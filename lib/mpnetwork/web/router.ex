@@ -1,4 +1,4 @@
-defmodule Mpnetwork.Router do
+defmodule Mpnetwork.Web.Router do
   use Mpnetwork.Web, :router
 
   pipeline :browser do
@@ -13,14 +13,14 @@ defmodule Mpnetwork.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Mpnetwork do
+  scope "/", Mpnetwork.Web do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Mpnetwork do
+  # scope "/api", Mpnetwork.Web do
   #   pipe_through :api
   # end
 end

@@ -1,4 +1,4 @@
-defmodule Mpnetwork.ErrorHelpers do
+defmodule Mpnetwork.Web.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -32,9 +32,9 @@ defmodule Mpnetwork.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(Mpnetwork.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Mpnetwork.Web.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(Mpnetwork.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Mpnetwork.Web.Gettext, "errors", msg, opts)
     end
   end
 end

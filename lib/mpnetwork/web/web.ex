@@ -16,32 +16,19 @@ defmodule Mpnetwork.Web do
   below.
   """
 
-  def model do
-    quote do
-      use Ecto.Schema
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
-    end
-  end
-
   def controller do
     quote do
-      use Phoenix.Controller
-
-      alias Mpnetwork.Repo
-      import Ecto
-      import Ecto.Query
-
-      import Mpnetwork.Router.Helpers
-      import Mpnetwork.Gettext
+      use Phoenix.Controller, namespace: Mpnetwork.Web
+      import Plug.Conn
+      import Mpnetwork.Web.Router.Helpers
+      import Mpnetwork.Web.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "web/templates"
+      use Phoenix.View, root: "lib/mpnetwork/web/templates",
+                        namespace: Mpnetwork.Web
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
@@ -49,26 +36,24 @@ defmodule Mpnetwork.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Mpnetwork.Router.Helpers
-      import Mpnetwork.ErrorHelpers
-      import Mpnetwork.Gettext
+      import Mpnetwork.Web.Router.Helpers
+      import Mpnetwork.Web.ErrorHelpers
+      import Mpnetwork.Web.Gettext
     end
   end
 
   def router do
     quote do
       use Phoenix.Router
+      import Plug.Conn
+      import Phoenix.Controller
     end
   end
 
   def channel do
     quote do
       use Phoenix.Channel
-
-      alias Mpnetwork.Repo
-      import Ecto
-      import Ecto.Query
-      import Mpnetwork.Gettext
+      import Mpnetwork.Web.Gettext
     end
   end
 

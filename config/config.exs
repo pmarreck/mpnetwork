@@ -10,10 +10,10 @@ config :mpnetwork,
   ecto_repos: [Mpnetwork.Repo]
 
 # Configures the endpoint
-config :mpnetwork, Mpnetwork.Endpoint,
+config :mpnetwork, Mpnetwork.Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "0UYiCVV96M2bKbnZuilr1oNUY+NRJz8F07d3nWVjUOEwBHmxohBn2W4qjz+9oVUd",
-  render_errors: [view: Mpnetwork.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: Mpnetwork.Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Mpnetwork.PubSub,
            adapter: Phoenix.PubSub.PG2]
 

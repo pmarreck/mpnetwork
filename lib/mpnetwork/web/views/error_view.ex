@@ -1,4 +1,4 @@
-defmodule Mpnetwork.ErrorView do
+defmodule Mpnetwork.Web.ErrorView do
   use Mpnetwork.Web, :view
 
   def render("404.html", _assigns) do

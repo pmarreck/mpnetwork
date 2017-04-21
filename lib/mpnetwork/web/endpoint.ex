@@ -1,7 +1,7 @@
-defmodule Mpnetwork.Endpoint do
+defmodule Mpnetwork.Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :mpnetwork
 
-  socket "/socket", Mpnetwork.UserSocket
+  socket "/socket", Mpnetwork.Web.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -36,7 +36,19 @@ defmodule Mpnetwork.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_mpnetwork_key",
-    signing_salt: "JI8nZXwE"
+    signing_salt: "EDekwQ8K"
 
-  plug Mpnetwork.Router
+  plug Mpnetwork.Web.Router
+
+  @doc """
+  Dynamically loads configuration from the system environment
+  on startup.
+
+  It receives the endpoint configuration from the config files
+  and must return the updated configuration.
+  """
+  def load_from_system_env(config) do
+    port = System.get_env("PORT") || raise "expected the PORT environment variable to be set"
+    {:ok, Keyword.put(config, :http, [:inet6, port: port])}
+  end
 end
