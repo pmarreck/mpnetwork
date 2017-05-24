@@ -18,9 +18,9 @@ defmodule Mpnetwork.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      applications: [:coherence],
+      # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:logger, :runtime_tools],
+      extra_applications: [:coherence, :logger, :runtime_tools],
     ]
   end
 
@@ -42,7 +42,8 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:coherence, "~> 0.3"},
+      {:coherence, github: "smpallen99/coherence", branch: "phx-1.3"},
+      {:ex_doc, "~> 0.14", only: :dev},
     ]
   end
 

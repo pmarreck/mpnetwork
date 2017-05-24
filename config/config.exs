@@ -23,16 +23,41 @@ config :logger, :console,
   metadata: [:request_id]
 
 # Configures Guardian
-config :guardian, Guardian,
-  allowed_algos: ["HS512"], # optional
-  verify_module: Guardian.JWT,  # optional
-  issuer: "Mpnetwork",
-  ttl: { 30, :days },
-  allowed_drift: 2000,
-  verify_issuer: true, # optional
-  secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
-  serializer: MyApp.GuardianSerializer
+# config :guardian, Guardian,
+#   allowed_algos: ["HS512"], # optional
+#   verify_module: Guardian.JWT,  # optional
+#   issuer: "Mpnetwork",
+#   ttl: { 30, :days },
+#   allowed_drift: 2000,
+#   verify_issuer: true, # optional
+#   secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
+#   serializer: MyApp.GuardianSerializer
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
+
+# %% Coherence Configuration %%   Don't remove this line
+config :coherence,
+  user_schema: Mpnetwork.User,
+  repo: Mpnetwork.Repo,
+  module: Mpnetwork,
+  router: Mpnetwork.Web.Router,
+  messages_backend: Mpnetwork.Coherence.Messages,
+  logged_out_url: "/",
+  email_from_name: "Manhasset-Port Washington Board of Realtors",
+  email_from_email: "jrusso@coachrealtors.com",
+  opts: [:authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token, :invitable, :registerable, :confirmable],
+  require_current_password: true, # Current password is required when updating new password.
+  reset_token_expire_days: 2,
+  confirmation_token_expire_days: 5,
+  allow_unconfirmed_access_for: 0,
+  max_failed_login_attempts: 5,
+  unlock_timeout_minutes: 15,
+  unlock_token_expire_minutes: 15,
+  rememberable_cookie_expire_hours: 14*24
+
+config :coherence, Mpnetwork.Coherence.Mailer,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: "your api key here"
+# %% End Coherence Configuration %%

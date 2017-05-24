@@ -81,7 +81,7 @@ config :mpnetwork, Mpnetwork.Repo,
   ssl: true
 
 # Guardian
-config :guardian, Guardian,
-  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+# config :guardian, Guardian,
+#   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 config :phoenix, :serve_endpoints, true
