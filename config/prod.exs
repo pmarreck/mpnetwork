@@ -21,7 +21,7 @@ config :mpnetwork, Mpnetwork.Web.Endpoint,
   # url: [scheme: "https", host: "murmuring-meadow-65796.herokuapp.com", port: 443],
   # url: [scheme: "https", host: "mpwrealestateboard.network", port: 443],
   url: [host: "www.mpwrealestateboard.network", port: 80],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  force_ssl: [hsts: true, rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: "${SECRET_KEY_BASE}" #System.get_env("SECRET_KEY_BASE")
 

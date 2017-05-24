@@ -17,8 +17,11 @@ defmodule Mpnetwork.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Mpnetwork.Application, []},
-     extra_applications: [:logger, :runtime_tools]]
+    [
+      applications: [:coherence],
+      mod: {Mpnetwork.Application, []},
+      extra_applications: [:logger, :runtime_tools],
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -29,16 +32,18 @@ defmodule Mpnetwork.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:distillery, "~> 1.4.0"},
-     {:phoenix, "~> 1.3.0-rc", override: true},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.2"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.6"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"},
-     {:guardian, "~> 0.14"}]
+    [
+      {:distillery, "~> 1.4.0"},
+      {:phoenix, "~> 1.3.0-rc", override: true},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix_ecto, "~> 3.2"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.6"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:gettext, "~> 0.11"},
+      {:cowboy, "~> 1.0"},
+      {:coherence, "~> 0.3"},
+    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
