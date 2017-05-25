@@ -15,7 +15,7 @@
 
 // import jQuery from "jquery"
 
-import "bootstrap"
+// import "bootstrap"
 
 import "admin-lte"
 
