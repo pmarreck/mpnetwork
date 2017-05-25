@@ -58,6 +58,7 @@ config :coherence,
   rememberable_cookie_expire_hours: 14*24
 
 config :coherence, Mpnetwork.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Sendgrid,
-  api_key: "your api key here"
+  adapter: Swoosh.Adapters.SparkPost,
+  api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
+  endpoint: "https://api.sparkpost.com/api/v1"
 # %% End Coherence Configuration %%
