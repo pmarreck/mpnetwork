@@ -6,7 +6,7 @@ defmodule Mpnetwork.User do
   schema "users" do
     field :username, :string, unique: true
     field :email, :string, unique: true
-    field :fullname, :string
+    field :name, :string
     field :firstname, :string
     field :lastname, :string
     field :office_phone, :string
@@ -22,7 +22,7 @@ defmodule Mpnetwork.User do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:username, :email, :fullname, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
+    |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
     |> validate_required([:username, :email, :office_id])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
