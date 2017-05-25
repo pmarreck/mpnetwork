@@ -16,7 +16,7 @@ case Mix.env do
   _     ->
     Mpnetwork.Repo.delete_all Mpnetwork.User
 
-    Mpnetwork.User.changeset(%Mpnetwork.User{}, %{username: "testuser", email: "testuser@example.com", office_id: 1, password: "secret", password_confirmation: "secret"})
+    Mpnetwork.User.changeset(%Mpnetwork.User{}, %{username: "testuser", email: "testuser@example.com", office_id: 1, role_id: 1, password: "secret", password_confirmation: "secret"})
     |> Mpnetwork.Repo.insert!
     |> Coherence.ControllerHelpers.confirm!
 end
