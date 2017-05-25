@@ -13,7 +13,7 @@
 // to also remove its path from "config.paths.watched".
 // import "phoenix_html"
 
-import jQuery from "jquery"
+// import jQuery from "jquery"
 
 import "bootstrap"
 
