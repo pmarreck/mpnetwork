@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+git -c http.extraheader="GIGALIXIR-CLEAN: true" push gigalixir master && prod.migrate
