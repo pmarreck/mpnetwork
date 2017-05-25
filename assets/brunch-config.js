@@ -71,10 +71,6 @@ exports.config = {
                                                // so I literally just copypasted it into app.css
                                                // out of frustration. #TODO
       ]
-    }, // note that this jQuery globalization is considered hacky, but fixes console bugs for now
-    globals: {
-      $: 'jquery',
-      jQuery: 'jquery'
     }
   }
 };
