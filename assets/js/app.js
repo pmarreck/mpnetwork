@@ -11,7 +11,13 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
+// import "phoenix_html"
+
+import jQuery from "jquery"
+
+import "bootstrap"
+
+import "admin-lte"
 
 // Import local files
 //

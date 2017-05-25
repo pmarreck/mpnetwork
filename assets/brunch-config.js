@@ -22,6 +22,9 @@ exports.config = {
     },
     stylesheets: {
       joinTo: "css/app.css"
+      // order: {
+      //   after: ["admin-lte/dist/css/skins/_all-skins.min.css"]
+      // }
     },
     templates: {
       joinTo: "js/app.js"
@@ -38,7 +41,7 @@ exports.config = {
   // Phoenix paths configuration
   paths: {
     // Dependencies and current project directories to watch
-    watched: ["static", "css", "js", "vendor"],
+    watched: ["static", "css", "js", "vendor", "skins"],
     // Where to compile files to
     public: "../priv/static"
   },
@@ -58,6 +61,20 @@ exports.config = {
   },
 
   npm: {
-    enabled: true
+    enabled: true,
+    styles: {
+      // bootstrap: ['dist/css/bootstrap.min.css'], // included by admin-lte
+      "admin-lte":  [
+        "bootstrap/css/bootstrap.min.css",
+        "dist/css/AdminLTE.min.css"
+        // "dist/css/skins/_all-skins.min.css" // no matter what I try, this is not getting included,
+                                               // so I literally just copypasted it into app.css
+                                               // out of frustration. #TODO
+      ]
+    }, // note that this jQuery globalization is considered hacky, but fixes console bugs for now
+    globals: {
+      $: 'jquery',
+      jQuery: 'jquery'
+    }
   }
 };
