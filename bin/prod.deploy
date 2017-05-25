@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-git push gigalixir master
-prod.migrate
+git push gigalixir master && prod.migrate
