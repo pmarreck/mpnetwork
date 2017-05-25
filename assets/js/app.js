@@ -13,9 +13,9 @@
 // to also remove its path from "config.paths.watched".
 // import "phoenix_html"
 
-// import jQuery from "jquery"
+import $ from "jquery"
 
-// import "bootstrap"
+import "bootstrap"
 
 import "admin-lte"
 
