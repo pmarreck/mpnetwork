@@ -46,7 +46,7 @@ config :coherence,
   messages_backend: Mpnetwork.Coherence.Messages,
   logged_out_url: "/",
   email_from_name: "Manhasset-Port Washington Board of Realtors",
-  email_from_email: "jrusso@coachrealtors.com",
+  email_from_email: "board@mpwrealestateboard.network",
   opts: [:authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token, :invitable, :registerable, :confirmable, :rememberable],
   require_current_password: true, # Current password is required when updating new password.
   reset_token_expire_days: 2,
