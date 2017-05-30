@@ -77,7 +77,7 @@ config :logger, level: :info
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: {:system, "DATABASE_URL"}, #System.get_env("DATABASE_URL"),
-  pool_size: 20,
+  pool_size: 40, # limit in google cloud postgres is 100
   ssl: true
 
 # Guardian
