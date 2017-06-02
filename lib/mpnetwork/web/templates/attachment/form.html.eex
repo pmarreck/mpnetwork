@@ -1,0 +1,53 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :sha256_hash, class: "control-label" %>
+    <%= text_input f, :sha256_hash, class: "form-control" %>
+    <%= error_tag f, :sha256_hash %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :primary, class: "control-label" %>
+    <%= checkbox f, :primary, class: "checkbox" %>
+    <%= error_tag f, :primary %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :content_type, class: "control-label" %>
+    <%= text_input f, :content_type, class: "form-control" %>
+    <%= error_tag f, :content_type %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :original_filename, class: "control-label" %>
+    <%= text_input f, :original_filename, class: "form-control" %>
+    <%= error_tag f, :original_filename %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :width_pixels, class: "control-label" %>
+    <%= number_input f, :width_pixels, class: "form-control" %>
+    <%= error_tag f, :width_pixels %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :height_pixels, class: "control-label" %>
+    <%= number_input f, :height_pixels, class: "form-control" %>
+    <%= error_tag f, :height_pixels %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :data, class: "control-label" %>
+    <%= text_input f, :data, class: "form-control" %>
+    <%= error_tag f, :data %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

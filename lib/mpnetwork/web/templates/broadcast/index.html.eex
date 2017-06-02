@@ -1,0 +1,30 @@
+<h2>Listing Broadcasts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Title</th>
+      <th>Body</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for broadcast <- @broadcasts do %>
+    <tr>
+      <td><%= broadcast.user_id %></td>
+      <td><%= broadcast.title %></td>
+      <td><%= broadcast.body %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: broadcast_path(@conn, :show, broadcast), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Broadcast", to: broadcast_path(@conn, :new) %></span>

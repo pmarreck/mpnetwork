@@ -1,0 +1,38 @@
+<h2>Listing Attachments</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Sha256 hash</th>
+      <th>Primary</th>
+      <th>Content type</th>
+      <th>Original filename</th>
+      <th>Width pixels</th>
+      <th>Height pixels</th>
+      <th>Data</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for attachment <- @attachments do %>
+    <tr>
+      <td><%= attachment.sha256_hash %></td>
+      <td><%= attachment.primary %></td>
+      <td><%= attachment.content_type %></td>
+      <td><%= attachment.original_filename %></td>
+      <td><%= attachment.width_pixels %></td>
+      <td><%= attachment.height_pixels %></td>
+      <td><%= attachment.data %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Attachment", to: attachment_path(@conn, :new) %></span>

@@ -1,0 +1,6 @@
+<h2>New Broadcast</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: broadcast_path(@conn, :create) %>
+
+<span><%= link "Back", to: broadcast_path(@conn, :index) %></span>

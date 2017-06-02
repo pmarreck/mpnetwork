@@ -1,0 +1,112 @@
+<h2>Listing Listings</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Draft</th>
+      <th>For sale</th>
+      <th>For rent</th>
+      <th>Description</th>
+      <th>Address</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Zip</th>
+      <th>Price usd</th>
+      <th>Studio</th>
+      <th>Num bedrooms</th>
+      <th>Num baths</th>
+      <th>Num half baths</th>
+      <th>Sq ft</th>
+      <th>Lot size acre cents</th>
+      <th>Year built</th>
+      <th>Stories</th>
+      <th>Basement</th>
+      <th>Fireplaces</th>
+      <th>Parking spaces</th>
+      <th>Mls source</th>
+      <th>Num garages</th>
+      <th>Attached garage</th>
+      <th>New construction</th>
+      <th>Tax rate code area</th>
+      <th>Total annual property taxes usd</th>
+      <th>Patio</th>
+      <th>Deck</th>
+      <th>Pool</th>
+      <th>Hot tub</th>
+      <th>Num skylights</th>
+      <th>Central air</th>
+      <th>Central vac</th>
+      <th>Security system</th>
+      <th>Fios available</th>
+      <th>High speed internet available</th>
+      <th>Modern kitchen countertops</th>
+      <th>Cellular coverage quality</th>
+      <th>Led lighting</th>
+      <th>New appliances</th>
+      <th>Ext url</th>
+      <th>Special notes</th>
+      <th>Visible on</th>
+      <th>Expires on</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for listing <- @listings do %>
+    <tr>
+      <td><%= listing.draft %></td>
+      <td><%= listing.for_sale %></td>
+      <td><%= listing.for_rent %></td>
+      <td><%= listing.description %></td>
+      <td><%= listing.address %></td>
+      <td><%= listing.city %></td>
+      <td><%= listing.state %></td>
+      <td><%= listing.zip %></td>
+      <td><%= listing.price_usd %></td>
+      <td><%= listing.studio %></td>
+      <td><%= listing.num_bedrooms %></td>
+      <td><%= listing.num_baths %></td>
+      <td><%= listing.num_half_baths %></td>
+      <td><%= listing.sq_ft %></td>
+      <td><%= listing.lot_size_acre_cents %></td>
+      <td><%= listing.year_built %></td>
+      <td><%= listing.stories %></td>
+      <td><%= listing.basement %></td>
+      <td><%= listing.fireplaces %></td>
+      <td><%= listing.parking_spaces %></td>
+      <td><%= listing.mls_source_id %></td>
+      <td><%= listing.num_garages %></td>
+      <td><%= listing.attached_garage %></td>
+      <td><%= listing.new_construction %></td>
+      <td><%= listing.tax_rate_code_area %></td>
+      <td><%= listing.total_annual_property_taxes_usd %></td>
+      <td><%= listing.patio %></td>
+      <td><%= listing.deck %></td>
+      <td><%= listing.pool %></td>
+      <td><%= listing.hot_tub %></td>
+      <td><%= listing.num_skylights %></td>
+      <td><%= listing.central_air %></td>
+      <td><%= listing.central_vac %></td>
+      <td><%= listing.security_system %></td>
+      <td><%= listing.fios_available %></td>
+      <td><%= listing.high_speed_internet_available %></td>
+      <td><%= listing.modern_kitchen_countertops %></td>
+      <td><%= listing.cellular_coverage_quality %></td>
+      <td><%= listing.led_lighting %></td>
+      <td><%= listing.new_appliances %></td>
+      <td><%= listing.ext_url %></td>
+      <td><%= listing.special_notes %></td>
+      <td><%= listing.visible_on %></td>
+      <td><%= listing.expires_on %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: listing_path(@conn, :show, listing), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Listing", to: listing_path(@conn, :new) %></span>

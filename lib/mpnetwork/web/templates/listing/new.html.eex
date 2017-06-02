@@ -1,0 +1,6 @@
+<h2>New Listing</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: listing_path(@conn, :create) %>
+
+<span><%= link "Back", to: listing_path(@conn, :index) %></span>

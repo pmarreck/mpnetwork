@@ -1,0 +1,23 @@
+<h2>Show Broadcast</h2>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @broadcast.user_id %>
+  </li>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @broadcast.title %>
+  </li>
+
+  <li>
+    <strong>Body:</strong>
+    <%= @broadcast.body %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: broadcast_path(@conn, :edit, @broadcast) %></span>
+<span><%= link "Back", to: broadcast_path(@conn, :index) %></span>

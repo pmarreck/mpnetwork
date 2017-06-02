@@ -1,0 +1,228 @@
+<h2>Show Listing</h2>
+
+<ul>
+
+  <li>
+    <strong>Draft:</strong>
+    <%= @listing.draft %>
+  </li>
+
+  <li>
+    <strong>For sale:</strong>
+    <%= @listing.for_sale %>
+  </li>
+
+  <li>
+    <strong>For rent:</strong>
+    <%= @listing.for_rent %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @listing.description %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @listing.address %>
+  </li>
+
+  <li>
+    <strong>City:</strong>
+    <%= @listing.city %>
+  </li>
+
+  <li>
+    <strong>State:</strong>
+    <%= @listing.state %>
+  </li>
+
+  <li>
+    <strong>Zip:</strong>
+    <%= @listing.zip %>
+  </li>
+
+  <li>
+    <strong>Price usd:</strong>
+    <%= @listing.price_usd %>
+  </li>
+
+  <li>
+    <strong>Studio:</strong>
+    <%= @listing.studio %>
+  </li>
+
+  <li>
+    <strong>Num bedrooms:</strong>
+    <%= @listing.num_bedrooms %>
+  </li>
+
+  <li>
+    <strong>Num baths:</strong>
+    <%= @listing.num_baths %>
+  </li>
+
+  <li>
+    <strong>Num half baths:</strong>
+    <%= @listing.num_half_baths %>
+  </li>
+
+  <li>
+    <strong>Sq ft:</strong>
+    <%= @listing.sq_ft %>
+  </li>
+
+  <li>
+    <strong>Lot size acre cents:</strong>
+    <%= @listing.lot_size_acre_cents %>
+  </li>
+
+  <li>
+    <strong>Year built:</strong>
+    <%= @listing.year_built %>
+  </li>
+
+  <li>
+    <strong>Stories:</strong>
+    <%= @listing.stories %>
+  </li>
+
+  <li>
+    <strong>Basement:</strong>
+    <%= @listing.basement %>
+  </li>
+
+  <li>
+    <strong>Fireplaces:</strong>
+    <%= @listing.fireplaces %>
+  </li>
+
+  <li>
+    <strong>Parking spaces:</strong>
+    <%= @listing.parking_spaces %>
+  </li>
+
+  <li>
+    <strong>Mls source:</strong>
+    <%= @listing.mls_source_id %>
+  </li>
+
+  <li>
+    <strong>Num garages:</strong>
+    <%= @listing.num_garages %>
+  </li>
+
+  <li>
+    <strong>Attached garage:</strong>
+    <%= @listing.attached_garage %>
+  </li>
+
+  <li>
+    <strong>New construction:</strong>
+    <%= @listing.new_construction %>
+  </li>
+
+  <li>
+    <strong>Tax rate code area:</strong>
+    <%= @listing.tax_rate_code_area %>
+  </li>
+
+  <li>
+    <strong>Total annual property taxes usd:</strong>
+    <%= @listing.total_annual_property_taxes_usd %>
+  </li>
+
+  <li>
+    <strong>Patio:</strong>
+    <%= @listing.patio %>
+  </li>
+
+  <li>
+    <strong>Deck:</strong>
+    <%= @listing.deck %>
+  </li>
+
+  <li>
+    <strong>Pool:</strong>
+    <%= @listing.pool %>
+  </li>
+
+  <li>
+    <strong>Hot tub:</strong>
+    <%= @listing.hot_tub %>
+  </li>
+
+  <li>
+    <strong>Num skylights:</strong>
+    <%= @listing.num_skylights %>
+  </li>
+
+  <li>
+    <strong>Central air:</strong>
+    <%= @listing.central_air %>
+  </li>
+
+  <li>
+    <strong>Central vac:</strong>
+    <%= @listing.central_vac %>
+  </li>
+
+  <li>
+    <strong>Security system:</strong>
+    <%= @listing.security_system %>
+  </li>
+
+  <li>
+    <strong>Fios available:</strong>
+    <%= @listing.fios_available %>
+  </li>
+
+  <li>
+    <strong>High speed internet available:</strong>
+    <%= @listing.high_speed_internet_available %>
+  </li>
+
+  <li>
+    <strong>Modern kitchen countertops:</strong>
+    <%= @listing.modern_kitchen_countertops %>
+  </li>
+
+  <li>
+    <strong>Cellular coverage quality:</strong>
+    <%= @listing.cellular_coverage_quality %>
+  </li>
+
+  <li>
+    <strong>Led lighting:</strong>
+    <%= @listing.led_lighting %>
+  </li>
+
+  <li>
+    <strong>New appliances:</strong>
+    <%= @listing.new_appliances %>
+  </li>
+
+  <li>
+    <strong>Ext url:</strong>
+    <%= @listing.ext_url %>
+  </li>
+
+  <li>
+    <strong>Special notes:</strong>
+    <%= @listing.special_notes %>
+  </li>
+
+  <li>
+    <strong>Visible on:</strong>
+    <%= @listing.visible_on %>
+  </li>
+
+  <li>
+    <strong>Expires on:</strong>
+    <%= @listing.expires_on %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: listing_path(@conn, :edit, @listing) %></span>
+<span><%= link "Back", to: listing_path(@conn, :index) %></span>

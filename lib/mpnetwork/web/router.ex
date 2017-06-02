@@ -44,6 +44,9 @@ defmodule Mpnetwork.Web.Router do
   scope "/", Mpnetwork.Web do
     pipe_through :protected
     # Add protected routes below
+    resources "/broadcasts", BroadcastController
+    resources "/listings", ListingController
+    resources "/attachments", AttachmentController
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,43 @@
+<h2>Show Attachment</h2>
+
+<ul>
+
+  <li>
+    <strong>Sha256 hash:</strong>
+    <%= @attachment.sha256_hash %>
+  </li>
+
+  <li>
+    <strong>Primary:</strong>
+    <%= @attachment.primary %>
+  </li>
+
+  <li>
+    <strong>Content type:</strong>
+    <%= @attachment.content_type %>
+  </li>
+
+  <li>
+    <strong>Original filename:</strong>
+    <%= @attachment.original_filename %>
+  </li>
+
+  <li>
+    <strong>Width pixels:</strong>
+    <%= @attachment.width_pixels %>
+  </li>
+
+  <li>
+    <strong>Height pixels:</strong>
+    <%= @attachment.height_pixels %>
+  </li>
+
+  <li>
+    <strong>Data:</strong>
+    <%= @attachment.data %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: attachment_path(@conn, :edit, @attachment) %></span>
+<span><%= link "Back", to: attachment_path(@conn, :index) %></span>
