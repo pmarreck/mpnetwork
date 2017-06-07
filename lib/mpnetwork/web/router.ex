@@ -34,16 +34,16 @@ defmodule Mpnetwork.Web.Router do
     coherence_routes :protected
   end
 
-  scope "/", Mpnetwork.Web do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
-    # Add public routes below
-  end
+  # scope "/", Mpnetwork.Web do
+  #   pipe_through :browser # Use the default browser stack
+  #   # Add public routes below
+  # end
 
   scope "/", Mpnetwork.Web do
     pipe_through :protected
     # Add protected routes below
+    get "/", PageController, :index # (even the landing page requires login)
+
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController

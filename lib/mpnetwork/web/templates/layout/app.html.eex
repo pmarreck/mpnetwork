@@ -53,6 +53,7 @@
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+            <!--
               <!-- Messages: style can be found in dropdown.less-->
               <li class="dropdown messages-menu">
                 <!-- Menu toggle button -->
@@ -149,28 +150,29 @@
                   </li>
                 </ul>
               </li>
+
               <!-- User Account Menu -->
               <li class="user user-menu"> <!-- removed 'dropdown' as a class, was breaking logout button -->
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="https://en.gravatar.com/userimage/121018227/4e0fed262b2e897f33477a86c4727c78.jpeg" class="user-image" alt="User Image">
+                  <img src="<%= gravatar_url(@current_user.email) %>" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">Peter Marreck</span>
+                  <span class="hidden-xs"><%= @current_user.name %></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="https://en.gravatar.com/userimage/121018227/4e0fed262b2e897f33477a86c4727c78.jpeg" class="img-circle" alt="User Image">
+                    <img src="<%= gravatar_url(@current_user.email) %>" class="img-circle" alt="User Image">
 
                     <p>
-                      Peter Marreck - Web Developer
-                      <small>Member since Nov. 2012</small>
+                      <%= @current_user.name %> - <%= elem({"Root","Site Admin","Office Admin","Realtor","User"},@current_user.role_id) %>
+                      <small>Member since <%= short_month_and_year(@current_user.confirmed_at) %></small>
                     </p>
                   </li>
                   <!-- Menu Body -->
                   <li class="user-body">
-                    <div class="row">
+                    <!-- <div class="row">
                       <div class="col-xs-4 text-center">
                         <a href="#">Followers</a>
                       </div>
@@ -180,7 +182,7 @@
                       <div class="col-xs-4 text-center">
                         <a href="#">Friends</a>
                       </div>
-                    </div>
+                    </div> -->
                     <!-- /.row -->
                   </li>
                   <!-- Menu Footer-->
@@ -215,10 +217,10 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="https://en.gravatar.com/userimage/121018227/4e0fed262b2e897f33477a86c4727c78.jpeg" class="img-circle" alt="User Image">
+              <img src="<%= gravatar_url(@current_user.email) %>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>Peter Marreck</p>
+              <p><%= @current_user.name %></p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>

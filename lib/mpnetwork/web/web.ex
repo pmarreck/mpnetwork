@@ -16,12 +16,15 @@ defmodule Mpnetwork.Web do
   below.
   """
 
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: Mpnetwork.Web
       import Plug.Conn
       import Mpnetwork.Web.Router.Helpers
       import Mpnetwork.Web.Gettext
+      # import Coherence current_user and logged_in? into all controllers
+      import Coherence, only: [current_user: 1, logged_in?: 1]
     end
   end
 
@@ -39,6 +42,8 @@ defmodule Mpnetwork.Web do
       import Mpnetwork.Web.Router.Helpers
       import Mpnetwork.Web.ErrorHelpers
       import Mpnetwork.Web.Gettext
+      # custom global helpers
+      import Mpnetwork.Web.GlobalHelpers
     end
   end
 
