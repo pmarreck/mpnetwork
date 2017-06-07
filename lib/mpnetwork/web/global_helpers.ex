@@ -10,7 +10,7 @@ defmodule Mpnetwork.Web.GlobalHelpers do
 
   def gravatar_url(email) do
     hash_email = :crypto.hash(:md5, email) |> Base.encode16 |> String.downcase
-    "http://www.gravatar.com/avatar/#{hash_email}"
+    "https://www.gravatar.com/avatar/#{hash_email}"
   end
 
 end
