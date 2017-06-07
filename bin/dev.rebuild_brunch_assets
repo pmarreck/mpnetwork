@@ -1,0 +1,1 @@
+cd assets; node node_modules/brunch/bin/brunch build --debug; cd ..
