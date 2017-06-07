@@ -150,7 +150,7 @@
                 </ul>
               </li>
               <!-- User Account Menu -->
-              <li class="dropdown user user-menu">
+              <li class="user user-menu"> <!-- removed 'dropdown' as a class, was breaking logout button -->
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->

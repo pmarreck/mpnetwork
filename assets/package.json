@@ -6,7 +6,7 @@
     "watch": "brunch watch --stdin"
   },
   "dependencies": {
-    "admin-lte": "^2",
+    "admin-lte": "^2.3.3",
     "jquery": "^3",
     "bootstrap": "^3",
     "phoenix": "file:../deps/phoenix",
