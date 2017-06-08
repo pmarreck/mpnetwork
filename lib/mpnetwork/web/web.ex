@@ -44,6 +44,8 @@ defmodule Mpnetwork.Web do
       import Mpnetwork.Web.Gettext
       # custom global helpers
       import Mpnetwork.Web.GlobalHelpers
+      # import Coherence current_user and logged_in? into all controllers
+      import Coherence, only: [current_user: 1, logged_in?: 1]
     end
   end
 

@@ -14,7 +14,9 @@ defmodule Mpnetwork.Web.BroadcastController do
   end
 
   def create(conn, %{"broadcast" => broadcast_params}) do
-    case Realtor.create_broadcast(broadcast_params) do
+    # inject current_user.id
+    broadcast_params_with_current_user_id = Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+    case Realtor.create_broadcast(broadcast_params_with_current_user_id) do
       {:ok, broadcast} ->
         conn
         |> put_flash(:info, "Broadcast created successfully.")

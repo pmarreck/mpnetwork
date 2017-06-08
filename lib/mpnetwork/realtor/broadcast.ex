@@ -5,9 +5,10 @@ defmodule Mpnetwork.Realtor.Broadcast do
 
 
   schema "broadcasts" do
-    field :user_id, :integer
     field :title, :string
     field :body, :string
+
+    belongs_to :user, Mpnetwork.User
 
     timestamps()
   end

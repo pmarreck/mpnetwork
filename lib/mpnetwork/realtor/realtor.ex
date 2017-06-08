@@ -18,7 +18,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_broadcasts do
-    Repo.all(Broadcast)
+    Repo.all(Broadcast) |> Repo.preload(:user)
   end
 
   @doc """
@@ -35,7 +35,9 @@ defmodule Mpnetwork.Realtor do
       ** (Ecto.NoResultsError)
 
   """
-  def get_broadcast!(id), do: Repo.get!(Broadcast, id)
+  def get_broadcast!(id) do
+    Repo.get!(Broadcast, id) |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a broadcast.

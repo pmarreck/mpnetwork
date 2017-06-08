@@ -44,6 +44,7 @@ defmodule Mpnetwork.Mixfile do
       {:cowboy, "~> 1.0"},
       {:coherence, github: "smpallen99/coherence", branch: "phx-1.3"},
       {:ex_doc, "~> 0.14", only: :dev},
+      {:timex, "~> 3.0"},
     ]
   end
 

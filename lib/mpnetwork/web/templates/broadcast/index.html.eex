@@ -1,30 +1,36 @@
-<h2>Listing Broadcasts</h2>
+<h2>Recent Broadcasts</h2>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Title</th>
-      <th>Body</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for broadcast <- @broadcasts do %>
-    <tr>
-      <td><%= broadcast.user_id %></td>
-      <td><%= broadcast.title %></td>
-      <td><%= broadcast.body %></td>
-
-      <td class="text-right">
-        <span><%= link "Show", to: broadcast_path(@conn, :show, broadcast), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
-    </tr>
-<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="tab-content">
+      <div class="active tab-pane">
+        <%= for broadcast <- @broadcasts do %>
+          <div class="post clearfix">
+            <div class="user-block">
+              <img class="img-circle img-bordered-sm" src="<%= gravatar_url(broadcast.user.email) %>" alt="user image">
+                  <span class="username">
+                    <a href="#"><%= broadcast.user.name %></a>
+                  </span>
+              <span class="description"><%= broadcast.inserted_at |> relative_humanized_time %></span>
+            </div>
+            <!-- /.user-block -->
+            <p><strong><%= broadcast.title %></strong></p>
+            <p><%= broadcast.body %>
+              <%= if @current_user.id == broadcast.user_id do %>
+                <div class="text-right">
+                  <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
+                  <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+                </div>
+              <%= end %>
+            </p>
+          </div>
+          <!-- /.post -->
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
   </tbody>
 </table>
 
-<span><%= link "New Broadcast", to: broadcast_path(@conn, :new) %></span>
+<span><%= link "New Broadcast", to: broadcast_path(@conn, :new), class: "btn btn-default btn-xl" %></span>

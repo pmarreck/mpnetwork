@@ -166,7 +166,7 @@
                     <img src="<%= gravatar_url(@current_user.email) %>" class="img-circle" alt="User Image">
 
                     <p>
-                      <%= @current_user.name %> - <%= elem({"Root","Site Admin","Office Admin","Realtor","User"},@current_user.role_id) %>
+                      <%= @current_user.name %> - <%= role_id_to_name(@current_user.role_id) %>
                       <small>Member since <%= short_month_and_year(@current_user.confirmed_at) %></small>
                     </p>
                   </li>
@@ -322,7 +322,7 @@
       <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-          <%= DateTime.utc_now() |> DateTime.to_iso8601() %>
+          <%= last_logged_in_relative_humanized(@current_user) %>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2017 <a href="http://mecha.engineering">Mecha LLC</a>.</strong> All rights reserved.
