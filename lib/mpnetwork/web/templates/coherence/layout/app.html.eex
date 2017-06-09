@@ -9,7 +9,7 @@
     <meta name="author" content=""> %>
 
     <title>Manhasset - Port Washington Real Estate Network</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_url(@conn, "/css/app.css") %>">
 <%#     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"> %>
     <!-- Font Awesome -->
@@ -189,6 +189,6 @@
       immediately after the control sidebar -->
       <div class="control-sidebar-bg"></div>
     </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="<%= static_url(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
