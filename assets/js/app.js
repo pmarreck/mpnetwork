@@ -11,7 +11,8 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-// import "phoenix"
+
+import "phoenix"
 import "phoenix_html"
 
 import $ from "jquery"
@@ -19,6 +20,13 @@ import $ from "jquery"
 import "bootstrap"
 
 import "admin-lte"
+
+// CommonJS style, see http://jsmodules.io/cjs.html for comparison
+// global.$ = global.jQuery = require("jquery")
+// global.bootstrap = require("bootstrap")
+// global.AdminLTE = require("admin-lte")
+
+
 
 // Import local files
 //

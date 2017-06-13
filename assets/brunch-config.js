@@ -1,30 +1,27 @@
 exports.config = {
   // See http://brunch.io/#documentation for docs.
   files: {
+    // javascripts: {
+    //   joinTo: {
+    //     "js/app.js": '*.min.js'
+    //   }
+    // },
+    // stylesheets: {
+    //   // joinTo: 'css/app.css',
+    //   joinTo: {
+    //     "css/app.css": '*.min.css'
+    //   },
+    // },
+
     javascripts: {
       joinTo: "js/app.js"
-
-      // To use a separate vendor.js bundle, specify two files path
-      // https://github.com/brunch/brunch/blob/master/docs/config.md#files
-      // joinTo: {
-      //  "js/app.js": /^(js)/,
-      //  "js/vendor.js": /^(vendor)|(deps)/
-      // }
-      //
-      // To change the order of concatenation of files, explicitly mention here
-      // https://github.com/brunch/brunch/tree/master/docs#concatenation
-      // order: {
-      //   before: [
-      //     "vendor/js/jquery-2.1.1.js",
-      //     "vendor/js/bootstrap.min.js"
-      //   ]
-      // }
     },
     stylesheets: {
-      joinTo: "css/app.css"
-      // order: {
-      //   after: ["admin-lte/dist/css/skins/_all-skins.min.css"]
-      // }
+      joinTo: {
+        "css/app.css": [
+          "css/*.scss"
+        ]
+      }
     },
     templates: {
       joinTo: "js/app.js"
@@ -51,6 +48,9 @@ exports.config = {
     babel: {
       // Do not use ES6 compiler in vendor code
       ignore: [/vendor/]
+    },
+    sass: {
+      mode: "native"
     }
   },
 
@@ -62,19 +62,9 @@ exports.config = {
 
   npm: {
     enabled: true,
-    styles: {
-      // bootstrap: ['dist/css/bootstrap.min.css'], // included by admin-lte
-      "admin-lte":  [
-        "bootstrap/css/bootstrap.min.css",
-        "dist/css/AdminLTE.min.css"
-        // "dist/css/skins/_all-skins.min.css" // no matter what I try, this is not getting included,
-                                               // so I literally just copypasted it into app.css
-                                               // out of frustration. #TODO
-      ]
-    }, // note that this jQuery globalization is considered hacky, but fixes console bugs for now
     globals: {
       $: 'jquery',
       jQuery: 'jquery'
     }
   }
-};
+}

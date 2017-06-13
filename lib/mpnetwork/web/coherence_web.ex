@@ -35,6 +35,8 @@ defmodule Mpnetwork.Coherence.Web do
       import Mpnetwork.Web.ErrorHelpers
       import Mpnetwork.Web.Gettext
       import Mpnetwork.Coherence.ViewHelpers
+      # custom global helpers
+      import Mpnetwork.Web.GlobalHelpers
     end
   end
   

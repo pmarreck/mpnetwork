@@ -50,4 +50,10 @@ defmodule Mpnetwork.Web.GlobalHelpers do
       |> DateTime.from_naive!("Etc/UTC")
   end
 
+  def current_datetime_standard_humanized(tz \\ "EDT") do
+    # I have no idea why I had to shift this because it was off by 1 hour.
+    # DST or something?
+    Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
+  end
+
 end
