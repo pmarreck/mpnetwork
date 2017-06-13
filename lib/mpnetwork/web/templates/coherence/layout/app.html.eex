@@ -96,7 +96,7 @@
       <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-          <%= current_datetime_standard_humanized %>
+          <%= current_datetime_standard_humanized() %>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2017 <a href="http://mecha.engineering">Mecha LLC</a>.</strong> All rights reserved.
