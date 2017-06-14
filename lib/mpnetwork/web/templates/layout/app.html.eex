@@ -259,21 +259,19 @@
                 <li><%= link "Add", to: listing_path(@conn, :new) %></li>
               </ul>
             </li>
-            <!-- 
-            <li class="active"><a href="/listings"><i class="fa fa-link"></i> <span>Browse listings</span></a></li>
-            <li><a href="/listings/new"><i class="fa fa-link"></i> <span>Add a listing</span></a></li>
-            -->
-            <li class="treeview">
-              <a href="#"><i class="fa fa-link"></i> <span>Admin</span>
-                <span class="pull-right-container">
+            <%= if @current_user.role_id < 3 do %>
+              <li class="treeview">
+                <a href="#"><i class="fa fa-link"></i> <span>Admin</span>
+                  <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                   </span>
-              </a>
-              <ul class="treeview-menu">
-                <li><%= link "Invite a user", to: invitation_path(@conn, :new) %></li>
-                <li><a href="#">Edit users</a></li>
-              </ul>
-            </li>
+                </a>
+                <ul class="treeview-menu">
+                  <li><%= link "Invite a user", to: invitation_path(@conn, :new) %></li>
+                  <li><a href="#">Edit users</a></li>
+                </ul>
+              </li>
+            <% end %>
           </ul>
           <!-- /.sidebar-menu -->
         </section>

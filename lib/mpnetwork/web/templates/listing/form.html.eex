@@ -54,7 +54,7 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :price_usd, "Price (USD, no dollar signs or commas or decimals)", class: "control-label" %>
+    <%= label f, :price_usd, "Price (USD, no $ or commas)", class: "control-label" %>
     <%= number_input f, :price_usd, class: "form-control" %>
     <%= error_tag f, :price_usd %>
   </div>
@@ -156,7 +156,7 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :total_annual_property_taxes_usd, "Total annual property taxes (USD, no $, comma or decimal)", class: "control-label" %>
+    <%= label f, :total_annual_property_taxes_usd, "Total annual property taxes (USD, no $ or commas)", class: "control-label" %>
     <%= number_input f, :total_annual_property_taxes_usd, class: "form-control" %>
     <%= error_tag f, :total_annual_property_taxes_usd %>
   </div>

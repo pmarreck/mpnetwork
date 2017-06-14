@@ -13,7 +13,7 @@ defmodule Mpnetwork.User do
     field :cell_phone, :string
     # field :password, :string, virtual: true #set via coherence_schema()
     field :office_id, :integer
-    field :role_id, :integer
+    field :role_id, :integer, default: 3 # Realtor
 
     coherence_schema() # adds :password_hash
 
@@ -23,7 +23,7 @@ defmodule Mpnetwork.User do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
-    |> validate_required([:username, :email, :office_id])
+    |> validate_required([:username, :email, :office_id, :role_id])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
     |> validate_coherence(params)
