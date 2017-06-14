@@ -62,18 +62,18 @@ defmodule Mpnetwork.Realtor.Listing do
   def changeset(%Listing{} = listing, %{"draft" => "true"} = attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:address])
+    |> validate_required([:user_id, :address])
   end
 
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:draft, :for_sale, :for_rent, :description, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size_acre_cents, :year_built, :stories, :basement, :fireplaces, :parking_spaces, :mls_source_id, :num_garages, :attached_garage, :new_construction, :tax_rate_code_area, :total_annual_property_taxes_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :cellular_coverage_quality, :led_lighting, :new_appliances, :ext_url, :special_notes, :visible_on, :expires_on])
+    |> validate_required([:user_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size_acre_cents, :year_built, :stories, :basement, :fireplaces, :parking_spaces, :num_garages, :attached_garage, :new_construction, :total_annual_property_taxes_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :led_lighting, :new_appliances, :visible_on, :expires_on])
   end
 
   defp casts(%Listing{} = listing, attrs) do
     listing
-    |> cast(attrs, [:draft, :for_sale, :for_rent, :description, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size_acre_cents, :year_built, :stories, :basement, :fireplaces, :parking_spaces, :mls_source_id, :num_garages, :attached_garage, :new_construction, :tax_rate_code_area, :total_annual_property_taxes_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :cellular_coverage_quality, :led_lighting, :new_appliances, :ext_url, :special_notes, :visible_on, :expires_on])
+    |> cast(attrs, [:user_id, :draft, :for_sale, :for_rent, :description, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size_acre_cents, :year_built, :stories, :basement, :fireplaces, :parking_spaces, :mls_source_id, :num_garages, :attached_garage, :new_construction, :tax_rate_code_area, :total_annual_property_taxes_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :cellular_coverage_quality, :led_lighting, :new_appliances, :ext_url, :special_notes, :visible_on, :expires_on])
   end
 
 end

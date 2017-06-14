@@ -1,45 +1,46 @@
-<!--h2>Recent Broadcasts</h2-->
 <div class="tab-content">
-  <div class="active tab-pane">
-    <%= for broadcast <- @broadcasts do %>
-      <div class="row">
-        <div class="col-md-2">
-          <div class="user-block">
-            <img class="img-circle img-bordered-sm" src="<%= gravatar_url(broadcast.user.email) %>" alt="user image">
-                <span class="username">
-                  <a href="#"><%= broadcast.user.name %></a>
-                </span>
-            <span class="description"><%= broadcast.inserted_at |> relative_humanized_time %></span>
-          </div>
-          <!-- /.user-block -->
-        </div>
-        <%= if @current_user.id == broadcast.user_id do %>
-          <div class="col-md-8">
-            <p><strong><%= broadcast.title %></strong></p>
-            <p><%= broadcast.body %>
-            </p>
-          </div>
-          <div class="col-md-2">
-            <div class="text-right">
-              <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
-              <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+  <div style="padding-top: 10px">
+    <div class="active tab-pane">
+        <%= for broadcast <- @broadcasts do %>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="user-block">
+                <img class="img-circle img-bordered-sm" src="<%= gravatar_url(broadcast.user.email) %>" alt="user image">
+                    <span class="username">
+                      <a href="#"><%= broadcast.user.name %></a>
+                    </span>
+                <span class="description"><%= broadcast.inserted_at |> relative_humanized_time %></span>
+              </div>
+              <!-- /.user-block -->
             </div>
-          </div>
-        <%= else %>
-          <div class="col-md-10">
-            <p><strong><%= broadcast.title %></strong></p>
-            <p><%= broadcast.body %>
-              <%= if @current_user.id == broadcast.user_id do %>
+            <%= if @current_user.id == broadcast.user_id || @current_user.role_id < 3 do %>
+              <div class="col-md-9">
+                <p><strong><%= broadcast.title %></strong></p>
+                <p><%= broadcast.body %>
+                </p>
+              </div>
+              <div class="col-md-1">
                 <div class="text-right">
                   <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
                   <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
                 </div>
-              <%= end %>
-            </p>
+              </div>
+            <%= else %>
+              <div class="col-md-10">
+                <p><strong><%= broadcast.title %></strong></p>
+                <p><%= broadcast.body %>
+                  <%= if @current_user.id == broadcast.user_id do %>
+                    <div class="text-right">
+                      <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
+                      <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+                    </div>
+                  <%= end %>
+                </p>
+              </div>
+            <% end %>
           </div>
+        <!-- /.post -->
         <% end %>
-      </div>
-    <!-- /.post -->
-    <% end %>
+    </div>
   </div>
 </div>

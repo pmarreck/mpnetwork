@@ -1,0 +1,24 @@
+<section class="content-header">
+  <%= if @assigns[:title] do %>
+    <h1>
+    <%= @assigns.title %>
+    <%= if @assigns[:subtitle] do %>
+      <small><%= @assigns.subtitle %></small>
+    <% end %>
+    </h1>
+  <% end %>
+  <% breadcrumb_path = @assigns.breadcrumb_path %>
+  <%= if breadcrumb_path && (breadcrumb_path != []) do %>
+    <% maxdepth = Enum.count(breadcrumb_path) %>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Top</a></li>
+      <%= for {level, depth} <- Enum.with_index(breadcrumb_path, 1) do %>
+        <%= if depth == maxdepth do %>
+          <li class="active"><%= level %></li>
+        <%= else %>
+          <li><%= level %></li>
+        <% end %>
+      <% end %>
+    </ol>
+  <% end %>
+</section>

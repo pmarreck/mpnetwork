@@ -1,19 +1,19 @@
-<h2>Show Listing</h2>
+<%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Show ]})) %>
 
-<ul>
+<ul style="list-style-type: none;">
 
   <li>
-    <strong>Draft:</strong>
+    <strong>Draft?</strong>
     <%= @listing.draft %>
   </li>
 
   <li>
-    <strong>For sale:</strong>
+    <strong>For sale?</strong>
     <%= @listing.for_sale %>
   </li>
 
   <li>
-    <strong>For rent:</strong>
+    <strong>For rent?</strong>
     <%= @listing.for_rent %>
   </li>
 
@@ -43,8 +43,8 @@
   </li>
 
   <li>
-    <strong>Price usd:</strong>
-    <%= @listing.price_usd %>
+    <strong>Price (USD):</strong>
+    <%= Number.Currency.number_to_currency(@listing.price_usd, precision: 0) %>
   </li>
 
   <li>
@@ -53,28 +53,28 @@
   </li>
 
   <li>
-    <strong>Num bedrooms:</strong>
+    <strong># bedrooms:</strong>
     <%= @listing.num_bedrooms %>
   </li>
 
   <li>
-    <strong>Num baths:</strong>
+    <strong># baths:</strong>
     <%= @listing.num_baths %>
   </li>
 
   <li>
-    <strong>Num half baths:</strong>
+    <strong># half baths:</strong>
     <%= @listing.num_half_baths %>
   </li>
 
   <li>
-    <strong>Sq ft:</strong>
+    <strong>Square feet:</strong>
     <%= @listing.sq_ft %>
   </li>
 
   <li>
-    <strong>Lot size acre cents:</strong>
-    <%= @listing.lot_size_acre_cents %>
+    <strong>Lot size (acres):</strong>
+    <%= if @listing.lot_size_acre_cents, do: @listing.lot_size_acre_cents/100 %>
   </li>
 
   <li>
@@ -88,7 +88,7 @@
   </li>
 
   <li>
-    <strong>Basement:</strong>
+    <strong>Basement?</strong>
     <%= @listing.basement %>
   </li>
 
@@ -103,22 +103,22 @@
   </li>
 
   <li>
-    <strong>Mls source:</strong>
+    <strong>MLS source identifier:</strong>
     <%= @listing.mls_source_id %>
   </li>
 
   <li>
-    <strong>Num garages:</strong>
+    <strong># garages:</strong>
     <%= @listing.num_garages %>
   </li>
 
   <li>
-    <strong>Attached garage:</strong>
+    <strong>Attached garage?</strong>
     <%= @listing.attached_garage %>
   </li>
 
   <li>
-    <strong>New construction:</strong>
+    <strong>New construction?</strong>
     <%= @listing.new_construction %>
   </li>
 
@@ -128,82 +128,82 @@
   </li>
 
   <li>
-    <strong>Total annual property taxes usd:</strong>
-    <%= @listing.total_annual_property_taxes_usd %>
+    <strong>Total annual property taxes (USD):</strong>
+    <%= Number.Currency.number_to_currency(@listing.total_annual_property_taxes_usd, precision: 0) %>
   </li>
 
   <li>
-    <strong>Patio:</strong>
+    <strong>Patio?</strong>
     <%= @listing.patio %>
   </li>
 
   <li>
-    <strong>Deck:</strong>
+    <strong>Deck?</strong>
     <%= @listing.deck %>
   </li>
 
   <li>
-    <strong>Pool:</strong>
+    <strong>Pool?</strong>
     <%= @listing.pool %>
   </li>
 
   <li>
-    <strong>Hot tub:</strong>
+    <strong>Hot tub?</strong>
     <%= @listing.hot_tub %>
   </li>
 
   <li>
-    <strong>Num skylights:</strong>
+    <strong># skylights:</strong>
     <%= @listing.num_skylights %>
   </li>
 
   <li>
-    <strong>Central air:</strong>
+    <strong>Central air?</strong>
     <%= @listing.central_air %>
   </li>
 
   <li>
-    <strong>Central vac:</strong>
+    <strong>Central vac?</strong>
     <%= @listing.central_vac %>
   </li>
 
   <li>
-    <strong>Security system:</strong>
+    <strong>Security system?</strong>
     <%= @listing.security_system %>
   </li>
 
   <li>
-    <strong>Fios available:</strong>
+    <strong>FIOS available?</strong>
     <%= @listing.fios_available %>
   </li>
 
   <li>
-    <strong>High speed internet available:</strong>
+    <strong>High speed internet available?</strong>
     <%= @listing.high_speed_internet_available %>
   </li>
 
   <li>
-    <strong>Modern kitchen countertops:</strong>
+    <strong>Modern kitchen countertops?</strong>
     <%= @listing.modern_kitchen_countertops %>
   </li>
 
   <li>
-    <strong>Cellular coverage quality:</strong>
+    <strong>Cellular coverage quality (how many bars on average):</strong>
     <%= @listing.cellular_coverage_quality %>
   </li>
 
   <li>
-    <strong>Led lighting:</strong>
+    <strong>LED lighting?</strong>
     <%= @listing.led_lighting %>
   </li>
 
   <li>
-    <strong>New appliances:</strong>
+    <strong>New appliances?</strong>
     <%= @listing.new_appliances %>
   </li>
 
   <li>
-    <strong>Ext url:</strong>
+    <strong>External url:</strong>
     <%= @listing.ext_url %>
   </li>
 

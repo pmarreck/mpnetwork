@@ -1,0 +1,59 @@
+<div style="padding-top: 20px">
+  <%= if @listings && @listings != [] do %>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Address</th>
+            <th>Price</th>
+            <th># beds</th>
+            <th># baths</th>
+            <th>Sq ft</th>
+            <th>Acres</th>
+            <th>Year built</th>
+            <th>Created</th>
+            <th>Public on</th>
+            <th>Expires on</th>
+
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+    <%= for listing <- @listings do %>
+        <tr>
+            <td>
+            <%= link "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}", to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
+            <%= if listing.draft do %> (Draft)<% end %>
+            </td>
+            <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
+            <td><%= listing.num_bedrooms %></td>
+            <%= if listing.num_baths do %>
+            <%= if listing.num_half_baths do %>
+                <td><%= listing.num_baths + listing.num_half_baths/2 %></td>
+            <%= else %>
+                <td><%= listing.num_baths %></td>
+            <% end %>
+            <%= else %>
+            <td></td>
+            <% end %>
+            <td><%= listing.sq_ft %></td>
+            <td><%= if listing.lot_size_acre_cents, do: listing.lot_size_acre_cents/100 %></td>
+            <td><%= listing.year_built %></td>
+            <td><%= relative_humanized_time(listing.inserted_at) %></td>
+            <td><%= listing.visible_on %></td>
+            <td><%= listing.expires_on %></td>
+
+            <td class="text-right">
+            <%= if @current_user.id == listing.user_id do %>
+              <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
+              <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+            <% end %>
+            </td>
+        </tr>
+    <% end %>
+        </tbody>
+    </table>
+  <%= else %>
+    <p>No listings by you yet!</p>
+    <%= link "Create a listing", to: listing_path(@conn, :new), class: "btn btn-default btn-xs" %>
+  <% end %>
+</div>

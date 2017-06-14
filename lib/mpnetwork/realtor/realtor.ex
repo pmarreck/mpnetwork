@@ -7,6 +7,7 @@ defmodule Mpnetwork.Realtor do
   alias Mpnetwork.Repo
 
   alias Mpnetwork.Realtor.Broadcast
+  alias Mpnetwork.Realtor.Listing
 
   @doc """
   Returns the list of broadcasts.
@@ -19,6 +20,19 @@ defmodule Mpnetwork.Realtor do
   """
   def list_broadcasts do
     Repo.all(Broadcast) |> Repo.preload(:user)
+  end
+
+  @doc """
+  Returns the last N broadcasts, sorted descending.
+
+  ## Examples
+
+      iex> list_latest_broadcasts()
+      [%Broadcast{}, ...]
+
+  """
+  def list_latest_broadcasts(count \\ 5) do
+    Repo.all(from b in Broadcast, order_by: [asc: b.inserted_at], limit: ^count) |> Repo.preload(:user)
   end
 
   @doc """
@@ -120,6 +134,19 @@ defmodule Mpnetwork.Realtor do
   end
 
   @doc """
+  Returns the latest listings by this user
+
+  ## Examples
+
+      iex> list_listings()
+      [%Listing{}, ...]
+
+  """
+  def list_latest_listings(current_user, count \\ 5) do
+    Repo.all(from l in Listing, where: l.user_id == ^current_user.id, order_by: [asc: l.inserted_at], limit: ^count)
+  end
+
+  @doc """
   Gets a single listing.
 
   Raises `Ecto.NoResultsError` if the Listing does not exist.
@@ -166,6 +193,8 @@ defmodule Mpnetwork.Realtor do
 
   """
   def update_listing(%Listing{} = listing, attrs) do
+IO.puts "UPDATING LISTING"
+IO.inspect attrs
     listing
     |> Listing.changeset(attrs)
     |> Repo.update()

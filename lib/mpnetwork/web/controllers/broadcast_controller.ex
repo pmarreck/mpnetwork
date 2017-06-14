@@ -9,7 +9,7 @@ defmodule Mpnetwork.Web.BroadcastController do
   end
 
   def new(conn, _params) do
-    changeset = Realtor.change_broadcast(%Mpnetwork.Realtor.Broadcast{})
+    changeset = Realtor.change_broadcast(%Realtor.Broadcast{})
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -33,29 +33,42 @@ defmodule Mpnetwork.Web.BroadcastController do
 
   def edit(conn, %{"id" => id}) do
     broadcast = Realtor.get_broadcast!(id)
-    changeset = Realtor.change_broadcast(broadcast)
-    render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
+    if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
+      changeset = Realtor.change_broadcast(broadcast)
+      render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
+    else
+      render(conn, 405, "Not allowed")
+    end
   end
 
   def update(conn, %{"id" => id, "broadcast" => broadcast_params}) do
     broadcast = Realtor.get_broadcast!(id)
-
-    case Realtor.update_broadcast(broadcast, broadcast_params) do
-      {:ok, broadcast} ->
-        conn
-        |> put_flash(:info, "Broadcast updated successfully.")
-        |> redirect(to: broadcast_path(conn, :show, broadcast))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
+    # inject current_user.id
+    broadcast_params_with_current_user_id = Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+    if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
+      case Realtor.update_broadcast(broadcast, broadcast_params_with_current_user_id) do
+        {:ok, broadcast} ->
+          conn
+          |> put_flash(:info, "Broadcast updated successfully.")
+          |> redirect(to: broadcast_path(conn, :show, broadcast))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
+      end
+    else
+      render(conn, 405, "Not allowed")
     end
   end
 
   def delete(conn, %{"id" => id}) do
     broadcast = Realtor.get_broadcast!(id)
-    {:ok, _broadcast} = Realtor.delete_broadcast(broadcast)
+    if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
+      {:ok, _broadcast} = Realtor.delete_broadcast(broadcast)
 
-    conn
-    |> put_flash(:info, "Broadcast deleted successfully.")
-    |> redirect(to: broadcast_path(conn, :index))
+      conn
+      |> put_flash(:info, "Broadcast deleted successfully.")
+      |> redirect(to: broadcast_path(conn, :index))
+    else
+      render(conn, 405, "Not allowed")
+    end
   end
 end

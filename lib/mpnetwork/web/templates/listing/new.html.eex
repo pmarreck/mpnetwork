@@ -1,4 +1,5 @@
-<h2>New Listing</h2>
+<%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings New ]})) %>
+
 
 <%= render "form.html", changeset: @changeset,
                         action: listing_path(@conn, :create) %>

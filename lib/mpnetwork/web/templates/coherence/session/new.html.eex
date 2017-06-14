@@ -1,4 +1,5 @@
 <br \>
+<p>Welcome to the Manhasset-Port Washington Real Estate Board network. Please log in.</p>
 
 <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f  -> %>
 

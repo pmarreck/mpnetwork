@@ -6,19 +6,19 @@
   <% end %>
 
   <div class="form-group">
-    <%= label f, :draft, class: "control-label" %>
+    <%= label f, :draft, "Draft?", class: "control-label" %>
     <%= checkbox f, :draft, class: "checkbox" %>
     <%= error_tag f, :draft %>
   </div>
 
   <div class="form-group">
-    <%= label f, :for_sale, class: "control-label" %>
+    <%= label f, :for_sale, "For Sale?", class: "control-label" %>
     <%= checkbox f, :for_sale, class: "checkbox" %>
     <%= error_tag f, :for_sale %>
   </div>
 
   <div class="form-group">
-    <%= label f, :for_rent, class: "control-label" %>
+    <%= label f, :for_rent, "For Rent?", class: "control-label" %>
     <%= checkbox f, :for_rent, class: "checkbox" %>
     <%= error_tag f, :for_rent %>
   </div>
@@ -54,43 +54,43 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :price_usd, class: "control-label" %>
+    <%= label f, :price_usd, "Price (USD, no dollar signs or commas or decimals)", class: "control-label" %>
     <%= number_input f, :price_usd, class: "form-control" %>
     <%= error_tag f, :price_usd %>
   </div>
 
   <div class="form-group">
-    <%= label f, :studio, class: "control-label" %>
+    <%= label f, :studio, "Studio?", class: "control-label" %>
     <%= checkbox f, :studio, class: "checkbox" %>
     <%= error_tag f, :studio %>
   </div>
 
   <div class="form-group">
-    <%= label f, :num_bedrooms, class: "control-label" %>
+    <%= label f, :num_bedrooms, "# Bedrooms", class: "control-label" %>
     <%= number_input f, :num_bedrooms, class: "form-control" %>
     <%= error_tag f, :num_bedrooms %>
   </div>
 
   <div class="form-group">
-    <%= label f, :num_baths, class: "control-label" %>
+    <%= label f, :num_baths, "# Baths", class: "control-label" %>
     <%= number_input f, :num_baths, class: "form-control" %>
     <%= error_tag f, :num_baths %>
   </div>
 
   <div class="form-group">
-    <%= label f, :num_half_baths, class: "control-label" %>
+    <%= label f, :num_half_baths, "# Half Baths", class: "control-label" %>
     <%= number_input f, :num_half_baths, class: "form-control" %>
     <%= error_tag f, :num_half_baths %>
   </div>
 
   <div class="form-group">
-    <%= label f, :sq_ft, class: "control-label" %>
+    <%= label f, :sq_ft, "Square feet", class: "control-label" %>
     <%= number_input f, :sq_ft, class: "form-control" %>
     <%= error_tag f, :sq_ft %>
   </div>
 
   <div class="form-group">
-    <%= label f, :lot_size_acre_cents, class: "control-label" %>
+    <%= label f, :lot_size_acre_cents, "Lot Size (in acre-cents, 100 cents = 1 acre)", class: "control-label" %>
     <%= number_input f, :lot_size_acre_cents, class: "form-control" %>
     <%= error_tag f, :lot_size_acre_cents %>
   </div>
@@ -108,43 +108,43 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :basement, class: "control-label" %>
+    <%= label f, :basement, "Basement?", class: "control-label" %>
     <%= checkbox f, :basement, class: "checkbox" %>
     <%= error_tag f, :basement %>
   </div>
 
   <div class="form-group">
-    <%= label f, :fireplaces, class: "control-label" %>
+    <%= label f, :fireplaces, "# Fireplaces", class: "control-label" %>
     <%= number_input f, :fireplaces, class: "form-control" %>
     <%= error_tag f, :fireplaces %>
   </div>
 
   <div class="form-group">
-    <%= label f, :parking_spaces, class: "control-label" %>
+    <%= label f, :parking_spaces, "# Parking Spaces", class: "control-label" %>
     <%= number_input f, :parking_spaces, class: "form-control" %>
     <%= error_tag f, :parking_spaces %>
   </div>
 
   <div class="form-group">
-    <%= label f, :mls_source_id, class: "control-label" %>
+    <%= label f, :mls_source_id, "MLS source ID", class: "control-label" %>
     <%= number_input f, :mls_source_id, class: "form-control" %>
     <%= error_tag f, :mls_source_id %>
   </div>
 
   <div class="form-group">
-    <%= label f, :num_garages, class: "control-label" %>
+    <%= label f, :num_garages, "# Garages", class: "control-label" %>
     <%= number_input f, :num_garages, class: "form-control" %>
     <%= error_tag f, :num_garages %>
   </div>
 
   <div class="form-group">
-    <%= label f, :attached_garage, class: "control-label" %>
+    <%= label f, :attached_garage, "Attached garage?", class: "control-label" %>
     <%= checkbox f, :attached_garage, class: "checkbox" %>
     <%= error_tag f, :attached_garage %>
   </div>
 
   <div class="form-group">
-    <%= label f, :new_construction, class: "control-label" %>
+    <%= label f, :new_construction, "New construction?", class: "control-label" %>
     <%= checkbox f, :new_construction, class: "checkbox" %>
     <%= error_tag f, :new_construction %>
   </div>
@@ -156,97 +156,97 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :total_annual_property_taxes_usd, class: "control-label" %>
+    <%= label f, :total_annual_property_taxes_usd, "Total annual property taxes (USD, no $, comma or decimal)", class: "control-label" %>
     <%= number_input f, :total_annual_property_taxes_usd, class: "form-control" %>
     <%= error_tag f, :total_annual_property_taxes_usd %>
   </div>
 
   <div class="form-group">
-    <%= label f, :patio, class: "control-label" %>
+    <%= label f, :patio, "Patio?", class: "control-label" %>
     <%= checkbox f, :patio, class: "checkbox" %>
     <%= error_tag f, :patio %>
   </div>
 
   <div class="form-group">
-    <%= label f, :deck, class: "control-label" %>
+    <%= label f, :deck, "Deck?", class: "control-label" %>
     <%= checkbox f, :deck, class: "checkbox" %>
     <%= error_tag f, :deck %>
   </div>
 
   <div class="form-group">
-    <%= label f, :pool, class: "control-label" %>
+    <%= label f, :pool, "Pool?", class: "control-label" %>
     <%= checkbox f, :pool, class: "checkbox" %>
     <%= error_tag f, :pool %>
   </div>
 
   <div class="form-group">
-    <%= label f, :hot_tub, class: "control-label" %>
+    <%= label f, :hot_tub, "Hot tub?", class: "control-label" %>
     <%= checkbox f, :hot_tub, class: "checkbox" %>
     <%= error_tag f, :hot_tub %>
   </div>
 
   <div class="form-group">
-    <%= label f, :num_skylights, class: "control-label" %>
+    <%= label f, :num_skylights, "# Skylights", class: "control-label" %>
     <%= number_input f, :num_skylights, class: "form-control" %>
     <%= error_tag f, :num_skylights %>
   </div>
 
   <div class="form-group">
-    <%= label f, :central_air, class: "control-label" %>
+    <%= label f, :central_air, "Central air?", class: "control-label" %>
     <%= checkbox f, :central_air, class: "checkbox" %>
     <%= error_tag f, :central_air %>
   </div>
 
   <div class="form-group">
-    <%= label f, :central_vac, class: "control-label" %>
+    <%= label f, :central_vac, "Central vac?", class: "control-label" %>
     <%= checkbox f, :central_vac, class: "checkbox" %>
     <%= error_tag f, :central_vac %>
   </div>
 
   <div class="form-group">
-    <%= label f, :security_system, class: "control-label" %>
+    <%= label f, :security_system, "Security system?", class: "control-label" %>
     <%= checkbox f, :security_system, class: "checkbox" %>
     <%= error_tag f, :security_system %>
   </div>
 
   <div class="form-group">
-    <%= label f, :fios_available, class: "control-label" %>
+    <%= label f, :fios_available, "FIOS available?", class: "control-label" %>
     <%= checkbox f, :fios_available, class: "checkbox" %>
     <%= error_tag f, :fios_available %>
   </div>
 
   <div class="form-group">
-    <%= label f, :high_speed_internet_available, class: "control-label" %>
+    <%= label f, :high_speed_internet_available, "High speed internet available? (including FIOS)", class: "control-label" %>
     <%= checkbox f, :high_speed_internet_available, class: "checkbox" %>
     <%= error_tag f, :high_speed_internet_available %>
   </div>
 
   <div class="form-group">
-    <%= label f, :modern_kitchen_countertops, class: "control-label" %>
+    <%= label f, :modern_kitchen_countertops, "Modern kitchen countertops?", class: "control-label" %>
     <%= checkbox f, :modern_kitchen_countertops, class: "checkbox" %>
     <%= error_tag f, :modern_kitchen_countertops %>
   </div>
 
   <div class="form-group">
-    <%= label f, :cellular_coverage_quality, class: "control-label" %>
+    <%= label f, :cellular_coverage_quality, "Cellular coverage quality (# bars on average)", class: "control-label" %>
     <%= number_input f, :cellular_coverage_quality, class: "form-control" %>
     <%= error_tag f, :cellular_coverage_quality %>
   </div>
 
   <div class="form-group">
-    <%= label f, :led_lighting, class: "control-label" %>
+    <%= label f, :led_lighting, "LED lighting?", class: "control-label" %>
     <%= checkbox f, :led_lighting, class: "checkbox" %>
     <%= error_tag f, :led_lighting %>
   </div>
 
   <div class="form-group">
-    <%= label f, :new_appliances, class: "control-label" %>
+    <%= label f, :new_appliances, "New appliances?", class: "control-label" %>
     <%= checkbox f, :new_appliances, class: "checkbox" %>
     <%= error_tag f, :new_appliances %>
   </div>
 
   <div class="form-group">
-    <%= label f, :ext_url, class: "control-label" %>
+    <%= label f, :ext_url, "External URL", class: "control-label" %>
     <%= text_input f, :ext_url, class: "form-control" %>
     <%= error_tag f, :ext_url %>
   </div>
@@ -259,13 +259,20 @@
 
   <div class="form-group">
     <%= label f, :visible_on, class: "control-label" %>
-    <%= date_select f, :visible_on, class: "form-control" %>
+    <% 
+      now = Timex.now("EDT")
+      {{year, month, day}, _} = Timex.to_erl(now)
+    %>
+    <%= date_select f, :visible_on, default: {year, month, day}, class: "form-control" %>
     <%= error_tag f, :visible_on %>
   </div>
 
   <div class="form-group">
     <%= label f, :expires_on, class: "control-label" %>
-    <%= date_select f, :expires_on, class: "form-control" %>
+    <%
+      {{year, month, day}, _} = Timex.to_erl(Timex.shift(now, months: 1))
+    %>
+    <%= date_select f, :expires_on, default: {year, month, day}, class: "form-control" %>
     <%= error_tag f, :expires_on %>
   </div>
 
