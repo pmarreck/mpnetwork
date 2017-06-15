@@ -7,8 +7,6 @@ defmodule Mpnetwork.User do
     field :username, :string, unique: true
     field :email, :string, unique: true
     field :name, :string
-    field :firstname, :string
-    field :lastname, :string
     field :office_phone, :string
     field :cell_phone, :string
     # field :password, :string, virtual: true #set via coherence_schema()
