@@ -8,6 +8,25 @@ defmodule Mpnetwork.Realtor do
 
   alias Mpnetwork.Realtor.Broadcast
   alias Mpnetwork.Realtor.Listing
+  alias Mpnetwork.User
+
+  @doc """
+  Creates a user.
+
+  ## Examples
+
+      iex> create_user(%{email: "test@example.com"})
+      {:ok, %User{}}
+
+      iex> create_user(%{email: ""})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
+  end
 
   @doc """
   Returns the list of broadcasts.
@@ -19,7 +38,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_broadcasts do
-    Repo.all(Broadcast) |> Repo.preload(:user)
+    Repo.all(Broadcast) #|> Repo.preload(:user)
   end
 
   @doc """
@@ -50,7 +69,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_broadcast!(id) do
-    Repo.get!(Broadcast, id) |> Repo.preload(:user)
+    Repo.get!(Broadcast, id) #|> Repo.preload(:user)
   end
 
   @doc """
@@ -193,8 +212,6 @@ defmodule Mpnetwork.Realtor do
 
   """
   def update_listing(%Listing{} = listing, attrs) do
-IO.puts "UPDATING LISTING"
-IO.inspect attrs
     listing
     |> Listing.changeset(attrs)
     |> Repo.update()

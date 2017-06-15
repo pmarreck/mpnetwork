@@ -28,6 +28,10 @@ defmodule Mpnetwork.Web.GlobalHelpers do
     "Last sign-in: " <> relative_humanized_time(user.last_sign_in_at)
   end
 
+  def relative_humanized_time(nil) do
+    "NEVER! Welcome!"
+  end
+
   def relative_humanized_time(%Ecto.DateTime{} = ecto_datetime) do
     utc_datetime = ecto_datetime |> convert_ecto_datetime_to_utc_datetime
     relative_humanized_time(utc_datetime)

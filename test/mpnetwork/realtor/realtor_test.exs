@@ -3,14 +3,31 @@ defmodule Mpnetwork.RealtorTest do
 
   alias Mpnetwork.Realtor
 
+  @valid_user_attrs %{email: "test@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
+
+  defp user_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        attrs
+        |> Enum.into(@valid_user_attrs)
+        |> Realtor.create_user()
+      user
+  end
+
   describe "broadcasts" do
     alias Mpnetwork.Realtor.Broadcast
 
-    @valid_attrs %{body: "some body", title: "some title", user_id: 42}
-    @update_attrs %{body: "some updated body", title: "some updated title", user_id: 43}
-    @invalid_attrs %{body: nil, title: nil, user_id: nil}
+    @valid_attrs %{body: "some body", title: "some title"}
+    @update_attrs %{body: "some updated body", title: "some updated title"}
+    @invalid_attrs %{body: nil, title: nil}
 
     def broadcast_fixture(attrs \\ %{}) do
+      # first add an associated user if none exists
+      attrs = unless attrs[:user_id] do
+        user = user_fixture()
+        Enum.into(%{user_id: user.id}, attrs)
+      else
+        attrs
+      end
       {:ok, broadcast} =
         attrs
         |> Enum.into(@valid_attrs)
@@ -30,10 +47,12 @@ defmodule Mpnetwork.RealtorTest do
     end
 
     test "create_broadcast/1 with valid data creates a broadcast" do
-      assert {:ok, %Broadcast{} = broadcast} = Realtor.create_broadcast(@valid_attrs)
+      user = user_fixture()
+      valid_attrs_with_user_id = Enum.into(%{user_id: user.id}, @valid_attrs)
+      assert {:ok, %Broadcast{} = broadcast} = Realtor.create_broadcast(valid_attrs_with_user_id)
       assert broadcast.body == "some body"
       assert broadcast.title == "some title"
-      assert broadcast.user_id == 42
+      assert broadcast.user_id != nil
     end
 
     test "create_broadcast/1 with invalid data returns error changeset" do
@@ -46,7 +65,7 @@ defmodule Mpnetwork.RealtorTest do
       assert %Broadcast{} = broadcast
       assert broadcast.body == "some updated body"
       assert broadcast.title == "some updated title"
-      assert broadcast.user_id == 43
+      assert broadcast.user_id != nil
     end
 
     test "update_broadcast/2 with invalid data returns error changeset" do
@@ -70,16 +89,22 @@ defmodule Mpnetwork.RealtorTest do
   describe "listings" do
     alias Mpnetwork.Realtor.Listing
 
-    @valid_attrs %{expires_on: ~D[2010-04-17], state: "some state", new_construction: true, fios_available: true, tax_rate_code_area: 42, total_annual_property_taxes_usd: 42, num_skylights: 42, lot_size_acre_cents: 42, attached_garage: true, for_rent: true, zip: "some zip", ext_url: "some ext_url", visible_on: ~D[2010-04-17], city: "some city", fireplaces: 42, new_appliances: true, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 42, num_half_baths: 42, year_built: 42, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: true, cellular_coverage_quality: 42, hot_tub: true, basement: true, price_usd: 42, special_notes: "some special_notes", parking_spaces: 42, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "some address", num_garages: 42, num_baths: 42, central_vac: true, led_lighting: true}
+    @valid_attrs %{expires_on: ~D[2017-09-17], state: "NY", new_construction: false, fios_available: true, tax_rate_code_area: 42, total_annual_property_taxes_usd: 42, num_skylights: 42, lot_size_acre_cents: 42, attached_garage: true, for_rent: true, zip: "11050", ext_url: "http://ext_url", visible_on: ~D[2018-04-17], city: "New York", fireplaces: 3, new_appliances: true, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 2, num_half_baths: 2, year_built: 1993, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: false, cellular_coverage_quality: 42, hot_tub: true, basement: true, price_usd: 1000000, special_notes: "some special_notes", parking_spaces: 6, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "1 Fancy Place", num_garages: 4, num_baths: 5, central_vac: true, led_lighting: true}
     @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, total_annual_property_taxes_usd: 43, num_skylights: 43, lot_size_acre_cents: 43, attached_garage: false, for_rent: false, zip: "some updated zip", ext_url: "some updated ext_url", visible_on: ~D[2011-05-18], city: "some updated city", fireplaces: 43, new_appliances: false, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 43, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 43, hot_tub: false, basement: false, price_usd: 43, special_notes: "some updated special_notes", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, led_lighting: false}
     @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, total_annual_property_taxes_usd: nil, num_skylights: nil, lot_size_acre_cents: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_url: nil, visible_on: nil, city: nil, fireplaces: nil, new_appliances: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, special_notes: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, led_lighting: nil}
 
     def listing_fixture(attrs \\ %{}) do
+      # first add an associated user if none exists
+      attrs = unless attrs[:user_id] do
+        user = user_fixture()
+        Enum.into(%{user_id: user.id}, attrs)
+      else
+        attrs
+      end
       {:ok, listing} =
         attrs
         |> Enum.into(@valid_attrs)
         |> Realtor.create_listing()
-
       listing
     end
 
@@ -94,10 +119,12 @@ defmodule Mpnetwork.RealtorTest do
     end
 
     test "create_listing/1 with valid data creates a listing" do
-      assert {:ok, %Listing{} = listing} = Realtor.create_listing(@valid_attrs)
-      assert listing.expires_on == ~D[2010-04-17]
-      assert listing.state == "some state"
-      assert listing.new_construction == true
+      user = user_fixture()
+      valid_attrs_with_user_id = Enum.into(%{user_id: user.id}, @valid_attrs)
+      assert {:ok, %Listing{} = listing} = Realtor.create_listing(valid_attrs_with_user_id)
+      assert listing.expires_on == ~D[2017-09-17]
+      assert listing.state == "NY"
+      assert listing.new_construction == false
       assert listing.fios_available == true
       assert listing.tax_rate_code_area == 42
       assert listing.total_annual_property_taxes_usd == 42
@@ -105,38 +132,38 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.lot_size_acre_cents == 42
       assert listing.attached_garage == true
       assert listing.for_rent == true
-      assert listing.zip == "some zip"
-      assert listing.ext_url == "some ext_url"
-      assert listing.visible_on == ~D[2010-04-17]
-      assert listing.city == "some city"
-      assert listing.fireplaces == 42
+      assert listing.zip == "11050"
+      assert listing.ext_url == "http://ext_url"
+      assert listing.visible_on == ~D[2018-04-17]
+      assert listing.city == "New York"
+      assert listing.fireplaces == 3
       assert listing.new_appliances == true
       assert listing.modern_kitchen_countertops == true
       assert listing.deck == true
       assert listing.for_sale == true
       assert listing.central_air == true
-      assert listing.stories == 42
-      assert listing.num_half_baths == 42
-      assert listing.year_built == 42
+      assert listing.stories == 2
+      assert listing.num_half_baths == 2
+      assert listing.year_built == 1993
       assert listing.draft == true
       assert listing.pool == true
       assert listing.mls_source_id == 42
       assert listing.security_system == true
       assert listing.sq_ft == 42
-      assert listing.studio == true
+      assert listing.studio == false
       assert listing.cellular_coverage_quality == 42
       assert listing.hot_tub == true
       assert listing.basement == true
-      assert listing.price_usd == 42
+      assert listing.price_usd == 1000000
       assert listing.special_notes == "some special_notes"
-      assert listing.parking_spaces == 42
+      assert listing.parking_spaces == 6
       assert listing.description == "some description"
       assert listing.num_bedrooms == 42
       assert listing.high_speed_internet_available == true
       assert listing.patio == true
-      assert listing.address == "some address"
-      assert listing.num_garages == 42
-      assert listing.num_baths == 42
+      assert listing.address == "1 Fancy Place"
+      assert listing.num_garages == 4
+      assert listing.num_baths == 5
       assert listing.central_vac == true
       assert listing.led_lighting == true
     end

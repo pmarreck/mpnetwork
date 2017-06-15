@@ -12,7 +12,7 @@ defmodule Mpnetwork.User do
     field :office_phone, :string
     field :cell_phone, :string
     # field :password, :string, virtual: true #set via coherence_schema()
-    field :office_id, :integer
+    field :office_id, :integer, default: 1
     field :role_id, :integer, default: 3 # Realtor
 
     coherence_schema() # adds :password_hash
@@ -21,9 +21,10 @@ defmodule Mpnetwork.User do
   end
 
   def changeset(model, params \\ %{}) do
+    params_with_username = copy_email_to_username_unless_username_exists(params)
     model
-    |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
-    |> validate_required([:username, :email, :office_id, :role_id])
+    |> cast(params_with_username, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
+    |> validate_required([:username, :email])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
     |> validate_coherence(params)
@@ -33,6 +34,17 @@ defmodule Mpnetwork.User do
     model
     |> cast(params, ~w(password password_confirmation reset_password_token reset_password_sent_at))
     |> validate_coherence_password_reset(params)
+  end
+
+  defp copy_email_to_username_unless_username_exists(params) do
+    # for now the username will default to the email if not otherwise provided
+    # for some reason had weird errors flipping between string/atom keys so here you go
+    params = cond do
+      (params[:email] && !params[:username])  -> Enum.into(%{username: params[:email]}, params)
+      (params["email"] && !params["username"]) -> Enum.into(%{"username" => params["email"]}, params)
+      true -> params
+    end
+    params
   end
 
   # taken from http://www.regular-expressions.info/email.html

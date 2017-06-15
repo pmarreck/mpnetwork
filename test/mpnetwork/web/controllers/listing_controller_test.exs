@@ -7,8 +7,19 @@ defmodule Mpnetwork.Web.ListingControllerTest do
   @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, total_annual_property_taxes_usd: 43, num_skylights: 43, lot_size_acre_cents: 43, attached_garage: false, for_rent: false, zip: "some updated zip", ext_url: "some updated ext_url", visible_on: ~D[2011-05-18], city: "some updated city", fireplaces: 43, new_appliances: false, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 43, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 43, hot_tub: false, basement: false, price_usd: 43, special_notes: "some updated special_notes", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, led_lighting: false}
   @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, total_annual_property_taxes_usd: nil, num_skylights: nil, lot_size_acre_cents: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_url: nil, visible_on: nil, city: nil, fireplaces: nil, new_appliances: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, special_notes: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, led_lighting: nil}
 
+  @valid_user_attrs %{email: "test@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
+
+  def user_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        attrs
+        |> Enum.into(@valid_user_attrs)
+        |> Realtor.create_user()
+      user
+  end
+
   def fixture(:listing) do
-    {:ok, listing} = Realtor.create_listing(@create_attrs)
+    user = user_fixture()
+    {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id}, @create_attrs))
     listing
   end
 
