@@ -43,8 +43,6 @@
         <!-- Header Navbar -->
         <nav class="navbar navbar-static-top" role="navigation">
         </nav>
-
-        <span class="logo"></span>
       </header>
 
       <!-- Left side column. contains the logo and sidebar -->
