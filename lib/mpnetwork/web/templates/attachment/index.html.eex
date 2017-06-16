@@ -3,28 +3,15 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Sha256 hash</th>
       <th>Primary</th>
-      <th>Content type</th>
-      <th>Original filename</th>
-      <th>Width pixels</th>
-      <th>Height pixels</th>
-      <th>Data</th>
-
       <th></th>
     </tr>
   </thead>
   <tbody>
 <%= for attachment <- @attachments do %>
     <tr>
-      <td><%= attachment.sha256_hash %></td>
       <td><%= attachment.primary %></td>
-      <td><%= attachment.content_type %></td>
-      <td><%= attachment.original_filename %></td>
-      <td><%= attachment.width_pixels %></td>
-      <td><%= attachment.height_pixels %></td>
-      <td><%= attachment.data %></td>
-
+      <td><img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, attachment) %>" /></td>
       <td class="text-right">
         <span><%= link "Show", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>

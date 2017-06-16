@@ -6,7 +6,8 @@ defmodule Mpnetwork.Listing.PriceHistory do
 
   schema "listing_price_histories" do
     field :price_usd, :integer
-    field :listing_id, :id
+    # field :listing_id, :id
+    belongs_to :listing, Mpnetwork.Realtor.Listing
 
     timestamps()
   end

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mix phx.gen.secret
+mix eliver.bump

@@ -10,8 +10,12 @@ defmodule Mpnetwork.User do
     field :office_phone, :string
     field :cell_phone, :string
     # field :password, :string, virtual: true #set via coherence_schema()
-    field :office_id, :integer, default: 1
-    field :role_id, :integer, default: 3 # Realtor
+    # field :office_id, :integer, default: 1
+    belongs_to :office, Mpnetwork.Realtor.Office, defaults: %{id: 1}
+    # field :role_id, :integer, default: 3 # Realtor
+    belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
+    has_many :listings, Mpnetwork.Realtor.Listing
+    has_many :broadcasts, Mpnetwork.Realtor.Broadcast
 
     coherence_schema() # adds :password_hash
 

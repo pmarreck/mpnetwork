@@ -1,4 +1,4 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [multipart: true], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -6,9 +6,9 @@
   <% end %>
 
   <div class="form-group">
-    <%= label f, :sha256_hash, class: "control-label" %>
-    <%= text_input f, :sha256_hash, class: "form-control" %>
-    <%= error_tag f, :sha256_hash %>
+    <%= label f, :listing_id, class: "control-label" %>
+    <%= number_input f, :listing_id, class: "form-control" %>
+    <%= error_tag f, :listing_id %>
   </div>
 
   <div class="form-group">
@@ -18,32 +18,10 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :content_type, class: "control-label" %>
-    <%= text_input f, :content_type, class: "form-control" %>
-    <%= error_tag f, :content_type %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :original_filename, class: "control-label" %>
-    <%= text_input f, :original_filename, class: "form-control" %>
-    <%= error_tag f, :original_filename %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :width_pixels, class: "control-label" %>
-    <%= number_input f, :width_pixels, class: "form-control" %>
-    <%= error_tag f, :width_pixels %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :height_pixels, class: "control-label" %>
-    <%= number_input f, :height_pixels, class: "form-control" %>
-    <%= error_tag f, :height_pixels %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :data, class: "control-label" %>
-    <%= text_input f, :data, class: "form-control" %>
+    <%= label f, "File attachment:", class: "control-label" %>
+<% IO.inspect f %>
+    <img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
+    <%= file_input f, :data, class: "form-control" %>
     <%= error_tag f, :data %>
   </div>
 

@@ -14,6 +14,13 @@ defmodule Mpnetwork.Application do
       supervisor(Mpnetwork.Web.Endpoint, []),
       # Start your own worker by calling: Mpnetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(Mpnetwork.Worker, [arg1, arg2, arg3]),
+      worker(Cachex, [:attachment_cache, [
+        limit: %Cachex.Limit{
+          limit: 1500,
+          policy: Cachex.Policy.LRW,
+          reclaim: 0.1
+        }]
+      ]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

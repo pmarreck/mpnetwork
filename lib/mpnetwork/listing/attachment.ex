@@ -5,7 +5,8 @@ defmodule Mpnetwork.Listing.Attachment do
 
 
   schema "listing_attachments" do
-    field :listing_id, :id
+    # field :listing_id, :id
+    belongs_to :listing, Mpnetwork.Listing
     field :content_type, :string
     field :is_image, :boolean, default: false
     field :width_pixels, :integer
@@ -21,7 +22,7 @@ defmodule Mpnetwork.Listing.Attachment do
   @doc false
   def changeset(%Attachment{} = attachment, attrs) do
     attachment
-    |> cast(attrs, [:sha256_hash, :primary, :content_type, :original_filename, :width_pixels, :height_pixels, :data])
+    |> cast(attrs, [:listing_id, :sha256_hash, :primary, :content_type, :is_image, :original_filename, :width_pixels, :height_pixels, :data])
     |> validate_required([:sha256_hash, :primary, :content_type, :original_filename, :width_pixels, :height_pixels, :data])
   end
 end

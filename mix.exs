@@ -47,6 +47,9 @@ defmodule Mpnetwork.Mixfile do
       {:timex, "~> 3.0"},
       {:number, "~> 0.5"},
       {:timber, "~> 2.0"},
+      {:ex_image_info, "~> 0.1.1"},
+      {:eliver, "~> 1.0.0"}, # provides `mix eliver.bump` for hot prod upgrades
+      {:cachex, "~> 2.1"},
     ]
   end
 

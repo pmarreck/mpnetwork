@@ -49,14 +49,18 @@ defmodule Mpnetwork.Realtor.Listing do
     field :num_baths, :integer
     field :central_vac, :boolean, default: false
     field :led_lighting, :boolean, default: false
-    field :user_id, :id
-    field :building_type_id, :id
+    # field :user_id, :id
+    belongs_to :user, Mpnetwork.User
+    # field :building_type_id, :id
+    belongs_to :building_type, Mpnetwork.Listing.BuildingType
+    has_many :price_history, Mpnetwork.Listing.PriceHistory
+    has_many :attachments, Mpnetwork.Listing.Attachment
 
     timestamps()
   end
 
   @doc """
-    Reduced requireds for listing attributes in "draft" status.
+    Relaxed requireds for listing attributes in "draft" status.
     That was easy...
   """
   def changeset(%Listing{} = listing, %{"draft" => "true"} = attrs) do
