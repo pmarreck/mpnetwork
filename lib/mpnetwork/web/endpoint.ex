@@ -21,7 +21,6 @@ defmodule Mpnetwork.Web.Endpoint do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -38,6 +37,10 @@ defmodule Mpnetwork.Web.Endpoint do
     store: :cookie,
     key: "_mpnetwork_key",
     signing_salt: "EDekwQ8K"
+
+  # Add Timber plugs for capturing HTTP context and events
+  plug Timber.Integrations.ContextPlug
+  plug Timber.Integrations.EventPlug
 
   plug Mpnetwork.Web.Router
 

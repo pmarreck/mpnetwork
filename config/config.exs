@@ -63,3 +63,6 @@ config :coherence, Mpnetwork.Coherence.Mailer,
   api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
   endpoint: "https://api.sparkpost.com/api/v1"
 # %% End Coherence Configuration %%
+
+# Import Timber, structured logging
+import_config "timber.exs"

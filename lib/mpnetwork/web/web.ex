@@ -19,7 +19,7 @@ defmodule Mpnetwork.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: Mpnetwork.Web
+      use Phoenix.Controller, log: false, namespace: Mpnetwork.Web
       import Plug.Conn
       import Mpnetwork.Web.Router.Helpers
       import Mpnetwork.Web.Gettext

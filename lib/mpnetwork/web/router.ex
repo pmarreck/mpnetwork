@@ -2,6 +2,15 @@ defmodule Mpnetwork.Web.Router do
   use Mpnetwork.Web, :router
   use Coherence.Router
 
+  def create_timber_user_context(conn, _opts) do
+    if conn.assigns[:current_user] do
+      user = conn.assigns.current_user
+      %Timber.Contexts.UserContext{id: user.id, name: user.name, email: user.email}
+      |> Timber.add_context()
+    end
+    conn
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -18,6 +27,7 @@ defmodule Mpnetwork.Web.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Coherence.Authentication.Session, protected: true
+    plug :create_timber_user_context
   end
 
   pipeline :api do

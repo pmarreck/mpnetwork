@@ -46,6 +46,7 @@ defmodule Mpnetwork.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.0"},
       {:number, "~> 0.5"},
+      {:timber, "~> 2.0"},
     ]
   end
 
