@@ -60,4 +60,21 @@ defmodule Mpnetwork.Web.GlobalHelpers do
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 
+  @content_type_to_icon_class_map %{
+    "application/pdf" => "fa fa-fw fa-file-pdf-o",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "fa fa-fw fa-file-word-o",
+    "application/msword" => "fa fa-fw fa-file-word-o",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "fa fa-fw fa-file-excel-o",
+    "application/vnd.ms-excel" => "fa fa-fw fa-file-excel-o",
+    "application/zip" => "fa fa-fw fa-file-zip-o",
+    "text/plain" => "fa fa-fw fa-file-text-o"
+  }
+
+  def html_icon_class_by_content_type(content_type) do
+    # use as a class on an i element
+    Map.get(
+      @content_type_to_icon_class_map, content_type, "fa fa-fw fa-file-o"
+    )
+  end
+
 end

@@ -23,6 +23,6 @@ defmodule Mpnetwork.Listing.Attachment do
   def changeset(%Attachment{} = attachment, attrs) do
     attachment
     |> cast(attrs, [:listing_id, :sha256_hash, :primary, :content_type, :is_image, :original_filename, :width_pixels, :height_pixels, :data])
-    |> validate_required([:sha256_hash, :primary, :content_type, :original_filename, :width_pixels, :height_pixels, :data])
+    |> validate_required([:sha256_hash, :primary, :is_image, :content_type, :original_filename, :data])
   end
 end

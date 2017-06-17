@@ -8,11 +8,23 @@ defmodule Mpnetwork.Web.AttachmentController do
   defp get_cached(id) do
     id = if is_binary(id), do: String.to_integer(id), else: id
     attachment = case Cachex.get(:attachment_cache, id, fallback: &Listing.get_attachment!/1) do
-      {:ok, val}     -> val
-      {:loaded, val} -> val
+      # {:ok, val}     -> val
+      # {:loaded, val} -> val
+      {_, val}       -> val
     end
-    # touch it in order to make LRW policy an LRU policy
+    # touch it in order to turn LRW policy into an LRU policy
     Cachex.touch(:attachment_cache, id)
+    attachment
+  end
+
+  defp get_cached_and_purge(id) do
+    id = if is_binary(id), do: String.to_integer(id), else: id
+    attachment = case Cachex.get(:attachment_cache, id, fallback: &Listing.get_attachment!/1) do
+      # {:ok, val}     -> val
+      # {:loaded, val} -> val
+      {_, val}       -> val
+    end
+    Cachex.del(:attachment_cache, id)
     attachment
   end
 
@@ -27,8 +39,12 @@ defmodule Mpnetwork.Web.AttachmentController do
     # don't trust content type from the browser I guess, lol
     # binary_data_content_type = attachment_params["data"].content_type
     binary_data = File.read!(binary_data_loc)
-    {binary_data_content_type, width_pixels, height_pixels, _} = ExImageInfo.info(binary_data)
-    attachment_params = Enum.into(%{
+    {binary_data_content_type, width_pixels, height_pixels} = 
+      case ExImageInfo.info(binary_data) do
+        nil          -> {attachment_params["data"].content_type, nil, nil}
+        {a, b, c, _} -> {a, b, c}
+      end
+    Enum.into(%{
       "data" => binary_data,
       "content_type" => binary_data_content_type,
       "original_filename" => binary_data_orig_filename,
@@ -49,16 +65,6 @@ defmodule Mpnetwork.Web.AttachmentController do
     }, attachment_params)
   end
 
-  defp get_cached_and_purge(id) do
-    id = if is_binary(id), do: String.to_integer(id), else: id
-    attachment = case Cachex.get(:attachment_cache, id, fallback: &Listing.get_attachment!/1) do
-      {:ok, val}     -> val
-      {:loaded, val} -> val
-    end
-    Cachex.del(:attachment_cache, id)
-    attachment
-  end
-
   def index(conn, _params) do
     attachments = Listing.list_attachments()
     render(conn, "index.html", attachments: attachments)
@@ -76,7 +82,7 @@ defmodule Mpnetwork.Web.AttachmentController do
       {:ok, attachment} ->
         conn
         |> put_flash(:info, "Attachment created successfully.")
-        |> redirect(to: attachment_path(conn, :show, attachment))
+        |> redirect(to: attachment_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -84,12 +90,25 @@ defmodule Mpnetwork.Web.AttachmentController do
 
   # note: this actually delivers the binary data, not an HTML view
   def show(conn, %{"id" => id}) do
+    import Plug.Conn
     attachment = get_cached(id)
-    conn
-    |> Plug.Conn.put_resp_header("content-type", attachment.content_type)
-    |> Plug.Conn.put_resp_header("ETag", Base.encode16(attachment.sha256_hash) )
-    |> Plug.Conn.send_resp(200, attachment.data)
-    # render(conn, "show.html", attachment: attachment)
+    # obey the If-None-Match header and send a Not Modified if they're the same
+    expected_hash = get_req_header(conn, "if-none-match")
+    actual_hash   = Base.encode16(attachment.sha256_hash)
+    if Enum.member?(expected_hash, actual_hash) do
+      conn
+      |> send_resp(304, "")
+    else
+      conn
+      |> put_resp_header("content-type", attachment.content_type)
+      |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
+      |> put_resp_header("ETag", Base.encode16(attachment.sha256_hash) )
+      # |> delete_resp_header("set-cookie") # don't need to send cookie data with files
+      # Can't seem to delete the set-cookie response header being sent with attachments.
+      # Tabling for now. Probably has to do with the secure routes, but I did try
+      # piping just the show action through an empty pipeline.
+      |> send_resp(200, attachment.data)
+    end
   end
 
   def edit(conn, %{"id" => id}) do
@@ -101,7 +120,7 @@ defmodule Mpnetwork.Web.AttachmentController do
   def update(conn, %{"id" => id, "attachment" => attachment_params}) do
     attachment = get_cached_and_purge(id)
     attachment_params = convert_attachment_params_to_attachment_data(attachment_params)
-    
+
     case Listing.update_attachment(attachment, attachment_params) do
       {:ok, attachment} ->
         conn

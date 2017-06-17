@@ -19,8 +19,13 @@
 
   <div class="form-group">
     <%= label f, "File attachment:", class: "control-label" %>
-<% IO.inspect f %>
-    <img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
+    <%= if f.data.id do %>
+        <%= if f.data.is_image do %>
+          <img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
+        <% else %>
+          <%= link "Download/view \"#{f.data.original_filename}\"", to: attachment_path(@conn, :show, f.data.id) %>
+        <% end %>
+    <% end %>
     <%= file_input f, :data, class: "form-control" %>
     <%= error_tag f, :data %>
   </div>
