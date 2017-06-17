@@ -4,7 +4,7 @@ defmodule Mpnetwork.Web.BroadcastController do
   alias Mpnetwork.Realtor
 
   def index(conn, _params) do
-    broadcasts = Realtor.list_broadcasts_with_users()
+    broadcasts = Realtor.list_latest_broadcasts(20)
     render(conn, "index.html", broadcasts: broadcasts)
   end
 

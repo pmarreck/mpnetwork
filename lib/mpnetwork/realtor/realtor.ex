@@ -41,10 +41,6 @@ defmodule Mpnetwork.Realtor do
     Repo.all(Broadcast) #|> Repo.preload(:user)
   end
 
-  def list_broadcasts_with_users do
-    Repo.all(Broadcast) |> Repo.preload(:user)
-  end
-
   @doc """
   Returns the last N broadcasts, sorted descending.
 
@@ -55,7 +51,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_broadcasts(count \\ 5) do
-    Repo.all(from b in Broadcast, order_by: [asc: b.inserted_at], limit: ^count) |> Repo.preload(:user)
+    Repo.all(from b in Broadcast, order_by: [desc: b.inserted_at], limit: ^count) |> Repo.preload(:user)
   end
 
   @doc """
