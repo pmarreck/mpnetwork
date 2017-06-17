@@ -1,31 +1,41 @@
 defmodule Mpnetwork.Web.AttachmentController do
   use Mpnetwork.Web, :controller
 
-  alias Mpnetwork.Listing
+  alias Mpnetwork.{Listing, Realtor}
 
   require ExImageInfo
+  require Logger
 
-  defp get_cached(id) do
+  defp get_cached(id, touch \\ true) do
     id = if is_binary(id), do: String.to_integer(id), else: id
     attachment = case Cachex.get(:attachment_cache, id, fallback: &Listing.get_attachment!/1) do
-      # {:ok, val}     -> val
-      # {:loaded, val} -> val
+      {:ok, val}     ->
+        Logger.info "Retrieved attachment from app cache: id:#{val.id} '#{val.original_filename}' (#{val.content_type}) listing_id:#{val.listing_id}"
+        val
+      {:loaded, val} ->
+        Logger.info "Retrieved attachment from DB, caching: id:#{val.id} '#{val.original_filename}' (#{val.content_type}) listing_id:#{val.listing_id}"
+        val
       {_, val}       -> val
     end
-    # touch it in order to turn LRW policy into an LRU policy
-    Cachex.touch(:attachment_cache, id)
+    # Touch it in order to turn LRW policy into an LRU policy
+    # but don't bother if we're about to purge it anyway
+    # or if you don't want to LRU for some reason (it's LRW without touching)
+    if touch do
+      Cachex.touch(:attachment_cache, id)
+    end
     attachment
   end
 
   defp get_cached_and_purge(id) do
-    id = if is_binary(id), do: String.to_integer(id), else: id
-    attachment = case Cachex.get(:attachment_cache, id, fallback: &Listing.get_attachment!/1) do
-      # {:ok, val}     -> val
-      # {:loaded, val} -> val
-      {_, val}       -> val
-    end
-    Cachex.del(:attachment_cache, id)
+    attachment = get_cached(id, false)
+    purge_cached(id)
     attachment
+  end
+
+  defp purge_cached(id) do
+    id = if is_binary(id), do: String.to_integer(id), else: id
+    Logger.info "Purging attachment from cache: id:#{id}"
+    { :ok, true } = Cachex.del(:attachment_cache, id)
   end
 
   defp convert_attachment_params_to_attachment_data(attachment_params) do
@@ -65,26 +75,48 @@ defmodule Mpnetwork.Web.AttachmentController do
     }, attachment_params)
   end
 
-  def index(conn, _params) do
-    attachments = Listing.list_attachments()
-    render(conn, "index.html", attachments: attachments)
+  def index(conn, %{"listing_id" => listing_id} = _params) do
+    listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
+    listing = Realtor.get_listing!(listing_id)
+    if listing.user_id == current_user(conn).id do
+      attachments = Listing.list_attachments(listing_id)
+      render(conn, "index.html", attachments: attachments, listing: listing)
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
+    end
   end
 
-  def new(conn, _params) do
-    changeset = Listing.change_attachment(%Mpnetwork.Listing.Attachment{})
-    render(conn, "new.html", changeset: changeset)
+  def new(conn, %{"listing_id" => listing_id} = _params) do
+    listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
+    listing = Realtor.get_listing!(listing_id)
+    if listing.user_id == current_user(conn).id do
+      changeset = Listing.change_attachment(%Mpnetwork.Listing.Attachment{})
+      render(conn, "new.html", changeset: changeset, listing: listing)
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
+    end
   end
 
-  def create(conn, %{"attachment" => attachment_params}) do
-    attachment_params = convert_attachment_params_to_attachment_data(attachment_params)
-    # IO.inspect attachment_params
-    case Listing.create_attachment(attachment_params) do
-      {:ok, attachment} ->
-        conn
-        |> put_flash(:info, "Attachment created successfully.")
-        |> redirect(to: attachment_path(conn, :index))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+  def create(conn, %{"attachment" => attachment_params} = params) do
+    # only parse attachment data if one is actually posted
+    attachment_params = case attachment_params["data"] do
+      nil -> attachment_params
+      _   -> convert_attachment_params_to_attachment_data(attachment_params)
+    end
+    listing_id = attachment_params["listing_id"]
+    listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
+    listing = Realtor.get_listing!(listing_id)
+    if listing.user_id == current_user(conn).id do
+      case Listing.create_attachment(attachment_params) do
+        {:ok, attachment} ->
+          conn
+          |> put_flash(:info, "Attachment created successfully.")
+          |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html", changeset: changeset, listing_id: params["listing_id"])
+      end
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
     end
   end
 
@@ -96,9 +128,11 @@ defmodule Mpnetwork.Web.AttachmentController do
     expected_hash = get_req_header(conn, "if-none-match")
     actual_hash   = Base.encode16(attachment.sha256_hash)
     if Enum.member?(expected_hash, actual_hash) do
+      Logger.info "Sending 304 Not Modified for attachment id:#{attachment.id} '#{attachment.original_filename}' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
       conn
       |> send_resp(304, "")
     else
+      Logger.info "Sending attachment id:#{attachment.id} '#{attachment.original_filename}' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
       conn
       |> put_resp_header("content-type", attachment.content_type)
       |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
@@ -113,30 +147,45 @@ defmodule Mpnetwork.Web.AttachmentController do
 
   def edit(conn, %{"id" => id}) do
     attachment = get_cached(id)
+    listing = Realtor.get_listing!(attachment.listing_id)
     changeset = Listing.change_attachment(attachment)
-    render(conn, "edit.html", attachment: attachment, changeset: changeset)
+    render(conn, "edit.html", attachment: attachment, changeset: changeset, listing: listing)
   end
 
   def update(conn, %{"id" => id, "attachment" => attachment_params}) do
-    attachment = get_cached_and_purge(id)
-    attachment_params = convert_attachment_params_to_attachment_data(attachment_params)
-
-    case Listing.update_attachment(attachment, attachment_params) do
-      {:ok, attachment} ->
-        conn
-        |> put_flash(:info, "Attachment updated successfully.")
-        |> redirect(to: attachment_path(conn, :show, attachment))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", attachment: attachment, changeset: changeset)
+    attachment = get_cached(id, false)
+    listing = Realtor.get_listing!(attachment.listing_id)
+    if listing.user_id == current_user(conn).id do
+      # only parse attachment data if one is actually posted
+      attachment_params = case attachment_params["data"] do
+        nil -> attachment_params
+        _   -> convert_attachment_params_to_attachment_data(attachment_params)
+      end
+      case Listing.update_attachment(attachment, attachment_params) do
+        {:ok, _attachment} ->
+          purge_cached(id)
+          conn
+          |> put_flash(:info, "Attachment updated successfully.")
+          |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", attachment: attachment, changeset: changeset, listing: listing)
+      end
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    attachment = get_cached_and_purge(id)
-    {:ok, _attachment} = Listing.delete_attachment(attachment)
-
-    conn
-    |> put_flash(:info, "Attachment deleted successfully.")
-    |> redirect(to: attachment_path(conn, :index))
+    attachment = get_cached(id, false)
+    listing = Realtor.get_listing!(attachment.listing_id)
+    if listing.user_id == current_user(conn).id do
+      purge_cached(id)
+      {:ok, _attachment} = Listing.delete_attachment(attachment)
+      conn
+      |> put_flash(:info, "Attachment deleted successfully.")
+      |> redirect(to: attachment_path(conn, :index, listing_id: listing.id))
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
+    end
   end
 end

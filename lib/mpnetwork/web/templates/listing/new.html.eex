@@ -2,6 +2,8 @@
 
 
 <%= render "form.html", changeset: @changeset,
-                        action: listing_path(@conn, :create) %>
+                        action: listing_path(@conn, :create),
+                        conn: @conn,
+                        attachments: [] %>
 
 <span><%= link "Back", to: listing_path(@conn, :index) %></span>

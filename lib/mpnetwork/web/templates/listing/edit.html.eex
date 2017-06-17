@@ -1,6 +1,9 @@
 <%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Edit ]})) %>
 
 <%= render "form.html", changeset: @changeset,
-                        action: listing_path(@conn, :update, @listing) %>
+                        action: listing_path(@conn, :update, @listing),
+                        conn: @conn,
+                        listing: @listing,
+                        attachments: @attachments %>
 
 <span><%= link "Back", to: listing_path(@conn, :index) %></span>

@@ -156,8 +156,8 @@ defmodule Mpnetwork.Realtor do
       [%Listing{}, ...]
 
   """
-  def list_listings do
-    Repo.all(Listing)
+  def list_listings(realtor) do
+    list_latest_listings(realtor, 30)
   end
 
   @doc """
@@ -170,7 +170,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(current_user, count \\ 5) do
-    Repo.all(from l in Listing, where: l.user_id == ^current_user.id, order_by: [asc: l.inserted_at], limit: ^count)
+    Repo.all(from l in Listing, where: l.user_id == ^current_user.id, order_by: [desc: l.inserted_at], limit: ^count)
   end
 
   @doc """

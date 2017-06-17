@@ -40,4 +40,4 @@
 </ul>
 
 <span><%= link "Edit", to: attachment_path(@conn, :edit, @attachment) %></span>
-<span><%= link "Back", to: attachment_path(@conn, :index) %></span>
+<span><%= link "Back", to: attachment_path(@conn, :index, listing_id: @attachment.listing_id) %></span>

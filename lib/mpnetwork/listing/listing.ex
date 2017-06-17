@@ -22,6 +22,60 @@ defmodule Mpnetwork.Listing do
   end
 
   @doc """
+  Returns the list of attachments for a given listing_id.
+
+  ## Examples
+
+      iex> list_attachments(1)
+      [%Attachment{}, ...]
+
+  """
+  def list_attachments(listing_id) do
+    Repo.all(
+      from attachment in Attachment,
+      where: attachment.listing_id == ^listing_id,
+      order_by: [desc: attachment.is_image, desc: attachment.primary]
+    )
+  end
+
+  @doc """
+  Returns the primary image for a given listing_id.
+
+  ## Examples
+
+      iex> find_primary_image(1)
+      [%Attachment{}, ...]
+
+  """
+  def find_primary_image(listing_id) do
+    Repo.one(
+      from attachment in Attachment,
+      where: attachment.listing_id == ^listing_id,
+      where: attachment.is_image == true,
+      order_by: [desc: attachment.primary],
+      limit: 1
+    )
+  end
+
+  @doc """
+  Returns a map of listing_ids to the primary image for a given listing.
+  TODO: rewrite this to make the DB do the work instead of requerying.
+
+  ## Examples
+
+      iex> primary_images_for_listings(1)
+      %{1 => %Attachment{}, ...}
+
+  """
+  def primary_images_for_listings(listings) do
+    Enum.reduce(listings, %{}, fn(listing, map) ->
+      %{listing.id => find_primary_image(listing.id)}
+      |> Enum.into(map)
+      end
+    ) |> IO.inspect
+  end
+
+  @doc """
   Gets a single attachment.
 
   Raises `Ecto.NoResultsError` if the Attachment does not exist.

@@ -67,7 +67,19 @@ defmodule Mpnetwork.Web.GlobalHelpers do
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "fa fa-fw fa-file-excel-o",
     "application/vnd.ms-excel" => "fa fa-fw fa-file-excel-o",
     "application/zip" => "fa fa-fw fa-file-zip-o",
-    "text/plain" => "fa fa-fw fa-file-text-o"
+    "application/x-7z-compressed" => "fa fa-fw fa-file-zip-o",
+    "application/x-gzip" => "fa fa-fw fa-file-zip-o",
+    "application/x-bzip2" => "fa fa-fw fa-file-zip-o",
+    "application/x-gtar" => "fa fa-fw fa-file-zip-o",
+    "application/x-rar-compressed" => "fa fa-fw fa-file-zip-o",
+    "text/plain" => "fa fa-fw fa-file-text-o",
+    "video/mp4" => "fa fa-fw fa-file-video-o",
+    "video/x-ms-wmv" => "fa fa-fw fa-file-video-o",
+    "video/x-msvideo" => "fa fa-fw fa-file-video-o",
+    "video/quicktime" => "fa fa-fw fa-file-video-o",
+    "video/3gpp" => "fa fa-fw fa-file-video-o",
+    "video/x-flv" => "fa fa-fw fa-file-video-o",
+    "video/mpeg" => "fa fa-fw fa-file-video-o",
   }
 
   def html_icon_class_by_content_type(content_type) do

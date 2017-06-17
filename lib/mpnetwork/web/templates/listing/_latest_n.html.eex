@@ -4,6 +4,7 @@
         <thead>
         <tr>
             <th>Address</th>
+            <th>Thumb</th>
             <th>Price</th>
             <th># beds</th>
             <th># baths</th>
@@ -21,8 +22,20 @@
     <%= for listing <- @listings do %>
         <tr>
             <td>
-            <%= link "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}", to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
-            <%= if listing.draft do %> (Draft)<% end %>
+              <% 
+                address_text = if listing.city && listing.state && listing.zip do 
+                  "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}"
+                else
+                  listing.address
+                end
+              %>
+              <%= link address_text, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
+              <%= if listing.draft do %> (Draft)<% end %>
+            </td>
+            <td>
+                <%= if @primaries[listing.id] do %>
+                    <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id]) %>" />
+                <% end %>
             </td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td><%= listing.num_bedrooms %></td>

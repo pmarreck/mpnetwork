@@ -1,5 +1,7 @@
 <%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings List ]})) %>
 
-<%= render("_latest_n.html", conn: @conn, listings: @listings, current_user: @current_user) %>
+<p>Your latest 30 listings: (pagination coming soon)</p>
+
+<%= render("_latest_n.html", conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
 
 <span><%= link "New Listing", to: listing_path(@conn, :new) %></span>

@@ -1,5 +1,11 @@
 <%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Show ]})) %>
 
+<div class="form-group">
+  <div><%= link "Add/Edit Photos/Attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></div>
+  <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing) %>
+
+</div>
+
 <ul style="list-style-type: none;">
 
   <li>

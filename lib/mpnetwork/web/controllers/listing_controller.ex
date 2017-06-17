@@ -1,11 +1,12 @@
 defmodule Mpnetwork.Web.ListingController do
   use Mpnetwork.Web, :controller
 
-  alias Mpnetwork.Realtor
+  alias Mpnetwork.{Realtor, Listing}
 
   def index(conn, _params) do
-    listings = Realtor.list_listings()
-    render(conn, "index.html", listings: listings)
+    listings = Realtor.list_listings(current_user(conn))
+    primaries = Listing.primary_images_for_listings(listings)
+    render(conn, "index.html", listings: listings, primaries: primaries)
   end
 
   def new(conn, _params) do
@@ -29,14 +30,16 @@ defmodule Mpnetwork.Web.ListingController do
 
   def show(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    render(conn, "show.html", listing: listing)
+    attachments = Listing.list_attachments(id)
+    render(conn, "show.html", listing: listing, attachments: attachments)
   end
 
   def edit(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
     if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+      attachments = Listing.list_attachments(listing.id)
       changeset = Realtor.change_listing(listing)
-      render(conn, "edit.html", listing: listing, changeset: changeset)
+      render(conn, "edit.html", listing: listing, attachments: attachments, changeset: changeset)
     else
       render(conn, 405, "Not allowed")
     end

@@ -73,6 +73,7 @@ defmodule Mpnetwork.Realtor.Listing do
     listing
     |> casts(attrs)
     |> validate_required([:user_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size_acre_cents, :year_built, :stories, :basement, :fireplaces, :parking_spaces, :num_garages, :attached_garage, :new_construction, :total_annual_property_taxes_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :led_lighting, :new_appliances, :visible_on, :expires_on])
+    |> validate_inclusion(:cellular_coverage_quality, 0..5)
   end
 
   defp casts(%Listing{} = listing, attrs) do
