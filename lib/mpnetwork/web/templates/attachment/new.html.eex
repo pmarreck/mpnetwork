@@ -4,6 +4,6 @@
                         action: attachment_path(@conn, :create),
                         listing: @listing,
                         conn: @conn,
-                        new?: true %>
+                        attachment: false %>
 
-<span><%= link "Back", to: attachment_path(@conn, :index) %></span>
+<span><%= link "Back", to: attachment_path(@conn, :index, listing_id: @listing.id) %></span>

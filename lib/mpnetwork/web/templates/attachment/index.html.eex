@@ -31,5 +31,6 @@
   </table>
 <% end %>
 
-<span><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></span>
-<span><%= link "Return to listing edit", to: listing_path(@conn, :edit, @listing) %></span>
+<span><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
+&nbsp;&nbsp;
+<span><%= link "Return to editing listing details", to: listing_path(@conn, :edit, @listing) %></span>

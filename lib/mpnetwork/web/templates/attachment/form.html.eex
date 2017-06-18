@@ -27,8 +27,9 @@
 
   <div class="form-group">
     <%= submit "Save", class: "btn btn-primary" %>
-    <%= unless @new? do %>
-      <%= link "Delete", to: attachment_path(@conn, :delete, f.data.id), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-    <% end %>
   </div>
+<% end %>
+<br />
+<%= if @attachment do %>
+  <%= link "Delete", to: attachment_path(@conn, :delete, @attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xl" %></span>
 <% end %>

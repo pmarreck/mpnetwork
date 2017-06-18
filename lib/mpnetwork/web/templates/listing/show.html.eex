@@ -229,5 +229,6 @@
 
 </ul>
 
-<span><%= link "Edit", to: listing_path(@conn, :edit, @listing) %></span>
-<span><%= link "Back", to: listing_path(@conn, :index) %></span>
+<span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+&nbsp;&nbsp;
+<span><%= link "Back to your listings", to: listing_path(@conn, :index) %></span>

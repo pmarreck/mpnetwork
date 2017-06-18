@@ -1,8 +1,9 @@
 <%= if @existing do %>
   <div class="form-group">
-    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xs" %></div>
+    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
     <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @existing) %>
   </div>
+  <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
 <% end %>
 
 <%= form_for @changeset, @action, fn f -> %>
@@ -288,6 +289,6 @@
   </div>
 <% end %>
 <%= if @existing do %>
-  <span><%= link "Delete", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
+  <span><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
 <% end %>
 <br />
