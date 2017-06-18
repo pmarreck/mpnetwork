@@ -26,9 +26,9 @@ defmodule Mpnetwork.Web.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison,
-    length: 20_000_000, # 20 megabytes
-    read_length: 2_000_000, # default chunk length, 2MB
-    read_timeout: 15_000 # timeout in ms per chunk, 15s
+    length: Application.get_env(:mpnetwork, :max_attachment_size),
+    read_length: Application.get_env(:mpnetwork, :attachment_chunk_size),
+    read_timeout: Application.get_env(:mpnetwork, :attachment_chunk_timeout)
 
   plug Plug.MethodOverride
   plug Plug.Head

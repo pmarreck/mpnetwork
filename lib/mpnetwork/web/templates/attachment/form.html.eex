@@ -25,6 +25,9 @@
     <%= error_tag f, :data %>
   </div>
 
+  <p><i>Note that attachments are currently limited to a size of <%= Application.get_env(:mpnetwork, :max_attachment_size)/1000000 %>MB. You can attach files of any type.</i></p>
+  <p><i>(There isn't yet an enforced limit on the number of attachments per listing. Please don't abuse this privilege!)</i></p>
+
   <div class="form-group">
     <%= submit "Save", class: "btn btn-primary" %>
   </div>
