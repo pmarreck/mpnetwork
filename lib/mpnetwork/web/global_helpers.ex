@@ -61,18 +61,23 @@ defmodule Mpnetwork.Web.GlobalHelpers do
   end
 
   @content_type_to_icon_class_map %{
+    # PDF
     "application/pdf" => "fa fa-fw fa-file-pdf-o",
+    # MS Office formats
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "fa fa-fw fa-file-word-o",
     "application/msword" => "fa fa-fw fa-file-word-o",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "fa fa-fw fa-file-excel-o",
     "application/vnd.ms-excel" => "fa fa-fw fa-file-excel-o",
+    # Compression formats
     "application/zip" => "fa fa-fw fa-file-zip-o",
     "application/x-7z-compressed" => "fa fa-fw fa-file-zip-o",
     "application/x-gzip" => "fa fa-fw fa-file-zip-o",
     "application/x-bzip2" => "fa fa-fw fa-file-zip-o",
     "application/x-gtar" => "fa fa-fw fa-file-zip-o",
     "application/x-rar-compressed" => "fa fa-fw fa-file-zip-o",
+    # Plain text doc
     "text/plain" => "fa fa-fw fa-file-text-o",
+    # Video formats
     "video/mp4" => "fa fa-fw fa-file-video-o",
     "video/x-ms-wmv" => "fa fa-fw fa-file-video-o",
     "video/x-msvideo" => "fa fa-fw fa-file-video-o",
@@ -80,6 +85,16 @@ defmodule Mpnetwork.Web.GlobalHelpers do
     "video/3gpp" => "fa fa-fw fa-file-video-o",
     "video/x-flv" => "fa fa-fw fa-file-video-o",
     "video/mpeg" => "fa fa-fw fa-file-video-o",
+    # Image formats
+    "image/svg+xml" => "fa fa-fw fa-file-image-o",
+    "image/jpeg" => "fa fa-fw fa-file-image-o",
+    "image/gif"  => "fa fa-fw fa-file-image-o",
+    "image/png"  => "fa fa-fw fa-file-image-o",
+    "image/bmp"  => "fa fa-fw fa-file-image-o",
+    "image/psd"  => "fa fa-fw fa-file-image-o",
+    "image/tiff" => "fa fa-fw fa-file-image-o",
+    "image/webp" => "fa fa-fw fa-file-image-o",
+    "image/flif" => "fa fa-fw fa-file-image-o",
   }
 
   def html_icon_class_by_content_type(content_type) do
