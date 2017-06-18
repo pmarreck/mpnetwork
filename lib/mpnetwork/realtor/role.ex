@@ -3,7 +3,6 @@ defmodule Mpnetwork.Realtor.Role do
   import Ecto.Changeset
   alias Mpnetwork.Realtor.Role
 
-
   schema "roles" do
     field :name, :string
 

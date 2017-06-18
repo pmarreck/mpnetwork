@@ -25,7 +25,7 @@ defmodule Mpnetwork.User do
   def changeset(model, params \\ %{}) do
     params_with_username = copy_email_to_username_unless_username_exists(params)
     model
-    |> cast(params_with_username, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id ] ++ coherence_fields())
+    |> cast(params_with_username, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
     |> validate_required([:username, :email])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)

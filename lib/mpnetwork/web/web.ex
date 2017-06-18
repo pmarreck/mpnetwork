@@ -16,7 +16,6 @@ defmodule Mpnetwork.Web do
   below.
   """
 
-
   def controller do
     quote do
       use Phoenix.Controller, log: false, namespace: Mpnetwork.Web

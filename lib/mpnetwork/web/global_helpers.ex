@@ -1,6 +1,6 @@
 defmodule Mpnetwork.Web.GlobalHelpers do
 
-  @roles {"Root","Site Admin","Office Admin","Realtor","User"}
+  @roles {"Root", "Site Admin", "Office Admin", "Realtor", "User"}
 
   def role_id_to_name(role_id) do
     elem(@roles, role_id)
@@ -13,7 +13,7 @@ defmodule Mpnetwork.Web.GlobalHelpers do
 
   ### DATETIME-RELATED ###
   def month_to_short_name(month_num) do
-    elem({"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}, month_num - 1)
+    elem({"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}, month_num - 1)
   end
 
   def short_month_and_year(ecto_datetime) do
@@ -49,14 +49,12 @@ defmodule Mpnetwork.Web.GlobalHelpers do
 
   defp convert_ecto_datetime_to_utc_datetime(%Ecto.DateTime{} = edt) do
     edt
-      |> Ecto.DateTime.to_erl
-      |> NaiveDateTime.from_erl!
-      |> DateTime.from_naive!("Etc/UTC")
+    |> Ecto.DateTime.to_erl
+    |> NaiveDateTime.from_erl!
+    |> DateTime.from_naive!("Etc/UTC")
   end
 
   def current_datetime_standard_humanized(tz \\ "EDT") do
-    # I have no idea why I had to shift this because it was off by 1 hour.
-    # DST or something?
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 

@@ -3,7 +3,6 @@ defmodule Mpnetwork.Realtor.Office do
   import Ecto.Changeset
   alias Mpnetwork.Realtor.Office
 
-
   schema "offices" do
     field :name, :string
 

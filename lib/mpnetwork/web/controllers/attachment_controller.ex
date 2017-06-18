@@ -35,7 +35,14 @@ defmodule Mpnetwork.Web.AttachmentController do
   defp purge_cached(id) do
     id = if is_binary(id), do: String.to_integer(id), else: id
     Logger.info "Purging attachment from cache: id:#{id}"
-    { :ok, true } = Cachex.del(:attachment_cache, id)
+    {:ok, true} = Cachex.del(:attachment_cache, id)
+  end
+
+  defp extract_meta_from_binary_data(binary_data, claimed_content_type) do
+    case ExImageInfo.info(binary_data) do
+      nil          -> {claimed_content_type, nil, nil}
+      {a, b, c, _} -> {a, b, c}
+    end
   end
 
   defp convert_attachment_params_to_attachment_data(attachment_params) do
@@ -44,16 +51,12 @@ defmodule Mpnetwork.Web.AttachmentController do
     # filename: "scumbag-steve-if-you-find-the-mirror-of-the-heart-dull-the-rust-has-not-been-cleared-from-its-face.jpg",
     # path: "/var/folders/7w/2lx70htn0nn9rnnq0cmyppfr0000gn/T//plug-1497/multipart-635613-44500-4"},
     # "listing_id" => "2", "primary" => "false"}
-    binary_data_loc = attachment_params["data"].path
-    binary_data_orig_filename = attachment_params["data"].filename
-    # don't trust content type from the browser I guess, lol
-    # binary_data_content_type = attachment_params["data"].content_type
+    request_data = attachment_params["data"]
+    binary_data_loc = request_data.path
+    binary_data_orig_filename = request_data.filename
     binary_data = File.read!(binary_data_loc)
-    {binary_data_content_type, width_pixels, height_pixels} = 
-      case ExImageInfo.info(binary_data) do
-        nil          -> {attachment_params["data"].content_type, nil, nil}
-        {a, b, c, _} -> {a, b, c}
-      end
+    {binary_data_content_type, width_pixels, height_pixels} =
+      extract_meta_from_binary_data(binary_data, request_data.content_type)
     Enum.into(%{
       "data" => binary_data,
       "content_type" => binary_data_content_type,
@@ -136,7 +139,7 @@ defmodule Mpnetwork.Web.AttachmentController do
       conn
       |> put_resp_header("content-type", attachment.content_type)
       |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
-      |> put_resp_header("ETag", Base.encode16(attachment.sha256_hash) )
+      |> put_resp_header("ETag", Base.encode16(attachment.sha256_hash))
       # |> delete_resp_header("set-cookie") # don't need to send cookie data with files
       # Can't seem to delete the set-cookie response header being sent with attachments.
       # Tabling for now. Probably has to do with the secure routes, but I did try

@@ -39,7 +39,7 @@ defmodule Mpnetwork.Coherence.Web do
       import Mpnetwork.Web.GlobalHelpers
     end
   end
-  
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
