@@ -4,6 +4,7 @@
                         action: listing_path(@conn, :update, @listing),
                         conn: @conn,
                         listing: @listing,
-                        attachments: @attachments %>
+                        attachments: @attachments,
+                        existing: @listing %>
 
 <span><%= link "Back", to: listing_path(@conn, :index) %></span>

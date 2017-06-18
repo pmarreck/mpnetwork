@@ -53,8 +53,8 @@ defmodule Mpnetwork.Realtor.Listing do
     belongs_to :user, Mpnetwork.User
     # field :building_type_id, :id
     belongs_to :building_type, Mpnetwork.Listing.BuildingType
-    has_many :price_history, Mpnetwork.Listing.PriceHistory
-    has_many :attachments, Mpnetwork.Listing.Attachment
+    has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
+    has_many :attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all
 
     timestamps()
   end

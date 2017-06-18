@@ -3,6 +3,7 @@
 <%= render "form.html", changeset: @changeset,
                         action: attachment_path(@conn, :update, @attachment),
                         conn: @conn,
-                        listing: @listing %>
+                        listing: @listing,
+                        new?: false %>
 
 <span><%= link "Back", to: attachment_path(@conn, :index, listing_id: @attachment.listing_id) %></span>
