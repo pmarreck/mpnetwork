@@ -3,9 +3,11 @@ defmodule Mpnetwork.Web.BroadcastController do
 
   alias Mpnetwork.Realtor
 
+  @index_max 20
+
   def index(conn, _params) do
-    broadcasts = Realtor.list_latest_broadcasts(20)
-    render(conn, "index.html", broadcasts: broadcasts)
+    broadcasts = Realtor.list_latest_broadcasts(@index_max)
+    render(conn, "index.html", broadcasts: broadcasts, length: @index_max)
   end
 
   def new(conn, _params) do

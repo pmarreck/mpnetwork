@@ -6,5 +6,5 @@
                         conn: @conn,
                         attachments: [],
                         existing: false %>
-
+<p><i>Attachments can be added after saving the listing</i></p>
 <span><%= link "Back", to: listing_path(@conn, :index) %></span>

@@ -72,7 +72,7 @@ defmodule Mpnetwork.Listing do
       %{listing.id => find_primary_image(listing.id)}
       |> Enum.into(map)
       end
-    ) |> IO.inspect
+    )
   end
 
   @doc """

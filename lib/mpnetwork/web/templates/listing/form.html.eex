@@ -284,6 +284,10 @@
   </div>
 
   <div class="form-group">
-    <%= submit "Save", class: "btn btn-primary" %>
+    <%= submit "Save", class: "btn btn-primary", style: "width: 100px" %>
   </div>
 <% end %>
+<%= if @existing do %>
+  <span><%= link "Delete", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
+<% end %>
+<br />
