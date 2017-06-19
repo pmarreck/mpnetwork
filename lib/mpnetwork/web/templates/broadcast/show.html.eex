@@ -18,6 +18,6 @@
 </div>
 
 <div class="info">
-  <span><%= link "Edit", to: broadcast_path(@conn, :edit, @broadcast) %></span>
-  <span><%= link "Back", to: broadcast_path(@conn, :index) %></span>
+  <span><%= link "Edit", to: broadcast_path(@conn, :edit, @broadcast), class: "btn btn-default" %></span>
+  &nbsp;&nbsp;&nbsp;<span><%= link "Back", to: broadcast_path(@conn, :index) %></span>
 </div>

@@ -26,11 +26,11 @@ defmodule Mpnetwork.Web.AttachmentController do
     attachment
   end
 
-  defp get_cached_and_purge(id) do
-    attachment = get_cached(id, false)
-    purge_cached(id)
-    attachment
-  end
+  # defp get_cached_and_purge(id) do
+  #   attachment = get_cached(id, false)
+  #   purge_cached(id)
+  #   attachment
+  # end
 
   defp purge_cached(id) do
     id = if is_binary(id), do: String.to_integer(id), else: id
@@ -87,6 +87,11 @@ defmodule Mpnetwork.Web.AttachmentController do
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
     end
+  end
+
+  def index(conn, _) do
+    # don't render attachment list without a listing_id
+    send_resp(conn, 404, "Not Found")
   end
 
   def new(conn, %{"listing_id" => listing_id} = _params) do

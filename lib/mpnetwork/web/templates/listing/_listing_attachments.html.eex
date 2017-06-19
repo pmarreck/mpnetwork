@@ -3,11 +3,13 @@
     <tbody>
   <%= for attachment <- @attachments do %>
       <tr>
-        <td>
-          <%= if attachment.primary do %>
-            <b>Primary Listing Image</b>
-          <% end %>
-        </td>
+        <%= if attachment.primary do %>
+          <td style="vertical-align: middle">
+            <b>Designated Primary Photo ⇨</b>
+          </td>
+        <%= else %>
+          <td></td>
+        <% end %>
         <td>
           <%= if attachment.is_image do %>
             <img style="width:50%;max-width:600px;" src="<%= attachment_path(@conn, :show, attachment) %>" />

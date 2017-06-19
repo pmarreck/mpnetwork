@@ -45,6 +45,17 @@ defmodule Mpnetwork.Web.ListingController do
     end
   end
 
+  def edit_mls(conn, %{"id" => id}) do
+    listing = Realtor.get_listing!(id)
+    if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+      attachments = Listing.list_attachments(listing.id)
+      changeset = Realtor.change_listing(listing)
+      render(conn, "edit_mls.html", listing: listing, attachments: attachments, changeset: changeset)
+    else
+      render(conn, 405, "Not allowed")
+    end
+  end
+
   def update(conn, %{"id" => id, "listing" => listing_params}) do
     listing = Realtor.get_listing!(id)
     if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
