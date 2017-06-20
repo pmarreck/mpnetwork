@@ -23,9 +23,11 @@ defmodule Mpnetwork.User do
   end
 
   def changeset(model, params \\ %{}) do
-    params_with_username = copy_email_to_username_unless_username_exists(params)
+    params = params
+    |> copy_email_to_username_unless_username_exists
+    |> default_role_to_realtor
     model
-    |> cast(params_with_username, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
+    |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
     |> validate_required([:username, :email])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
@@ -44,6 +46,15 @@ defmodule Mpnetwork.User do
     params = cond do
       (params[:email] && !params[:username])  -> Enum.into(%{username: params[:email]}, params)
       (params["email"] && !params["username"]) -> Enum.into(%{"username" => params["email"]}, params)
+      true -> params
+    end
+    params
+  end
+
+  defp default_role_to_realtor(params) do
+    params = cond do
+      (params[:email] && !params[:role_id]) -> Enum.into(%{role_id: 3}, params)
+      (params["email"] && !params["role_id"]) -> Enum.into(%{"role_id" => 3}, params)
       true -> params
     end
     params
