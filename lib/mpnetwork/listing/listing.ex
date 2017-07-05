@@ -4,22 +4,24 @@ defmodule Mpnetwork.Listing do
   """
 
   import Ecto.Query, warn: false
+  import Mogrify
   alias Mpnetwork.Repo
+  alias Briefly, as: Temp
 
   alias Mpnetwork.Listing.Attachment
 
-  @doc """
-  Returns the list of attachments.
+  # @doc """
+  # Returns the list of attachments.
 
-  ## Examples
+  # ## Examples
 
-      iex> list_attachments()
-      [%Attachment{}, ...]
+  #     iex> list_attachments()
+  #     [%Attachment{}, ...]
 
-  """
-  def list_attachments do
-    Repo.all(Attachment)
-  end
+  # """
+  # def list_attachments do
+  #   Repo.all(Attachment)
+  # end
 
   @doc """
   Returns the list of attachments for a given listing_id.
@@ -73,6 +75,63 @@ defmodule Mpnetwork.Listing do
       |> Enum.into(map)
       end
     )
+  end
+
+  defp extract_meta_from_binary_data(binary_data, claimed_content_type) do
+    case ExImageInfo.info(binary_data) do
+      nil          -> {claimed_content_type, nil, nil}
+      {a, b, c, _} -> {a, b, c}
+    end
+  end
+
+  @doc """
+  Gets a single attachment at a given width and height.
+
+  Raises `Ecto.NoResultsError` if the Attachment does not exist.
+
+  ## Examples
+
+      iex> get_attachment!({123, 1, 1})
+      %Attachment{}
+
+      iex> get_attachment!({456, 1, 1})
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_attachment!({id, width, height}) do
+    # first we will get the original attachment from the DB, filtering on images-only
+    # Repo.get!(Attachment, id)
+    attachment = Repo.one!(
+      from attachment in Attachment,
+      where: attachment.id == ^id,
+      where: attachment.is_image == true,
+      limit: 1
+    )
+    # then we will write its binary data to a local tempfile
+    {:ok, path} = Temp.create
+    File.write!(path, attachment.data) # should close file automatically
+    # then we will resize it
+    image = open(path) |> resize("#{width}x#{height}") |> save
+    # then we will reread the new file's binary data
+    new_image_data = File.read!(image.path)
+    # then we will parse the new file's actual dimensions
+    {binary_data_content_type, width_pixels, height_pixels} =
+      extract_meta_from_binary_data(new_image_data, attachment.content_type)
+    # then we will return this (which currently gets stored in the app cache)
+    attachment
+    |> Attachment.changeset(%{
+      width_pixels: width_pixels,
+      height_pixels: height_pixels,
+      content_type: binary_data_content_type,
+      sha256_hash: :crypto.hash(:sha256, new_image_data),
+      data: new_image_data,
+      inserted_at: Timex.now("EDT"),
+      updated_at: Timex.now("EDT")
+    })
+    |> Ecto.Changeset.apply_changes # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
+    # Note that the calling code has to somehow track a list of the original's multiple sizes in the cache
+    # for the sake of cache deletion
+
   end
 
   @doc """

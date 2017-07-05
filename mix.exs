@@ -10,7 +10,8 @@ defmodule Mpnetwork.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
-     deps: deps()]
+     deps: deps(),
+     test_coverage: [tool: ExCoveralls],]
   end
 
   # Configuration for the OTP application.
@@ -51,6 +52,11 @@ defmodule Mpnetwork.Mixfile do
       {:eliver, "~> 1.0.0"}, # provides `mix eliver.bump` for hot prod upgrades
       {:cachex, "~> 2.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.7", only: :test},
+      {:swoosh, "~> 0.8.1"},
+      {:phoenix_swoosh, git: "https://github.com/vircung/phoenix_swoosh.git", branch: "phx-1.3"},
+      {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
+      {:briefly, "~> 0.3"}, # for easily working with tempfiles
     ]
   end
 

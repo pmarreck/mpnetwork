@@ -34,7 +34,9 @@
             </td>
             <td>
                 <%= if @primaries[listing.id] do %>
-                    <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id]) %>" />
+                  <%= link to: listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
+                    <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
+                  <% end %>
                 <% end %>
             </td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>

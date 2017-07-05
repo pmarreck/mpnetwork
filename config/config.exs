@@ -8,7 +8,7 @@ use Mix.Config
 # General application configuration
 config :mpnetwork,
   ecto_repos: [Mpnetwork.Repo],
-  max_attachment_size: 50_000_000, # 50 megabytes.
+  max_attachment_size: 20_000_000, # 20 megabytes.
   attachment_chunk_size: 2_000_000, # default chunk length, 2MB
   attachment_chunk_timeout: 10_000, # timeout in ms per chunk, 10s
   max_attachments_per_listing: 20 # not enforced yet!
@@ -25,6 +25,10 @@ config :mpnetwork, Mpnetwork.Web.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+# Configures Swoosh (email wrapper)
+config :mpnetwork, Sample.Mailer,
+  adapter: Swoosh.Adapters.SparkPost
 
 # Configures Guardian
 # config :guardian, Guardian,

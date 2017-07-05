@@ -1,8 +1,12 @@
 <%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Show ]})) %>
 
 <div class="form-group">
-  <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></div>
-  <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing) %>
+  <%= if @listing.user_id == @current_user.id do %>
+    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></div>
+  <%= else %>
+    <br/>
+  <% end %>
+  <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
 </div>
 
 <ul style="list-style-type: none;">
@@ -229,6 +233,8 @@
 
 </ul>
 
-<span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+<%= if @listing.user_id == @current_user.id do %>
+  <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+<% end %>
 &nbsp;&nbsp;
-<span><%= link "Back to your listings", to: listing_path(@conn, :index) %></span>
+<span><%= link "Back to all listings", to: listing_path(@conn, :index) %></span>

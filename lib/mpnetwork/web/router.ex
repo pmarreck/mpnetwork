@@ -48,6 +48,15 @@ defmodule Mpnetwork.Web.Router do
   #   pipe_through :browser # Use the default browser stack
   #   # Add public routes below
   # end
+  
+  # custom dev-only route to view local mailbox
+  if Mix.env == :dev do
+    scope "/dev" do
+      pipe_through :browser
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview, [base_path: "/dev/mailbox"]
+    end
+  end
 
   scope "/", Mpnetwork.Web do
     pipe_through :protected

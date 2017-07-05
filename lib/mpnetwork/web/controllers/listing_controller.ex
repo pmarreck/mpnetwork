@@ -4,7 +4,7 @@ defmodule Mpnetwork.Web.ListingController do
   alias Mpnetwork.{Realtor, Listing}
 
   def index(conn, _params) do
-    listings = Realtor.list_listings(current_user(conn))
+    listings = Realtor.list_latest_listings(nil, 30)
     primaries = Listing.primary_images_for_listings(listings)
     render(conn, "index.html", listings: listings, primaries: primaries)
   end

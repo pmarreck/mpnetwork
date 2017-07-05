@@ -16,7 +16,7 @@ defmodule Mpnetwork.Application do
       # worker(Mpnetwork.Worker, [arg1, arg2, arg3]),
       worker(Cachex, [:attachment_cache, [
         limit: %Cachex.Limit{
-          limit: 1500,
+          limit: 5000, # bumped after implementation of app-cached thumbnails of arbitrary size
           policy: Cachex.Policy.LRW,
           reclaim: 0.1
         }]

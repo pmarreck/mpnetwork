@@ -45,6 +45,11 @@ config :mpnetwork, Mpnetwork.Web.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
+# Configure the mailer to deliver to a local server for development
+# which can be seen at /mailbox (per the route set up)
+config :mpnetwork, Mailer,
+  adapter: Swoosh.Adapters.Local
+
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20

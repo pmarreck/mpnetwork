@@ -12,16 +12,18 @@
         <% end %>
         <td>
           <%= if attachment.is_image do %>
-            <img style="width:50%;max-width:600px;" src="<%= attachment_path(@conn, :show, attachment) %>" />
+            <img style="width:50%;max-width:400px;" src="<%= attachment_path(@conn, :show, attachment, w: 400, h: 400) %>" />
           <% else %>
             <i class="<%= html_icon_class_by_content_type(attachment.content_type) %>"></i>
             <%= link attachment.original_filename, to: attachment_path(@conn, :show, attachment) %>
           <% end %>
         </td>
         <td class="text-right">
-          <span><%= link "Show", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
-          <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
-          <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
+          <%= if @listing.user_id == @current_user.id do %>
+            <span><%= link "Show", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
+            <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
+            <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
+          <% end %>
         </td>
       </tr>
   <% end %>
