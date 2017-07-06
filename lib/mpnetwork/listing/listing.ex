@@ -129,9 +129,6 @@ defmodule Mpnetwork.Listing do
       updated_at: Timex.now("EDT")
     })
     |> Ecto.Changeset.apply_changes # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
-    # Note that the calling code has to somehow track a list of the original's multiple sizes in the cache
-    # for the sake of cache deletion
-
   end
 
   @doc """

@@ -152,6 +152,7 @@ defmodule Mpnetwork.Realtor do
       [%Listing{}, ...]
 
   """
+
   def list_listings(realtor, limit \\ 30) do
     list_latest_listings(realtor, limit)
   end
@@ -160,7 +161,7 @@ defmodule Mpnetwork.Realtor do
   def list_latest_listings(who, limit \\ 5)
 
   @doc """
-  Returns the latest listings by everyone
+  Returns the latest non-draft listings by everyone
 
   ## Examples
 
@@ -169,7 +170,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(nil, limit) do
-    Repo.all(from l in Listing, order_by: [desc: l.inserted_at], limit: ^limit)
+    Repo.all(from l in Listing, where: l.draft == false, order_by: [desc: l.inserted_at], limit: ^limit)
   end
 
   @doc """

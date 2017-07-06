@@ -69,7 +69,8 @@ defmodule Mpnetwork.Web.ListingController do
           |> put_flash(:info, "Listing updated successfully.")
           |> redirect(to: listing_path(conn, :show, listing))
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "edit.html", listing: listing, changeset: changeset)
+          attachments = Listing.list_attachments(id)
+          render(conn, "edit.html", listing: listing, changeset: changeset, attachments: attachments)
       end
     else
       render(conn, 405, "Not allowed")
