@@ -211,4 +211,41 @@ defmodule Mpnetwork.Listing do
   def change_attachment(%Attachment{} = attachment) do
     Attachment.changeset(attachment, %{})
   end
+
+  @doc """
+  Computes the link code for an emailed client listing.
+
+  ## Examples
+
+      iex> public_client_listing_code(listing)
+      "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
+
+  """
+  def public_client_listing_code(listing) do
+    do_listing_code(listing, "client")
+  end
+
+  @doc """
+  Computes the link code for an emailed agent listing.
+
+  ## Examples
+
+      iex> public_agent_listing_code(listing)
+      "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
+
+  """
+  def public_agent_listing_code(listing) do
+    do_listing_code(listing, "agent")
+  end
+
+  defp do_listing_code(listing, recipient_type) do
+    updated_secs_since_epoch = listing.updated_at
+      |> DateTime.from_naive!("Etc/UTC")
+      |> DateTime.to_unix
+    :crypto.hash(:sha256, "#{recipient_type}#{listing.id}#{updated_secs_since_epoch}#{Mpnetwork.Web.Endpoint.config(:secret_key_base)}")
+      |> Base.encode32
+      |> String.downcase
+      |> String.trim_trailing("=")
+  end
+
 end

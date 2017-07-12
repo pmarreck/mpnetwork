@@ -1,0 +1,6 @@
+<div>
+  Dear <%= @name %>,
+</div>
+<div>
+  <%= link "You gotta see this.", to: @url %>
+</div>

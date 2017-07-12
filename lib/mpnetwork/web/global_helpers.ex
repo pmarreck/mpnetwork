@@ -58,6 +58,13 @@ defmodule Mpnetwork.Web.GlobalHelpers do
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 
+  # convert falsey values to "N", anything else to "Y"
+  def yn(bool), do: if bool, do: "Y", else: "N"
+
+  # convert an integer number of dollars to dollar format
+  def dollars(val) when is_number(val), do: Number.Currency.number_to_currency(val, precision: 0)
+  def dollars(_), do: ""
+
   @content_type_to_icon_class_map %{
     # PDF
     "application/pdf" => "fa fa-fw fa-file-pdf-o",

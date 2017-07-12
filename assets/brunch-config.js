@@ -20,6 +20,9 @@ exports.config = {
       joinTo: {
         "css/app.css": [
           "css/*.scss"
+        ],
+        "css/public_listing.css": [
+          "css/public_listing.css"
         ]
       }
     },

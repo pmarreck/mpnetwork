@@ -44,10 +44,15 @@ defmodule Mpnetwork.Web.Router do
     coherence_routes :protected
   end
 
-  # scope "/", Mpnetwork.Web do
-  #   pipe_through :browser # Use the default browser stack
-  #   # Add public routes below
-  # end
+  scope "/", Mpnetwork.Web do
+    pipe_through :browser # Use the default browser stack
+    # Add public routes below
+    get "/client_listing/:id/:sig", ListingController, :client_listing, as: :public_client_listing
+    get "/agent_listing/:id/:sig", ListingController, :agent_listing, as: :public_agent_listing
+    # Image (and all) attachments are currently unauthenticated due to the need to make them available
+    # in public links to listings... could this end up being a security problem due to autoincrementing IDs?
+    resources "/attachments", AttachmentController, only: [:show]
+  end
   
   # custom dev-only route to view local mailbox
   if Mix.env == :dev do
@@ -63,9 +68,11 @@ defmodule Mpnetwork.Web.Router do
     # Add protected routes below
     get "/", PageController, :index # (even the landing page requires login)
 
+    get "/listings/:id/email_listing", ListingController, :email_listing, as: :email_listing
+    post "/listings/:id/send_email", ListingController, :send_email, as: :email_listing
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
-    resources "/attachments", AttachmentController
+    resources "/attachments", AttachmentController, except: [:show]
   end
 
   # Other scopes may use custom stacks.

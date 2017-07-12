@@ -1,0 +1,390 @@
+
+<div class="data-report template-report">
+  <div class="document-viewer-toolbar"></div>
+  <div class="template-report form">
+    <div class="group orientation-vertical legacyBorder last-child" style="width: 750px;">
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-horizontal " style="width: 450px;">
+          <div class="report-field label-hidden"><span class="report-label hidden">[addr]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.address %></span></div>
+          <div class="report-literal report-field ">,&nbsp;</div>
+          <div class="report-field label-hidden behavior"><span class="report-label hidden">[town]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.city %></span></div>
+          <div class="report-field label-hidden behavior behavior-hidden"><span class="report-label hidden">[outof_area]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"></span></div>
+          <div class="report-literal report-field ">,&nbsp;</div>
+          <div class="report-field label-hidden"><span class="report-label hidden">[ste]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.state %></span></div>
+          <div class="report-literal report-field ">&nbsp;</div>
+          <div class="report-field label-hidden"><span class="report-label hidden">[zip]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.zip %></span></div>
+          <div class="report-literal report-field ">&nbsp;</div>
+          <div class="report-field label-hidden behavior behavior-hidden"><span class="report-label hidden">[country]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;">Usa</span></div>
+        </div>
+        <div class="report-field label-visible"><span class="report-label " style="font-size: 10pt; font-weight: bold;">List Price:</span><span class="report-value" style="font-weight: bold; text-align: left; width: 160px; font-size: 10pt;"><%= dollars @listing.price_usd %></span></div>
+      </div>
+      <div class="group orientation-tabular">
+        <div class="group orientation-horizontal last-child">
+          <div class="group orientation-vertical" style="width: 250px;">
+            <div class="group orientation-vertical last-child" style="width: 250px;">
+              <div class="multi-photo" style="display: table-cell; vertical-align: middle">
+                <%= if @showcase_image && @showcase_image.is_image do %>
+                  <img class="main-listing-photo" src="<%= attachment_path(@conn, :show, @showcase_image, w: 250, h: 192) %>" />
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="group orientation-vertical  last-child" style="width: 490px;">
+            <div class="group orientation-horizontal ">
+              <div class="group orientation-horizontal  last-child" style="width: 490px;">
+                <div class="group orientation-vertical " style="width: 112px;">
+                  <div class="report-field label-visible"><span class="report-label " style="font-size: 10pt; font-weight: 700;">ML#:</span><span class="report-value" style="font-weight: 700; font-size: 10pt;">2872703</span></div>
+                </div>
+                <div class="group orientation-vertical " style="width: 100px;">
+                  <div class="report-field label-hidden"><span class="report-label hidden">[class]:</span><span class="report-value">Residential</span></div>
+                </div>
+                <div class="group orientation-vertical " style="width: 122px;">
+                  <div class="report-field label-hidden"><span class="report-label hidden">[$familyDet]:</span><span class="report-value">1 Family, Det</span></div>
+                </div>
+                <div class="group orientation-vertical " style="width: 100px;">
+                  <div class="report-field label-visible"><span class="report-label ">LSC:</span><span class="report-value">PC</span></div>
+                </div>
+                <div class="group orientation-vertical  last-child">
+                  <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM:</span><span class="report-value">N</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="report-literal report-field report-line ">
+              <hr>
+            </div>
+            <div class="group orientation-horizontal  last-child">
+              <div class="group orientation-vertical " style="width: 265px;">
+                <div class="report-field label-visible"><span class="report-label ">Sec/Area:</span><span class="report-value">Manhasset Isle</span></div>
+                <div class="report-field label-visible"><span class="report-label ">Devel:</span><span class="report-value"></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 85px;">
+                    <div class="report-field label-visible"><span class="report-label ">Schools:</span><span class="report-value">4</span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-hidden"><span class="report-label hidden">[sd_name]:</span><span class="report-value">Port Washington</span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 135px;">
+                    <div class="report-field label-visible"><span class="report-label ">Taxes:</span><span class="report-value">0</span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Vill Tax:</span><span class="report-value"></span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Total Taxes:</span><span class="report-value"><%= dollars @listing.total_annual_property_taxes_usd %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Taxes w/Basic STAR:</span><span class="report-value"></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-visible"><span class="report-label ">Dis:</span><span class="report-value"></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Block:</span><span class="report-value"></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Sec:</span><span class="report-value"></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Lot:</span><span class="report-value"></span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 150px;">
+                    <div class="report-field label-visible"><span class="report-label ">Adult Comm:</span><span class="report-value">N</span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Gated Prop:</span><span class="report-value"></span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal  last-child">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-visible"><span class="report-label ">Beach Rts:</span><span class="report-value"></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Dock Rts:</span><span class="report-value"></span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-hidden"><span class="report-label hidden">[style]:</span><span class="report-value">Houseboat</span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Zone:</span><span class="report-value">3</span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Rooms:</span><span class="report-value">3</span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 75px;">
+                    <div class="report-field label-visible"><span class="report-label ">Br:</span><span class="report-value">2</span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">MBR 1st Floor:</span><span class="report-value">Y</span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Baths Full:</span><span class="report-value">1</span></div>
+                <div class="report-field label-visible"><span class="report-label ">Baths Half:</span><span class="report-value">0</span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical  last-child" style="width: 150px;">
+                    <div class="report-field label-visible"><span class="report-label ">Basement:</span><span class="report-value">None</span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Finished Bsmt:</span><span class="report-value">N</span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Lot Size:</span><span class="report-value">0</span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Lot Sqft:</span><span class="report-value">0</span></div>
+                <div class="report-field label-visible"><span class="report-label ">Zoning:</span><span class="report-value"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 525px;">
+          <div class="report-field label-visible behavior"><span class="report-label ">Cross Street:</span><span class="report-value">Sintsink Drive E</span></div>
+        </div>
+        <!--div class="group orientation-horizontal  behavior last-child">
+          <div class="report-literal report-field "><img src="http://cdn.walk.sc/images/walkscore-logo-small.gif">&nbsp;</div>
+          <div class="report-field label-visible"><span class="report-label ">Walk Score®:</span><span class="report-value"><a class="form-link remote-link" href="http://www.mlsstratus.com/walkscore/ws.asp?addr=24 Matinecock Ave, Port Washington, NY 11050&amp;encAddr=24 Matinecock Ave-Port Washington-NY-11050&amp;lat=40.8360649645329&amp;lng=-73.7064962089062" value="">58</a></span></div>
+        </div-->
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible behavior"><span class="report-label ">Directions:</span><span class="report-value">Lie 36N - Port Washington Blvd. - Main St. - Shore Rd. - Left On Manhasset Ave. - Left Onto Sintsink Dr. - Right On Matinecock Ave.</span></div>
+      </div>
+      <div class="group orientation-vertical  behavior">
+        <div class="report-literal report-field report-line ">
+          <hr>
+        </div>
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible behavior"><span class="report-label ">Remarks:</span><span class="report-value">Submit All Offers In Writing Accompanied By Pre-Approval Letter And/Or Proof Of Funds.  No Offer Considered Accepted Until Formal Contract Of Sale Is Fully Executed And Delivered. Compensation Offered To Mls Participants Only. All Information Including But Not Limited To Taxes, Lot Size, Age Of Property Are Not Guaranteed Nor Verified And Should Be Independently Verified.</span></div>
+      </div>
+      <div class="report-literal report-field report-line ">
+        <hr>
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible"><span class="report-label ">Property Description:</span><span class="report-value">1971 Christcraft 34 Ft. Houseboat With 2 Bedrooms Including A Third Floor Fully Insulated Fiberglass - Gel Coated Roof.  Docking Fees - $650/Month.  Great Views Of Manhasset Bay!</span></div>
+      </div>
+      <div class="group orientation-tabular ">
+        <div class="group orientation-horizontal  last-child">
+          <div class="group orientation-vertical " style="width: 200px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Property Info</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Appx Yr Built:</span><span class="report-value"><%= @listing.year_built %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">New Constr:</span><span class="report-value"><%= yn(@listing.new_construction) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Construction:</span><span class="report-value">Fiber/Wood</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Front Expose:</span><span class="report-value"></span></div>
+            <div class="group orientation-horizontal ">
+              <div class="group orientation-vertical " style="width: 120px;">
+                <div class="report-field label-visible"><span class="report-label ">Cul-De-Sac:</span><span class="report-value"></span></div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="report-field label-visible"><span class="report-label ">Corner:</span><span class="report-value"></span></div>
+              </div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Horse Prop:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Appearance:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Waterfront:</span><span class="report-value">Y</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Waterview:</span><span class="report-value">Y</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Water Frtage:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Bulkhead:</span><span class="report-value"></span></div>
+          </div>
+          <div class="group orientation-vertical " style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Rooms/Interior</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label "># Kitchens:</span><span class="report-value">1</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Eat In Kitchen:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">DiningRm:</span><span class="report-value">None</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Den/Fam Rm:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Office:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Attic:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Apx Int Sqft:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Wood Flrs:</span><span class="report-value">Y</span></div>
+            <div class="report-field label-visible"><span class="report-label ">W/W Carpet:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Fireplaces:</span><span class="report-value">1</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Skylight:</span><span class="report-value">3</span></div>
+          </div>
+          <div class="group orientation-vertical " style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Appliances/Utilities</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Stove:</span><span class="report-value">Y</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Refrigerator:</span><span class="report-value">Y</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Dishwasher:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Washer:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Dryer:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">A/C:</span><span class="report-value">2</span></div>
+            <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">CAC Zones:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Heat:</span><span class="report-value">-, -</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Heat Zones:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Sep HW Heater:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Permit:</span><span class="report-value"></span></div>
+          </div>
+          <div class="group orientation-vertical  last-child" style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Exterior</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Garage:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Driveway:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Porch:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Patio:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Deck:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Pool:</span><span class="report-value">N</span></div>
+            <div class="report-field label-visible"><span class="report-label ">Tennis Ct:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Ing Sprinks:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Building Size:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Water:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Sewer:</span><span class="report-value"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 500px;">
+          <div class="report-field label-visible"><span class="report-label ">Bsmt/Subfl:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible"><span class="report-label ">1st Floor:</span><span class="report-value">Bedroom, Kitchen, Bathroom</span></div>
+          <div class="report-field label-visible"><span class="report-label ">2nd Floor:</span><span class="report-value">Bedroom With 3 Skylights</span></div>
+          <div class="report-field label-visible"><span class="report-label ">3rd Floor:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Personal Property Exclusions:</span><span class="report-value"></span></div>
+        </div>
+        <div class="group orientation-vertical  last-child" style="width: 240px;">
+          <div class="report-field label-visible"><span class="report-label ">Also For Rent:</span><span class="report-value">Y</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Rental Income:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Short Sale:</span><span class="report-value">N</span></div>
+          <div class="report-field label-visible"><span class="report-label ">REO:</span><span class="report-value">N</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Supersedes ML#:</span><span class="report-value"></span></div>
+        </div>
+      </div>
+      <div class="report-literal report-field report-line ">
+        <hr>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 225px;">
+          <div class="report-field label-visible"><span class="report-label ">Energy Efficient Feature:</span><span class="report-value">N</span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 175px;">
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Green Certified:</span><span class="report-value"></span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 175px;">
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Cert Type:</span><span class="report-value"></span></div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Cert Year:</span><span class="report-value"></span></div>
+        </div>
+      </div>
+      <div class="report-field label-hidden"><span class="report-label hidden">[energy_efficiency_srch]:</span><span class="report-value"></span></div>
+      <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Handicap Accessible:</span><span class="report-value"></span></div>
+      <div class="group orientation-horizontal ">
+        <div class="report-literal report-field ">&nbsp;</div>
+      </div>
+      <div class="group orientation-vertical  empty">
+        <div class=""></div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="report-literal report-field ">&nbsp;</div>
+      </div>
+      <div class="group orientation-vertical  empty">
+        <div class=""></div>
+      </div>
+      <div class="group orientation-vertical  behavior">
+        <div class="report-literal report-field report-line ">
+          <hr>
+        </div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 223px;">
+          <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value">7/29/2016</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Exp Date:</span><span class="report-value">7/29/2017</span></div>
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale UC:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale Cancel:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM Start Date:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM End Date:</span><span class="report-value"></span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 200px;">
+          <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value">$36,000</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Prior LP:</span><span class="report-value">$29,999</span></div>
+          <div class="report-field label-visible"><span class="report-label ">List Price:</span><span class="report-value">$25,000</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Owner Financing:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Broker/Agent Owned:</span><span class="report-value">N</span></div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible"><span class="report-label ">Seller Agency Comp:</span><span class="report-value">0</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Buyer Agency Comp:</span><span class="report-value">0</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Broker Agency Comp:</span><span class="report-value">6</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Listing Broker Comp (For Rental):</span><span class="report-value">50%</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Buyer Exclusions:</span><span class="report-value">N</span></div>
+          <div class="report-literal report-field "><i>Offers of compensation are for MPW network participants only.</i></div>
+        </div>
+      </div>
+      <div class="report-literal report-field report-line ">
+        <hr>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 150px;">
+          <div class="report-field label-visible"><span class="report-label ">Occupancy:</span><span class="report-value"></span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 290px;">
+          <div class="report-field label-visible"><span class="report-label ">Owner:</span><span class="report-value">Morgan</span></div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible"><span class="report-label ">Offers:</span><span class="report-value">Can Be Present</span></div>
+        </div>
+      </div>
+      <div class="group orientation-horizontal  last-child">
+        <div class="group orientation-vertical " style="width: 440px;">
+          <div class="group orientation-horizontal  behavior">
+            <div class="group orientation-vertical " style="width: 335px;">
+              <div class="group orientation-horizontal  last-child">
+                <div class="report-field label-visible"><span class="report-label ">List Broker:</span><span class="report-value"><a class="form-link " href="Javascript:showOfficePopup('LAFF02');" value="">LAFFEY FINE HOMES</a></span></div>
+                <div class="report-literal report-field ">&nbsp;&nbsp;</div>
+                <div class="report-literal report-field ">(</div>
+                <div class="report-field label-hidden"><span class="report-label hidden">[$codeBranch]:</span><span class="report-value">LAFF02</span></div>
+                <div class="report-literal report-field ">)</div>
+              </div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 105px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[bph_num]:</span><span class="report-value">516-741-3070</span></div>
+            </div>
+          </div>
+          <div class="group orientation-horizontal  behavior">
+            <div class="group orientation-vertical " style="width: 335px;">
+              <div class="group orientation-horizontal  last-child">
+                <div class="report-field label-visible"><span class="report-label ">List Agent:</span><span class="report-value"><a class="form-link " href="Javascript:showMemberPopup('108179');" value="">Valis, Sandra L</a></span></div>
+              </div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 105px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[lagt_ph]:</span><span class="report-value">516-741-3070</span></div>
+            </div>
+          </div>
+          <div class="group orientation-horizontal  behavior behavior-hidden">
+            <div class="group orientation-vertical " style="width: 335px;">
+              <div class="group orientation-horizontal  last-child">
+                <div class="report-field label-visible"><span class="report-label ">Co-List Agt:</span><span class="report-value"><a class="form-link " href="Javascript:showMemberPopup('');" value=""></a></span></div>
+              </div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 105px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[co_lagt_ph]:</span><span class="report-value"></span></div>
+            </div>
+          </div>
+          <div class="group orientation-horizontal  behavior behavior-hidden last-child">
+            <div class="group orientation-vertical " style="width: 335px;">
+              <div class="report-field label-visible"><span class="report-label ">Co-List Agt2:</span><span class="report-value"><a class="form-link " href="Javascript:showMemberPopup('');" value=""></a></span></div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 105px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[co_list_agent2ph]:</span><span class="report-value"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value">Call Office (516) 741-3070</span></div>
+          <div class="report-field label-visible"><span class="report-label ">Status/Show#:</span><span class="report-value">516-741-3070</span></div>
+          <div class="group orientation-horizontal  last-child">
+            <div class="group orientation-vertical " style="width: 100px;">
+              <div class="report-field label-visible"><span class="report-label ">Lockbox:</span><span class="report-value"></span></div>
+            </div>
+            <div class="group orientation-vertical  last-child">
+              <div class="report-field label-visible"><span class="report-label ">Neg Dir:</span><span class="report-value">N</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

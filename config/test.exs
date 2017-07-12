@@ -17,3 +17,7 @@ config :mpnetwork, Mpnetwork.Repo,
   database: "mpnetwork_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Mailer stub for Swoosh
+config :mpnetwork, Mpnetwork.Mailer,
+  adapter: Swoosh.Adapters.Test

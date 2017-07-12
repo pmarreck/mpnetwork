@@ -3,7 +3,7 @@
     <tbody>
   <%= for attachment <- @attachments do %>
       <tr>
-        <%= if attachment.primary do %>
+        <%= if attachment.primary && @listing.user_id == @current_user.id do %>
           <td style="vertical-align: middle">
             <b>Designated Primary Photo ⇨</b>
           </td>
@@ -19,8 +19,8 @@
           <% end %>
         </td>
         <td class="text-right">
+            <span><%= link "#{if attachment.is_image, do: "Enlarge", else: "View"}", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
           <%= if @listing.user_id == @current_user.id do %>
-            <span><%= link "Show", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
             <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
             <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
           <% end %>

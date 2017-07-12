@@ -47,7 +47,7 @@ config :logger, :console, format: "[$level] $message\n"
 
 # Configure the mailer to deliver to a local server for development
 # which can be seen at /mailbox (per the route set up)
-config :mpnetwork, Mailer,
+config :mpnetwork, Mpnetwork.Mailer,
   adapter: Swoosh.Adapters.Local
 
 # Set a higher stacktrace during development. Avoid configuring such

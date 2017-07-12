@@ -57,6 +57,7 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_swoosh, git: "https://github.com/vircung/phoenix_swoosh.git", branch: "phx-1.3"},
       {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
       {:briefly, "~> 0.3"}, # for easily working with tempfiles
+      {:ex_crypto, "~> 0.4", override: true},
     ]
   end
 

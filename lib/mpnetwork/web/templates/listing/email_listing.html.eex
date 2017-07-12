@@ -1,0 +1,29 @@
+<%= render(Mpnetwork.Web.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Email ]})) %>
+
+<h4>Send an email linking to <%= @listing.address %></h4>
+<p><%= link "Preview the link (client format)", to: public_client_listing_path(@conn, :client_listing, @listing.id, public_client_listing_code(@listing)) %> (just use your browser's Back button to return here)</p>
+<p><%= link "Preview the link (agent format)", to: public_agent_listing_path(@conn, :agent_listing, @listing.id, public_agent_listing_code(@listing)) %></p>
+<%= form_for @conn, email_listing_path(@conn, :send_email, @listing.id), [as: :email], fn f  -> %>
+  <div class="form-group">
+    <%= label f, "Name of user to email this listing to:", class: "control-label" %>
+    <%= text_input f, :name, class: "form-control", required: "" %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "Email of user to email this listing to:", class: "control-label" %>
+    <%= text_input f, :email_address, class: "form-control", required: "" %>
+    <%= error_tag f, :email_address %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "Type of listing format to send a link of:", class: "control-label" %>
+    <%= select(f, :type, ["Client": "client", "Agent": "agent"], class: "form-control") %>
+    <%= error_tag f, :type %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Send Email", class: "btn btn-primary" %>
+    <%= link "Cancel", to: listing_path(@conn, :show, @listing.id), class: "btn" %>
+  </div>
+<% end %>

@@ -27,8 +27,10 @@ config :logger, :console,
   metadata: [:request_id]
 
 # Configures Swoosh (email wrapper)
-config :mpnetwork, Sample.Mailer,
-  adapter: Swoosh.Adapters.SparkPost
+config :mpnetwork, Mpnetwork.Mailer,
+  adapter: Swoosh.Adapters.SparkPost,
+  api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
+  endpoint: "https://api.sparkpost.com/api/v1"
 
 # Configures Guardian
 # config :guardian, Guardian,
