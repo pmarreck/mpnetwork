@@ -7,7 +7,7 @@
           <td style="vertical-align: middle">
             <b>Designated Primary Photo ⇨</b>
           </td>
-        <%= else %>
+        <% else %>
           <td></td>
         <% end %>
         <td>

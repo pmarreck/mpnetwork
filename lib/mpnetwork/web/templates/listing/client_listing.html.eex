@@ -33,7 +33,7 @@
             <div class="group orientation-horizontal ">
               <div class="group orientation-horizontal  last-child" style="width: 490px;">
                 <div class="group orientation-vertical " style="width: 112px;">
-                  <div class="report-field label-visible"><span class="report-label " style="font-size: 10pt; font-weight: 700;">ML#:</span><span class="report-value" style="font-weight: 700; font-size: 10pt;">2872703</span></div>
+                  <div class="report-field label-visible"><span class="report-label " style="font-size: 10pt; font-weight: 700;">MPW#:</span><span class="report-value" style="font-weight: 700; font-size: 10pt;"><%= @listing.id %></span></div>
                 </div>
                 <div class="group orientation-vertical " style="width: 100px;">
                   <div class="report-field label-hidden"><span class="report-label hidden">[class]:</span><span class="report-value">Residential</span></div>
@@ -72,7 +72,7 @@
                     <div class="report-field label-visible"><span class="report-label ">Vill Tax:</span><span class="report-value"></span></div>
                   </div>
                 </div>
-                <div class="report-field label-visible"><span class="report-label ">Total Taxes:</span><span class="report-value"><%= dollars @listing.total_annual_property_taxes_usd %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Total Taxes:</span><span class="report-value"><%= dollars @listing.prop_tax_usd %></span></div>
                 <div class="report-field label-visible"><span class="report-label ">Taxes w/Basic STAR:</span><span class="report-value"></span></div>
                 <div class="group orientation-horizontal ">
                   <div class="group orientation-vertical " style="width: 100px;">

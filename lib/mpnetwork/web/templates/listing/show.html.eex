@@ -3,7 +3,7 @@
 <div class="form-group">
   <%= if @listing.user_id == @current_user.id do %>
     <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></div>
-  <%= else %>
+  <% else %>
     <br/>
   <% end %>
   <div><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xs" %></div>
@@ -83,8 +83,8 @@
   </li>
 
   <li>
-    <strong>Lot size (acres):</strong>
-    <%= if @listing.lot_size_acre_cents, do: @listing.lot_size_acre_cents/100 %>
+    <strong>Lot size:</strong>
+    <%= @listing.lot_size %>
   </li>
 
   <li>
@@ -104,7 +104,7 @@
 
   <li>
     <strong>Fireplaces:</strong>
-    <%= @listing.fireplaces %>
+    <%= @listing.num_fireplaces %>
   </li>
 
   <li>
@@ -138,8 +138,8 @@
   </li>
 
   <li>
-    <strong>Total annual property taxes (USD):</strong>
-    <%= Number.Currency.number_to_currency(@listing.total_annual_property_taxes_usd, precision: 0) %>
+    <strong>Property taxes (USD):</strong>
+    <%= Number.Currency.number_to_currency(@listing.prop_tax_usd, precision: 0) %>
   </li>
 
   <li>
@@ -204,22 +204,12 @@
 
   <li>
     <strong>LED lighting?</strong>
-    <%= @listing.led_lighting %>
+    <%= @listing.eef_led_lighting %>
   </li>
 
   <li>
-    <strong>New appliances?</strong>
-    <%= @listing.new_appliances %>
-  </li>
-
-  <li>
-    <strong>External url:</strong>
-    <%= @listing.ext_url %>
-  </li>
-
-  <li>
-    <strong>Special notes:</strong>
-    <%= @listing.special_notes %>
+    <strong>Remarks:</strong>
+    <%= @listing.remarks %>
   </li>
 
   <li>

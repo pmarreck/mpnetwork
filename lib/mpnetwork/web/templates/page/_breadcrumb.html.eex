@@ -15,7 +15,7 @@
       <%= for {level, depth} <- Enum.with_index(breadcrumb_path, 1) do %>
         <%= if depth == maxdepth do %>
           <li class="active"><%= level %></li>
-        <%= else %>
+        <% else %>
           <li><%= level %></li>
         <% end %>
       <% end %>

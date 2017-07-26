@@ -92,15 +92,15 @@
   </div>
 
   <div class="form-group<%= if f.errors[:sq_ft], do: " has-error" %>">
-    <%= label f, :sq_ft, "Square feet", class: "control-label" %>
+    <%= label f, :sq_ft, "Apx intl sq ft", class: "control-label" %>
     <%= number_input f, :sq_ft, class: "form-control" %>
     <%= error_tag f, :sq_ft %>
   </div>
 
-  <div class="form-group<%= if f.errors[:lot_size_acre_cents], do: " has-error" %>">
-    <%= label f, :lot_size_acre_cents, "Lot Size (in acre-cents, 100 cents = 1 acre)", class: "control-label" %>
-    <%= number_input f, :lot_size_acre_cents, class: "form-control" %>
-    <%= error_tag f, :lot_size_acre_cents %>
+  <div class="form-group<%= if f.errors[:lot_size], do: " has-error" %>">
+    <%= label f, :lot_size, "Lot Size", class: "control-label" %>
+    <%= text_input f, :lot_size, class: "form-control" %>
+    <%= error_tag f, :lot_size %>
   </div>
 
   <div class="form-group<%= if f.errors[:year_built], do: " has-error" %>">
@@ -121,10 +121,10 @@
     <%= error_tag f, :basement %>
   </div>
 
-  <div class="form-group<%= if f.errors[:fireplaces], do: " has-error" %>">
-    <%= label f, :fireplaces, "# Fireplaces", class: "control-label" %>
-    <%= number_input f, :fireplaces, class: "form-control" %>
-    <%= error_tag f, :fireplaces %>
+  <div class="form-group<%= if f.errors[:num_fireplaces], do: " has-error" %>">
+    <%= label f, :num_fireplaces, "# Fireplaces", class: "control-label" %>
+    <%= number_input f, :num_fireplaces, class: "form-control" %>
+    <%= error_tag f, :num_fireplaces %>
   </div>
 
   <div class="form-group<%= if f.errors[:parking_spaces], do: " has-error" %>">
@@ -163,10 +163,10 @@
     <%= error_tag f, :tax_rate_code_area %>
   </div>
 
-  <div class="form-group<%= if f.errors[:total_annual_property_taxes_usd], do: " has-error" %>">
-    <%= label f, :total_annual_property_taxes_usd, "Total annual property taxes (USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :total_annual_property_taxes_usd, class: "form-control" %>
-    <%= error_tag f, :total_annual_property_taxes_usd %>
+  <div class="form-group<%= if f.errors[:prop_tax_usd], do: " has-error" %>">
+    <%= label f, :prop_tax_usd, "Property taxes (USD, no $ or commas)", class: "control-label" %>
+    <%= number_input f, :prop_tax_usd, class: "form-control" %>
+    <%= error_tag f, :prop_tax_usd %>
   </div>
 
   <div class="form-group<%= if f.errors[:patio], do: " has-error" %>">
@@ -241,28 +241,16 @@
     <%= error_tag f, :cellular_coverage_quality %>
   </div>
 
-  <div class="form-group<%= if f.errors[:led_lighting], do: " has-error" %>">
-    <%= label f, :led_lighting, "LED lighting?", class: "control-label" %>
-    <%= checkbox f, :led_lighting, class: "checkbox" %>
-    <%= error_tag f, :led_lighting %>
+  <div class="form-group<%= if f.errors[:eef_led_lighting], do: " has-error" %>">
+    <%= label f, :eef_led_lighting, "LED lighting?", class: "control-label" %>
+    <%= checkbox f, :eef_led_lighting, class: "checkbox" %>
+    <%= error_tag f, :eef_led_lighting %>
   </div>
 
-  <div class="form-group<%= if f.errors[:new_appliances], do: " has-error" %>">
-    <%= label f, :new_appliances, "New appliances?", class: "control-label" %>
-    <%= checkbox f, :new_appliances, class: "checkbox" %>
-    <%= error_tag f, :new_appliances %>
-  </div>
-
-  <div class="form-group<%= if f.errors[:ext_url], do: " has-error" %>">
-    <%= label f, :ext_url, "External URL", class: "control-label" %>
-    <%= text_input f, :ext_url, class: "form-control" %>
-    <%= error_tag f, :ext_url %>
-  </div>
-
-  <div class="form-group<%= if f.errors[:special_notes], do: " has-error" %>">
-    <%= label f, :special_notes, class: "control-label" %>
-    <%= textarea f, :special_notes, class: "form-control" %>
-    <%= error_tag f, :special_notes %>
+  <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
+    <%= label f, :remarks, class: "control-label" %>
+    <%= textarea f, :remarks, class: "form-control" %>
+    <%= error_tag f, :remarks %>
   </div>
 
   <div class="form-group<%= if f.errors[:visible_on], do: " has-error" %>">

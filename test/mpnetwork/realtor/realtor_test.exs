@@ -89,9 +89,9 @@ defmodule Mpnetwork.RealtorTest do
   describe "listings" do
     alias Mpnetwork.Realtor.Listing
 
-    @valid_attrs %{expires_on: ~D[2017-09-17], state: "NY", new_construction: false, fios_available: true, tax_rate_code_area: 42, total_annual_property_taxes_usd: 42, num_skylights: 42, lot_size_acre_cents: 42, attached_garage: true, for_rent: true, zip: "11050", ext_url: "http://ext_url", visible_on: ~D[2018-04-17], city: "New York", fireplaces: 3, new_appliances: true, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 2, num_half_baths: 2, year_built: 1993, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: false, cellular_coverage_quality: 42, hot_tub: true, basement: true, price_usd: 1000000, special_notes: "some special_notes", parking_spaces: 6, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "1 Fancy Place", num_garages: 4, num_baths: 5, central_vac: true, led_lighting: true}
-    @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, total_annual_property_taxes_usd: 43, num_skylights: 43, lot_size_acre_cents: 43, attached_garage: false, for_rent: false, zip: "some updated zip", ext_url: "some updated ext_url", visible_on: ~D[2011-05-18], city: "some updated city", fireplaces: 43, new_appliances: false, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 43, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 43, hot_tub: false, basement: false, price_usd: 43, special_notes: "some updated special_notes", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, led_lighting: false}
-    @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, total_annual_property_taxes_usd: nil, num_skylights: nil, lot_size_acre_cents: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_url: nil, visible_on: nil, city: nil, fireplaces: nil, new_appliances: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, special_notes: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, led_lighting: nil}
+    @valid_attrs %{expires_on: ~D[2017-09-17], state: "NY", new_construction: false, fios_available: true, tax_rate_code_area: 42, prop_tax_usd: 42, num_skylights: 42, lot_size: 42, attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["http://ext_urls"], visible_on: ~D[2018-04-17], city: "New York", num_fireplaces: 3, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 2, num_half_baths: 2, year_built: 1993, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: false, cellular_coverage_quality: 42, hot_tub: true, basement: true, price_usd: 1000000, remarks: "some remarks", parking_spaces: 6, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "1 Fancy Place", num_garages: 4, num_baths: 5, central_vac: true, eef_led_lighting: true}
+    @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, prop_tax_usd: 43, num_skylights: 43, lot_size: 43, attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["http://updated_ext_urls"], visible_on: ~D[2011-05-18], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 43, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 43, hot_tub: false, basement: false, price_usd: 43, remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
+    @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, prop_tax_usd: nil, num_skylights: nil, lot_size: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_urls: nil, visible_on: nil, city: nil, num_fireplaces: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, remarks: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, eef_led_lighting: nil}
 
     def listing_fixture(attrs \\ %{}) do
       # first add an associated user if none exists
@@ -127,17 +127,16 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.new_construction == false
       assert listing.fios_available == true
       assert listing.tax_rate_code_area == 42
-      assert listing.total_annual_property_taxes_usd == 42
+      assert listing.prop_tax_usd == 42
       assert listing.num_skylights == 42
-      assert listing.lot_size_acre_cents == 42
+      assert listing.lot_size == 42
       assert listing.attached_garage == true
       assert listing.for_rent == true
       assert listing.zip == "11050"
-      assert listing.ext_url == "http://ext_url"
+      assert listing.ext_urls == ["http://ext_urls"]
       assert listing.visible_on == ~D[2018-04-17]
       assert listing.city == "New York"
-      assert listing.fireplaces == 3
-      assert listing.new_appliances == true
+      assert listing.num_fireplaces == 3
       assert listing.modern_kitchen_countertops == true
       assert listing.deck == true
       assert listing.for_sale == true
@@ -155,7 +154,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.hot_tub == true
       assert listing.basement == true
       assert listing.price_usd == 1000000
-      assert listing.special_notes == "some special_notes"
+      assert listing.remarks == "some remarks"
       assert listing.parking_spaces == 6
       assert listing.description == "some description"
       assert listing.num_bedrooms == 42
@@ -165,7 +164,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.num_garages == 4
       assert listing.num_baths == 5
       assert listing.central_vac == true
-      assert listing.led_lighting == true
+      assert listing.eef_led_lighting == true
     end
 
     test "create_listing/1 with invalid data returns error changeset" do
@@ -181,17 +180,16 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.new_construction == false
       assert listing.fios_available == false
       assert listing.tax_rate_code_area == 43
-      assert listing.total_annual_property_taxes_usd == 43
+      assert listing.prop_tax_usd == 43
       assert listing.num_skylights == 43
-      assert listing.lot_size_acre_cents == 43
+      assert listing.lot_size == 43
       assert listing.attached_garage == false
       assert listing.for_rent == false
       assert listing.zip == "some updated zip"
-      assert listing.ext_url == "some updated ext_url"
+      assert listing.ext_urls == ["http://updated_ext_urls"]
       assert listing.visible_on == ~D[2011-05-18]
       assert listing.city == "some updated city"
-      assert listing.fireplaces == 43
-      assert listing.new_appliances == false
+      assert listing.num_fireplaces == 43
       assert listing.modern_kitchen_countertops == false
       assert listing.deck == false
       assert listing.for_sale == false
@@ -209,7 +207,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.hot_tub == false
       assert listing.basement == false
       assert listing.price_usd == 43
-      assert listing.special_notes == "some updated special_notes"
+      assert listing.remarks == "some updated remarks"
       assert listing.parking_spaces == 43
       assert listing.description == "some updated description"
       assert listing.num_bedrooms == 43
@@ -219,7 +217,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.num_garages == 43
       assert listing.num_baths == 43
       assert listing.central_vac == false
-      assert listing.led_lighting == false
+      assert listing.eef_led_lighting == false
     end
 
     test "update_listing/2 with invalid data returns error changeset" do

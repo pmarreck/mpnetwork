@@ -77,10 +77,10 @@
 
           <%= info = get_flash(@conn, :info); if info do %>
             <p class="alert alert-info" role="alert"><%= info %></p>
-          <%= end %>
+          <% end %>
           <%= error = get_flash(@conn, :error); if error do %>
             <p class="alert alert-danger" role="alert"><%= error %></p>
-          <%= end %>
+          <% end %>
 
           <main role="main">
             <%= render @view_module, @view_template, assigns %>

@@ -6,8 +6,9 @@
             <th>Address</th>
             <th>Thumb</th>
             <th>Price</th>
-            <th># beds</th>
-            <th># baths</th>
+            <th>beds</th>
+            <th>baths</th>
+            <th>half baths</th>
             <th>Sq ft</th>
             <th>Acres</th>
             <th>Year built</th>
@@ -41,17 +42,10 @@
             </td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td><%= listing.num_bedrooms %></td>
-            <%= if listing.num_baths do %>
-            <%= if listing.num_half_baths do %>
-                <td><%= listing.num_baths + listing.num_half_baths/2 %></td>
-            <%= else %>
-                <td><%= listing.num_baths %></td>
-            <% end %>
-            <%= else %>
-            <td></td>
-            <% end %>
+            <td><%= listing.num_baths %></td>
+            <td><%= listing.num_half_baths %></td>
             <td><%= listing.sq_ft %></td>
-            <td><%= if listing.lot_size_acre_cents, do: listing.lot_size_acre_cents/100 %></td>
+            <td><%= listing.lot_size %></td>
             <td><%= listing.year_built %></td>
             <td><%= relative_humanized_time(listing.inserted_at) %></td>
             <td><%= listing.visible_on %></td>
@@ -67,7 +61,7 @@
     <% end %>
         </tbody>
     </table>
-  <%= else %>
+  <% else %>
     <p>No listings by you yet!</p>
     <%= link "Create a listing", to: listing_path(@conn, :new), class: "btn btn-default btn-xs" %>
   <% end %>

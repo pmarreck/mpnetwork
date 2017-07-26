@@ -47,7 +47,7 @@ defmodule Mpnetwork.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.0"},
       {:number, "~> 0.5"},
-      {:timber, "~> 2.0"},
+      {:timber, "~> 2.4"},
       {:ex_image_info, "~> 0.1.1"},
       {:eliver, "~> 1.0.0"}, # provides `mix eliver.bump` for hot prod upgrades
       {:cachex, "~> 2.1"},
@@ -58,6 +58,8 @@ defmodule Mpnetwork.Mixfile do
       {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
       {:briefly, "~> 0.3"}, # for easily working with tempfiles
       {:ex_crypto, "~> 0.4", override: true},
+      # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
+      {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
     ]
   end
 
