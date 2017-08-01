@@ -43,7 +43,7 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:coherence, github: "smpallen99/coherence", branch: "phx-1.3"},
+      {:coherence, github: "smpallen99/coherence", branch: "master"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.1"},
       {:number, "~> 0.5"},
