@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Update the instrumenters so that we can structure Phoenix logs
-config :mpnetwork, Mpnetwork.Web.Endpoint,
+config :mpnetwork, MpnetworkWeb.Endpoint,
   instrumenters: [Timber.Integrations.PhoenixInstrumenter]
 
 # Structure Ecto logs

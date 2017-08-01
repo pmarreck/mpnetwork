@@ -14,10 +14,10 @@ config :mpnetwork,
   max_attachments_per_listing: 20 # not enforced yet!
 
 # Configures the endpoint
-config :mpnetwork, Mpnetwork.Web.Endpoint,
+config :mpnetwork, MpnetworkWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "0UYiCVV96M2bKbnZuilr1oNUY+NRJz8F07d3nWVjUOEwBHmxohBn2W4qjz+9oVUd",
-  render_errors: [view: Mpnetwork.Web.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Mpnetwork.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
@@ -52,7 +52,7 @@ config :coherence,
   user_schema: Mpnetwork.User,
   repo: Mpnetwork.Repo,
   module: Mpnetwork,
-  router: Mpnetwork.Web.Router,
+  router: MpnetworkWeb.Router,
   messages_backend: Mpnetwork.Coherence.Messages,
   site_name: "MPWrealestateboard.network",
   logged_out_url: "/",

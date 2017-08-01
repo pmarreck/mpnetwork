@@ -1,4 +1,4 @@
-defmodule Mpnetwork.Web.ConnCase do
+defmodule MpnetworkWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -13,16 +13,16 @@ defmodule Mpnetwork.Web.ConnCase do
   of the test unless the test case is marked as async.
   """
 
-  use ExUnit.CaseTemplate
+  use ExUnit.CaseTemplate, async: true
 
   using do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      import Mpnetwork.Web.Router.Helpers
+      import MpnetworkWeb.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Mpnetwork.Web.Endpoint
+      @endpoint MpnetworkWeb.Endpoint
     end
   end
 

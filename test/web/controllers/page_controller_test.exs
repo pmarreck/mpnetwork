@@ -1,5 +1,5 @@
-defmodule Mpnetwork.Web.PageControllerTest do
-  use Mpnetwork.Web.ConnCase
+defmodule MpnetworkWeb.PageControllerTest do
+  use MpnetworkWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

@@ -1,3 +1,3 @@
-defmodule Mpnetwork.Web.PageViewTest do
-  use Mpnetwork.Web.ConnCase, async: true
+defmodule MpnetworkWeb.PageViewTest do
+  use MpnetworkWeb.ConnCase, async: true
 end

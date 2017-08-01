@@ -1,20 +1,39 @@
-defmodule Mpnetwork.Web.BroadcastControllerTest do
-  use Mpnetwork.Web.ConnCase
+defmodule MpnetworkWeb.BroadcastControllerTest do
 
-  alias Mpnetwork.Realtor
+  # use ExUnit.Case, async: true
 
-  @create_attrs %{body: "some body", title: "some title", user_id: 42}
-  @update_attrs %{body: "some updated body", title: "some updated title", user_id: 43}
-  @invalid_attrs %{body: nil, title: nil, user_id: nil}
+  use MpnetworkWeb.ConnCase, async: true
+
+  alias Mpnetwork.{Realtor, Repo}
+  alias Mpnetwork.Realtor.Broadcast
+
+  import Mpnetwork.Test.Utilities
+
+  @create_attrs %{body: "some broadcast body", title: "some broadcast title", user_id: 1}
+  @update_attrs %{body: "some updated broadcast body", title: "some updated broadcast title", user_id: 1}
+  @invalid_attrs %{body: nil, title: nil, user_id: 1}
+
+  setup %{conn: conn} do
+    user = current_user()
+    {:ok, conn: assign(conn, :current_user, user), user: user}
+  end
 
   def fixture(:broadcast) do
     {:ok, broadcast} = Realtor.create_broadcast(@create_attrs)
     broadcast
   end
 
+  test "required login" do
+    conn = %Plug.Conn{}
+    conn = get conn, broadcast_path(conn, :index)
+    assert html_response(conn, 200) =~ "action=\"/sessions\""
+    assert conn.resp_body =~ "Email"
+    assert conn.resp_body =~ "Password"
+  end
+
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, broadcast_path(conn, :index)
-    assert html_response(conn, 200) =~ "Listing Broadcasts"
+    assert html_response(conn, 200) =~ "Most Recent Broadcasts"
   end
 
   test "renders form for new broadcasts", %{conn: conn} do
@@ -29,7 +48,7 @@ defmodule Mpnetwork.Web.BroadcastControllerTest do
     assert redirected_to(conn) == broadcast_path(conn, :show, id)
 
     conn = get conn, broadcast_path(conn, :show, id)
-    assert html_response(conn, 200) =~ "Show Broadcast"
+    assert html_response(conn, 200) =~ "Broadcast created successfully"
   end
 
   test "does not create broadcast and renders errors when data is invalid", %{conn: conn} do
@@ -49,7 +68,7 @@ defmodule Mpnetwork.Web.BroadcastControllerTest do
     assert redirected_to(conn) == broadcast_path(conn, :show, broadcast)
 
     conn = get conn, broadcast_path(conn, :show, broadcast)
-    assert html_response(conn, 200) =~ "some updated body"
+    assert html_response(conn, 200) =~ "Broadcast updated successfully"
   end
 
   test "does not update chosen broadcast and renders errors when data is invalid", %{conn: conn} do
@@ -58,12 +77,15 @@ defmodule Mpnetwork.Web.BroadcastControllerTest do
     assert html_response(conn, 200) =~ "Edit Broadcast"
   end
 
-  test "deletes chosen broadcast", %{conn: conn} do
+  test "deletes chosen broadcast", %{conn: fresh_conn} do
+    conn = fresh_conn
     broadcast = fixture(:broadcast)
     conn = delete conn, broadcast_path(conn, :delete, broadcast)
     assert redirected_to(conn) == broadcast_path(conn, :index)
+    refute Repo.get(Broadcast, broadcast.id)
     assert_error_sent 404, fn ->
-      get conn, broadcast_path(conn, :show, broadcast)
+      conn = fresh_conn
+      get(conn, broadcast_path(conn, :show, broadcast))
     end
   end
 end

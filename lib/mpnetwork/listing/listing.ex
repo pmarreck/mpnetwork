@@ -242,9 +242,8 @@ defmodule Mpnetwork.Listing do
     updated_secs_since_epoch = listing.updated_at
       |> DateTime.from_naive!("Etc/UTC")
       |> DateTime.to_unix
-    :crypto.hash(:sha256, "#{recipient_type}#{listing.id}#{updated_secs_since_epoch}#{Mpnetwork.Web.Endpoint.config(:secret_key_base)}")
-      |> Base.encode32
-      |> String.downcase
+    :crypto.hash(:sha256, "#{recipient_type}#{listing.id}#{updated_secs_since_epoch}#{MpnetworkWeb.Endpoint.config(:secret_key_base)}")
+      |> Base.encode32(case: :lower)
       |> String.trim_trailing("=")
   end
 

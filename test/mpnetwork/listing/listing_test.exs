@@ -1,4 +1,7 @@
 defmodule Mpnetwork.ListingTest do
+
+  use ExUnit.Case, async: true
+  
   use Mpnetwork.DataCase
 
   alias Mpnetwork.Listing

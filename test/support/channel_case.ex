@@ -1,4 +1,4 @@
-defmodule Mpnetwork.Web.ChannelCase do
+defmodule MpnetworkWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -13,7 +13,7 @@ defmodule Mpnetwork.Web.ChannelCase do
   of the test unless the test case is marked as async.
   """
 
-  use ExUnit.CaseTemplate
+  use ExUnit.CaseTemplate, async: true
 
   using do
     quote do
@@ -21,7 +21,7 @@ defmodule Mpnetwork.Web.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint Mpnetwork.Web.Endpoint
+      @endpoint MpnetworkWeb.Endpoint
     end
   end
 
