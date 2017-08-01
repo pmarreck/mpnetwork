@@ -1,3 +1,3 @@
-defmodule Coherence.ConfirmationView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.ConfirmationView do
+  use MpnetworkWeb.Coherence, :view
 end

@@ -1,3 +1,3 @@
-defmodule Coherence.PasswordView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.PasswordView do
+  use MpnetworkWeb.Coherence, :view
 end

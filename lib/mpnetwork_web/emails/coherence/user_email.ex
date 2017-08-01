@@ -1,6 +1,6 @@
 Code.ensure_loaded Phoenix.Swoosh
 
-defmodule Mpnetwork.Coherence.UserEmail do
+defmodule MpnetworkWeb.Coherence.UserEmail do
   @moduledoc false
   use Phoenix.Swoosh, view: Coherence.EmailView, layout: {Coherence.LayoutView, :email}
   alias Swoosh.Email

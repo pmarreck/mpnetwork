@@ -54,7 +54,8 @@ defmodule Mpnetwork.Mixfile do
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:swoosh, "~> 0.8"},
-      {:phoenix_swoosh, git: "https://github.com/vircung/phoenix_swoosh.git", branch: "phx-1.3"},
+      # phoenix_swoosh newer version already included by Coherence (and conflicts with this)
+      # {:phoenix_swoosh, git: "https://github.com/vircung/phoenix_swoosh.git", branch: "phx-1.3"},
       {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
       {:briefly, "~> 0.3"}, # for easily working with tempfiles
       {:ex_crypto, "~> 0.4", override: true},

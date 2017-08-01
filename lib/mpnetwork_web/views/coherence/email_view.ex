@@ -1,3 +1,3 @@
-defmodule Coherence.EmailView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.EmailView do
+  use MpnetworkWeb.Coherence, :view
 end

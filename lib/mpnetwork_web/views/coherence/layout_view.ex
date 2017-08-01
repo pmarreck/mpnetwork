@@ -1,3 +1,3 @@
-defmodule Coherence.LayoutView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.LayoutView do
+  use MpnetworkWeb.Coherence, :view
 end

@@ -1,3 +1,3 @@
 defmodule Coherence.CoherenceView do
-  use Mpnetwork.Coherence.Web, :view
+  use MpnetworkWeb.Coherence, :view
 end

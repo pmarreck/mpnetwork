@@ -1,3 +1,3 @@
-defmodule Coherence.SessionView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.SessionView do
+  use MpnetworkWeb.Coherence, :view
 end

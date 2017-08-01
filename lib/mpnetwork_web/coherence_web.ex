@@ -1,9 +1,28 @@
-defmodule Mpnetwork.Coherence.Web do
+defmodule MpnetworkWeb.Coherence do
   @moduledoc false
+
+  def view do
+    quote do
+      use Phoenix.View, root: "lib/mpnetwork_web/templates"
+      # Import convenience functions from controllers
+
+      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
+
+      # Use all HTML functionality (forms, tags, etc)
+      use Phoenix.HTML
+
+      import MpnetworkWeb.Router.Helpers
+      import MpnetworkWeb.ErrorHelpers
+      import MpnetworkWeb.Gettext
+      import MpnetworkWeb.Coherence.ViewHelpers
+      # custom global helpers
+      import MpnetworkWeb.GlobalHelpers
+    end
+  end
 
   def controller do
     quote do
-      use Phoenix.Controller, except: [layout_view: 2] #, namespace: BlogPhx.Web
+      use Phoenix.Controller, except: [layout_view: 2]
       use Coherence.Config
       use Timex
 
@@ -18,25 +37,6 @@ defmodule Mpnetwork.Coherence.Web do
       alias Coherence.ControllerHelpers, as: Helpers
 
       require Redirects
-    end
-  end
-
-  def view do
-    quote do
-      use Phoenix.View, root: "lib/mpnetwork/web/templates/coherence"
-      # Import convenience functions from controllers
-
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
-
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-
-      import MpnetworkWeb.Router.Helpers
-      import MpnetworkWeb.ErrorHelpers
-      import MpnetworkWeb.Gettext
-      import Mpnetwork.Coherence.ViewHelpers
-      # custom global helpers
-      import MpnetworkWeb.GlobalHelpers
     end
   end
 

@@ -1,6 +1,6 @@
 <br \>
 
-<h3><%= dgettext "coherence", "Resend Confirmation" %></h3>
+<h3><%= dgettext "coherence", "Resend Confirmation Instructions" %></h3>
 
 <%= form_for @changeset, confirmation_path(@conn, :create), [as: :confirmation], fn f  -> %>
 

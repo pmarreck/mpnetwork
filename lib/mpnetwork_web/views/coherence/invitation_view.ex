@@ -1,3 +1,3 @@
-defmodule Coherence.InvitationView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.InvitationView do
+  use MpnetworkWeb.Coherence, :view
 end

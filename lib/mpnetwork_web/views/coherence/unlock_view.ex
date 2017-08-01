@@ -1,3 +1,3 @@
-defmodule Coherence.UnlockView do
-  use Mpnetwork.Coherence.Web, :view
+defmodule MpnetworkWeb.Coherence.UnlockView do
+  use MpnetworkWeb.Coherence, :view
 end
