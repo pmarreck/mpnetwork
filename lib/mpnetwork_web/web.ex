@@ -29,7 +29,7 @@ defmodule MpnetworkWeb do
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/mpnetwork/web/templates",
+      use Phoenix.View, root: "lib/mpnetwork_web/templates",
                         namespace: MpnetworkWeb
 
       # Import convenience functions from controllers
