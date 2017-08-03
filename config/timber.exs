@@ -1,13 +1,16 @@
 use Mix.Config
 
 # Update the instrumenters so that we can structure Phoenix logs
-config :mpnetwork, MpnetworkWeb.Endpoint,
-  instrumenters: [Timber.Integrations.PhoenixInstrumenter]
-
-# Structure Ecto logs
-config :mpnetwork, Mpnetwork.Repo,
-  loggers: [{Timber.Integrations.EctoLogger, :log, [:info]}]
-
+# For now, do this only for Mix.env == :prod
+if Mix.env() == :prod do
+  # Update the instrumenters so that we can structure Phoenix logs
+  # For now, do this only for Mix.env == :prod
+  config :mpnetwork, MpnetworkWeb.Endpoint,
+    instrumenters: [Timber.Integrations.PhoenixInstrumenter]
+  # Structure Ecto logs
+  config :mpnetwork, Mpnetwork.Repo,
+    loggers: [{Timber.Integrations.EctoLogger, :log, [:info]}]
+end
 # Use Timber as the logger backend
 # Feel free to add additional backends if you want to send you logs to multiple devices.
 # Deliver logs via HTTP to the Timber API by using the Timber HTTP backend.

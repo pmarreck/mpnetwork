@@ -4,9 +4,10 @@ defmodule Mpnetwork.Listing do
   """
 
   import Ecto.Query, warn: false
-  import Mogrify
   alias Mpnetwork.Repo
   alias Briefly, as: Temp
+  require Mpnetwork.Upload
+  alias Mpnetwork.Upload
 
   alias Mpnetwork.Listing.Attachment
 
@@ -77,13 +78,6 @@ defmodule Mpnetwork.Listing do
     )
   end
 
-  defp extract_meta_from_binary_data(binary_data, claimed_content_type) do
-    case ExImageInfo.info(binary_data) do
-      nil          -> {claimed_content_type, nil, nil}
-      {a, b, c, _} -> {a, b, c}
-    end
-  end
-
   @doc """
   Gets a single attachment at a given width and height.
 
@@ -99,6 +93,7 @@ defmodule Mpnetwork.Listing do
 
   """
   def get_attachment!({id, width, height}) do
+    import Mogrify
     # first we will get the original attachment from the DB, filtering on images-only
     # Repo.get!(Attachment, id)
     attachment = Repo.one!(
@@ -111,12 +106,12 @@ defmodule Mpnetwork.Listing do
     {:ok, path} = Temp.create
     File.write!(path, attachment.data) # should close file automatically
     # then we will resize it
-    image = open(path) |> resize("#{width}x#{height}") |> save
+    image = open(path) |> resize("#{width}x#{height}>") |> save
     # then we will reread the new file's binary data
     new_image_data = File.read!(image.path)
     # then we will parse the new file's actual dimensions
     {binary_data_content_type, width_pixels, height_pixels} =
-      extract_meta_from_binary_data(new_image_data, attachment.content_type)
+      Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
     # then we will return this (which currently gets stored in the app cache)
     attachment
     |> Attachment.changeset(%{

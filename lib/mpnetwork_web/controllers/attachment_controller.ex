@@ -1,10 +1,10 @@
 defmodule MpnetworkWeb.AttachmentController do
   use MpnetworkWeb, :controller
 
-  alias Mpnetwork.{Listing, Realtor}
+  require Mpnetwork.Upload
+  alias Mpnetwork.{Listing, Realtor, Upload}
   alias Mpnetwork.Listing.Attachment
 
-  require ExImageInfo
   require Logger
 
   defp get_cached(id, touch \\ true), do: get_cached(id, nil, nil, touch)
@@ -73,37 +73,19 @@ defmodule MpnetworkWeb.AttachmentController do
     end
   end
 
-  defp extract_meta_from_binary_data(binary_data, claimed_content_type) do
-    case ExImageInfo.info(binary_data) do
-      nil          -> {claimed_content_type, nil, nil}
-      {a, b, c, _} -> {a, b, c}
-    end
-  end
-
   defp convert_attachment_params_to_attachment_data(attachment_params) do
-    IO.inspect attachment_params
-    request_data = attachment_params["data"]
-    binary_data_loc = request_data[:path] || request_data["path"]
-    binary_data_orig_filename = request_data[:filename] || request_data["filename"]
-    binary_data = request_data[:binary] || request_data["binary"] || File.read!(binary_data_loc)
+    request_data = Upload.normalize_plug_upload(attachment_params["data"])
+    %Upload{filename: binary_data_orig_filename,
+            binary: binary_data,
+            content_type: binary_data_content_type} = request_data
     {binary_data_content_type, width_pixels, height_pixels} =
-      extract_meta_from_binary_data(binary_data, request_data[:content_type] || request_data["content_type"])
+      Upload.extract_meta_from_binary_data(binary_data, binary_data_content_type)
     Enum.into(%{
       "data" => binary_data,
       "content_type" => binary_data_content_type,
       "original_filename" => binary_data_orig_filename,
-      # note that these are all the image types that ExImageInfo recognizes
-      "is_image" => case binary_data_content_type do
-                      "image/jpeg" -> true
-                      "image/gif"  -> true
-                      "image/png"  -> true
-                      "image/bmp"  -> true
-                      "image/psd"  -> true
-                      "image/tiff" -> true
-                      "image/webp" -> true
-                      _            -> false
-                    end,
-      "sha256_hash" => :crypto.hash(:sha256, binary_data), #note that this is the raw binary, not |> Base.encode16
+      "is_image" => Upload.is_image?(binary_data_content_type),
+      "sha256_hash" => Upload.sha256_hash(binary_data), #note that this is the raw binary, not |> Base.encode16
       "width_pixels" => width_pixels,
       "height_pixels" => height_pixels
     }, attachment_params)
@@ -136,7 +118,7 @@ defmodule MpnetworkWeb.AttachmentController do
     end
   end
 
-  def create(conn, %{"attachment" => %{"listing_id" => listing_id} = attachment_params} = params) do
+  def create(conn, %{"attachment" => %{"listing_id" => listing_id} = attachment_params} = _params) do
     # only parse attachment data if one is actually posted
     attachment_params = case attachment_params["data"] do
       nil -> attachment_params
@@ -151,7 +133,7 @@ defmodule MpnetworkWeb.AttachmentController do
           |> put_flash(:info, "Attachment created successfully.")
           |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "new.html", changeset: changeset, listing_id: params["listing_id"])
+          render(conn, "new.html", changeset: changeset, listing: listing, listing_id: listing.id)
       end
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")

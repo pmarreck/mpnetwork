@@ -67,13 +67,18 @@ defmodule Mpnetwork.Realtor.Listing do
     listing
     |> casts(attrs)
     |> validate_required([:user_id, :address])
-    |> validate_inclusion(:price_usd, 0..2147483647, message: "Price must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
+    |> constraints
   end
 
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
     |> validate_required([:user_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size, :year_built, :stories, :basement, :num_fireplaces, :parking_spaces, :num_garages, :attached_garage, :new_construction, :prop_tax_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :eef_led_lighting, :visible_on, :expires_on])
+    |> constraints
+  end
+
+  defp constraints(listing) do
+    listing
     |> validate_inclusion(:cellular_coverage_quality, 0..5)
     |> validate_inclusion(:price_usd, 0..2147483647, message: "Price must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
   end

@@ -3,7 +3,7 @@ defmodule Mpnetwork.Mixfile do
 
   def project do
     [app: :mpnetwork,
-     version: "0.0.1",
+     version: String.trim(File.read!("VERSION")),
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
