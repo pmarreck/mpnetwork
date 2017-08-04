@@ -7,7 +7,7 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
   alias Mpnetwork.{Realtor, Repo}
   alias Mpnetwork.Realtor.Broadcast
 
-  # import Mpnetwork.Test.Utilities
+  import Mpnetwork.Test.Support.Utilities
 
   @create_attrs %{body: "some broadcast body", title: "some broadcast title", user_id: 1}
   @update_attrs %{body: "some updated broadcast body", title: "some updated broadcast title", user_id: 1}
@@ -18,19 +18,9 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end
 
-  def valid_user_attrs, do: %{email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2}
-
   def fixture(:broadcast) do
     {:ok, broadcast} = Realtor.create_broadcast(@create_attrs)
     broadcast
-  end
-
-  def user_fixture(attrs \\ %{}) do
-    {:ok, user} =
-      attrs
-      |> Enum.into(valid_user_attrs())
-      |> Realtor.create_user()
-    user
   end
 
   test "required login" do

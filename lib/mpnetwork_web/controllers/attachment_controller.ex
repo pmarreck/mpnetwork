@@ -156,7 +156,7 @@ defmodule MpnetworkWeb.AttachmentController do
       conn
       |> put_resp_header("content-type", attachment.content_type)
       |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
-      |> put_resp_header("ETag", Base.encode16(attachment.sha256_hash))
+      |> put_resp_header("etag", Base.encode16(attachment.sha256_hash))
       # |> delete_resp_header("set-cookie") # don't need to send cookie data with files
       # Can't seem to delete the set-cookie response header being sent with attachments.
       # Tabling for now. Probably has to do with the secure routes, but I did try
@@ -201,7 +201,8 @@ defmodule MpnetworkWeb.AttachmentController do
     attachment = get_cached(id, false)
     listing = Realtor.get_listing!(attachment.listing_id)
     if listing.user_id == current_user(conn).id do
-      # purge_cached(attachment) # not strictly necessary, would get evicted on next cache cleanup anyway due to disuse
+      purge_cached(attachment) # not strictly necessary, would get evicted on next cache cleanup anyway due to disuse
+                               # but I did it anyway to satisfy the test correctly asserting 404 on a re-retrieval :)
       {:ok, _attachment} = Listing.delete_attachment(attachment)
       conn
       |> put_flash(:info, "Attachment deleted successfully.")

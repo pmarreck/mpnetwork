@@ -14,6 +14,10 @@ defmodule Mpnetwork.Upload do
     mu
   end
 
+  # def normalize_plug_upload(pu) when is_binary(pu) do
+  #   %Upload{binary: pu}
+  # end
+
   def is_image?(content_type) do
     # note that these are all (and the only, currently) image types that ExImageInfo recognizes
     case content_type do
