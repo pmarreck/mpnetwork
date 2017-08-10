@@ -17,6 +17,8 @@ defmodule Mpnetwork.EnumMaps do
   @listing_status_types_ext ["For Sale", "Under Contract", "Closed", "Price Change", "Withdrawn", "Sold", "Temporarily Off Market"]
   @listing_status_types_int ~w[FS UC CL PC WR SL TOM]a
   def listing_status_types_int, do: @listing_status_types_int
+  @listing_status_type_opts Enum.zip(@listing_status_types_ext, @listing_status_types_int)
+  def listing_status_type_select_opts, do: @listing_status_type_opts
   # perhaps instead attribute "New" if listing is under a month old?
 
   @listing_status_types_int_to_ext_map Enum.zip(@listing_status_types_int, @listing_status_types_ext) |> Map.new
@@ -207,6 +209,85 @@ defmodule Mpnetwork.EnumMaps do
   def map_deck_type_int_to_ext(k) when is_atom(k), do: @deck_types_int_to_ext_map[k]
   def map_deck_type_int_to_ext(k) when is_binary(k), do: map_deck_type_int_to_ext(String.to_existing_atom(k))
   def map_deck_type_ext_to_int(k) when is_binary(k), do: @deck_types_ext_to_int_map[k]
+
+  # List of Energy-Efficient Features (note: NOT a type. Just seemed appropriate to keep here.)
+  @eef_features_ext [
+    "Energy Star Stove",
+    "Energy Star Refrigerator",
+    "Energy Star Dishwasher",
+    "Energy Star Washer",
+    "Energy Star Dryer",
+    "Energy Star Water Heater",
+    "Geothermal Water Heater",
+    "Solar Water Heater",
+    "Tankless Water Heater",
+    "Double Pane Windows",
+    "Insulated Windows",
+    "Tinted Windows",
+    "Triple Pane Windows",
+    "Energy Star Windows",
+    "Storm Doors",
+    "Insulated Doors",
+    "Energy Star Doors",
+    "Foam Insulation",
+    "Cellulose Insulation",
+    "Blown Insulation",
+    "Programmable Thermostat",
+    "Low Flow Showers/Fixtures",
+    "Low Flow/Dual Flush Toilet",
+    "Gray Water System",
+    "Energy Star Furnace",
+    "Geothermal Heating",
+    "Energy Star A/C",
+    "Energy Star CAC",
+    "Geothermal A/C",
+    "Solar A/C",
+    "Solar Panels",
+    "Solar Pool Cover",
+    "Windmill",
+  ]
+  @eef_features_int ~w[
+    eef_energy_star_stove
+    eef_energy_star_refrigerator
+    eef_energy_star_dishwasher
+    eef_energy_star_washer
+    eef_energy_star_dryer
+    eef_energy_star_water_heater
+    eef_geothermal_water_heater
+    eef_solar_water_heater
+    eef_tankless_water_heater
+    eef_double_pane_windows
+    eef_insulated_windows
+    eef_tinted_windows
+    eef_triple_pane_windows
+    eef_energy_star_windows
+    eef_storm_doors
+    eef_insulated_doors
+    eef_energy_star_doors
+    eef_foam_insulation
+    eef_cellulose_insulation
+    eef_blown_insulation
+    eef_programmable_thermostat
+    eef_low_flow_showers_fixtures
+    eef_low_flow_dual_flush_toilet
+    eef_gray_water_system
+    eef_energy_star_furnace
+    eef_geothermal_heating
+    eef_energy_star_ac
+    eef_energy_star_cac
+    eef_geothermal_ac
+    eef_solar_ac
+    eef_solar_panels
+    eef_solar_pool_cover
+    eef_windmill
+  ]a
+  def eef_features_int, do: @eef_features_int
+  @eef_features_int_to_ext_map Enum.zip(@eef_features_int, @eef_features_ext) |> Map.new
+  @eef_features_ext_to_int_map Enum.zip(@eef_features_ext, @eef_features_int) |> Map.new
+
+  def map_eef_feature_int_to_ext(k) when is_atom(k), do: @eef_features_int_to_ext_map[k]
+  def map_eef_feature_int_to_ext(k) when is_binary(k), do: map_eef_feature_int_to_ext(String.to_existing_atom(k))
+  def map_eef_feature_ext_to_int(k) when is_binary(k), do: @eef_features_ext_to_int_map[k]
 
 end
 

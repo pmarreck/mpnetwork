@@ -2,7 +2,7 @@ defmodule MpnetworkWeb.AttachmentController do
   use MpnetworkWeb, :controller
 
   require Mpnetwork.Upload
-  alias Mpnetwork.{Listing, Realtor, Upload}
+  alias Mpnetwork.{Listing, Realtor, Upload, Config}
   alias Mpnetwork.Listing.Attachment
 
   require Logger
@@ -16,7 +16,7 @@ defmodule MpnetworkWeb.AttachmentController do
       {id, nil, nil} -> id
       {id, w, h} -> {id, w, h}
     end
-    attachment = case Cachex.get(:attachment_cache, key, fallback: &Listing.get_attachment!/1) do
+    attachment = case Cachex.get(Config.get(:cache_name), key, fallback: &Listing.get_attachment!/1) do
       {:ok, val}     ->
         Logger.info "Retrieved attachment from app cache key #{inspect key}: id:#{val.id} '#{val.original_filename}' (#{val.content_type}) listing_id:#{val.listing_id}"
         val
@@ -29,7 +29,7 @@ defmodule MpnetworkWeb.AttachmentController do
     # but don't bother if we're about to purge it anyway
     # or if you don't want to LRU for some reason (it's LRW without touching)
     if touch do
-      Cachex.touch(:attachment_cache, key)
+      Cachex.touch(Config.get(:cache_name), key)
     end
     attachment
   end
@@ -42,7 +42,7 @@ defmodule MpnetworkWeb.AttachmentController do
 
   defp purge_all_cached_dimensions(%Attachment{} = attachment) do
     id = attachment.id
-    keys_to_delete = :attachment_cache
+    keys_to_delete = Config.get(:cache_name)
     |> Cachex.stream!(of: :key)
     |> Enum.filter(fn key ->
       case key do
@@ -52,7 +52,7 @@ defmodule MpnetworkWeb.AttachmentController do
       end
     end)
     Logger.info "Purging these keys from cache: #{inspect keys_to_delete}"
-    Cachex.transaction(:attachment_cache, keys_to_delete, fn(worker) ->
+    Cachex.transaction(Config.get(:cache_name), keys_to_delete, fn(worker) ->
       keys_to_delete
       |> Enum.each(fn key -> 
         Logger.info "Purging key #{inspect key} from cache"
@@ -66,7 +66,7 @@ defmodule MpnetworkWeb.AttachmentController do
     # id = if is_binary(attachment.id), do: String.to_integer(attachment.id), else: attachment.id
     id = attachment.id
     Logger.info "Purging attachment from cache: id:#{id}"
-    {:ok, true} = Cachex.del(:attachment_cache, id)
+    {:ok, true} = Cachex.del(Config.get(:cache_name), id)
     if attachment.is_image do
       Logger.info "Seeking out and purging all cached image resizes for id:#{id}"
       purge_all_cached_dimensions(attachment)

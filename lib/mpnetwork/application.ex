@@ -14,7 +14,7 @@ defmodule Mpnetwork.Application do
       supervisor(MpnetworkWeb.Endpoint, []),
       # Start your own worker by calling: Mpnetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(Mpnetwork.Worker, [arg1, arg2, arg3]),
-      worker(Cachex, [:attachment_cache, [
+      worker(Cachex, [Application.get_env(:mpnetwork, :cache_name), [
         limit: %Cachex.Limit{
           limit: 5000, # bumped after implementation of app-cached thumbnails of arbitrary size
           policy: Cachex.Policy.LRW,

@@ -1,5 +1,9 @@
 use Mix.Config
 
+# General application configuration
+config :mpnetwork,
+  cache_name: :test_attachment_cache
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :mpnetwork, MpnetworkWeb.Endpoint,

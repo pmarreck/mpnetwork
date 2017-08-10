@@ -1,18 +1,6 @@
-
-<div class="entityedit page webkit chrome v58_0_3029_110 applemac show-bannerpanel mlsli" id="c1">
-<div class="mlsearchpanel panel" id="c3">
-	<input class="textinput mlsearchinput empty" id="c4" name="" type="text" value=""><span class="text" id="c6">ML# Search</span>
-	<ul class="text mlsearchresults" id="c5" style="display:none;"></ul>
-</div>
-
 <div class="mainpanel panel" id="c99">
-	<div class="loadingpanel panel addeditloadingpanel" id="c124" style="display: none;">
-	<div class="panel loadingmessagepanel" id="c125">
-		<span class="text loadingmessagetext" id="c126">Loading Add/Edit</span>
-	</div>
-	</div>
 	<div class="editformpanel panel" id="c114" style="">
-	
+
 	<div class="panel scrollcontainer" id="c596">
 		<div class="editform form formitem" id="c127">
 		<div class="formgroup formitem vertical" id="c129" style="width:775px; :;">
@@ -24,8 +12,9 @@
 				<span class="formtext formitem" id="c132" property="st_num" style="width:60px;"><label for="c132-text"><a>Street #:</a></label><input class="textinput value" id="c132-text" maxlength="10" name="" size="12" type="text" value="4"><span class="required-indicator" style="display: none;">*</span></span>
 			</div>
 			<div class="formgroup formitem vertical" id="c133" style="width:160px;">
-				<span class="formselect formitem" id="c134" property="st_dir"><label for="c134-select"><a>Street Dir:</a></label><select class="value" id="c134-select" size="1">
-				<option>
+				<span class="formselect formitem" id="c134" property="st_dir"><label for="c134-select"><a>Street Dir:</a></label>
+				<select class="fancy" id="c134-select" size="1">
+				<option value="">
 				</option>
 				<option value="E">
 					E
@@ -57,7 +46,7 @@
 				<span class="formtext formitem" id="c136" property="st"><label for="c136-text"><a>Street Name:</a></label><input class="textinput value" id="c136-text" maxlength="16" name="" size="22" type="text" value="Mora"><span class="required-indicator">*</span></span>
 			</div>
 			<div class="formgroup formitem vertical" id="c137">
-				<span class="formselect formitem" id="c138" property="st_sfx"><label for="c138-select"><a>St Suffix:</a></label><select class="value" id="c138-select" size="1">
+				<span class="formselect formitem" id="c138" property="st_sfx"><label for="c138-select"><a>St Suffix:</a></label><select class="fancy" id="c138-select" size="1">
 				<option>
 				</option>
 				<option value="Ave">
@@ -175,8 +164,8 @@
 			</div>
 			</div>
 			<div class="formgroup formitem horizontal" id="c139">
-			<span class="formselect formitem" id="c140" property="town"><label for="c140-select"><a>Town:</a></label><select class="value" id="c140-select" size="1">
-				<option>
+			<span class="formselect formitem" id="c140" property="town"><label for="c140-select"><a>Town:</a></label><select class="fancy" id="c140-select" size="1">
+				<option value="">
 				</option>
 				<option value="Addisleigh Park">
 				Addisleigh Park
@@ -1540,7 +1529,7 @@
 				<option value="Yaphank">
 				Yaphank
 				</option>
-			</select><span class="required-indicator">*</span></span> <span class="formselect formitem" id="c141" property="zn"><label for="c141-select"><a>Zone:</a></label> <select class="value" id="c141-select" size="1">
+			</select><span class="required-indicator">*</span></span> <span class="formselect formitem" id="c141" property="zn"><label for="c141-select"><a>Zone:</a></label> <select class="fancy" id="c141-select" size="1">
 				<option>
 				</option>
 				<option selected="selected" value="3">
@@ -1584,7 +1573,7 @@
 			</div>
 			<div class="formgroup formitem horizontal" id="c161">
 			<div class="formgroup formitem vertical" id="c162" style="width:380px;">
-				<span class="formhybrid formitem" id="c163" property="sd_name"><span class="formtext formitem" id="c163-hybrid-text" style="display:none;"><label for="c163-hybrid-text-text"><a>School Dist. Name:</a></label><input class="textinput value" id="c163-hybrid-text-text" maxlength="30" name="" size="22" type="text" value="Manhasset"><span class="required-indicator">*</span></span> <span class="formselect formitem" id="c163-hybrid-select"><label for="c163-hybrid-select-select"><a>School Dist. Name:</a></label> <select class="value" id="c163-hybrid-select-select" size="1">
+				<span class="formhybrid formitem" id="c163" property="sd_name"><span class="formtext formitem" id="c163-hybrid-text" style="display:none;"><label for="c163-hybrid-text-text"><a>School Dist. Name:</a></label><input class="textinput value" id="c163-hybrid-text-text" maxlength="30" name="" size="22" type="text" value="Manhasset"><span class="required-indicator">*</span></span> <span class="formselect formitem" id="c163-hybrid-select"><label for="c163-hybrid-select-select"><a>School Dist. Name:</a></label> <select class="fancy" id="c163-hybrid-select-select" size="1">
 				<option>
 				</option>
 				<option value="Bethpage">
@@ -1855,7 +1844,7 @@
 		<div class="formgroup formitem vertical" id="c204" style="width:775px; :;">
 			<div class="formgrouplabel">
 			Price/Dates
-			</div> 
+			</div>
       <span class="formliteral formitem" id="c206"><strong>Prices</strong></span>
 			<div class="formgroup formitem horizontal" id="c207">
 			<div class="formgroup formitem vertical" id="c208" style="padding-left: 35px; :;">
@@ -7507,7 +7496,7 @@
 			</div>
 			<div class="formgroup formitem horizontal" id="c443">
 			<span class="formliteral formitem" id="c444"></span>
-			</div><span class="formliteral formitem" id="c445"><strong>Property Desc is for description only. No name, PH#, refer to agent, office, status, etc.</strong></span> <span class="formtext formitem formtexttextarea" id="c446" property="ad_text"><label for="c446-text"><a>Property Desc (Info for consumers):</a></label> 
+			</div><span class="formliteral formitem" id="c445"><strong>Property Desc is for description only. No name, PH#, refer to agent, office, status, etc.</strong></span> <span class="formtext formitem formtexttextarea" id="c446" property="ad_text"><label for="c446-text"><a>Property Desc (Info for consumers):</a></label>
 			<textarea class="textinput value" cols="95" id="c446-text" maxlength="375" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 375);" rows="5">3 Bedroom 2 1/2 Bath Stucco Colonial Convenient To Lirr, Northern Blvd And Manhasset Jr/Sr Schools</textarea> <span class="required-indicator" style="display: none;">*</span></span>
 			<div class="formgroup formitem horizontal" id="c447">
 			<span class="formliteral formitem" id="c448"></span>
@@ -7580,15 +7569,15 @@
 			</div><span class="formliteral formitem" id="c468" style="text-align:center; :;"></span>
 			<p><span class="formliteral formitem" id="c468" style="text-align:center; :;"><strong>Virtual Tour Links: Enter each URL for this listing's virtual tour or slideshow only once in its own field starting with http://<br>
 			No contact info.</strong></span></p><span class="formtext formitem formtexttextarea" id="c469" property="tour_url"><label for="c469-text"><a>Tour URL 1:</a></label>
-			<textarea class="textinput value" cols="100" id="c469-text" maxlength="450" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 450);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c470" property="virtual_tour1_desc"><label for="c470-text"><a>Description:</a></label> 
-			<textarea class="textinput value" cols="100" id="c470-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c471" property="tour_url2"><label for="c471-text"><a>Tour URL 2:</a></label> 
-			<textarea class="textinput value" cols="100" id="c471-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c472" property="virtual_tour2_desc"><label for="c472-text"><a>Description:</a></label> 
-			<textarea class="textinput value" cols="100" id="c472-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c473" property="tour_url3"><label for="c473-text"><a>Tour URL 3:</a></label> 
-			<textarea class="textinput value" cols="100" id="c473-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c474" property="virtual_tour3_desc"><label for="c474-text"><a>Description:</a></label> 
-			<textarea class="textinput value" cols="100" id="c474-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c475" property="tour_url4"><label for="c475-text"><a>Tour URL 4:</a></label> 
-			<textarea class="textinput value" cols="100" id="c475-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c476" property="virtual_tour4_desc"><label for="c476-text"><a>Description:</a></label> 
-			<textarea class="textinput value" cols="100" id="c476-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c477" property="tour_branded_url"><label for="c477-text"><a>Virtual Tour Branded URL:</a></label> 
-			<textarea class="textinput value" cols="100" id="c477-text" maxlength="450" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 450);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c478" property="tour_branded_url_desc" style="display:none;"><label for="c478-text"><a>Virtual Tour Branded Desc:</a></label> 
+			<textarea class="textinput value" cols="100" id="c469-text" maxlength="450" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 450);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c470" property="virtual_tour1_desc"><label for="c470-text"><a>Description:</a></label>
+			<textarea class="textinput value" cols="100" id="c470-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c471" property="tour_url2"><label for="c471-text"><a>Tour URL 2:</a></label>
+			<textarea class="textinput value" cols="100" id="c471-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c472" property="virtual_tour2_desc"><label for="c472-text"><a>Description:</a></label>
+			<textarea class="textinput value" cols="100" id="c472-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c473" property="tour_url3"><label for="c473-text"><a>Tour URL 3:</a></label>
+			<textarea class="textinput value" cols="100" id="c473-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c474" property="virtual_tour3_desc"><label for="c474-text"><a>Description:</a></label>
+			<textarea class="textinput value" cols="100" id="c474-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c475" property="tour_url4"><label for="c475-text"><a>Tour URL 4:</a></label>
+			<textarea class="textinput value" cols="100" id="c475-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c476" property="virtual_tour4_desc"><label for="c476-text"><a>Description:</a></label>
+			<textarea class="textinput value" cols="100" id="c476-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c477" property="tour_branded_url"><label for="c477-text"><a>Virtual Tour Branded URL:</a></label>
+			<textarea class="textinput value" cols="100" id="c477-text" maxlength="450" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 450);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c478" property="tour_branded_url_desc" style="display:none;"><label for="c478-text"><a>Virtual Tour Branded Desc:</a></label>
 			<textarea class="textinput value" cols="100" id="c478-text" maxlength="40" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 40);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span> <span class="formtext formitem formtexttextarea" id="c479" property="video_url"><label for="c479-text"><a>Video URL:</a></label>
 			<textarea class="textinput value" cols="100" id="c479-text" maxlength="200" name="" onkeyup="REWire.Controls.TextInput.enforceMaxLength(this, 200);" rows="1"></textarea><span class="required-indicator" style="display: none;">*</span></span>
 		</div>
@@ -9830,4 +9819,3 @@
 	</div>
 	</div>
 </div>
-

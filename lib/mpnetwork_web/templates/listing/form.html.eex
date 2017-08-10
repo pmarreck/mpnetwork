@@ -37,6 +37,12 @@
     <%= error_tag f, :description %>
   </div>
 
+  <div class="form-group<%= if f.errors[:listing_status_type], do: " has-error" %>">
+    <%= label f, :listing_status_type, "Listing Status", class: "control-label" %>
+    <%= select f, :listing_status_type, Mpnetwork.EnumMaps.listing_status_type_select_opts, class: "fancy" %>
+    <%= error_tag f, :listing_status_type %>
+  </div>
+
   <div class="form-group<%= if f.errors[:address], do: " has-error" %>">
     <%= label f, :address, class: "control-label" %>
     <%= text_input f, :address, class: "form-control" %>
@@ -255,7 +261,7 @@
 
   <div class="form-group<%= if f.errors[:visible_on], do: " has-error" %>">
     <%= label f, :visible_on, class: "control-label" %>
-    <% 
+    <%
       now = Timex.now("EDT")
       {{year, month, day}, _} = Timex.to_erl(now)
     %>

@@ -12,6 +12,8 @@
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
 
+//"JavaScript Next"-style
+
 import "phoenix"
 import "phoenix_html"
 
@@ -19,9 +21,13 @@ import $ from "jquery"
 
 import "bootstrap"
 
+import "select2"
+
 import "admin-lte"
 
-// CommonJS style, see http://jsmodules.io/cjs.html for comparison
+$(document).ready(function() { $(".fancy").select2(); });
+
+// "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison
 // global.$ = global.jQuery = require("jquery")
 // global.bootstrap = require("bootstrap")
 // global.AdminLTE = require("admin-lte")

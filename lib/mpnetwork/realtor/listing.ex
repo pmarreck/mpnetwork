@@ -85,7 +85,7 @@ defmodule Mpnetwork.Realtor.Listing do
 
   defp casts(%Listing{} = listing, attrs) do
     listing
-    |> cast(attrs, [:user_id, :draft, :for_sale, :for_rent, :description, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size, :year_built, :stories, :basement, :num_fireplaces, :parking_spaces, :mls_source_id, :num_garages, :attached_garage, :new_construction, :tax_rate_code_area, :prop_tax_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :cellular_coverage_quality, :eef_led_lighting, :ext_urls, :remarks, :visible_on, :expires_on])
+    |> cast(attrs, [:user_id, :draft, :for_sale, :for_rent, :description, :listing_status_type, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size, :year_built, :stories, :basement, :num_fireplaces, :parking_spaces, :mls_source_id, :num_garages, :attached_garage, :new_construction, :tax_rate_code_area, :prop_tax_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :cellular_coverage_quality, :eef_led_lighting, :ext_urls, :remarks, :visible_on, :expires_on])
     |> foreign_key_constraint(:user_id)
   end
 

@@ -4,14 +4,16 @@ defmodule Mpnetwork.Mixfile do
   def project do
     [app: :mpnetwork,
      version: String.trim(File.read!("VERSION")),
-     elixir: "~> 1.4",
+     elixir: "~> 1.5",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
      deps: deps(),
-     test_coverage: [tool: ExCoveralls],]
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: [coveralls: :test],
+    ]
   end
 
   # Configuration for the OTP application.

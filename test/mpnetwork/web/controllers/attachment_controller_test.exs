@@ -58,7 +58,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   end
 
   # holy crap, was this test a pain to write. FYI
-  test "creates attachment and redirects to show when data is valid", %{conn: initial_conn} do
+  test "creates attachment and redirects to show when data is valid, also returns 304 on re-request", %{conn: initial_conn} do
     conn = initial_conn
     listing = fixture(:listing, conn.assigns.current_user)
     conn = post conn, attachment_path(conn, :create), attachment: Enum.into(%{listing_id: listing.id, listing: listing}, @post_create_attrs)
@@ -67,9 +67,14 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     listing_id = String.to_integer(listing_id)
     assert listing_id == listing.id
     assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
-    [%Attachment{id: attachment_id}] = Repo.all(from a in Attachment, where: a.listing_id == ^listing_id)
+    [%Attachment{id: attachment_id} = attachment] = Repo.all(from a in Attachment, where: a.listing_id == ^listing_id)
     conn = get conn, attachment_path(conn, :show, attachment_id)
     assert response(conn, 200) =~ @test_attachment_binary_data
+    conn = initial_conn
+    # the following header triggers the ETag comparison server-side
+    conn = put_req_header(conn, "if-none-match", Base.encode16(attachment.sha256_hash))
+    conn = get conn, attachment_path(conn, :show, attachment_id)
+    assert response(conn, 304)
   end
 
   test "does not create attachment and renders errors when data is invalid", %{conn: conn} do

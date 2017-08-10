@@ -11,7 +11,8 @@ config :mpnetwork,
   max_attachment_size: 20_000_000, # 20 megabytes.
   attachment_chunk_size: 2_000_000, # default chunk length, 2MB
   attachment_chunk_timeout: 10_000, # timeout in ms per chunk, 10s
-  max_attachments_per_listing: 20 # not enforced yet!
+  max_attachments_per_listing: 20, # not enforced yet!
+  cache_name: :attachment_cache
 
 # Configures the endpoint
 config :mpnetwork, MpnetworkWeb.Endpoint,
@@ -42,10 +43,6 @@ config :mpnetwork, Mpnetwork.Mailer,
 #   verify_issuer: true, # optional
 #   secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
 #   serializer: MyApp.GuardianSerializer
-
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
 
 # %% Coherence Configuration %%   Don't remove this line
 config :coherence,
@@ -78,3 +75,7 @@ config :coherence, Mpnetwork.Coherence.Mailer,
 
 # Import Timber, structured logging
 import_config "timber.exs"
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"

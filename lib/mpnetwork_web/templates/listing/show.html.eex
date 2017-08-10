@@ -33,6 +33,11 @@
   </li>
 
   <li>
+    <strong>Listing status:</strong>
+    <%= @listing.listing_status_type %>
+  </li>
+
+  <li>
     <strong>Address:</strong>
     <%= @listing.address %>
   </li>
