@@ -210,6 +210,18 @@ defmodule Mpnetwork.EnumMaps do
   def map_deck_type_int_to_ext(k) when is_binary(k), do: map_deck_type_int_to_ext(String.to_existing_atom(k))
   def map_deck_type_ext_to_int(k) when is_binary(k), do: @deck_types_ext_to_int_map[k]
 
+  # Attachment Types
+  @att_types_ext ["Single-family detached", "Attached", "Semi"]
+  @att_types_int ~w[ det att semi ]
+  def att_types_int, do: @att_types_int
+
+  @att_types_int_to_ext_map Enum.zip(@att_types_int, @att_types_ext) |> Map.new
+  @att_types_ext_to_int_map Enum.zip(@att_types_ext, @att_types_int) |> Map.new
+
+  def map_att_type_int_to_ext(k) when is_atom(k), do: @att_types_int_to_ext_map[k]
+  def map_att_type_int_to_ext(k) when is_binary(k), do: map_att_type_int_to_ext(String.to_existing_atom(k))
+  def map_att_type_ext_to_int(k) when is_binary(k), do: @att_types_ext_to_int_map[k]
+
   # List of Energy-Efficient Features (note: NOT a type. Just seemed appropriate to keep here.)
   @eef_features_ext [
     "Energy Star Stove",
@@ -310,3 +322,4 @@ defenum PatioTypeEnum, :patio_type, Enums.patio_types_int()
 defenum PorchTypeEnum, :porch_type, Enums.porch_types_int()
 defenum PoolTypeEnum, :pool_type, Enums.pool_types_int()
 defenum DeckTypeEnum, :deck_type, Enums.deck_types_int()
+defenum AttachmentTypeEnum, :att_type, Enums.att_types_int()
