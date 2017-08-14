@@ -25,7 +25,9 @@ import "select2"
 
 import "admin-lte"
 
-$(document).ready(function() { $(".fancy").select2(); });
+$(document).ready(function() {
+  $(".fancy").select2();
+});
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison
 // global.$ = global.jQuery = require("jquery")

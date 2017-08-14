@@ -19,6 +19,15 @@
     <%= error_tag f, :draft %>
   </div>
 
+  <div class="form-group<%= if f.errors[:siding_desc], do: " has-error" %>">
+    <%= label f, :siding_desc, "Exterior construction?", class: "control-label" %>
+    <%= datalist_input f, :siding_desc, %{
+      list_name: "sidingList",
+      data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"],
+      class: "form-control"} %>
+    <%= error_tag f, :siding_desc %>
+  </div>
+
   <div class="form-group<%= if f.errors[:for_sale], do: " has-error" %>">
     <%= label f, :for_sale, "For Sale?", class: "control-label" %>
     <%= checkbox f, :for_sale, class: "checkbox" %>

@@ -1,5 +1,7 @@
 defmodule MpnetworkWeb.GlobalHelpers do
 
+  use Phoenix.HTML
+
   @roles {"Root", "Site Admin", "Office Admin", "Realtor", "User"}
 
   def role_id_to_name(role_id) do
@@ -106,9 +108,24 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   def html_icon_class_by_content_type(content_type) do
     # use as a class on an i element
-    Map.get(
-      @content_type_to_icon_class_map, content_type, "fa fa-fw fa-file-o"
-    )
+    Map.get(@content_type_to_icon_class_map, content_type, "fa fa-fw fa-file-o")
+  end
+
+  # datalist element
+  def datalist_input(f, name, %{list_name: list_name, data: list} = attrs) do
+    struct_name = if f, do: "#{f.name}[#{name}]", else: "#{name}"
+    attrs = attrs
+    |> Map.put(:type, "text")
+    |> Map.put(:list, list_name)
+    |> Map.put(:name, struct_name)
+    |> Map.delete(:data)
+    |> Map.delete(:list_name)
+    attrs_html = Enum.map_join(attrs, " ", fn({x,y}) -> ~s(#{x}="#{y}") end)
+    opts_html = Enum.map_join(list, "\n", fn(x) -> ~s(<option value="#{x}">) end)
+    raw ~s(<input #{attrs_html} />\n<datalist id="#{list_name}">\n#{opts_html}\n</datalist>)
+  end
+  def datalist_input(name, %{} = attrs) do
+    datalist_input(nil, name, attrs)
   end
 
 end
