@@ -23,10 +23,17 @@ import "bootstrap"
 
 import "select2"
 
+import "admin-lte/plugins/datepicker/bootstrap-datepicker"
+
 import "admin-lte"
 
 $(document).ready(function() {
   $(".fancy").select2();
+  $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
+  $.fn.datepicker.defaults.assumeNearbyYear = true;
+  $.fn.datepicker.defaults.todayHighlight = true;
+  $('#visible_on').datepicker();
+  $('#expires_on').datepicker();
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

@@ -4,7 +4,8 @@ defmodule Mpnetwork.EnumMaps do
   @class_types_ext ~w[Residential Condo Co-op HOA Rental Land Commercial/Industrial]
   @class_types_int (@class_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def class_types_int, do: @class_types_int
-  # def class_types_ext, do: @class_types_ext
+  @class_type_opts Enum.zip(@class_types_ext, @class_types_int)
+  def class_type_select_opts, do: @class_type_opts
 
   @class_types_int_to_ext_map Enum.zip(@class_types_int, @class_types_ext) |> Map.new
   @class_types_ext_to_int_map Enum.zip(@class_types_ext, @class_types_int) |> Map.new
@@ -44,6 +45,8 @@ defmodule Mpnetwork.EnumMaps do
   @waterfront_types_ext ["Bay", "Canal", "Creek", "Harbor", "Inlet", "Lake", "Ocean", "Pond", "Prot Wetland", "River", "Sound", "Other"]
   @waterfront_types_int ~w[bay canal creek harbor inlet lake ocean pond wetland river sound other]a
   def waterfront_types_int, do: @waterfront_types_int
+  @waterfront_type_opts Enum.zip(@waterfront_types_ext, @waterfront_types_int)
+  def waterfront_type_select_opts, do: @waterfront_type_opts
 
   @waterfront_types_int_to_ext_map Enum.zip(@waterfront_types_int, @waterfront_types_ext) |> Map.new
   @waterfront_types_ext_to_int_map Enum.zip(@waterfront_types_ext, @waterfront_types_int) |> Map.new
@@ -56,6 +59,8 @@ defmodule Mpnetwork.EnumMaps do
   @front_exposure_types_ext ~w[N S E W NE NW SE SW]
   @front_exposure_types_int ~w[N S E W NE NW SE SW]a
   def front_exposure_types_int, do: @front_exposure_types_int
+  @front_exposure_type_opts Enum.zip(@front_exposure_types_ext, @front_exposure_types_int)
+  def front_exposure_type_select_opts, do: @front_exposure_type_opts
 
   @front_exposure_types_int_to_ext_map Enum.zip(@front_exposure_types_int, @front_exposure_types_ext) |> Map.new
   @front_exposure_types_ext_to_int_map Enum.zip(@front_exposure_types_ext, @front_exposure_types_int) |> Map.new

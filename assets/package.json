@@ -10,6 +10,7 @@
     "admin-lte": "^2.3.11",
     "bootstrap": ">=3.3.7",
     "bootstrap-sass": ">=3.3.7",
+    "bootstrap-datepicker": "~1.7.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "select2": "^4.0.3",
@@ -20,6 +21,8 @@
     "brunch": "^2",
     "clean-css-brunch": "^2",
     "css-brunch": "^2",
+    "less": "^2.7.2",
+    "less-brunch": "^2.10.0",
     "uglify-js-brunch": "^2"
   }
 }
