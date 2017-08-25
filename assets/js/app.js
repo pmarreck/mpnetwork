@@ -32,8 +32,7 @@ $(document).ready(function() {
   $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
-  $('#visible_on').datepicker();
-  $('#expires_on').datepicker();
+  $('div.date .form-control').datepicker();
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison
