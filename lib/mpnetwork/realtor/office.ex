@@ -5,6 +5,11 @@ defmodule Mpnetwork.Realtor.Office do
 
   schema "offices" do
     field :name, :string
+    field :address, :string
+    field :city, :string
+    field :state, :string
+    field :zip, :string
+    field :phone, :string
 
     timestamps()
   end

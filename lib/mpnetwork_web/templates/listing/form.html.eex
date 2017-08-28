@@ -1155,6 +1155,13 @@
     <%= error_tag f, :status_showing_phone %>
   </div>
 
+  <!-- 159 -->
+  <div class="form-group<%= if f.errors[:broker], do: " has-error" %>">
+    <%= label f, :office_id, "Broker:", class: "control-label" %>
+    <%= select f, :office_id, for(o <- @offices, do: {o.name, o.id}), class: "fancy" %>
+    <%= error_tag f, :office_id %>
+  </div>
+
   <!-- 176 -->
   <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
     <%= label f, :remarks, class: "control-label" %>

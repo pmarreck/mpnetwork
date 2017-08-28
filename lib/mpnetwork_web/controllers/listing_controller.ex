@@ -4,6 +4,7 @@ defmodule MpnetworkWeb.ListingController do
   require Logger
 
   alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer}
+  # alias Mpnetwork.Realtor.Office
 
   import Listing, only: [public_client_listing_code: 1, public_agent_listing_code: 1]
 
@@ -17,7 +18,7 @@ defmodule MpnetworkWeb.ListingController do
 
   def new(conn, _params) do
     changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, offices: offices())
   end
 
   def create(conn, %{"listing" => listing_params}) do
@@ -44,11 +45,11 @@ defmodule MpnetworkWeb.ListingController do
     if params["version"] == "mls" do
       edit_mls(conn, params)
     else
-      listing = Realtor.get_listing!(id)
+      listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
       if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
         attachments = Listing.list_attachments(listing.id)
         changeset = Realtor.change_listing(listing)
-        render(conn, "edit.html", listing: listing, attachments: attachments, changeset: changeset)
+        render(conn, "edit.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
       else
         send_resp(conn, 405, "Not allowed")
       end
@@ -56,11 +57,11 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def edit_mls(conn, %{"id" => id}) do
-    listing = Realtor.get_listing!(id)
+    listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
     if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
       attachments = Listing.list_attachments(listing.id)
       changeset = Realtor.change_listing(listing)
-      render(conn, "edit_mls.html", listing: listing, attachments: attachments, changeset: changeset)
+      render(conn, "edit_mls.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
     else
       send_resp(conn, 405, "Not allowed")
     end
@@ -76,7 +77,7 @@ defmodule MpnetworkWeb.ListingController do
           |> redirect(to: listing_path(conn, :show, listing))
         {:error, %Ecto.Changeset{} = changeset} ->
           attachments = Listing.list_attachments(id)
-          render(conn, "edit.html", listing: listing, changeset: changeset, attachments: attachments)
+          render(conn, "edit.html", listing: listing, changeset: changeset, attachments: attachments, offices: offices())
       end
     else
       send_resp(conn, 405, "Not allowed")
@@ -149,6 +150,10 @@ defmodule MpnetworkWeb.ListingController do
     # else
     #   send_resp(conn, 405, "Not allowed to email a listing that is not yours")
     # end
+  end
+
+  defp offices do
+    Realtor.all_office_names
   end
 
 end

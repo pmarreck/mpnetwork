@@ -4,6 +4,7 @@
                         action: listing_path(@conn, :update, @listing),
                         conn: @conn,
                         listing: @listing,
+                        offices: @offices,
                         attachments: @attachments,
                         existing: @listing %>
 

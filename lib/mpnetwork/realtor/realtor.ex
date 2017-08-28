@@ -6,8 +6,7 @@ defmodule Mpnetwork.Realtor do
   import Ecto.Query, warn: false
   alias Mpnetwork.Repo
 
-  alias Mpnetwork.Realtor.Broadcast
-  alias Mpnetwork.Realtor.Listing
+  alias Mpnetwork.Realtor.{Broadcast, Listing, Office}
   alias Mpnetwork.User
 
   @doc """
@@ -266,4 +265,31 @@ defmodule Mpnetwork.Realtor do
   def change_listing(%Listing{} = listing) do
     Listing.changeset(listing, %{})
   end
+
+  @doc """
+  Returns a list of all office names with their id's.
+  """
+  def all_office_names do
+    Repo.all(
+      from office in Office,
+      select: {office.id, office.name},
+      order_by: [desc: office.name]
+    )
+  end
+
+  @doc """
+  Gets a single office.
+
+  Raises `Ecto.NoResultsError` if the Office does not exist.
+
+  ## Examples
+
+      iex> get_office!(123)
+      %Office{}
+
+      iex> get_office!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_office!(id), do: Repo.get!(Office, id)
 end
