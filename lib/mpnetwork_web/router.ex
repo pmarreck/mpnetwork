@@ -55,8 +55,9 @@ defmodule MpnetworkWeb.Router do
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController, except: [:show]
+    resources "/offices", OfficeController
   end
-  
+
   scope "/", MpnetworkWeb do
     pipe_through :browser # Use the default browser stack
     # Add public routes below
@@ -66,7 +67,7 @@ defmodule MpnetworkWeb.Router do
     # in public links to listings... could this end up being a security problem due to autoincrementing IDs?
     resources "/attachments", AttachmentController, only: [:show]
   end
-  
+
   # custom dev-only route to view local mailbox
   if Mix.env == :dev do
     scope "/dev" do

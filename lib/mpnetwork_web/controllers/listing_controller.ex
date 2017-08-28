@@ -31,7 +31,7 @@ defmodule MpnetworkWeb.ListingController do
         |> put_flash(:info, "Listing created successfully.")
         |> redirect(to: listing_path(conn, :show, listing))
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, offices: offices())
     end
   end
 
@@ -46,30 +46,26 @@ defmodule MpnetworkWeb.ListingController do
       edit_mls(conn, params)
     else
       listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
-      if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+      ensure_owner_or_admin(conn, listing, fn ->
         attachments = Listing.list_attachments(listing.id)
         changeset = Realtor.change_listing(listing)
         render(conn, "edit.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
-      else
-        send_resp(conn, 405, "Not allowed")
-      end
+      end)
     end
   end
 
   def edit_mls(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
-    if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+    ensure_owner_or_admin(conn, listing, fn ->
       attachments = Listing.list_attachments(listing.id)
       changeset = Realtor.change_listing(listing)
       render(conn, "edit_mls.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
+    end)
   end
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
     listing = Realtor.get_listing!(id)
-    if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+    ensure_owner_or_admin(conn, listing, fn ->
       case Realtor.update_listing(listing, listing_params) do
         {:ok, listing} ->
           conn
@@ -79,22 +75,18 @@ defmodule MpnetworkWeb.ListingController do
           attachments = Listing.list_attachments(id)
           render(conn, "edit.html", listing: listing, changeset: changeset, attachments: attachments, offices: offices())
       end
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
+    end)
   end
 
   def delete(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
+    ensure_owner_or_admin(conn, listing, fn ->
       {:ok, _listing} = Realtor.delete_listing(listing)
 
       conn
       |> put_flash(:info, "Listing deleted successfully.")
       |> redirect(to: listing_path(conn, :index))
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
+    end)
   end
 
   def client_listing(conn, %{"id" => id, "sig" => signature}) do
@@ -153,7 +145,18 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   defp offices do
-    Realtor.all_office_names
+    Realtor.list_offices
+  end
+
+  defp ensure_owner_or_admin(conn, resource, lambda) do
+    u = current_user(conn)
+    oid = resource.user_id
+    admin = u.role_id < 3
+    if u.id == oid || admin do
+      lambda.()
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
 end

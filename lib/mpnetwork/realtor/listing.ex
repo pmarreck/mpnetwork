@@ -163,7 +163,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field :cellular_coverage_quality, :integer
     field :owner_name, :string
     field :status_showing_phone, :string
-    belongs_to :broker, Mpnetwork.Office
+    belongs_to :broker, Mpnetwork.Realtor.Office
     field :broker_agent_owned, :boolean
     belongs_to :user, Mpnetwork.User
     field :listing_agent_phone, :string

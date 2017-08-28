@@ -1157,9 +1157,9 @@
 
   <!-- 159 -->
   <div class="form-group<%= if f.errors[:broker], do: " has-error" %>">
-    <%= label f, :office_id, "Broker:", class: "control-label" %>
-    <%= select f, :office_id, for(o <- @offices, do: {o.name, o.id}), class: "fancy" %>
-    <%= error_tag f, :office_id %>
+    <%= label f, :broker_id, "Broker:", class: "control-label" %>
+    <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy" %>
+    <%= error_tag f, :broker_id %>
   </div>
 
   <!-- 176 -->

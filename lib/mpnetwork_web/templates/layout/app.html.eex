@@ -269,6 +269,9 @@
                   <li><%= link "Invite a user", to: invitation_path(@conn, :new) %></li>
                   <li><a href="#">Edit users</a></li>
                 </ul>
+                <ul class="treeview-menu">
+                  <li><%= link "Edit offices", to: office_path(@conn, :index) %></li>
+                </ul>
               </li>
             <% end %>
           </ul>

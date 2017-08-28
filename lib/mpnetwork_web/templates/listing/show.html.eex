@@ -2,11 +2,12 @@
 
 <div class="form-group">
   <%= if @listing.user_id == @current_user.id do %>
-    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></div>
+    <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+    <span><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xs" %></span>
   <% else %>
     <br/>
   <% end %>
-  <div><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xs" %></div>
+  <span><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xs" %></span>
   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
 </div>
 

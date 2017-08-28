@@ -237,4 +237,74 @@ defmodule Mpnetwork.RealtorTest do
       assert %Ecto.Changeset{} = Realtor.change_listing(listing)
     end
   end
+
+  describe "offices" do
+    alias Mpnetwork.Realtor.Office
+
+    @valid_attrs %{address: "some address", city: "some city", name: "some name", phone: "some phone", state: "some state", zip: "some zip"}
+    @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
+    @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
+
+    def office_fixture(attrs \\ %{}) do
+      {:ok, office} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Realtor.create_office()
+
+      office
+    end
+
+    test "list_offices/0 returns all offices" do
+      office = office_fixture()
+      assert Realtor.list_offices() == [office]
+    end
+
+    test "get_office!/1 returns the office with given id" do
+      office = office_fixture()
+      assert Realtor.get_office!(office.id) == office
+    end
+
+    test "create_office/1 with valid data creates a office" do
+      assert {:ok, %Office{} = office} = Realtor.create_office(@valid_attrs)
+      assert office.address == "some address"
+      assert office.city == "some city"
+      assert office.name == "some name"
+      assert office.phone == "some phone"
+      assert office.state == "some state"
+      assert office.zip == "some zip"
+    end
+
+    test "create_office/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Realtor.create_office(@invalid_attrs)
+    end
+
+    test "update_office/2 with valid data updates the office" do
+      office = office_fixture()
+      assert {:ok, office} = Realtor.update_office(office, @update_attrs)
+      assert %Office{} = office
+      assert office.address == "some updated address"
+      assert office.city == "some updated city"
+      assert office.name == "some updated name"
+      assert office.phone == "some updated phone"
+      assert office.state == "some updated state"
+      assert office.zip == "some updated zip"
+    end
+
+    test "update_office/2 with invalid data returns error changeset" do
+      office = office_fixture()
+      assert {:error, %Ecto.Changeset{}} = Realtor.update_office(office, @invalid_attrs)
+      assert office == Realtor.get_office!(office.id)
+    end
+
+    test "delete_office/1 deletes the office" do
+      office = office_fixture()
+      assert {:ok, %Office{}} = Realtor.delete_office(office)
+      assert_raise Ecto.NoResultsError, fn -> Realtor.get_office!(office.id) end
+    end
+
+    test "change_office/1 returns a office changeset" do
+      office = office_fixture()
+      assert %Ecto.Changeset{} = Realtor.change_office(office)
+    end
+  end
 end

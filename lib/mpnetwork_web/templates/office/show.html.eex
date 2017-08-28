@@ -1,0 +1,9 @@
+<h2><%= @office.name %></h2>
+
+<p><%= @office.address %></p>
+<p><%= @office.city %>, <%= @office.state %> <%= @office.zip %></p>
+<p><%= @office.phone %></p>
+
+<span><%= link "Edit", to: office_path(@conn, :edit, @office), class: "btn btn-default btn-xl" %></span>
+&nbsp;
+<span><%= link "Back", to: office_path(@conn, :index) %></span>
