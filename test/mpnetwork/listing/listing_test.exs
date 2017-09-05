@@ -1,7 +1,7 @@
 defmodule Mpnetwork.ListingTest do
 
   use ExUnit.Case, async: true
-  
+
   use Mpnetwork.DataCase
 
   alias Mpnetwork.{Listing, Upload, Realtor}
@@ -40,7 +40,7 @@ defmodule Mpnetwork.ListingTest do
     end
 
     def fixture(:listing, user \\ user_fixture()) do
-      {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id}, @listing_create_attrs))
+      {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id, broker_id: user.office_id}, @listing_create_attrs))
       listing
     end
 

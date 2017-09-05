@@ -21,18 +21,29 @@ import $ from "jquery"
 
 import "bootstrap"
 
-import "select2"
+// import "select2"
 
 import "admin-lte/plugins/datepicker/bootstrap-datepicker"
+
+import "admin-lte/plugins/input-mask/jquery.inputmask"
+
+import "admin-lte/plugins/select2/select2.full.min"
 
 import "admin-lte"
 
 $(document).ready(function() {
-  $(".fancy").select2();
+  // trigger multiselect with search autocomplete
+  $(".fancy").select2({
+    placeholder: "Select an option",
+    allowClear: true,
+  });
+  // trigger datepicker inputs
   $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
   $('div.date .form-control').datepicker();
+  // trigger phone input masks
+  $(":input").inputmask();
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

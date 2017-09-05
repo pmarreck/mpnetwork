@@ -1,6 +1,7 @@
 defmodule MpnetworkWeb.Router do
   use MpnetworkWeb, :router
   use Coherence.Router
+  alias Mpnetwork.Repo
 
   def create_timber_user_context(conn, _opts) do
     if conn.assigns[:current_user] do
@@ -20,6 +21,11 @@ defmodule MpnetworkWeb.Router do
     plug Coherence.Authentication.Session
   end
 
+  defp create_office_context(conn, _) do
+    u = conn.assigns.current_user |> Repo.preload(:broker)
+    Plug.Conn.assign(conn, :current_office, u.broker)
+  end
+
   pipeline :protected do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -27,7 +33,21 @@ defmodule MpnetworkWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Coherence.Authentication.Session, protected: true
+    plug :create_office_context
     plug :create_timber_user_context
+  end
+
+  defp admin_check(conn, _) do
+    # note that this assumes the session's already been fetched in its pipeline, or it will fail
+    if conn.assigns.current_user.role_id > 2 do
+      send_resp(conn, 405, "Not allowed")
+    else
+      conn
+    end
+  end
+
+  pipeline :admin_protected do
+    plug :admin_check
   end
 
   pipeline :api do
@@ -44,6 +64,10 @@ defmodule MpnetworkWeb.Router do
     coherence_routes :protected
   end
 
+  scope "/", MpnetworkWeb do
+    pipe_through [:protected, :admin_protected]
+    resources "/offices", OfficeController
+  end
 
   scope "/", MpnetworkWeb do
     pipe_through :protected
@@ -55,7 +79,6 @@ defmodule MpnetworkWeb.Router do
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController, except: [:show]
-    resources "/offices", OfficeController
   end
 
   scope "/", MpnetworkWeb do

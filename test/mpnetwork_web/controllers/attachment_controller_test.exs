@@ -22,16 +22,18 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   # @update_attrs Enum.into(%{data: @test_attachment_new_binary_data}, @post_update_attrs)
   # @invalid_attrs %{content_type: nil, data: nil, height_pixels: nil, original_filename: nil, is_image: nil, primary: true, sha256_hash: nil, width_pixels: nil}
   @invalid_post_attrs Enum.into(%{data: nil}, @post_create_attrs)
-  
+
   setup %{conn: conn} do
-    user = user_fixture()
+    office = office_fixture()
+    user = user_fixture(%{office: office, office_id: office.id})
+    conn = assign(conn, :current_office, office)
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end
 
   def fixture(a, b \\ %{})
 
   def fixture(:listing, user) do
-    {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id, user: user}, @listing_create_attrs))
+    {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id, user: user, broker_id: user.office_id}, @listing_create_attrs))
     listing
   end
 

@@ -4,7 +4,7 @@ defmodule Mpnetwork.EnumMaps do
   @class_types_ext ~w[Residential Condo Co-op HOA Rental Land Commercial/Industrial]
   @class_types_int (@class_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def class_types_int, do: @class_types_int
-  @class_type_opts Enum.zip(["" | @class_types_ext], [nil | @class_types_int])
+  @class_type_opts Enum.zip([" " | @class_types_ext], [nil | @class_types_int])
   def class_type_select_opts, do: @class_type_opts
 
   @class_types_int_to_ext_map Enum.zip(@class_types_int, @class_types_ext) |> Map.new
@@ -18,7 +18,7 @@ defmodule Mpnetwork.EnumMaps do
   @listing_status_types_ext ["For Sale", "Under Contract", "Closed", "Price Change", "Withdrawn", "Sold", "Temporarily Off Market"]
   @listing_status_types_int ~w[FS UC CL PC WR SL TOM]a
   def listing_status_types_int, do: @listing_status_types_int
-  @listing_status_type_opts Enum.zip(["" | @listing_status_types_ext], [nil | @listing_status_types_int])
+  @listing_status_type_opts Enum.zip([" " | @listing_status_types_ext], [nil | @listing_status_types_int])
   def listing_status_type_select_opts, do: @listing_status_type_opts
   # perhaps instead attribute "New" if listing is under a month old?
 
@@ -33,7 +33,7 @@ defmodule Mpnetwork.EnumMaps do
   @basement_types_ext ~w[Full Part Crawl Opt None]
   @basement_types_int ~w[full part crawl opt none]a
   def basement_types_int, do: @basement_types_int
-  @basement_type_opts Enum.zip(["" | @basement_types_ext], [nil | @basement_types_int])
+  @basement_type_opts Enum.zip([" " | @basement_types_ext], [nil | @basement_types_int])
   def basement_type_select_opts, do: @basement_type_opts
 
   @basement_types_int_to_ext_map Enum.zip(@basement_types_int, @basement_types_ext) |> Map.new
@@ -47,7 +47,7 @@ defmodule Mpnetwork.EnumMaps do
   @waterfront_types_ext ["Bay", "Canal", "Creek", "Harbor", "Inlet", "Lake", "Ocean", "Pond", "Prot Wetland", "River", "Sound", "Other"]
   @waterfront_types_int ~w[bay canal creek harbor inlet lake ocean pond wetland river sound other]a
   def waterfront_types_int, do: @waterfront_types_int
-  @waterfront_type_opts Enum.zip(["" | @waterfront_types_ext], [nil | @waterfront_types_int])
+  @waterfront_type_opts Enum.zip([" " | @waterfront_types_ext], [nil | @waterfront_types_int])
   def waterfront_type_select_opts, do: @waterfront_type_opts
 
   @waterfront_types_int_to_ext_map Enum.zip(@waterfront_types_int, @waterfront_types_ext) |> Map.new
@@ -61,7 +61,7 @@ defmodule Mpnetwork.EnumMaps do
   @front_exposure_types_ext ~w[N S E W NE NW SE SW]
   @front_exposure_types_int ~w[N S E W NE NW SE SW]a
   def front_exposure_types_int, do: @front_exposure_types_int
-  @front_exposure_type_opts Enum.zip(["" | @front_exposure_types_ext], [nil | @front_exposure_types_int])
+  @front_exposure_type_opts Enum.zip([" " | @front_exposure_types_ext], [nil | @front_exposure_types_int])
   def front_exposure_type_select_opts, do: @front_exposure_type_opts
 
   @front_exposure_types_int_to_ext_map Enum.zip(@front_exposure_types_int, @front_exposure_types_ext) |> Map.new
@@ -77,7 +77,7 @@ defmodule Mpnetwork.EnumMaps do
                     "Ranch", "Saltbox", "Splanch", "Split", "Split Ranch", "Store+Dwell", "Townhouse", "Traditional", "Tudor", "Victorian", "Other"]
   @style_types_int (@style_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def style_types_int, do: @style_types_int
-  @style_type_opts Enum.zip(["" | @style_types_ext], [nil | @style_types_int])
+  @style_type_opts Enum.zip([" " | @style_types_ext], [nil | @style_types_int])
   def style_type_select_opts, do: @style_type_opts
 
   @style_types_int_to_ext_map Enum.zip(@style_types_int, @style_types_ext) |> Map.new
@@ -91,7 +91,7 @@ defmodule Mpnetwork.EnumMaps do
   @dining_room_types_ext ["Formal", "L-Shaped", "Lr/Dr", "None", "Other"]
   @dining_room_types_int (@dining_room_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def dining_room_types_int, do: @dining_room_types_int
-  @dining_room_type_opts Enum.zip(["" | @dining_room_types_ext], [nil | @dining_room_types_int])
+  @dining_room_type_opts Enum.zip([" " | @dining_room_types_ext], [nil | @dining_room_types_int])
   def dining_room_type_select_opts, do: @dining_room_type_opts
 
   @dining_room_types_int_to_ext_map Enum.zip(@dining_room_types_int, @dining_room_types_ext) |> Map.new
@@ -105,7 +105,7 @@ defmodule Mpnetwork.EnumMaps do
   @fuel_types_ext ["Elec", "Gas", "Oil", "Solar", "Other"]
   @fuel_types_int ~w[elec gas oil solar other]a
   def fuel_types_int, do: @fuel_types_int
-  @fuel_type_opts Enum.zip(["" | @fuel_types_ext], [nil | @fuel_types_int])
+  @fuel_type_opts Enum.zip([" " | @fuel_types_ext], [nil | @fuel_types_int])
   def fuel_type_select_opts, do: @fuel_type_opts
 
   @fuel_types_int_to_ext_map Enum.zip(@fuel_types_int, @fuel_types_ext) |> Map.new
@@ -119,7 +119,7 @@ defmodule Mpnetwork.EnumMaps do
   @heating_types_ext ["None", "Elec", "Heat Pump/CAC", "HA/Furnace", "HW/Boiler", "GeoX", "Rad", "Steam", "Other"]
   @heating_types_int (@heating_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def heating_types_int, do: @heating_types_int
-  @heating_type_opts Enum.zip(["" | @heating_types_ext], [nil | @heating_types_int])
+  @heating_type_opts Enum.zip([" " | @heating_types_ext], [nil | @heating_types_int])
   def heating_type_select_opts, do: @heating_type_opts
 
   @heating_types_int_to_ext_map Enum.zip(@heating_types_int, @heating_types_ext) |> Map.new
@@ -133,7 +133,7 @@ defmodule Mpnetwork.EnumMaps do
   @sewage_types_ext ["Municipal Sewer", "Cesspool", "Septic"]
   @sewage_types_int ~w[sewer cesspool septic]a
   def sewage_types_int, do: @sewage_types_int
-  @sewage_type_opts Enum.zip(["" | @sewage_types_ext], [nil | @sewage_types_int])
+  @sewage_type_opts Enum.zip([" " | @sewage_types_ext], [nil | @sewage_types_int])
   def sewage_type_select_opts, do: @sewage_type_opts
 
   @sewage_types_int_to_ext_map Enum.zip(@sewage_types_int, @sewage_types_ext) |> Map.new
@@ -147,7 +147,7 @@ defmodule Mpnetwork.EnumMaps do
   @water_types_ext ~w[Public Well]
   @water_types_int ~w[public well]a
   def water_types_int, do: @water_types_int
-  @water_type_opts Enum.zip(["" | @water_types_ext], [nil | @water_types_int])
+  @water_type_opts Enum.zip([" " | @water_types_ext], [nil | @water_types_int])
   def water_type_select_opts, do: @water_type_opts
 
   @water_types_int_to_ext_map Enum.zip(@water_types_int, @water_types_ext) |> Map.new
@@ -161,7 +161,7 @@ defmodule Mpnetwork.EnumMaps do
   @sep_hw_heater_types_ext ["Elec", "Gas", "Oil", "Solar", "Other"]
   @sep_hw_heater_types_int ~w[elec gas oil solar other]a
   def sep_hw_heater_types_int, do: @sep_hw_heater_types_int
-  @sep_hw_heater_type_opts Enum.zip(["" | @sep_hw_heater_types_ext], [nil | @sep_hw_heater_types_int])
+  @sep_hw_heater_type_opts Enum.zip([" " | @sep_hw_heater_types_ext], [nil | @sep_hw_heater_types_int])
   def sep_hw_heater_type_select_opts, do: @sep_hw_heater_type_opts
 
   @sep_hw_heater_types_int_to_ext_map Enum.zip(@sep_hw_heater_types_int, @sep_hw_heater_types_ext) |> Map.new
@@ -175,7 +175,7 @@ defmodule Mpnetwork.EnumMaps do
   @green_cert_types_ext ["Energy Star", "HERS", "LEED", "LEED Gold", "LEED Silver", "LEED Platinum"]
   @green_cert_types_int (@green_cert_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def green_cert_types_int, do: @green_cert_types_int
-  @green_cert_type_opts Enum.zip(["" | @green_cert_types_ext], [nil | @green_cert_types_int])
+  @green_cert_type_opts Enum.zip([" " | @green_cert_types_ext], [nil | @green_cert_types_int])
   def green_cert_type_select_opts, do: @green_cert_type_opts
 
   @green_cert_types_int_to_ext_map Enum.zip(@green_cert_types_int, @green_cert_types_ext) |> Map.new
@@ -189,7 +189,7 @@ defmodule Mpnetwork.EnumMaps do
   @patio_types_int ~w[brick bluestone concrete ceramic_tile porcelain_tile limestone pavers quartzite slate wood other]a
   @patio_types_ext (@patio_types_int |> Enum.map(&(Atom.to_string(&1) |> String.replace(~r/_/, " ") |> String.capitalize)))
   def patio_types_int, do: @patio_types_int
-  @patio_type_opts Enum.zip(["" | @patio_types_ext], [nil | @patio_types_int])
+  @patio_type_opts Enum.zip([" " | @patio_types_ext], [nil | @patio_types_int])
   def patio_type_select_opts, do: @patio_type_opts
 
   @patio_types_int_to_ext_map Enum.zip(@patio_types_int, @patio_types_ext) |> Map.new
@@ -217,7 +217,7 @@ defmodule Mpnetwork.EnumMaps do
   @pool_types_ext ["Above-ground", "Fiberglass", "Concrete", "Vinyl", "Gunite", "Shotcrete", "Masonry block", "Lap", "Freeform", "Other"]
   @pool_types_int (@pool_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def pool_types_int, do: @pool_types_int
-  @pool_type_opts Enum.zip(["" | @pool_types_ext], [nil | @pool_types_int])
+  @pool_type_opts Enum.zip([" " | @pool_types_ext], [nil | @pool_types_int])
   def pool_type_select_opts, do: @pool_type_opts
 
   @pool_types_int_to_ext_map Enum.zip(@pool_types_int, @pool_types_ext) |> Map.new
@@ -231,7 +231,7 @@ defmodule Mpnetwork.EnumMaps do
   @deck_types_ext ["Hardwood", "PT Lumber", "Redwood", "Cedar", "Tropical hardwood", "Composite", "Plastic", "Aluminum", "Other"]
   @deck_types_int (@deck_types_ext |> Enum.map(&(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_") |> String.to_atom)))
   def deck_types_int, do: @deck_types_int
-  @deck_type_opts Enum.zip(["" | @deck_types_ext], [nil | @deck_types_int])
+  @deck_type_opts Enum.zip([" " | @deck_types_ext], [nil | @deck_types_int])
   def deck_type_select_opts, do: @deck_type_opts
 
   @deck_types_int_to_ext_map Enum.zip(@deck_types_int, @deck_types_ext) |> Map.new
@@ -245,7 +245,7 @@ defmodule Mpnetwork.EnumMaps do
   @att_types_ext ["Single-family detached", "Attached", "Semi"]
   @att_types_int ~w[ det att semi ]
   def att_types_int, do: @att_types_int
-  @att_type_opts Enum.zip(["" | @att_types_ext], [nil | @att_types_int])
+  @att_type_opts Enum.zip([" " | @att_types_ext], [nil | @att_types_int])
   def att_type_select_opts, do: @att_type_opts
 
   @att_types_int_to_ext_map Enum.zip(@att_types_int, @att_types_ext) |> Map.new

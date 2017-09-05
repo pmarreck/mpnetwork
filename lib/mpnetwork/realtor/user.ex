@@ -11,7 +11,9 @@ defmodule Mpnetwork.User do
     field :cell_phone, :string
     # field :password, :string, virtual: true #set via coherence_schema()
     # field :office_id, :integer, default: 1
-    belongs_to :office, Mpnetwork.Realtor.Office, defaults: %{id: 1}
+    # Had to rename the following association to "broker"
+    # after "office" became a boolean. Oops.
+    belongs_to :broker, Mpnetwork.Realtor.Office, foreign_key: :office_id
     # field :role_id, :integer, default: 3 # Realtor
     belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
     has_many :listings, Mpnetwork.Realtor.Listing

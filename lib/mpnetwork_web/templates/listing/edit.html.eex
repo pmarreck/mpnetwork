@@ -5,6 +5,7 @@
                         conn: @conn,
                         listing: @listing,
                         offices: @offices,
+                        users: @users,
                         attachments: @attachments,
                         existing: @listing %>
 

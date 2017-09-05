@@ -35,9 +35,14 @@
     <%= error_tag f, :zip %>
   </div>
 
-  <div class="form-group">
+  <div class="form-group<%= if f.errors[:phone], do: " has-error" %>">
     <%= label f, :phone, class: "control-label" %>
-    <%= text_input f, :phone, class: "form-control" %>
+    <div class="input-group">
+      <div class="input-group-addon">
+        <i class="fa fa-phone"></i>
+      </div>
+      <%= telephone_input f, :phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+    </div>
     <%= error_tag f, :phone %>
   </div>
 

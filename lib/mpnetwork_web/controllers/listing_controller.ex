@@ -17,21 +17,32 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def new(conn, _params) do
-    changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{})
-    render(conn, "new.html", changeset: changeset, offices: offices())
+    changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{
+      user_id: current_user(conn).id,
+      broker_id: conn.assigns.current_office.id
+    })
+    render(conn, "new.html",
+      changeset: changeset,
+      offices: offices(),
+      users: users(conn.assigns.current_office)
+    )
   end
 
   def create(conn, %{"listing" => listing_params}) do
     # inject current_user.id
-    listing_params_with_current_user_id = Enum.into(%{"user_id" => current_user(conn).id}, listing_params)
+    listing_params_with_current_user_id_and_broker_id = Enum.into(%{"user_id" => current_user(conn).id, "broker_id" => conn.assigns.current_office.id}, listing_params)
 
-    case Realtor.create_listing(listing_params_with_current_user_id) do
+    case Realtor.create_listing(listing_params_with_current_user_id_and_broker_id) do
       {:ok, listing} ->
         conn
         |> put_flash(:info, "Listing created successfully.")
         |> redirect(to: listing_path(conn, :show, listing))
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset, offices: offices())
+        render(conn, "new.html",
+          changeset: changeset,
+          offices: offices(),
+          users: users(conn.assigns.current_office)
+        )
     end
   end
 
@@ -45,21 +56,34 @@ defmodule MpnetworkWeb.ListingController do
     if params["version"] == "mls" do
       edit_mls(conn, params)
     else
-      listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
+      listing = Realtor.get_listing!(id)
       ensure_owner_or_admin(conn, listing, fn ->
         attachments = Listing.list_attachments(listing.id)
         changeset = Realtor.change_listing(listing)
-        render(conn, "edit.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
+        render(conn, "edit.html",
+          listing: listing,
+          attachments: attachments,
+          changeset: changeset,
+          broker: listing.broker,
+          offices: offices(),
+          users: users(conn.assigns.current_office)
+        )
       end)
     end
   end
 
   def edit_mls(conn, %{"id" => id}) do
-    listing = Realtor.get_listing!(id) |> Repo.preload([:broker, :user])
+    listing = Realtor.get_listing!(id)
     ensure_owner_or_admin(conn, listing, fn ->
       attachments = Listing.list_attachments(listing.id)
       changeset = Realtor.change_listing(listing)
-      render(conn, "edit_mls.html", listing: listing, attachments: attachments, changeset: changeset, offices: offices())
+      render(conn, "edit_mls.html",
+        listing: listing,
+        attachments: attachments,
+        changeset: changeset,
+        offices: offices(),
+        users: users(conn.assigns.current_office)
+      )
     end)
   end
 
@@ -73,7 +97,13 @@ defmodule MpnetworkWeb.ListingController do
           |> redirect(to: listing_path(conn, :show, listing))
         {:error, %Ecto.Changeset{} = changeset} ->
           attachments = Listing.list_attachments(id)
-          render(conn, "edit.html", listing: listing, changeset: changeset, attachments: attachments, offices: offices())
+          render(conn, "edit.html",
+            listing: listing,
+            attachments: attachments,
+            changeset: changeset,
+            offices: offices(),
+            users: users(conn.assigns.current_office)
+          )
       end
     end)
   end
@@ -146,6 +176,14 @@ defmodule MpnetworkWeb.ListingController do
 
   defp offices do
     Realtor.list_offices
+  end
+
+  # defp users do
+  #   Realtor.list_users
+  # end
+
+  defp users(office) do
+    Realtor.list_users(office)
   end
 
   defp ensure_owner_or_admin(conn, resource, lambda) do

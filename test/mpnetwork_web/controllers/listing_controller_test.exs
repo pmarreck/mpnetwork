@@ -15,7 +15,9 @@ defmodule MpnetworkWeb.ListingControllerTest do
   def valid_user_attrs, do: %{email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2}
 
   setup %{conn: conn} do
-    user = user_fixture()
+    office = office_fixture()
+    user = user_fixture(%{office: office, office_id: office.id})
+    conn = assign(conn, :current_office, office)
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end
 
@@ -27,8 +29,18 @@ defmodule MpnetworkWeb.ListingControllerTest do
     user
   end
 
+  @valid_office_attrs %{name: "Coach"}
+  def office_fixture(attrs \\ %{}) do
+    {:ok, office} =
+      attrs
+      |> Enum.into(@valid_office_attrs)
+      |> Realtor.create_office()
+    office
+  end
+
   def fixture(:listing, user \\ user_fixture()) do
-    {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id}, @create_attrs))
+    office = office_fixture()
+    {:ok, listing} = Realtor.create_listing(Enum.into(%{user_id: user.id, user: user, broker_id: office.id, broker: office}, @create_attrs))
     listing
   end
 

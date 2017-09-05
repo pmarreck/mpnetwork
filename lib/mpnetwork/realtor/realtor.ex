@@ -28,6 +28,23 @@ defmodule Mpnetwork.Realtor do
   end
 
   @doc """
+  Returns the list of users.
+
+  ## Examples
+
+      iex> list_users()
+      [%User{}, ...]
+
+  """
+  def list_users do
+    Repo.all(from u in User, order_by: [asc: u.name])
+  end
+
+  def list_users(office) do
+    Repo.all(from u in User, where: u.office_id == ^office.id, order_by: [asc: u.name])
+  end
+
+  @doc """
   Returns the list of broadcasts.
 
   ## Examples
@@ -199,7 +216,7 @@ defmodule Mpnetwork.Realtor do
       ** (Ecto.NoResultsError)
 
   """
-  def get_listing!(id), do: Repo.get!(Listing, id)
+  def get_listing!(id), do: Repo.get!(Listing, id) |> Repo.preload([:broker, :user])
 
   @doc """
   Creates a listing.

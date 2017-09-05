@@ -163,7 +163,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field :cellular_coverage_quality, :integer
     field :owner_name, :string
     field :status_showing_phone, :string
-    belongs_to :broker, Mpnetwork.Realtor.Office
+    belongs_to :broker, Mpnetwork.Realtor.Office, foreign_key: :broker_id
     field :broker_agent_owned, :boolean
     belongs_to :user, Mpnetwork.User
     field :listing_agent_phone, :string
@@ -211,14 +211,14 @@ defmodule Mpnetwork.Realtor.Listing do
   def changeset(%Listing{} = listing, %{"draft" => "true"} = attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:user_id, :address])
+    |> validate_required([:user_id, :broker_id, :address])
     |> constraints
   end
 
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:user_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :studio, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size, :year_built, :stories, :basement, :num_fireplaces, :parking_spaces, :num_garages, :attached_garage, :new_construction, :prop_tax_usd, :patio, :deck, :pool, :hot_tub, :num_skylights, :central_air, :central_vac, :security_system, :fios_available, :high_speed_internet_available, :modern_kitchen_countertops, :eef_led_lighting, :visible_on, :expires_on])
+    |> validate_required([:user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :lot_size, :year_built, :stories, :basement, :num_fireplaces, :parking_spaces, :num_garages, :attached_garage, :new_construction, :prop_tax_usd, :central_air, :visible_on, :expires_on])
     |> constraints
   end
 
@@ -426,6 +426,7 @@ defmodule Mpnetwork.Realtor.Listing do
       :selling_agent_name
     ])
     |> foreign_key_constraint(:user_id)
+    |> foreign_key_constraint(:broker_id)
   end
 
 end

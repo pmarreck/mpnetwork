@@ -10,8 +10,8 @@
             <th>baths</th>
             <th>half baths</th>
             <th>Sq ft</th>
-            <th>Acres</th>
-            <th>Year built</th>
+            <th>Lot sz</th>
+            <th>Year</th>
             <th>Created</th>
             <th>Public on</th>
             <th>Expires on</th>
@@ -23,8 +23,8 @@
     <%= for listing <- @listings do %>
         <tr>
             <td>
-              <% 
-                address_text = if listing.city && listing.state && listing.zip do 
+              <%
+                address_text = if listing.city && listing.state && listing.zip do
                   "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}"
                 else
                   listing.address

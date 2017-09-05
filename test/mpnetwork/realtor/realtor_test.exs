@@ -101,6 +101,13 @@ defmodule Mpnetwork.RealtorTest do
       else
         attrs
       end
+      # next add an associated office if none exists
+      attrs = unless attrs[:broker_id] || attrs[:broker] do
+        broker = office_fixture()
+        Enum.into(%{broker_id: broker.id, broker: broker}, attrs)
+      else
+        attrs
+      end
       {:ok, listing} =
         attrs
         |> Enum.into(@valid_attrs)
@@ -114,14 +121,15 @@ defmodule Mpnetwork.RealtorTest do
     end
 
     test "get_listing!/1 returns the listing with given id" do
-      listing = listing_fixture()
+      listing = listing_fixture() |> Repo.preload([:user, :broker])
       assert Realtor.get_listing!(listing.id) == listing
     end
 
     test "create_listing/1 with valid data creates a listing" do
       user = user_fixture()
-      valid_attrs_with_user_id = Enum.into(%{user_id: user.id}, @valid_attrs)
-      assert {:ok, %Listing{} = listing} = Realtor.create_listing(valid_attrs_with_user_id)
+      office = office_fixture()
+      valid_attrs_with_user_id_and_broker_id = Enum.into(%{user_id: user.id, broker_id: office.id}, @valid_attrs)
+      assert {:ok, %Listing{} = listing} = Realtor.create_listing(valid_attrs_with_user_id_and_broker_id)
       assert listing.expires_on == ~D[2017-09-17]
       assert listing.state == "NY"
       assert listing.new_construction == false
@@ -221,7 +229,7 @@ defmodule Mpnetwork.RealtorTest do
     end
 
     test "update_listing/2 with invalid data returns error changeset" do
-      listing = listing_fixture()
+      listing = listing_fixture() |> Repo.preload([:user, :broker])
       assert {:error, %Ecto.Changeset{}} = Realtor.update_listing(listing, @invalid_attrs)
       assert listing == Realtor.get_listing!(listing.id)
     end
@@ -250,7 +258,6 @@ defmodule Mpnetwork.RealtorTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Realtor.create_office()
-
       office
     end
 

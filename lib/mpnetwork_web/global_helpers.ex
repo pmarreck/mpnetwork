@@ -128,4 +128,8 @@ defmodule MpnetworkWeb.GlobalHelpers do
     datalist_input(nil, name, attrs)
   end
 
+  def is_admin(conn) do
+    conn.assigns.current_user.role_id < 3
+  end
+
 end
