@@ -6,7 +6,7 @@
   <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
 <% end %>
 
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [class: "contains-datetimes"], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -241,22 +241,37 @@
 
   <!-- 32 -->
   <div class="form-group<%= if f.errors[:price_usd], do: " has-error" %>">
-    <%= label f, :price_usd, "Price (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :price_usd, class: "form-control" %>
+    <%= label f, :price_usd, "Price", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :price_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :price_usd %>
   </div>
 
   <!-- 33 -->
   <div class="form-group<%= if f.errors[:prior_price_usd], do: " has-error" %>">
-    <%= label f, :prior_price_usd, "Prior price (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :prior_price_usd, class: "form-control" %>
+    <%= label f, :prior_price_usd, "Prior price", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :prior_price_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :prior_price_usd %>
   </div>
 
   <!-- 34 -->
   <div class="form-group<%= if f.errors[:original_price_usd], do: " has-error" %>">
-    <%= label f, :original_price_usd, "Original price (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :original_price_usd, class: "form-control" %>
+    <%= label f, :original_price_usd, "Original price", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :original_price_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :original_price_usd %>
   </div>
 
@@ -269,22 +284,37 @@
 
   <!-- 36 -->
   <div class="form-group<%= if f.errors[:prop_tax_usd], do: " has-error" %>">
-    <%= label f, :prop_tax_usd, "Property taxes (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :prop_tax_usd, class: "form-control" %>
+    <%= label f, :prop_tax_usd, "Property taxes (annual)", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :prop_tax_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :prop_tax_usd %>
   </div>
 
   <!-- 37 -->
   <div class="form-group<%= if f.errors[:vill_tax_usd], do: " has-error" %>">
-    <%= label f, :vill_tax_usd, "Village taxes (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :vill_tax_usd, class: "form-control" %>
+    <%= label f, :vill_tax_usd, "Village taxes (annual)", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :vill_tax_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :vill_tax_usd %>
   </div>
 
   <!-- 38 -->
   <div class="form-group<%= if f.errors[:star_deduc_usd], do: " has-error" %>">
-    <%= label f, :star_deduc_usd, "STAR deduction (Whole USD, no $ or commas)", class: "control-label" %>
-    <%= number_input f, :star_deduc_usd, class: "form-control" %>
+    <%= label f, :star_deduc_usd, "STAR deduction", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :star_deduc_usd, class: "form-control" %>
+    </div>
     <%= error_tag f, :star_deduc_usd %>
   </div>
 
@@ -1151,7 +1181,12 @@
   <!-- 158 -->
   <div class="form-group<%= if f.errors[:status_showing_phone], do: " has-error" %>">
     <%= label f, :status_showing_phone, class: "control-label" %>
-    <%= telephone_input f, :status_showing_phone, class: "form-control", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+    <div class="input-group">
+      <div class="input-group-addon">
+        <i class="fa fa-phone"></i>
+      </div>
+      <%= telephone_input f, :status_showing_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+    </div>
     <%= error_tag f, :status_showing_phone %>
   </div>
 
@@ -1184,11 +1219,141 @@
     <%= error_tag f, :user_id %>
   </div>
 
+  <!-- 162 -->
+  <div class="form-group<%= if f.errors[:listing_agent_phone], do: " has-error" %>">
+    <%= label f, :listing_agent_phone, class: "control-label" %>
+    <div class="input-group">
+      <div class="input-group-addon">
+        <i class="fa fa-phone"></i>
+      </div>
+      <%= telephone_input f, :listing_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+    </div>
+    <%= error_tag f, :listing_agent_phone %>
+  </div>
+
+  <!-- 163 -->
+  <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>" title="note: can only be changed by admins">
+    <%= label f, :colisting_agent_id, "Co-listing agent", class: "control-label" %>
+    <%= select f, :colisting_agent_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy" %>
+    <%= error_tag f, :colisting_agent_id %>
+  </div>
+
+  <!-- 164 -->
+  <div class="form-group<%= if f.errors[:colisting_agent_phone], do: " has-error" %>">
+    <%= label f, :colisting_agent_phone, "Co-listing agent phone", class: "control-label" %>
+    <div class="input-group">
+      <div class="input-group-addon">
+        <i class="fa fa-phone"></i>
+      </div>
+      <%= telephone_input f, :colisting_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+    </div>
+    <%= error_tag f, :colisting_agent_phone %>
+  </div>
+
+  <!-- 165 -->
+  <div class="form-group<%= if f.errors[:seller_agency_comp], do: " has-error" %>">
+    <%= label f, :seller_agency_comp, class: "control-label" %>
+    <div class="input-group col-xs-1">
+      <%= number_input f, :seller_agency_comp, class: "form-control" %>
+      <div class="input-group-addon">
+        &#37;
+      </div>
+    </div>
+    <%= error_tag f, :seller_agency_comp %>
+  </div>
+
+  <!-- 166 -->
+  <div class="form-group<%= if f.errors[:buyer_agency_comp], do: " has-error" %>">
+    <%= label f, :buyer_agency_comp, class: "control-label" %>
+    <div class="input-group col-xs-1">
+      <%= number_input f, :buyer_agency_comp, class: "form-control" %>
+      <div class="input-group-addon">
+        &#37;
+      </div>
+    </div>
+    <%= error_tag f, :buyer_agency_comp %>
+  </div>
+
+  <!-- 167 -->
+  <div class="form-group<%= if f.errors[:broker_agency_comp], do: " has-error" %>">
+    <%= label f, :broker_agency_comp, class: "control-label" %>
+    <div class="input-group col-xs-1">
+      <%= number_input f, :broker_agency_comp, class: "form-control" %>
+      <div class="input-group-addon">
+        &#37;
+      </div>
+    </div>
+    <%= error_tag f, :broker_agency_comp %>
+  </div>
+
+  <!-- 168 -->
+  <div class="form-group<%= if f.errors[:listing_broker_comp_rental], do: " has-error" %>">
+    <%= label f, :listing_broker_comp_rental, class: "control-label" %>
+    <%= text_input f, :listing_broker_comp_rental, class: "form-control" %>
+    <%= error_tag f, :listing_broker_comp_rental %>
+  </div>
+
+  <!-- 169 -->
+  <div class="form-group<%= if f.errors[:buyer_exclusions], do: " has-error" %>">
+    <%= label f, :buyer_exclusions, "Buyer exclusions?", class: "control-label" %>
+    <%= checkbox f, :buyer_exclusions, class: "checkbox" %>
+    <%= error_tag f, :buyer_exclusions %>
+  </div>
+
+  <!-- 170 -->
+  <div class="form-group<%= if f.errors[:negotiate_direct], do: " has-error" %>">
+    <%= label f, :negotiate_direct, "Negotiate direct?", class: "control-label" %>
+    <%= checkbox f, :negotiate_direct, class: "checkbox" %>
+    <%= error_tag f, :negotiate_direct %>
+  </div>
+
+  <!-- 171 -->
+  <div class="form-group<%= if f.errors[:offers_presentable], do: " has-error" %>">
+    <%= label f, :offers_presentable, "Offers presentable?", class: "control-label" %>
+    <%= checkbox f, :offers_presentable, class: "checkbox" %>
+    <%= error_tag f, :offers_presentable %>
+  </div>
+
+  <!-- 172 -->
+  <div class="form-group<%= if f.errors[:occupancy], do: " has-error" %>">
+    <%= label f, :occupancy, class: "control-label" %>
+    <%= text_input f, :occupancy, class: "form-control" %>
+    <%= error_tag f, :occupancy %>
+  </div>
+
+  <!-- 173 -->
+  <div class="form-group<%= if f.errors[:show_instr], do: " has-error" %>">
+    <%= label f, :show_instr, class: "control-label" %>
+    <%= text_input f, :show_instr, class: "form-control" %>
+    <%= error_tag f, :show_instr %>
+  </div>
+
+  <!-- 174 -->
+  <div class="form-group<%= if f.errors[:lockbox], do: " has-error" %>">
+    <%= label f, :lockbox, "Lockbox?", class: "control-label" %>
+    <%= checkbox f, :lockbox, class: "checkbox" %>
+    <%= error_tag f, :lockbox %>
+  </div>
+
+  <!-- 175 -->
+  <div class="form-group<%= if f.errors[:owner_financing], do: " has-error" %>">
+    <%= label f, :owner_financing, "Owner-financed?", class: "control-label" %>
+    <%= checkbox f, :owner_financing, class: "checkbox" %>
+    <%= error_tag f, :owner_financing %>
+  </div>
+
   <!-- 176 -->
   <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
     <%= label f, :remarks, class: "control-label" %>
     <%= textarea f, :remarks, class: "form-control" %>
     <%= error_tag f, :remarks %>
+  </div>
+
+  <!-- 177 -->
+  <div class="form-group<%= if f.errors[:directions], do: " has-error" %>">
+    <%= label f, :directions, class: "control-label" %>
+    <%= textarea f, :directions, class: "form-control" %>
+    <%= error_tag f, :directions %>
   </div>
 
   <!-- 178 -->
@@ -1198,12 +1363,94 @@
     <%= error_tag f, :description %>
   </div>
 
+  <!-- 179 -->
+  <div class="form-group<%= if f.errors[:rental_income_usd], do: " has-error" %>">
+    <%= label f, :rental_income_usd, class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :rental_income_usd, class: "form-control" %>
+    </div>
+    <%= error_tag f, :rental_income_usd %>
+  </div>
+
+  <!-- 180 -->
+  <div class="form-group<%= if f.errors[:also_for_rent], do: " has-error" %>">
+    <%= label f, :also_for_rent, "Also for rent?", class: "control-label" %>
+    <%= checkbox f, :also_for_rent, class: "checkbox" %>
+    <%= error_tag f, :also_for_rent %>
+  </div>
+
+  <!-- 181 -->
+  <div class="form-group<%= if f.errors[:rental_price_usd], do: " has-error" %>">
+    <%= label f, :rental_price_usd, "Rental price", class: "control-label" %>
+    <div class="input-group col-xs-3">
+      <div class="input-group-addon">
+        $
+      </div>
+      <%= number_input f, :rental_price_usd, class: "form-control" %>
+    </div>
+    <%= error_tag f, :rental_price_usd %>
+  </div>
+
+ <!-- 182 -->
+  <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
+    <%= label f, :personal_prop_exclusions, class: "control-label" %>
+    <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
+    <%= error_tag f, :personal_prop_exclusions %>
+  </div>
+
   <!-- 183 -->
   <div class="form-group<%= if f.errors[:mls_source_id], do: " has-error" %>">
     <%= label f, :mls_source_id, "MLS source ID", class: "control-label" %>
     <%= number_input f, :mls_source_id, class: "form-control" %>
     <%= error_tag f, :mls_source_id %>
   </div>
+
+  <!-- 184 -->
+  <div class="form-group<%= if f.errors[:reo], do: " has-error" %>">
+    <%= label f, :reo, "REO?", class: "control-label" %>
+    <%= checkbox f, :reo, class: "checkbox" %>
+    <%= error_tag f, :reo %>
+  </div>
+
+  <!-- 185 -->
+  <div class="form-group<%= if f.errors[:short_sale], do: " has-error" %>">
+    <%= label f, :short_sale, "Short sale?", class: "control-label" %>
+    <%= checkbox f, :short_sale, class: "checkbox" %>
+    <%= error_tag f, :short_sale %>
+  </div>
+
+ <!-- 186 -->
+  <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
+    <%= label f, :ext_urls, "External URL 1 (THESE DON'T WORK YET)", class: "control-label" %>
+    <%= text_input f, :ext_urls, name: "ext_urls[][first]", class: "form-control" %>
+    <%= error_tag f, :ext_urls %>
+  </div>
+
+  <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
+    <%= label f, :ext_urls, "External URL 2", class: "control-label" %>
+    <%= text_input f, :ext_urls, name: "ext_urls[][second]", class: "form-control" %>
+    <%= error_tag f, :ext_urls %>
+  </div>
+
+  <!-- 187 -->
+  <div class="form-group<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
+    <%= label f, :next_broker_oh_start_at, "Next broker open-house start on/at:", class: "control-label" %>
+    <div class="input-group datetime">
+      <label class="input-group-addon" for="next_broker_oh_start_at">
+        <span class="fa fa-calendar"></span>
+      </label>
+      <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
+      <label class="input-group-addon" for="next_broker_oh_start_at">
+        <span class="fa fa-clock-o"></span>
+      </label>
+    </div>
+    <%= error_tag f, :next_broker_oh_start_at %>
+  </div>
+
+
 
   <div class="form-group">
     <%= submit "Save", class: "btn btn-primary", style: "width: 100px" %>

@@ -23,7 +23,13 @@ import "bootstrap"
 
 // import "select2"
 
+import moment from "moment"
+
+import moment_timezone from "moment-timezone"
+
 import "admin-lte/plugins/datepicker/bootstrap-datepicker"
+
+import daterangepicker from "bootstrap-daterangepicker"
 
 import "admin-lte/plugins/input-mask/jquery.inputmask"
 
@@ -31,7 +37,21 @@ import "admin-lte/plugins/select2/select2.full.min"
 
 import "admin-lte"
 
-$(document).ready(function() {
+function ConvertFromUTCToLocal(dt){
+  // alert(dt);
+  var localval = moment(dt).tz(moment.tz.guess()).format('YYYY-MM-DD h:mm A');
+  // alert(localval);
+  return localval;
+}
+
+function ConvertFromLocalToUTC(dt){
+  // alert("utc func received: " + dt);
+  var utcval = moment.tz(dt, moment.tz.guess()).toISOString();
+  // alert(utcval);
+  return utcval;
+}
+
+$(function() {
   // trigger multiselect with search autocomplete
   $(".fancy").select2({
     placeholder: "Select an option",
@@ -41,7 +61,31 @@ $(document).ready(function() {
   $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
-  $('div.date .form-control').datepicker();
+  $('div.date input.form-control').datepicker();
+  // convert UTC datetime values to local TZ after form load
+  $('div.datetime input.form-control').each(function(_i, dt){
+    $(dt).val(ConvertFromUTCToLocal(dt.value));
+  });
+  // set up post hook to convert local TZ datetimes back to UTC just before form post
+  $('form.contains-datetimes').submit(function(){
+    var datetimes = $(this).find('div.datetime input.form-control');
+    datetimes.each(function(_i, dt){
+      $(dt).val(ConvertFromLocalToUTC(dt.value));
+    });
+    return true;
+  });
+  // trigger daterangepicker inputs
+  $('div.datetime input.form-control').daterangepicker({
+    singleDatePicker: true,
+    autoApply: true,
+    autoUpdateInput: true,
+    timePicker: true,
+    timePicker24Hour: false,
+    timePickerIncrement: 15,
+    locale: {
+      format: 'YYYY-MM-DD h:mm A'
+    }
+  })
   // trigger phone input masks
   $(":input").inputmask();
 });

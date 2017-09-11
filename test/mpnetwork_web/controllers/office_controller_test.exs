@@ -1,5 +1,5 @@
 defmodule MpnetworkWeb.OfficeControllerTest do
-  use MpnetworkWeb.ConnCase
+  use MpnetworkWeb.ConnCase, async: true
 
   alias Mpnetwork.Realtor
 

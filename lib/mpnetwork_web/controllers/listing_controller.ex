@@ -88,6 +88,7 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
+IO.inspect listing_params, limit: :infinity
     listing = Realtor.get_listing!(id)
     ensure_owner_or_admin(conn, listing, fn ->
       case Realtor.update_listing(listing, listing_params) do
