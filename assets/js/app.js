@@ -37,18 +37,34 @@ import "admin-lte/plugins/select2/select2.full.min"
 
 import "admin-lte"
 
+// global app config stuff (move to separate files/envs at some point?)
+var mpnetwork = {
+  config: {
+    dateformat: 'yyyy-mm-dd',
+    datetimeformat: 'YYYY-MM-DD h:mm A'
+  }
+}
+
 function ConvertFromUTCToLocal(dt){
-  // alert(dt);
-  var localval = moment(dt).tz(moment.tz.guess()).format('YYYY-MM-DD h:mm A');
-  // alert(localval);
-  return localval;
+  switch(dt) {
+    case "":
+      return "";
+      break;
+    default:
+      return moment(dt).tz(moment.tz.guess()).format(mpnetwork.config.datetimeformat);
+      break;
+  }
 }
 
 function ConvertFromLocalToUTC(dt){
-  // alert("utc func received: " + dt);
-  var utcval = moment.tz(dt, moment.tz.guess()).toISOString();
-  // alert(utcval);
-  return utcval;
+  switch(dt) {
+    case "":
+      return "";
+      break;
+    default:
+      return moment.tz(dt, moment.tz.guess()).toISOString();
+      break;
+  }
 }
 
 $(function() {
@@ -58,11 +74,11 @@ $(function() {
     allowClear: true,
   });
   // trigger datepicker inputs
-  $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
+  $.fn.datepicker.defaults.format = mpnetwork.config.dateformat;
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
   $('div.date input.form-control').datepicker();
-  // convert UTC datetime values to local TZ after form load
+  // convert UTC datetime values to local TZ after page load for pages with these elements
   $('div.datetime input.form-control').each(function(_i, dt){
     $(dt).val(ConvertFromUTCToLocal(dt.value));
   });
@@ -78,14 +94,20 @@ $(function() {
   $('div.datetime input.form-control').daterangepicker({
     singleDatePicker: true,
     autoApply: true,
-    autoUpdateInput: true,
+    autoUpdateInput: false, // see note below
     timePicker: true,
     timePicker24Hour: false,
     timePickerIncrement: 15,
     locale: {
-      format: 'YYYY-MM-DD h:mm A'
+      format: mpnetwork.config.datetimeformat
     }
-  })
+  });
+  // Silly workaround to preserve initially-blank values, per http://www.daterangepicker.com/#config
+  // and its "Input Initially Empty" "hack"
+  // This also requires "autoUpdateInput" config to be false, above.
+  $('div.datetime input.form-control').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format(mpnetwork.config.datetimeformat));
+  });
   // trigger phone input masks
   $(":input").inputmask();
 });

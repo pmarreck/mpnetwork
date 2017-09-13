@@ -29,10 +29,10 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def create(conn, %{"listing" => listing_params}) do
-    # inject current_user.id
-    listing_params_with_current_user_id_and_broker_id = Enum.into(%{"user_id" => current_user(conn).id, "broker_id" => conn.assigns.current_office.id}, listing_params)
-
-    case Realtor.create_listing(listing_params_with_current_user_id_and_broker_id) do
+    # inject current_user.id and current_office.id (as broker_id)
+    listing_params = Enum.into(%{"user_id" => current_user(conn).id, "broker_id" => conn.assigns.current_office.id}, listing_params)
+    listing_params = filter_empty_ext_urls(listing_params)
+    case Realtor.create_listing(listing_params) do
       {:ok, listing} ->
         conn
         |> put_flash(:info, "Listing created successfully.")
@@ -88,8 +88,9 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
-IO.inspect listing_params, limit: :infinity
+# IO.inspect listing_params, limit: :infinity
     listing = Realtor.get_listing!(id)
+    listing_params = filter_empty_ext_urls(listing_params)
     ensure_owner_or_admin(conn, listing, fn ->
       case Realtor.update_listing(listing, listing_params) do
         {:ok, listing} ->
@@ -195,6 +196,16 @@ IO.inspect listing_params, limit: :infinity
       lambda.()
     else
       send_resp(conn, 405, "Not allowed")
+    end
+  end
+
+  defp filter_empty_ext_urls(listing_params) do
+    %{"ext_urls" => ext_urls} = listing_params
+    if ext_urls do
+      ext_urls = Enum.filter(ext_urls, &(&1!=""))
+      Enum.into(%{"ext_urls" => ext_urls}, listing_params)
+    else
+      listing_params
     end
   end
 

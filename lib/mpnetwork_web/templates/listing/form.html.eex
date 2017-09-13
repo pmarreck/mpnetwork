@@ -1423,40 +1423,108 @@
   </div>
 
  <!-- 186 -->
-  <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
-    <%= label f, :ext_urls, "External URL 1 (THESE DON'T WORK YET)", class: "control-label" %>
-    <%= text_input f, :ext_urls, name: "ext_urls[][first]", class: "form-control" %>
-    <%= error_tag f, :ext_urls %>
+
+  <% if f.data.ext_urls do %>
+    <%= for {url, idx} <- Enum.with_index(Enum.filter(f.data.ext_urls, &(&1!="")), 1) do %>
+      <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
+        <%= label f, :ext_urls, "External URL #{idx}", class: "control-label" %>
+        <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: url, class: "form-control" %>
+        <%= error_tag f, :ext_urls %>
+      </div>
+    <% end %>
+  <% end %>
+
+
+  <div class="form-group">
+    <%= label f, :ext_urls, "Add an external URL", class: "control-label" %>
+    <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: "", class: "form-control" %>
   </div>
 
-  <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
-    <%= label f, :ext_urls, "External URL 2", class: "control-label" %>
-    <%= text_input f, :ext_urls, name: "ext_urls[][second]", class: "form-control" %>
-    <%= error_tag f, :ext_urls %>
-  </div>
+  <div><i>Note: All of the following times are in your current local timezone</i></div>
 
-  <!-- 187 -->
-  <div class="form-group<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
-    <%= label f, :next_broker_oh_start_at, "Next broker open-house start on/at:", class: "control-label" %>
-    <div class="input-group datetime">
-      <label class="input-group-addon" for="next_broker_oh_start_at">
-        <span class="fa fa-calendar"></span>
-      </label>
-      <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
-      <label class="input-group-addon" for="next_broker_oh_start_at">
-        <span class="fa fa-clock-o"></span>
-      </label>
+  <div class="row">
+    <!-- 187 -->
+    <div class="col-xs-3 form-group<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
+      <%= label f, :next_broker_oh_start_at, "Next broker open-house start on/at:", class: "control-label" %>
+      <div class="input-group datetime">
+        <label class="input-group-addon" for="next_broker_oh_start_at">
+          <span class="fa fa-calendar"></span>
+        </label>
+        <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
+        <label class="input-group-addon" for="next_broker_oh_start_at">
+          <span class="fa fa-clock-o"></span>
+        </label>
+      </div>
+      <%= error_tag f, :next_broker_oh_start_at %>
     </div>
-    <%= error_tag f, :next_broker_oh_start_at %>
+    <!-- 188 -->
+    <div class="col-xs-3 form-group<%= if f.errors[:next_broker_oh_end_at], do: " has-error" %>">
+      <%= label f, :next_broker_oh_end_at, "Next broker open-house end on/at:", class: "control-label" %>
+      <div class="input-group datetime">
+        <label class="input-group-addon" for="next_broker_oh_end_at">
+          <span class="fa fa-calendar"></span>
+        </label>
+        <%= text_input f, :next_broker_oh_end_at, class: "form-control", id: "next_broker_oh_end_at" %>
+        <label class="input-group-addon" for="next_broker_oh_end_at">
+          <span class="fa fa-clock-o"></span>
+        </label>
+      </div>
+      <%= error_tag f, :next_broker_oh_end_at %>
+    </div>
   </div>
 
+  <!-- 189 -->
+  <div class="form-group<%= if f.errors[:next_broker_oh_note], do: " has-error" %>">
+    <%= label f, :next_broker_oh_note, "Broker open-house notes", class: "control-label" %>
+    <%= textarea f, :next_broker_oh_note, class: "form-control" %>
+    <%= error_tag f, :next_broker_oh_note %>
+  </div>
 
+  <div><i>Note: All of the following times are in your current local timezone</i></div>
+
+  <div class="row">
+    <!-- 190 -->
+    <div class="col-xs-3 form-group<%= if f.errors[:next_cust_oh_start_at], do: " has-error" %>">
+      <%= label f, :next_cust_oh_start_at, "Next customer open-house start on/at:", class: "control-label" %>
+      <div class="input-group datetime">
+        <label class="input-group-addon" for="next_cust_oh_start_at">
+          <span class="fa fa-calendar"></span>
+        </label>
+        <%= text_input f, :next_cust_oh_start_at, class: "form-control", id: "next_cust_oh_start_at" %>
+        <label class="input-group-addon" for="next_cust_oh_start_at">
+          <span class="fa fa-clock-o"></span>
+        </label>
+      </div>
+      <%= error_tag f, :next_cust_oh_start_at %>
+    </div>
+    <!-- 191 -->
+    <div class="col-xs-3 form-group<%= if f.errors[:next_cust_oh_end_at], do: " has-error" %>">
+      <%= label f, :next_cust_oh_end_at, "Next customer open-house end on/at:", class: "control-label" %>
+      <div class="input-group datetime">
+        <label class="input-group-addon" for="next_cust_oh_end_at">
+          <span class="fa fa-calendar"></span>
+        </label>
+        <%= text_input f, :next_cust_oh_end_at, class: "form-control", id: "next_cust_oh_end_at" %>
+        <label class="input-group-addon" for="next_cust_oh_end_at">
+          <span class="fa fa-clock-o"></span>
+        </label>
+      </div>
+      <%= error_tag f, :next_cust_oh_end_at %>
+    </div>
+  </div>
+
+  <!-- 192 -->
+  <div class="form-group<%= if f.errors[:next_cust_oh_note], do: " has-error" %>">
+    <%= label f, :next_cust_oh_note, "Customer open-house notes", class: "control-label" %>
+    <%= textarea f, :next_cust_oh_note, class: "form-control" %>
+    <%= error_tag f, :next_cust_oh_note %>
+  </div>
 
   <div class="form-group">
     <%= submit "Save", class: "btn btn-primary", style: "width: 100px" %>
   </div>
 <% end %>
 <%= if @existing do %>
-  <span><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
+  <div><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></div>
 <% end %>
 <br />
