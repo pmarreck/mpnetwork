@@ -40,6 +40,10 @@ defmodule Mpnetwork.Realtor do
     Repo.all(from u in User, order_by: [asc: u.name])
   end
 
+  def list_users(nil) do
+    Repo.all(from u in User, order_by: [asc: u.name])
+  end
+
   def list_users(office) do
     Repo.all(from u in User, where: u.office_id == ^office.id, order_by: [asc: u.name])
   end
