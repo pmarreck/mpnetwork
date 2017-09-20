@@ -114,12 +114,14 @@ defmodule MpnetworkWeb.GlobalHelpers do
   # datalist element
   def datalist_input(f, name, %{list_name: list_name, data: list} = attrs) do
     struct_name = if f, do: "#{f.name}[#{name}]", else: "#{name}"
+    val = if f, do: Map.get(f.data, name), else: nil
     attrs = attrs
     |> Map.put(:type, "text")
     |> Map.put(:list, list_name)
     |> Map.put(:name, struct_name)
     |> Map.delete(:data)
     |> Map.delete(:list_name)
+    attrs = if val, do: Map.put(attrs, :value, val), else: attrs
     attrs_html = Enum.map_join(attrs, " ", fn({x,y}) -> ~s(#{x}="#{y}") end)
     opts_html = Enum.map_join(list, "\n", fn(x) -> ~s(<option value="#{x}">) end)
     raw ~s(<input #{attrs_html} />\n<datalist id="#{list_name}">\n#{opts_html}\n</datalist>)
