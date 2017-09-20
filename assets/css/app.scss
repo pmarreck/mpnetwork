@@ -1,36 +1,22 @@
-/*!
- * SANDEEP 1
- */
-
 @import 'node_modules/admin-lte/bootstrap/css/bootstrap.min';
 
-/*!
- * SANDEEP 2
- */
 @import 'node_modules/admin-lte/dist/css/AdminLTE.min';
 
-/*!
- * SANDEEP 3
- */
 @import 'node_modules/admin-lte/dist/css/skins/_all-skins.min';
-
-/*!
- * SANDEEP 4
- */
-// @import 'node_modules/select2/dist/css/select2';
 
 @import 'node_modules/admin-lte/plugins/select2/select2';
 
-/*!
- * SANDEEP 5
- */
 @import 'node_modules/admin-lte/plugins/datepicker/datepicker3';
 
 @import 'node_modules/admin-lte/plugins/daterangepicker/daterangepicker';
 
-//
-.fancy {
-  width: 100%
+// .fancy {
+//   width: 100%
+// }
+
+.checkbox {
+  display: inline;
+  margin-right: 3px !important;
 }
 
 // hack to override this issue after spending too much time trying to solve it properly

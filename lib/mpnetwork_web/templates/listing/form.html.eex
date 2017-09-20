@@ -1,9 +1,28 @@
+<div><br /></div>
 <%= if @existing do %>
-  <div class="form-group">
-    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
-    <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @existing, current_user: @conn.assigns.current_user) %>
-  </div>
-  <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-info">
+          <div class="box-header">
+            <h3 class="box-title">Attachments/Photos</h3>
+          </div>
+          <div class="box-body">
+            <div class="row">
+              <div class="col-xs-12">
+
+                <div class="form-group">
+                  <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
+                  <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @existing, current_user: @conn.assigns.current_user) %>
+                </div>
+                <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 <% end %>
 
 <%= form_for @changeset, @action, [class: "contains-datetimes"], fn f -> %>
@@ -13,1518 +32,1733 @@
     </div>
   <% end %>
 
-  <!-- 1 -->
-  <div class="form-group<%= if f.errors[:draft], do: " has-error" %>">
-    <%= label f, :draft, "Draft?", class: "control-label" %>
-    <%= checkbox f, :draft, class: "checkbox" %>
-    <%= error_tag f, :draft %>
-  </div>
-
-  <!-- 2 -->
-  <div class="form-group<%= if f.errors[:for_sale], do: " has-error" %>">
-    <%= label f, :for_sale, "For Sale?", class: "control-label" %>
-    <%= checkbox f, :for_sale, class: "checkbox" %>
-    <%= error_tag f, :for_sale %>
-  </div>
-
-  <!-- 3 -->
-  <div class="form-group<%= if f.errors[:for_rent], do: " has-error" %>">
-    <%= label f, :for_rent, "For Rent?", class: "control-label" %>
-    <%= checkbox f, :for_rent, class: "checkbox" %>
-    <%= error_tag f, :for_rent %>
-  </div>
-
-  <!-- 4 -->
-  <div class="form-group<%= if f.errors[:class_type], do: " has-error" %>">
-    <%= label f, :class_type, "Property Class:", class: "control-label" %>
-    <%= select f, :class_type, Mpnetwork.EnumMaps.class_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :class_type %>
-  </div>
-
-  <!-- 5 -->
-  <div class="form-group<%= if f.errors[:studio], do: " has-error" %>">
-    <%= label f, :studio, "Studio?", class: "control-label" %>
-    <%= checkbox f, :studio, class: "checkbox" %>
-    <%= error_tag f, :studio %>
-  </div>
-
-  <!-- 6 -->
-  <div class="form-group<%= if f.errors[:address], do: " has-error" %>">
-    <%= label f, :address, class: "control-label" %>
-    <%= text_input f, :address, class: "form-control" %>
-    <%= error_tag f, :address %>
-  </div>
-
-  <!-- 7 -->
-  <div class="form-group<%= if f.errors[:city], do: " has-error" %>">
-    <%= label f, :city, class: "control-label" %>
-    <%= datalist_input f, :city, %{
-      list_name: "cityList",
-      data: [ "Manhasset", "Port Washington" ],
-      class: "form-control"} %>
-    <%= error_tag f, :city %>
-  </div>
-
-  <!-- 8 -->
-  <div class="form-group<%= if f.errors[:state], do: " has-error" %>">
-    <%= label f, :state, class: "control-label" %>
-    <%= datalist_input f, :state, %{
-      list_name: "stateList",
-      data: ~w[ NY ],
-      class: "form-control"} %>
-    <%= error_tag f, :state %>
-  </div>
-
-  <!-- 9 -->
-  <div class="form-group<%= if f.errors[:zip], do: " has-error" %>">
-    <%= label f, :zip, class: "control-label" %>
-    <%= datalist_input f, :zip, %{
-      list_name: "zipList",
-      data: ~w[ 11030 11050 ],
-      class: "form-control"} %>
-    <%= error_tag f, :zip %>
-  </div>
-
-  <!-- 10 -->
-  <div class="form-group<%= if f.errors[:district], do: " has-error" %>">
-    <%= label f, :district, "District", class: "control-label" %>
-    <%= text_input f, :district, class: "form-control" %>
-    <%= error_tag f, :district %>
-  </div>
-
-  <!-- 11 -->
-  <div class="form-group<%= if f.errors[:section_num], do: " has-error" %>">
-    <%= label f, :section_num, "Section #", class: "control-label" %>
-    <%= number_input f, :section_num, class: "form-control" %>
-    <%= error_tag f, :section_num %>
-  </div>
-
-  <!-- 12 -->
-  <div class="form-group<%= if f.errors[:block_num], do: " has-error" %>">
-    <%= label f, :block_num, "Block #", class: "control-label" %>
-    <%= number_input f, :block_num, class: "form-control" %>
-    <%= error_tag f, :block_num %>
-  </div>
-
-  <!-- 13 -->
-  <div class="form-group<%= if f.errors[:lot_num], do: " has-error" %>">
-    <%= label f, :lot_num, "Lot #", class: "control-label" %>
-    <%= number_input f, :lot_num, class: "form-control" %>
-    <%= error_tag f, :lot_num %>
-  </div>
-
-  <!-- 14 -->
-  <div class="form-group<%= if f.errors[:association], do: " has-error" %>">
-    <%= label f, :association, "Development", class: "control-label" %>
-    <%= text_input f, :association, class: "form-control" %>
-    <%= error_tag f, :association %>
-  </div>
-
-  <!-- 15 -->
-  <div class="form-group<%= if f.errors[:neighborhood], do: " has-error" %>">
-    <%= label f, :neighborhood, "Neighborhood", class: "control-label" %>
-    <%= text_input f, :neighborhood, class: "form-control" %>
-    <%= error_tag f, :neighborhood %>
-  </div>
-
-  <!-- 16 -->
-  <div class="form-group<%= if f.errors[:schools], do: " has-error" %>">
-    <%= label f, :schools, "Schools", class: "control-label" %>
-    <%= text_input f, :schools, class: "form-control" %>
-    <%= error_tag f, :schools %>
-  </div>
-
-  <!-- 17 -->
-  <div class="form-group<%= if f.errors[:zoning], do: " has-error" %>">
-    <%= label f, :zoning, "Zoning", class: "control-label" %>
-    <%= text_input f, :zoning, class: "form-control" %>
-    <%= error_tag f, :zoning %>
-  </div>
-
-  <!-- 18 -->
-  <div class="form-group<%= if f.errors[:corner], do: " has-error" %>">
-    <%= label f, :corner, "Corner?", class: "control-label" %>
-    <%= checkbox f, :corner, class: "checkbox" %>
-    <%= error_tag f, :corner %>
-  </div>
-
-  <!-- 19 -->
-  <div class="form-group<%= if f.errors[:cross_street], do: " has-error" %>">
-    <%= label f, :cross_street, "Cross street", class: "control-label" %>
-    <%= text_input f, :cross_street, class: "form-control" %>
-    <%= error_tag f, :cross_street %>
-  </div>
-
-  <!-- 20 -->
-  <div class="form-group<%= if f.errors[:cul_de_sac], do: " has-error" %>">
-    <%= label f, :cul_de_sac, "Cul de sac?", class: "control-label" %>
-    <%= checkbox f, :cul_de_sac, class: "checkbox" %>
-    <%= error_tag f, :cul_de_sac %>
-  </div>
-
-  <!-- 21 -->
-  <div class="form-group<%= if f.errors[:waterfront], do: " has-error" %>">
-    <%= label f, :waterfront, "Waterfront?", class: "control-label" %>
-    <%= checkbox f, :waterfront, class: "checkbox" %>
-    <%= error_tag f, :waterfront %>
-  </div>
-
-  <!-- 22 -->
-  <div class="form-group<%= if f.errors[:water_frontage_ft], do: " has-error" %>">
-    <%= label f, :water_frontage_ft, "Water frontage (ft)", class: "control-label" %>
-    <%= number_input f, :water_frontage_ft, class: "form-control" %>
-    <%= error_tag f, :water_frontage_ft %>
-  </div>
-
-  <!-- 23 -->
-  <div class="form-group<%= if f.errors[:waterfront_type], do: " has-error" %>">
-    <%= label f, :waterfront_type, "Waterfront type", class: "control-label" %>
-    <%= select f, :waterfront_type, Mpnetwork.EnumMaps.waterfront_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :waterfront_type %>
-  </div>
-
-  <!-- 24 -->
-  <div class="form-group<%= if f.errors[:waterview], do: " has-error" %>">
-    <%= label f, :waterview, "Waterview?", class: "control-label" %>
-    <%= checkbox f, :waterview, class: "checkbox" %>
-    <%= error_tag f, :waterview %>
-  </div>
-
-  <!-- 25 -->
-  <div class="form-group<%= if f.errors[:bulkhead], do: " has-error" %>">
-    <%= label f, :bulkhead, "Bulkhead?", class: "control-label" %>
-    <%= checkbox f, :bulkhead, class: "checkbox" %>
-    <%= error_tag f, :bulkhead %>
-  </div>
-
-  <!-- 26 -->
-  <div class="form-group<%= if f.errors[:bulkhead_ft], do: " has-error" %>">
-    <%= label f, :bulkhead_ft, "Bulkhead (ft)", class: "control-label" %>
-    <%= number_input f, :bulkhead_ft, class: "form-control" %>
-    <%= error_tag f, :bulkhead_ft %>
-  </div>
-
-  <!-- 27 -->
-  <div class="form-group<%= if f.errors[:dock_rights], do: " has-error" %>">
-    <%= label f, :dock_rights, "Dock rights?", class: "control-label" %>
-    <%= checkbox f, :dock_rights, class: "checkbox" %>
-    <%= error_tag f, :dock_rights %>
-  </div>
-
-  <!-- 28 -->
-  <div class="form-group<%= if f.errors[:beach_rights], do: " has-error" %>">
-    <%= label f, :beach_rights, "Beach rights?", class: "control-label" %>
-    <%= checkbox f, :beach_rights, class: "checkbox" %>
-    <%= error_tag f, :beach_rights %>
-  </div>
-
-  <!-- 29 -->
-  <div class="form-group<%= if f.errors[:adult_comm], do: " has-error" %>">
-    <%= label f, :adult_comm, "Adult community?", class: "control-label" %>
-    <%= checkbox f, :adult_comm, class: "checkbox" %>
-    <%= error_tag f, :adult_comm %>
-  </div>
-
-  <!-- 30 -->
-  <div class="form-group<%= if f.errors[:gated_comm], do: " has-error" %>">
-    <%= label f, :gated_comm, "Gated community?", class: "control-label" %>
-    <%= checkbox f, :gated_comm, class: "checkbox" %>
-    <%= error_tag f, :gated_comm %>
-  </div>
-
-  <!-- 31 -->
-  <div class="form-group<%= if f.errors[:front_exposure_type], do: " has-error" %>">
-    <%= label f, :front_exposure_type, "Front exposure", class: "control-label" %>
-    <%= select f, :front_exposure_type, Mpnetwork.EnumMaps.front_exposure_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :front_exposure_type %>
-  </div>
-
-  <!-- 32 -->
-  <div class="form-group<%= if f.errors[:price_usd], do: " has-error" %>">
-    <%= label f, :price_usd, "Price", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :price_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :price_usd %>
-  </div>
-
-  <!-- 33 -->
-  <div class="form-group<%= if f.errors[:prior_price_usd], do: " has-error" %>">
-    <%= label f, :prior_price_usd, "Prior price", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :prior_price_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :prior_price_usd %>
-  </div>
-
-  <!-- 34 -->
-  <div class="form-group<%= if f.errors[:original_price_usd], do: " has-error" %>">
-    <%= label f, :original_price_usd, "Original price", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :original_price_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :original_price_usd %>
-  </div>
-
-  <!-- 35 -->
-  <div class="form-group<%= if f.errors[:tax_rate_code_area], do: " has-error" %>">
-    <%= label f, :tax_rate_code_area, class: "control-label" %>
-    <%= number_input f, :tax_rate_code_area, class: "form-control" %>
-    <%= error_tag f, :tax_rate_code_area %>
-  </div>
-
-  <!-- 36 -->
-  <div class="form-group<%= if f.errors[:prop_tax_usd], do: " has-error" %>">
-    <%= label f, :prop_tax_usd, "Property taxes (annual)", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :prop_tax_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :prop_tax_usd %>
-  </div>
-
-  <!-- 37 -->
-  <div class="form-group<%= if f.errors[:vill_tax_usd], do: " has-error" %>">
-    <%= label f, :vill_tax_usd, "Village taxes (annual)", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :vill_tax_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :vill_tax_usd %>
-  </div>
-
-  <!-- 38 -->
-  <div class="form-group<%= if f.errors[:star_deduc_usd], do: " has-error" %>">
-    <%= label f, :star_deduc_usd, "STAR deduction", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :star_deduc_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :star_deduc_usd %>
-  </div>
-
-  <!-- 39 -->
-  <div class="form-group<%= if f.errors[:visible_on], do: " has-error" %>">
-    <%= label f, :visible_on, class: "control-label" %>
-    <%
-      {{year, month, day}, _} = if f.data.visible_on do
-        Timex.to_erl(Timex.now("EDT"))
-      else
-        {{1, 1, 1}, 1}
-      end
-    %>
-    <div class="input-group date">
-      <label class="input-group-addon" for="visible_on">
-        <span class="fa fa-calendar"></span>
-      </label>
-      <%= text_input f, :visible_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "visible_on" %>
-    </div>
-    <%= error_tag f, :visible_on %>
-  </div>
-
-  <!-- 40 -->
-  <div class="form-group<%= if f.errors[:expires_on], do: " has-error" %>">
-    <%= label f, :expires_on, class: "control-label" %>
-    <%
-      {{year, month, day}, _} = if f.data.expires_on do
-        Timex.to_erl(Timex.now("EDT"))
-      else
-        {{1, 1, 1}, 1}
-      end
-    %>
-    <div class="input-group date">
-      <label class="input-group-addon" for="expires_on">
-        <span class="fa fa-calendar"></span>
-      </label>
-      <%= text_input f, :expires_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "expires_on" %>
-    </div>
-    <%= error_tag f, :expires_on %>
-  </div>
-
-  <!-- 41 -->
-  <div class="form-group<%= if f.errors[:listing_status_type], do: " has-error" %>">
-    <%= label f, :listing_status_type, "Listing Status", class: "control-label" %>
-    <%= select f, :listing_status_type, Mpnetwork.EnumMaps.listing_status_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :listing_status_type %>
-  </div>
-
-  <!-- 42 -->
-  <div class="form-group<%= if f.errors[:style_type], do: " has-error" %>">
-    <%= label f, :style_type, "Style", class: "control-label" %>
-    <%= select f, :style_type, Mpnetwork.EnumMaps.style_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :style_type %>
-  </div>
-
-  <!-- 43 -->
-  <div class="form-group<%= if f.errors[:stories], do: " has-error" %>">
-    <%= label f, :stories, class: "control-label" %>
-    <%= number_input f, :stories, class: "form-control" %>
-    <%= error_tag f, :stories %>
-  </div>
-
-  <!-- 44 -->
-  <div class="form-group<%= if f.errors[:num_rooms], do: " has-error" %>">
-    <%= label f, :num_rooms, "# Rooms", class: "control-label" %>
-    <%= number_input f, :num_rooms, class: "form-control" %>
-    <%= error_tag f, :num_rooms %>
-  </div>
-
-  <!-- 45 -->
-  <div class="form-group<%= if f.errors[:num_bedrooms], do: " has-error" %>">
-    <%= label f, :num_bedrooms, "# Bedrooms", class: "control-label" %>
-    <%= number_input f, :num_bedrooms, class: "form-control" %>
-    <%= error_tag f, :num_bedrooms %>
-  </div>
-
-  <!-- 46 -->
-  <div class="form-group<%= if f.errors[:num_baths], do: " has-error" %>">
-    <%= label f, :num_baths, "# Baths", class: "control-label" %>
-    <%= number_input f, :num_baths, class: "form-control" %>
-    <%= error_tag f, :num_baths %>
-  </div>
-
-  <!-- 47 -->
-  <div class="form-group<%= if f.errors[:num_half_baths], do: " has-error" %>">
-    <%= label f, :num_half_baths, "# Half Baths", class: "control-label" %>
-    <%= number_input f, :num_half_baths, class: "form-control" %>
-    <%= error_tag f, :num_half_baths %>
-  </div>
-
-  <!-- 48 -->
-  <div class="form-group<%= if f.errors[:num_families], do: " has-error" %>">
-    <%= label f, :num_families, "# Families", class: "control-label" %>
-    <%= number_input f, :num_families, class: "form-control" %>
-    <%= error_tag f, :num_families %>
-  </div>
-
-  <!-- 49 -->
-  <div class="form-group<%= if f.errors[:att_type], do: " has-error" %>">
-    <%= label f, :att_type, "Attachment", class: "control-label" %>
-    <%= select f, :att_type, Mpnetwork.EnumMaps.att_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :att_type %>
-  </div>
-
-  <!-- 50 -->
-  <div class="form-group<%= if f.errors[:num_kitchens], do: " has-error" %>">
-    <%= label f, :num_kitchens, "# Kitchens", class: "control-label" %>
-    <%= number_input f, :num_kitchens, class: "form-control" %>
-    <%= error_tag f, :num_kitchens %>
-  </div>
-
-  <!-- 51 -->
-  <div class="form-group<%= if f.errors[:eat_in_kitchen], do: " has-error" %>">
-    <%= label f, :eat_in_kitchen, "Eat-in kitchen?", class: "control-label" %>
-    <%= checkbox f, :eat_in_kitchen, class: "checkbox" %>
-    <%= error_tag f, :eat_in_kitchen %>
-  </div>
-
-  <!-- 52 -->
-  <div class="form-group<%= if f.errors[:dining_room_type], do: " has-error" %>">
-    <%= label f, :dining_room_type, class: "control-label" %>
-    <%= select f, :dining_room_type, Mpnetwork.EnumMaps.dining_room_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :dining_room_type %>
-  </div>
-
-  <!-- 53 -->
-  <div class="form-group<%= if f.errors[:den], do: " has-error" %>">
-    <%= label f, :den, "Den?", class: "control-label" %>
-    <%= checkbox f, :den, class: "checkbox" %>
-    <%= error_tag f, :den %>
-  </div>
-
-  <!-- 54 -->
-  <div class="form-group<%= if f.errors[:office], do: " has-error" %>">
-    <%= label f, :office, "Office?", class: "control-label" %>
-    <%= checkbox f, :office, class: "checkbox" %>
-    <%= error_tag f, :office %>
-  </div>
-
-  <!-- 55 -->
-  <div class="form-group<%= if f.errors[:attic], do: " has-error" %>">
-    <%= label f, :attic, "Attic?", class: "control-label" %>
-    <%= checkbox f, :attic, class: "checkbox" %>
-    <%= error_tag f, :attic %>
-  </div>
-
-  <!-- 56 -->
-  <div class="form-group<%= if f.errors[:mbr_first_fl], do: " has-error" %>">
-    <%= label f, :mbr_first_fl, "Master bedroom on 1st floor?", class: "control-label" %>
-    <%= checkbox f, :mbr_first_fl, class: "checkbox" %>
-    <%= error_tag f, :mbr_first_fl %>
-  </div>
-
-  <!-- 57 -->
-  <div class="form-group<%= if f.errors[:permit], do: " has-error" %>">
-    <%= label f, :permit, "Permit", class: "control-label" %>
-    <%= text_input f, :permit, class: "form-control" %>
-    <%= error_tag f, :permit %>
-  </div>
-
-  <!-- 58 -->
-  <div class="form-group<%= if f.errors[:handicap_access], do: " has-error" %>">
-    <%= label f, :handicap_access, "Handicap access?", class: "control-label" %>
-    <%= checkbox f, :handicap_access, class: "checkbox" %>
-    <%= error_tag f, :handicap_access %>
-  </div>
-
-  <!-- 59 -->
-  <div class="form-group<%= if f.errors[:handicap_access_desc], do: " has-error" %>">
-    <%= label f, :handicap_access_desc, "Describe handicap access", class: "control-label" %>
-    <%= text_input f, :handicap_access_desc, class: "form-control" %>
-    <%= error_tag f, :handicap_access_desc %>
-  </div>
-
-  <!-- 60 -->
-  <div class="form-group<%= if f.errors[:sq_ft], do: " has-error" %>">
-    <%= label f, :sq_ft, "Approx. intl. sq ft", class: "control-label" %>
-    <%= number_input f, :sq_ft, class: "form-control" %>
-    <%= error_tag f, :sq_ft %>
-  </div>
-
-  <!-- 61 -->
-  <div class="form-group<%= if f.errors[:basement], do: " has-error" %>">
-    <%= label f, :basement, "Basement?", class: "control-label" %>
-    <%= checkbox f, :basement, class: "checkbox" %>
-    <%= error_tag f, :basement %>
-  </div>
-
-  <!-- 62 -->
-  <div class="form-group<%= if f.errors[:basement_type], do: " has-error" %>">
-    <%= label f, :basement_type, class: "control-label" %>
-    <%= select f, :basement_type, Mpnetwork.EnumMaps.basement_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :basement_type %>
-  </div>
-
-  <!-- 63 -->
-  <div class="form-group<%= if f.errors[:finished_basement], do: " has-error" %>">
-    <%= label f, :finished_basement, "Finished basement?", class: "control-label" %>
-    <%= checkbox f, :finished_basement, class: "checkbox" %>
-    <%= error_tag f, :finished_basement %>
-  </div>
-
-  <!-- 64 -->
-  <div class="form-group<%= if f.errors[:num_fireplaces], do: " has-error" %>">
-    <%= label f, :num_fireplaces, "# Fireplaces", class: "control-label" %>
-    <%= number_input f, :num_fireplaces, class: "form-control" %>
-    <%= error_tag f, :num_fireplaces %>
-  </div>
-
-  <!-- 65 -->
-  <div class="form-group<%= if f.errors[:w_w_carpet], do: " has-error" %>">
-    <%= label f, :w_w_carpet, "Wall-to-wall carpet?", class: "control-label" %>
-    <%= checkbox f, :w_w_carpet, class: "checkbox" %>
-    <%= error_tag f, :w_w_carpet %>
-  </div>
-
-  <!-- 66 -->
-  <div class="form-group<%= if f.errors[:wood_floors], do: " has-error" %>">
-    <%= label f, :wood_floors, "Hardwood floors?", class: "control-label" %>
-    <%= checkbox f, :wood_floors, class: "checkbox" %>
-    <%= error_tag f, :wood_floors %>
-  </div>
-
-  <!-- 67 -->
-  <div class="form-group<%= if f.errors[:year_built], do: " has-error" %>">
-    <%= label f, :year_built, class: "control-label" %>
-    <%= number_input f, :year_built, class: "form-control" %>
-    <%= error_tag f, :year_built %>
-  </div>
-
-  <!-- 68 -->
-  <div class="form-group<%= if f.errors[:new_construction], do: " has-error" %>">
-    <%= label f, :new_construction, "New construction?", class: "control-label" %>
-    <%= checkbox f, :new_construction, class: "checkbox" %>
-    <%= error_tag f, :new_construction %>
-  </div>
-
-  <!-- 69 -->
-  <div class="form-group<%= if f.errors[:num_skylights], do: " has-error" %>">
-    <%= label f, :num_skylights, "# Skylights", class: "control-label" %>
-    <%= number_input f, :num_skylights, class: "form-control" %>
-    <%= error_tag f, :num_skylights %>
-  </div>
-
-  <!-- 70 -->
-  <div class="form-group<%= if f.errors[:appearance], do: " has-error" %>">
-    <%= label f, :appearance, "Describe appearance", class: "control-label" %>
-    <%= text_input f, :appearance, class: "form-control" %>
-    <%= error_tag f, :appearance %>
-  </div>
-
-  <!-- 71 -->
-  <div class="form-group<%= if f.errors[:basement_desc], do: " has-error" %>">
-    <%= label f, :basement_desc, "Describe basement", class: "control-label" %>
-    <%= text_input f, :basement_desc, class: "form-control" %>
-    <%= error_tag f, :basement_desc %>
-  </div>
-
-  <!-- 72 -->
-  <div class="form-group<%= if f.errors[:first_fl_desc], do: " has-error" %>">
-    <%= label f, :first_fl_desc, "Describe 1st floor", class: "control-label" %>
-    <%= text_input f, :first_fl_desc, class: "form-control" %>
-    <%= error_tag f, :first_fl_desc %>
-  </div>
-
-  <!-- 73 -->
-  <div class="form-group<%= if f.errors[:second_fl_desc], do: " has-error" %>">
-    <%= label f, :second_fl_desc, "Describe 2nd floor", class: "control-label" %>
-    <%= text_input f, :second_fl_desc, class: "form-control" %>
-    <%= error_tag f, :second_fl_desc %>
-  </div>
-
-  <!-- 74 -->
-  <div class="form-group<%= if f.errors[:third_fl_desc], do: " has-error" %>">
-    <%= label f, :third_fl_desc, "Describe 3rd floor", class: "control-label" %>
-    <%= text_input f, :third_fl_desc, class: "form-control" %>
-    <%= error_tag f, :third_fl_desc %>
-  </div>
-
-  <!-- 75 -->
-  <div class="form-group<%= if f.errors[:siding_desc], do: " has-error" %>">
-    <%= label f, :siding_desc, "Exterior construction", class: "control-label" %>
-    <%= datalist_input f, :siding_desc, %{
-      list_name: "sidingList",
-      data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"],
-      class: "form-control"} %>
-    <%= error_tag f, :siding_desc %>
-  </div>
-
-  <!-- 76 -->
-  <div class="form-group<%= if f.errors[:construction], do: " has-error" %>">
-    <%= label f, :construction, "Frame construction", class: "control-label" %>
-    <%= text_input f, :construction, class: "form-control" %>
-    <%= error_tag f, :construction %>
-  </div>
-
-  <!-- 77 -->
-  <div class="form-group<%= if f.errors[:num_garages], do: " has-error" %>">
-    <%= label f, :num_garages, "# Garages", class: "control-label" %>
-    <%= number_input f, :num_garages, class: "form-control" %>
-    <%= error_tag f, :num_garages %>
-  </div>
-
-  <!-- 78 -->
-  <div class="form-group<%= if f.errors[:num_half_garages], do: " has-error" %>">
-    <%= label f, :num_half_garages, "# Half Garages", class: "control-label" %>
-    <%= number_input f, :num_half_garages, class: "form-control" %>
-    <%= error_tag f, :num_half_garages %>
-  </div>
-
-  <!-- 79 -->
-  <div class="form-group<%= if f.errors[:attached_garage], do: " has-error" %>">
-    <%= label f, :attached_garage, "Attached garage?", class: "control-label" %>
-    <%= checkbox f, :attached_garage, class: "checkbox" %>
-    <%= error_tag f, :attached_garage %>
-  </div>
-
-  <!-- 80 -->
-  <div class="form-group<%= if f.errors[:driveway], do: " has-error" %>">
-    <%= label f, :driveway, "Driveway description", class: "control-label" %>
-    <%= text_input f, :driveway, class: "form-control" %>
-    <%= error_tag f, :driveway %>
-  </div>
-
-  <!-- 81 -->
-  <div class="form-group<%= if f.errors[:parking_spaces], do: " has-error" %>">
-    <%= label f, :parking_spaces, "# Parking Spaces", class: "control-label" %>
-    <%= number_input f, :parking_spaces, class: "form-control" %>
-    <%= error_tag f, :parking_spaces %>
-  </div>
-
-  <!-- 82 -->
-  <div class="form-group<%= if f.errors[:deck], do: " has-error" %>">
-    <%= label f, :deck, "Deck?", class: "control-label" %>
-    <%= checkbox f, :deck, class: "checkbox" %>
-    <%= error_tag f, :deck %>
-  </div>
-
-  <!-- 83 -->
-  <div class="form-group<%= if f.errors[:deck_type], do: " has-error" %>">
-    <%= label f, :deck_type, class: "control-label" %>
-    <%= select f, :deck_type, Mpnetwork.EnumMaps.deck_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :deck_type %>
-  </div>
-
-  <!-- 84 -->
-  <div class="form-group<%= if f.errors[:patio], do: " has-error" %>">
-    <%= label f, :patio, "Patio?", class: "control-label" %>
-    <%= checkbox f, :patio, class: "checkbox" %>
-    <%= error_tag f, :patio %>
-  </div>
-
-  <!-- 85 -->
-  <div class="form-group<%= if f.errors[:patio_type], do: " has-error" %>">
-    <%= label f, :patio_type, class: "control-label" %>
-    <%= select f, :patio_type, Mpnetwork.EnumMaps.patio_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :patio_type %>
-  </div>
-
-  <!-- 86 -->
-  <div class="form-group<%= if f.errors[:porch], do: " has-error" %>">
-    <%= label f, :porch, "Porch?", class: "control-label" %>
-    <%= checkbox f, :porch, class: "checkbox" %>
-    <%= error_tag f, :porch %>
-  </div>
-
-  <!-- 87 -->
-  <div class="form-group<%= if f.errors[:porch_type], do: " has-error" %>">
-    <%= label f, :porch_type, class: "control-label" %>
-    <%= select f, :porch_type, Mpnetwork.EnumMaps.porch_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :porch_type %>
-  </div>
-
-  <!-- 88 -->
-  <div class="form-group<%= if f.errors[:pool], do: " has-error" %>">
-    <%= label f, :pool, "Pool?", class: "control-label" %>
-    <%= checkbox f, :pool, class: "checkbox" %>
-    <%= error_tag f, :pool %>
-  </div>
-
-  <!-- 89 -->
-  <div class="form-group<%= if f.errors[:pool_type], do: " has-error" %>">
-    <%= label f, :pool_type, class: "control-label" %>
-    <%= select f, :pool_type, Mpnetwork.EnumMaps.pool_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :pool_type %>
-  </div>
-
-  <!-- 90 -->
-  <div class="form-group<%= if f.errors[:hot_tub], do: " has-error" %>">
-    <%= label f, :hot_tub, "Hot tub?", class: "control-label" %>
-    <%= checkbox f, :hot_tub, class: "checkbox" %>
-    <%= error_tag f, :hot_tub %>
-  </div>
-
-  <!-- 91 -->
-  <div class="form-group<%= if f.errors[:ing_sprinks], do: " has-error" %>">
-    <%= label f, :ing_sprinks, "Inground sprinkler?", class: "control-label" %>
-    <%= checkbox f, :ing_sprinks, class: "checkbox" %>
-    <%= error_tag f, :ing_sprinks %>
-  </div>
-
-  <!-- 92 -->
-  <div class="form-group<%= if f.errors[:tennis_ct], do: " has-error" %>">
-    <%= label f, :tennis_ct, "Tennis court?", class: "control-label" %>
-    <%= checkbox f, :tennis_ct, class: "checkbox" %>
-    <%= error_tag f, :tennis_ct %>
-  </div>
-
-  <!-- 93 -->
-  <div class="form-group<%= if f.errors[:tennis_ct_desc], do: " has-error" %>">
-    <%= label f, :tennis_ct_desc, "Tennis court details", class: "control-label" %>
-    <%= text_input f, :tennis_ct_desc, class: "form-control" %>
-    <%= error_tag f, :tennis_ct_desc %>
-  </div>
-
-  <!-- 94 -->
-  <div class="form-group<%= if f.errors[:equestrian], do: " has-error" %>">
-    <%= label f, :equestrian, "Horse property?", class: "control-label" %>
-    <%= checkbox f, :equestrian, class: "checkbox" %>
-    <%= error_tag f, :equestrian %>
-  </div>
-
-  <!-- 95 -->
-  <div class="form-group<%= if f.errors[:lot_size], do: " has-error" %>">
-    <%= label f, :lot_size, "Lot Size (dimensions)", class: "control-label" %>
-    <%= text_input f, :lot_size, class: "form-control" %>
-    <%= error_tag f, :lot_size %>
-  </div>
-
-  <!-- 96 -->
-  <div class="form-group<%= if f.errors[:lot_sqft], do: " has-error" %>">
-    <%= label f, :lot_sqft, "Lot (square footage)", class: "control-label" %>
-    <%= number_input f, :lot_sqft, class: "form-control" %>
-    <%= error_tag f, :lot_sqft %>
-  </div>
-
-  <!-- 97 -->
-  <div class="form-group<%= if f.errors[:building_size_sqft], do: " has-error" %>">
-    <%= label f, :building_size_sqft, "Building size (square footage)", class: "control-label" %>
-    <%= number_input f, :building_size_sqft, class: "form-control" %>
-    <%= error_tag f, :building_size_sqft %>
-  </div>
-
-  <!-- 98 -->
-  <div class="form-group<%= if f.errors[:num_stoves], do: " has-error" %>">
-    <%= label f, :num_stoves, "# Stoves", class: "control-label" %>
-    <%= number_input f, :num_stoves, class: "form-control" %>
-    <%= error_tag f, :num_stoves %>
-  </div>
-
-  <!-- 99 -->
-  <div class="form-group<%= if f.errors[:num_refrigs], do: " has-error" %>">
-    <%= label f, :num_refrigs, "# Fridges", class: "control-label" %>
-    <%= number_input f, :num_refrigs, class: "form-control" %>
-    <%= error_tag f, :num_refrigs %>
-  </div>
-
-  <!-- 100 -->
-  <div class="form-group<%= if f.errors[:num_washers], do: " has-error" %>">
-    <%= label f, :num_washers, "# Washers", class: "control-label" %>
-    <%= number_input f, :num_washers, class: "form-control" %>
-    <%= error_tag f, :num_washers %>
-  </div>
-
-  <!-- 101 -->
-  <div class="form-group<%= if f.errors[:num_dryers], do: " has-error" %>">
-    <%= label f, :num_dryers, "# Dryers", class: "control-label" %>
-    <%= number_input f, :num_dryers, class: "form-control" %>
-    <%= error_tag f, :num_dryers %>
-  </div>
-
-  <!-- 102 -->
-  <div class="form-group<%= if f.errors[:num_dishwashers], do: " has-error" %>">
-    <%= label f, :num_dishwashers, "# Dishwashers", class: "control-label" %>
-    <%= number_input f, :num_dishwashers, class: "form-control" %>
-    <%= error_tag f, :num_dishwashers %>
-  </div>
-
-  <!-- 103 -->
-  <div class="form-group<%= if f.errors[:fuel_type], do: " has-error" %>">
-    <%= label f, :fuel_type, class: "control-label" %>
-    <%= select f, :fuel_type, Mpnetwork.EnumMaps.fuel_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :fuel_type %>
-  </div>
-
-  <!-- 104 -->
-  <div class="form-group<%= if f.errors[:heating_type], do: " has-error" %>">
-    <%= label f, :heating_type, class: "control-label" %>
-    <%= select f, :heating_type, Mpnetwork.EnumMaps.heating_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :heating_type %>
-  </div>
-
-  <!-- 105 -->
-  <div class="form-group<%= if f.errors[:heat_num_zones], do: " has-error" %>">
-    <%= label f, :heat_num_zones, "# Heat Zones", class: "control-label" %>
-    <%= number_input f, :heat_num_zones, class: "form-control" %>
-    <%= error_tag f, :heat_num_zones %>
-  </div>
-
-  <!-- 106 -->
-  <div class="form-group<%= if f.errors[:central_air], do: " has-error" %>">
-    <%= label f, :central_air, "Central air?", class: "control-label" %>
-    <%= checkbox f, :central_air, class: "checkbox" %>
-    <%= error_tag f, :central_air %>
-  </div>
-
-  <!-- 107 -->
-  <div class="form-group<%= if f.errors[:sewer], do: " has-error" %>">
-    <%= label f, :sewer, "Sewer?", class: "control-label" %>
-    <%= checkbox f, :sewer, class: "checkbox" %>
-    <%= error_tag f, :sewer %>
-  </div>
-
-  <!-- 108 -->
-  <div class="form-group<%= if f.errors[:sewage_type], do: " has-error" %>">
-    <%= label f, :sewage_type, class: "control-label" %>
-    <%= select f, :sewage_type, Mpnetwork.EnumMaps.sewage_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :sewage_type %>
-  </div>
-
-  <!-- 109 -->
-  <div class="form-group<%= if f.errors[:sep_hw_heater], do: " has-error" %>">
-    <%= label f, :sep_hw_heater, "Separate hot-water heater?", class: "control-label" %>
-    <%= checkbox f, :sep_hw_heater, class: "checkbox" %>
-    <%= error_tag f, :sep_hw_heater %>
-  </div>
-
-  <!-- 110 -->
-  <div class="form-group<%= if f.errors[:sep_hw_heater_type], do: " has-error" %>">
-    <%= label f, :sep_hw_heater_type, class: "control-label" %>
-    <%= select f, :sep_hw_heater_type, Mpnetwork.EnumMaps.sep_hw_heater_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :sep_hw_heater_type %>
-  </div>
-
-  <!-- 111 -->
-  <div class="form-group<%= if f.errors[:ac_num_zones], do: " has-error" %>">
-    <%= label f, :ac_num_zones, "# A/C Zones (or # of window A/C units)", class: "control-label" %>
-    <%= number_input f, :ac_num_zones, class: "form-control" %>
-    <%= error_tag f, :ac_num_zones %>
-  </div>
-
-  <!-- 112 -->
-  <div class="form-group<%= if f.errors[:water_type], do: " has-error" %>">
-    <%= label f, :water_type, class: "control-label" %>
-    <%= select f, :water_type, Mpnetwork.EnumMaps.water_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :water_type %>
-  </div>
-
-  <!-- 113 -->
-  <div class="form-group<%= if f.errors[:energy_eff], do: " has-error" %>">
-    <%= label f, :energy_eff, "Energy-efficient features?", class: "control-label" %>
-    <%= checkbox f, :energy_eff, class: "checkbox" %>
-    <%= error_tag f, :energy_eff %>
-  </div>
-
-  <!-- 114 -->
-  <div class="form-group<%= if f.errors[:eef_led_lighting], do: " has-error" %>">
-    <%= label f, :eef_led_lighting, "LED lighting", class: "control-label" %>
-    <%= checkbox f, :eef_led_lighting, class: "checkbox" %>
-    <%= error_tag f, :eef_led_lighting %>
-  </div>
-
-  <!-- 115 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_stove], do: " has-error" %>">
-    <%= label f, :eef_energy_star_stove, "Energy Star stove", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_stove, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_stove %>
-  </div>
-
-  <!-- 116 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_refrigerator], do: " has-error" %>">
-    <%= label f, :eef_energy_star_refrigerator, "Energy Star refrigerator", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_refrigerator, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_refrigerator %>
-  </div>
-
-  <!-- 117 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_dishwasher], do: " has-error" %>">
-    <%= label f, :eef_energy_star_dishwasher, "Energy Star dishwasher", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_dishwasher, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_dishwasher %>
-  </div>
-
-  <!-- 118 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_washer], do: " has-error" %>">
-    <%= label f, :eef_energy_star_washer, "Energy Star washer", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_washer, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_washer %>
-  </div>
-
-  <!-- 119 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_dryer], do: " has-error" %>">
-    <%= label f, :eef_energy_star_dryer, "Energy Star dryer", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_dryer, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_dryer %>
-  </div>
-
-  <!-- 120 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_water_heater], do: " has-error" %>">
-    <%= label f, :eef_energy_star_water_heater, "Energy Star water heater", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_water_heater, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_water_heater %>
-  </div>
-
-  <!-- 121 -->
-  <div class="form-group<%= if f.errors[:eef_geothermal_water_heater], do: " has-error" %>">
-    <%= label f, :eef_geothermal_water_heater, "Geothermal water heater", class: "control-label" %>
-    <%= checkbox f, :eef_geothermal_water_heater, class: "checkbox" %>
-    <%= error_tag f, :eef_geothermal_water_heater %>
-  </div>
-
-  <!-- 122 -->
-  <div class="form-group<%= if f.errors[:eef_solar_water_heater], do: " has-error" %>">
-    <%= label f, :eef_solar_water_heater, "Solar water heater", class: "control-label" %>
-    <%= checkbox f, :eef_solar_water_heater, class: "checkbox" %>
-    <%= error_tag f, :eef_solar_water_heater %>
-  </div>
-
-  <!-- 123 -->
-  <div class="form-group<%= if f.errors[:eef_tankless_water_heater], do: " has-error" %>">
-    <%= label f, :eef_tankless_water_heater, "Tankless water heater", class: "control-label" %>
-    <%= checkbox f, :eef_tankless_water_heater, class: "checkbox" %>
-    <%= error_tag f, :eef_tankless_water_heater %>
-  </div>
-
-  <!-- 124 -->
-  <div class="form-group<%= if f.errors[:eef_double_pane_windows], do: " has-error" %>">
-    <%= label f, :eef_double_pane_windows, "Double-pane windows", class: "control-label" %>
-    <%= checkbox f, :eef_double_pane_windows, class: "checkbox" %>
-    <%= error_tag f, :eef_double_pane_windows %>
-  </div>
-
-  <!-- 125 -->
-  <div class="form-group<%= if f.errors[:eef_insulated_windows], do: " has-error" %>">
-    <%= label f, :eef_insulated_windows, "Insulated windows", class: "control-label" %>
-    <%= checkbox f, :eef_insulated_windows, class: "checkbox" %>
-    <%= error_tag f, :eef_insulated_windows %>
-  </div>
-
-  <!-- 126 -->
-  <div class="form-group<%= if f.errors[:eef_tinted_windows], do: " has-error" %>">
-    <%= label f, :eef_tinted_windows, "Tinted windows", class: "control-label" %>
-    <%= checkbox f, :eef_tinted_windows, class: "checkbox" %>
-    <%= error_tag f, :eef_tinted_windows %>
-  </div>
-
-  <!-- 127 -->
-  <div class="form-group<%= if f.errors[:eef_triple_pane_windows], do: " has-error" %>">
-    <%= label f, :eef_triple_pane_windows, "Triple-pane windows", class: "control-label" %>
-    <%= checkbox f, :eef_triple_pane_windows, class: "checkbox" %>
-    <%= error_tag f, :eef_triple_pane_windows %>
-  </div>
-
-  <!-- 128 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_windows], do: " has-error" %>">
-    <%= label f, :eef_energy_star_windows, "Energy Star windows", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_windows, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_windows %>
-  </div>
-
-  <!-- 129 -->
-  <div class="form-group<%= if f.errors[:eef_storm_doors], do: " has-error" %>">
-    <%= label f, :eef_storm_doors, "Storm doors", class: "control-label" %>
-    <%= checkbox f, :eef_storm_doors, class: "checkbox" %>
-    <%= error_tag f, :eef_storm_doors %>
-  </div>
-
-  <!-- 130 -->
-  <div class="form-group<%= if f.errors[:eef_insulated_doors], do: " has-error" %>">
-    <%= label f, :eef_insulated_doors, "Insulated doors", class: "control-label" %>
-    <%= checkbox f, :eef_insulated_doors, class: "checkbox" %>
-    <%= error_tag f, :eef_insulated_doors %>
-  </div>
-
-  <!-- 131 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_doors], do: " has-error" %>">
-    <%= label f, :eef_energy_star_doors, "Energy Star doors", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_doors, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_doors %>
-  </div>
-
-  <!-- 132 -->
-  <div class="form-group<%= if f.errors[:eef_foam_insulation], do: " has-error" %>">
-    <%= label f, :eef_foam_insulation, "Foam insulation", class: "control-label" %>
-    <%= checkbox f, :eef_foam_insulation, class: "checkbox" %>
-    <%= error_tag f, :eef_foam_insulation %>
-  </div>
-
-  <!-- 133 -->
-  <div class="form-group<%= if f.errors[:eef_cellulose_insulation], do: " has-error" %>">
-    <%= label f, :eef_cellulose_insulation, "Cellulose insulation", class: "control-label" %>
-    <%= checkbox f, :eef_cellulose_insulation, class: "checkbox" %>
-    <%= error_tag f, :eef_cellulose_insulation %>
-  </div>
-
-  <!-- 134 -->
-  <div class="form-group<%= if f.errors[:eef_blown_insulation], do: " has-error" %>">
-    <%= label f, :eef_blown_insulation, "Blown insulation", class: "control-label" %>
-    <%= checkbox f, :eef_blown_insulation, class: "checkbox" %>
-    <%= error_tag f, :eef_blown_insulation %>
-  </div>
-
-  <!-- 135 -->
-  <div class="form-group<%= if f.errors[:eef_programmable_thermostat], do: " has-error" %>">
-    <%= label f, :eef_programmable_thermostat, "Programmable thermostat", class: "control-label" %>
-    <%= checkbox f, :eef_programmable_thermostat, class: "checkbox" %>
-    <%= error_tag f, :eef_programmable_thermostat %>
-  </div>
-
-  <!-- 136 -->
-  <div class="form-group<%= if f.errors[:eef_low_flow_showers_fixtures], do: " has-error" %>">
-    <%= label f, :eef_low_flow_showers_fixtures, "Low-flow shower fixtures", class: "control-label" %>
-    <%= checkbox f, :eef_low_flow_showers_fixtures, class: "checkbox" %>
-    <%= error_tag f, :eef_low_flow_showers_fixtures %>
-  </div>
-
-  <!-- 137 -->
-  <div class="form-group<%= if f.errors[:eef_low_flow_dual_flush_toilet], do: " has-error" %>">
-    <%= label f, :eef_low_flow_dual_flush_toilet, "Low-flow dual-flush toilet", class: "control-label" %>
-    <%= checkbox f, :eef_low_flow_dual_flush_toilet, class: "checkbox" %>
-    <%= error_tag f, :eef_low_flow_dual_flush_toilet %>
-  </div>
-
-  <!-- 138 -->
-  <div class="form-group<%= if f.errors[:eef_gray_water_system], do: " has-error" %>">
-    <%= label f, :eef_gray_water_system, "Greywater system", class: "control-label" %>
-    <%= checkbox f, :eef_gray_water_system, class: "checkbox" %>
-    <%= error_tag f, :eef_gray_water_system %>
-  </div>
-
-  <!-- 139 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_furnace], do: " has-error" %>">
-    <%= label f, :eef_energy_star_furnace, "Energy Star furnace", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_furnace, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_furnace %>
-  </div>
-
-  <!-- 140 -->
-  <div class="form-group<%= if f.errors[:eef_geothermal_heating], do: " has-error" %>">
-    <%= label f, :eef_geothermal_heating, "Geothermal heating", class: "control-label" %>
-    <%= checkbox f, :eef_geothermal_heating, class: "checkbox" %>
-    <%= error_tag f, :eef_geothermal_heating %>
-  </div>
-
-  <!-- 141 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_ac], do: " has-error" %>">
-    <%= label f, :eef_energy_star_ac, "Energy Star A/C (not central)", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_ac, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_ac %>
-  </div>
-
-  <!-- 142 -->
-  <div class="form-group<%= if f.errors[:eef_energy_star_cac], do: " has-error" %>">
-    <%= label f, :eef_energy_star_cac, "Energy Star CAC", class: "control-label" %>
-    <%= checkbox f, :eef_energy_star_cac, class: "checkbox" %>
-    <%= error_tag f, :eef_energy_star_cac %>
-  </div>
-
-  <!-- 143 -->
-  <div class="form-group<%= if f.errors[:eef_geothermal_ac], do: " has-error" %>">
-    <%= label f, :eef_geothermal_ac, "Geothermal A/C", class: "control-label" %>
-    <%= checkbox f, :eef_geothermal_ac, class: "checkbox" %>
-    <%= error_tag f, :eef_geothermal_ac %>
-  </div>
-
-  <!-- 144 -->
-  <div class="form-group<%= if f.errors[:eef_solar_ac], do: " has-error" %>">
-    <%= label f, :eef_solar_ac, "Solar A/C", class: "control-label" %>
-    <%= checkbox f, :eef_solar_ac, class: "checkbox" %>
-    <%= error_tag f, :eef_solar_ac %>
-  </div>
-
-  <!-- 145 -->
-  <div class="form-group<%= if f.errors[:eef_solar_panels], do: " has-error" %>">
-    <%= label f, :eef_solar_panels, "Solar panels", class: "control-label" %>
-    <%= checkbox f, :eef_solar_panels, class: "checkbox" %>
-    <%= error_tag f, :eef_solar_panels %>
-  </div>
-
-  <!-- 146 -->
-  <div class="form-group<%= if f.errors[:eef_solar_pool_cover], do: " has-error" %>">
-    <%= label f, :eef_solar_pool_cover, "Solar pool cover", class: "control-label" %>
-    <%= checkbox f, :eef_solar_pool_cover, class: "checkbox" %>
-    <%= error_tag f, :eef_solar_pool_cover %>
-  </div>
-
-  <!-- 147 -->
-  <div class="form-group<%= if f.errors[:eef_windmill], do: " has-error" %>">
-    <%= label f, :eef_windmill, "Windmill", class: "control-label" %>
-    <%= checkbox f, :eef_windmill, class: "checkbox" %>
-    <%= error_tag f, :eef_windmill %>
-  </div>
-
-  <!-- 148 -->
-  <div class="form-group<%= if f.errors[:green_certified], do: " has-error" %>">
-    <%= label f, :green_certified, "Green-certified?", class: "control-label" %>
-    <%= checkbox f, :green_certified, class: "checkbox" %>
-    <%= error_tag f, :green_certified %>
-  </div>
-
-  <!-- 149 -->
-  <div class="form-group<%= if f.errors[:green_cert_type], do: " has-error" %>">
-    <%= label f, :green_cert_type, class: "control-label" %>
-    <%= select f, :green_cert_type, Mpnetwork.EnumMaps.green_cert_type_select_opts, class: "fancy" %>
-    <%= error_tag f, :green_cert_type %>
-  </div>
-
-  <!-- 150 -->
-  <div class="form-group<%= if f.errors[:green_cert_year], do: " has-error" %>">
-    <%= label f, :green_cert_year, "Green certification year", class: "control-label" %>
-    <%= number_input f, :green_cert_year, class: "form-control" %>
-    <%= error_tag f, :green_cert_year %>
-  </div>
-
-  <!-- 151 -->
-  <div class="form-group<%= if f.errors[:central_vac], do: " has-error" %>">
-    <%= label f, :central_vac, "Central vac?", class: "control-label" %>
-    <%= checkbox f, :central_vac, class: "checkbox" %>
-    <%= error_tag f, :central_vac %>
-  </div>
-
-  <!-- 152 -->
-  <div class="form-group<%= if f.errors[:security_system], do: " has-error" %>">
-    <%= label f, :security_system, "Security system?", class: "control-label" %>
-    <%= checkbox f, :security_system, class: "checkbox" %>
-    <%= error_tag f, :security_system %>
-  </div>
-
-  <!-- 153 -->
-  <div class="form-group<%= if f.errors[:fios_available], do: " has-error" %>">
-    <%= label f, :fios_available, "FIOS available?", class: "control-label" %>
-    <%= checkbox f, :fios_available, class: "checkbox" %>
-    <%= error_tag f, :fios_available %>
-  </div>
-
-  <!-- 154 -->
-  <div class="form-group<%= if f.errors[:high_speed_internet_available], do: " has-error" %>">
-    <%= label f, :high_speed_internet_available, "High speed internet available? (including FIOS)", class: "control-label" %>
-    <%= checkbox f, :high_speed_internet_available, class: "checkbox" %>
-    <%= error_tag f, :high_speed_internet_available %>
-  </div>
-
-  <!-- 155 -->
-  <div class="form-group<%= if f.errors[:modern_kitchen_countertops], do: " has-error" %>">
-    <%= label f, :modern_kitchen_countertops, "Modern kitchen countertops?", class: "control-label" %>
-    <%= checkbox f, :modern_kitchen_countertops, class: "checkbox" %>
-    <%= error_tag f, :modern_kitchen_countertops %>
-  </div>
-
-  <!-- 156 -->
-  <div class="form-group<%= if f.errors[:cellular_coverage_quality], do: " has-error" %>">
-    <%= label f, :cellular_coverage_quality, "Cellular coverage quality (# bars on average, 0-5, or leave blank)", class: "control-label" %>
-    <%= number_input f, :cellular_coverage_quality, class: "form-control" %>
-    <%= error_tag f, :cellular_coverage_quality %>
-  </div>
-
-  <!-- 157 -->
-  <div class="form-group<%= if f.errors[:owner_name], do: " has-error" %>">
-    <%= label f, :owner_name, class: "control-label" %>
-    <%= text_input f, :owner_name, class: "form-control" %>
-    <%= error_tag f, :owner_name %>
-  </div>
-
-  <!-- 158 -->
-  <div class="form-group<%= if f.errors[:status_showing_phone], do: " has-error" %>">
-    <%= label f, :status_showing_phone, class: "control-label" %>
-    <div class="input-group">
-      <div class="input-group-addon">
-        <i class="fa fa-phone"></i>
-      </div>
-      <%= telephone_input f, :status_showing_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
-    </div>
-    <%= error_tag f, :status_showing_phone %>
-  </div>
-
-  <!-- 159 -->
-  <div class="form-group<%= if f.errors[:broker_id], do: " has-error" %>" title="note: can only be changed by admins">
-    <%= label f, :broker_id, "Broker:", class: "control-label" %>
-    <%= if is_admin(@conn) do %>
-      <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy" %>
-    <% else %>
-      <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", disabled: "disabled" %>
-    <% end %>
-    <%= error_tag f, :broker_id %>
-  </div>
-
-  <!-- 160 -->
-  <div class="form-group<%= if f.errors[:broker_agent_owned], do: " has-error" %>">
-    <%= label f, :broker_agent_owned, "Broker/agent-owned?", class: "control-label" %>
-    <%= checkbox f, :broker_agent_owned, class: "checkbox" %>
-    <%= error_tag f, :broker_agent_owned %>
-  </div>
-
-  <!-- 161 -->
-  <div class="form-group<%= if f.errors[:user_id], do: " has-error" %>" title="note: can only be changed by admins">
-    <%= label f, :user_id, "Agent:", class: "control-label" %>
-    <%= if is_admin(@conn) do %>
-      <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy" %>
-    <% else %>
-      <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", disabled: "disabled" %>
-    <% end %>
-    <%= error_tag f, :user_id %>
-  </div>
-
-  <!-- 162 -->
-  <div class="form-group<%= if f.errors[:listing_agent_phone], do: " has-error" %>">
-    <%= label f, :listing_agent_phone, class: "control-label" %>
-    <div class="input-group">
-      <div class="input-group-addon">
-        <i class="fa fa-phone"></i>
-      </div>
-      <%= telephone_input f, :listing_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
-    </div>
-    <%= error_tag f, :listing_agent_phone %>
-  </div>
-
-  <!-- 163 -->
-  <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>" title="note: can only be changed by admins">
-    <%= label f, :colisting_agent_id, "Co-listing agent", class: "control-label" %>
-    <%= select f, :colisting_agent_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy" %>
-    <%= error_tag f, :colisting_agent_id %>
-  </div>
-
-  <!-- 164 -->
-  <div class="form-group<%= if f.errors[:colisting_agent_phone], do: " has-error" %>">
-    <%= label f, :colisting_agent_phone, "Co-listing agent phone", class: "control-label" %>
-    <div class="input-group">
-      <div class="input-group-addon">
-        <i class="fa fa-phone"></i>
-      </div>
-      <%= telephone_input f, :colisting_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
-    </div>
-    <%= error_tag f, :colisting_agent_phone %>
-  </div>
-
-  <!-- 165 -->
-  <div class="form-group<%= if f.errors[:seller_agency_comp], do: " has-error" %>">
-    <%= label f, :seller_agency_comp, class: "control-label" %>
-    <div class="input-group col-xs-1">
-      <%= number_input f, :seller_agency_comp, class: "form-control" %>
-      <div class="input-group-addon">
-        &#37;
-      </div>
-    </div>
-    <%= error_tag f, :seller_agency_comp %>
-  </div>
-
-  <!-- 166 -->
-  <div class="form-group<%= if f.errors[:buyer_agency_comp], do: " has-error" %>">
-    <%= label f, :buyer_agency_comp, class: "control-label" %>
-    <div class="input-group col-xs-1">
-      <%= number_input f, :buyer_agency_comp, class: "form-control" %>
-      <div class="input-group-addon">
-        &#37;
-      </div>
-    </div>
-    <%= error_tag f, :buyer_agency_comp %>
-  </div>
-
-  <!-- 167 -->
-  <div class="form-group<%= if f.errors[:broker_agency_comp], do: " has-error" %>">
-    <%= label f, :broker_agency_comp, class: "control-label" %>
-    <div class="input-group col-xs-1">
-      <%= number_input f, :broker_agency_comp, class: "form-control" %>
-      <div class="input-group-addon">
-        &#37;
-      </div>
-    </div>
-    <%= error_tag f, :broker_agency_comp %>
-  </div>
-
-  <!-- 168 -->
-  <div class="form-group<%= if f.errors[:listing_broker_comp_rental], do: " has-error" %>">
-    <%= label f, :listing_broker_comp_rental, class: "control-label" %>
-    <%= text_input f, :listing_broker_comp_rental, class: "form-control" %>
-    <%= error_tag f, :listing_broker_comp_rental %>
-  </div>
-
-  <!-- 169 -->
-  <div class="form-group<%= if f.errors[:buyer_exclusions], do: " has-error" %>">
-    <%= label f, :buyer_exclusions, "Buyer exclusions?", class: "control-label" %>
-    <%= checkbox f, :buyer_exclusions, class: "checkbox" %>
-    <%= error_tag f, :buyer_exclusions %>
-  </div>
-
-  <!-- 170 -->
-  <div class="form-group<%= if f.errors[:negotiate_direct], do: " has-error" %>">
-    <%= label f, :negotiate_direct, "Negotiate direct?", class: "control-label" %>
-    <%= checkbox f, :negotiate_direct, class: "checkbox" %>
-    <%= error_tag f, :negotiate_direct %>
-  </div>
-
-  <!-- 171 -->
-  <div class="form-group<%= if f.errors[:offers_presentable], do: " has-error" %>">
-    <%= label f, :offers_presentable, "Offers presentable?", class: "control-label" %>
-    <%= checkbox f, :offers_presentable, class: "checkbox" %>
-    <%= error_tag f, :offers_presentable %>
-  </div>
-
-  <!-- 172 -->
-  <div class="form-group<%= if f.errors[:occupancy], do: " has-error" %>">
-    <%= label f, :occupancy, class: "control-label" %>
-    <%= text_input f, :occupancy, class: "form-control" %>
-    <%= error_tag f, :occupancy %>
-  </div>
-
-  <!-- 173 -->
-  <div class="form-group<%= if f.errors[:show_instr], do: " has-error" %>">
-    <%= label f, :show_instr, class: "control-label" %>
-    <%= text_input f, :show_instr, class: "form-control" %>
-    <%= error_tag f, :show_instr %>
-  </div>
-
-  <!-- 174 -->
-  <div class="form-group<%= if f.errors[:lockbox], do: " has-error" %>">
-    <%= label f, :lockbox, "Lockbox?", class: "control-label" %>
-    <%= checkbox f, :lockbox, class: "checkbox" %>
-    <%= error_tag f, :lockbox %>
-  </div>
-
-  <!-- 175 -->
-  <div class="form-group<%= if f.errors[:owner_financing], do: " has-error" %>">
-    <%= label f, :owner_financing, "Owner-financed?", class: "control-label" %>
-    <%= checkbox f, :owner_financing, class: "checkbox" %>
-    <%= error_tag f, :owner_financing %>
-  </div>
-
-  <!-- 176 -->
-  <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
-    <%= label f, :remarks, class: "control-label" %>
-    <%= textarea f, :remarks, class: "form-control" %>
-    <%= error_tag f, :remarks %>
-  </div>
-
-  <!-- 177 -->
-  <div class="form-group<%= if f.errors[:directions], do: " has-error" %>">
-    <%= label f, :directions, class: "control-label" %>
-    <%= textarea f, :directions, class: "form-control" %>
-    <%= error_tag f, :directions %>
-  </div>
-
-  <!-- 178 -->
-  <div class="form-group<%= if f.errors[:description], do: " has-error" %>">
-    <%= label f, :description, class: "control-label" %>
-    <%= textarea f, :description, class: "form-control" %>
-    <%= error_tag f, :description %>
-  </div>
-
-  <!-- 179 -->
-  <div class="form-group<%= if f.errors[:rental_income_usd], do: " has-error" %>">
-    <%= label f, :rental_income_usd, class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :rental_income_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :rental_income_usd %>
-  </div>
-
-  <!-- 180 -->
-  <div class="form-group<%= if f.errors[:also_for_rent], do: " has-error" %>">
-    <%= label f, :also_for_rent, "Also for rent?", class: "control-label" %>
-    <%= checkbox f, :also_for_rent, class: "checkbox" %>
-    <%= error_tag f, :also_for_rent %>
-  </div>
-
-  <!-- 181 -->
-  <div class="form-group<%= if f.errors[:rental_price_usd], do: " has-error" %>">
-    <%= label f, :rental_price_usd, "Rental price", class: "control-label" %>
-    <div class="input-group col-xs-3">
-      <div class="input-group-addon">
-        $
-      </div>
-      <%= number_input f, :rental_price_usd, class: "form-control" %>
-    </div>
-    <%= error_tag f, :rental_price_usd %>
-  </div>
-
- <!-- 182 -->
-  <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
-    <%= label f, :personal_prop_exclusions, class: "control-label" %>
-    <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
-    <%= error_tag f, :personal_prop_exclusions %>
-  </div>
-
-  <!-- 183 -->
-  <div class="form-group<%= if f.errors[:mls_source_id], do: " has-error" %>">
-    <%= label f, :mls_source_id, "MLS source ID", class: "control-label" %>
-    <%= number_input f, :mls_source_id, class: "form-control" %>
-    <%= error_tag f, :mls_source_id %>
-  </div>
-
-  <!-- 184 -->
-  <div class="form-group<%= if f.errors[:reo], do: " has-error" %>">
-    <%= label f, :reo, "REO?", class: "control-label" %>
-    <%= checkbox f, :reo, class: "checkbox" %>
-    <%= error_tag f, :reo %>
-  </div>
-
-  <!-- 185 -->
-  <div class="form-group<%= if f.errors[:short_sale], do: " has-error" %>">
-    <%= label f, :short_sale, "Short sale?", class: "control-label" %>
-    <%= checkbox f, :short_sale, class: "checkbox" %>
-    <%= error_tag f, :short_sale %>
-  </div>
-
- <!-- 186 -->
-
-  <% if f.data.ext_urls do %>
-    <%= for {url, idx} <- Enum.with_index(Enum.filter(f.data.ext_urls, &(&1!="")), 1) do %>
-      <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
-        <%= label f, :ext_urls, "External URL #{idx}", class: "control-label" %>
-        <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: url, class: "form-control" %>
-        <%= error_tag f, :ext_urls %>
-      </div>
-    <% end %>
-  <% end %>
-
-
-  <div class="form-group">
-    <%= label f, :ext_urls, "Add an external URL", class: "control-label" %>
-    <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: "", class: "form-control" %>
-  </div>
-
-  <div><i>Note: All of the following times are in your current local timezone</i></div>
-
+<section class="content">
   <div class="row">
-    <!-- 187 -->
-    <div class="col-xs-3 form-group<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
-      <%= label f, :next_broker_oh_start_at, "Next broker open-house start on/at:", class: "control-label" %>
-      <div class="input-group datetime">
-        <label class="input-group-addon" for="next_broker_oh_start_at">
-          <span class="fa fa-calendar"></span>
-        </label>
-        <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
-        <label class="input-group-addon" for="next_broker_oh_start_at">
-          <span class="fa fa-clock-o"></span>
-        </label>
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Basics</h3>
+        </div>
+        <div class="box-body">
+          <!-- 1 -->
+          <div class="form-group<%= if f.errors[:draft], do: " has-error" %>">
+            <%= checkbox f, :draft, class: "checkbox" %>
+            <%= label f, :draft, "Draft?", class: "control-label" %>
+            <i>Work-in-progress that only you can see.</i>
+            <%= error_tag f, :draft %>
+          </div>
+
+          <div class="row form-group">
+            <div class="col-xs-6">
+              <!-- 2 -->
+              <div class="<%= if f.errors[:for_sale], do: " has-error" %>">
+                <%= checkbox f, :for_sale, class: "checkbox" %>
+                <%= label f, :for_sale, "For Sale?", class: "control-label" %>
+                <%= error_tag f, :for_sale %>
+              </div>
+            </div>
+
+            <div class="col-xs-6">
+              <!-- 3 -->
+              <div class="<%= if f.errors[:for_rent], do: " has-error" %>">
+                <%= checkbox f, :for_rent, class: "checkbox" %>
+                <%= label f, :for_rent, "For Rent?", class: "control-label" %>
+                <%= error_tag f, :for_rent %>
+              </div>
+            </div>
+
+            <div class="col-xs-12"><i>(Check off both if also for rent.)</i></div>
+          </div>
+
+
+          <div class="row">
+          <!-- 4 -->
+            <div class="form-group col-xs-6<%= if f.errors[:class_type], do: " has-error" %>">
+              <%= label f, :class_type, "Property Class:", class: "control-label" %>
+              <%= select f, :class_type, Mpnetwork.EnumMaps.class_type_select_opts, class: "fancy" %>
+              <%= error_tag f, :class_type %>
+            </div>
+
+            <!-- 5 -->
+            <div class="form-group col-xs-6<%= if f.errors[:studio], do: " has-error" %>">
+              <%= checkbox f, :studio, class: "checkbox" %>
+              <%= label f, :studio, "Studio?", class: "control-label" %>
+              <%= error_tag f, :studio %>
+            </div>
+          </div>
+        </div> <!-- box-body -->
       </div>
-      <%= error_tag f, :next_broker_oh_start_at %>
-    </div>
-    <!-- 188 -->
-    <div class="col-xs-3 form-group<%= if f.errors[:next_broker_oh_end_at], do: " has-error" %>">
-      <%= label f, :next_broker_oh_end_at, "Next broker open-house end on/at:", class: "control-label" %>
-      <div class="input-group datetime">
-        <label class="input-group-addon" for="next_broker_oh_end_at">
-          <span class="fa fa-calendar"></span>
-        </label>
-        <%= text_input f, :next_broker_oh_end_at, class: "form-control", id: "next_broker_oh_end_at" %>
-        <label class="input-group-addon" for="next_broker_oh_end_at">
-          <span class="fa fa-clock-o"></span>
-        </label>
-      </div>
-      <%= error_tag f, :next_broker_oh_end_at %>
     </div>
   </div>
-
-  <!-- 189 -->
-  <div class="form-group<%= if f.errors[:next_broker_oh_note], do: " has-error" %>">
-    <%= label f, :next_broker_oh_note, "Broker open-house notes", class: "control-label" %>
-    <%= textarea f, :next_broker_oh_note, class: "form-control" %>
-    <%= error_tag f, :next_broker_oh_note %>
-  </div>
-
-  <div><i>Note: All of the following times are in your current local timezone</i></div>
-
+</section>
+<section class="content">
   <div class="row">
-    <!-- 190 -->
-    <div class="col-xs-3 form-group<%= if f.errors[:next_cust_oh_start_at], do: " has-error" %>">
-      <%= label f, :next_cust_oh_start_at, "Next customer open-house start on/at:", class: "control-label" %>
-      <div class="input-group datetime">
-        <label class="input-group-addon" for="next_cust_oh_start_at">
-          <span class="fa fa-calendar"></span>
-        </label>
-        <%= text_input f, :next_cust_oh_start_at, class: "form-control", id: "next_cust_oh_start_at" %>
-        <label class="input-group-addon" for="next_cust_oh_start_at">
-          <span class="fa fa-clock-o"></span>
-        </label>
-      </div>
-      <%= error_tag f, :next_cust_oh_start_at %>
-    </div>
-    <!-- 191 -->
-    <div class="col-xs-3 form-group<%= if f.errors[:next_cust_oh_end_at], do: " has-error" %>">
-      <%= label f, :next_cust_oh_end_at, "Next customer open-house end on/at:", class: "control-label" %>
-      <div class="input-group datetime">
-        <label class="input-group-addon" for="next_cust_oh_end_at">
-          <span class="fa fa-calendar"></span>
-        </label>
-        <%= text_input f, :next_cust_oh_end_at, class: "form-control", id: "next_cust_oh_end_at" %>
-        <label class="input-group-addon" for="next_cust_oh_end_at">
-          <span class="fa fa-clock-o"></span>
-        </label>
-      </div>
-      <%= error_tag f, :next_cust_oh_end_at %>
-    </div>
-  </div>
+    <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header">
+          <h3 class="box-title">Location</h3>
+        </div>
+        <div class="box-body">
+          <!-- 6 -->
+          <div class="form-group<%= if f.errors[:address], do: " has-error" %>">
+            <%= label f, :address, class: "control-label" %>
+            <%= text_input f, :address, class: "form-control" %>
+            <%= error_tag f, :address %>
+          </div>
 
-  <!-- 192 -->
-  <div class="form-group<%= if f.errors[:next_cust_oh_note], do: " has-error" %>">
-    <%= label f, :next_cust_oh_note, "Customer open-house notes", class: "control-label" %>
-    <%= textarea f, :next_cust_oh_note, class: "form-control" %>
-    <%= error_tag f, :next_cust_oh_note %>
-  </div>
+          <div class="row form-grouop">
+            <!-- 7 -->
+            <div class="col-xs-5<%= if f.errors[:city], do: " has-error" %>">
+              <%= label f, :city, class: "control-label" %>
+              <%= datalist_input f, :city, %{
+                list_name: "cityList",
+                data: [ "Manhasset", "Port Washington" ],
+                class: "form-control"} %>
+              <%= error_tag f, :city %>
+            </div>
 
-  <div class="form-group">
-    <%= submit "Save", class: "btn btn-primary", style: "width: 100px" %>
+            <!-- 8 -->
+            <div class="col-xs-3<%= if f.errors[:state], do: " has-error" %>">
+              <%= label f, :state, class: "control-label" %>
+              <%= datalist_input f, :state, %{
+                list_name: "stateList",
+                data: ~w[ NY ],
+                class: "form-control"} %>
+              <%= error_tag f, :state %>
+            </div>
+
+            <!-- 9 -->
+            <div class="col-xs-4<%= if f.errors[:zip], do: " has-error" %>">
+              <%= label f, :zip, class: "control-label" %>
+              <%= datalist_input f, :zip, %{
+                list_name: "zipList",
+                data: ~w[ 11030 11050 ],
+                class: "form-control"} %>
+              <%= error_tag f, :zip %>
+            </div>
+
+          </div> <!-- row -->
+
+          <!-- 10 -->
+          <div class="form-group<%= if f.errors[:district], do: " has-error" %>">
+            <%= label f, :district, "District", class: "control-label" %>
+            <%= text_input f, :district, class: "form-control" %>
+            <%= error_tag f, :district %>
+          </div>
+
+          <!-- 11 -->
+          <div class="form-group<%= if f.errors[:section_num], do: " has-error" %>">
+            <%= label f, :section_num, "Section #", class: "control-label" %>
+            <%= number_input f, :section_num, class: "form-control" %>
+            <%= error_tag f, :section_num %>
+          </div>
+
+          <!-- 12 -->
+          <div class="form-group<%= if f.errors[:block_num], do: " has-error" %>">
+            <%= label f, :block_num, "Block #", class: "control-label" %>
+            <%= number_input f, :block_num, class: "form-control" %>
+            <%= error_tag f, :block_num %>
+          </div>
+
+          <!-- 13 -->
+          <div class="form-group<%= if f.errors[:lot_num], do: " has-error" %>">
+            <%= label f, :lot_num, "Lot #", class: "control-label" %>
+            <%= number_input f, :lot_num, class: "form-control" %>
+            <%= error_tag f, :lot_num %>
+          </div>
+
+          <!-- 14 -->
+          <div class="form-group<%= if f.errors[:association], do: " has-error" %>">
+            <%= label f, :association, "Development", class: "control-label" %>
+            <%= text_input f, :association, class: "form-control" %>
+            <%= error_tag f, :association %>
+          </div>
+
+          <!-- 15 -->
+          <div class="form-group<%= if f.errors[:neighborhood], do: " has-error" %>">
+            <%= label f, :neighborhood, "Neighborhood", class: "control-label" %>
+            <%= text_input f, :neighborhood, class: "form-control" %>
+            <%= error_tag f, :neighborhood %>
+          </div>
+
+          <!-- 16 -->
+          <div class="form-group<%= if f.errors[:schools], do: " has-error" %>">
+            <%= label f, :schools, "Schools", class: "control-label" %>
+            <%= text_input f, :schools, class: "form-control" %>
+            <%= error_tag f, :schools %>
+          </div>
+
+          <!-- 17 -->
+          <div class="form-group<%= if f.errors[:zoning], do: " has-error" %>">
+            <%= label f, :zoning, "Zoning", class: "control-label" %>
+            <%= text_input f, :zoning, class: "form-control" %>
+            <%= error_tag f, :zoning %>
+          </div>
+
+          <!-- 18 -->
+          <div class="form-group<%= if f.errors[:corner], do: " has-error" %>">
+            <%= checkbox f, :corner, class: "checkbox" %>
+            <%= label f, :corner, "Corner?", class: "control-label" %>
+            <%= error_tag f, :corner %>
+          </div>
+
+          <!-- 19 -->
+          <div class="form-group<%= if f.errors[:cross_street], do: " has-error" %>">
+            <%= label f, :cross_street, "Cross street", class: "control-label" %>
+            <%= text_input f, :cross_street, class: "form-control" %>
+            <%= error_tag f, :cross_street %>
+          </div>
+
+          <!-- 20 -->
+          <div class="form-group<%= if f.errors[:cul_de_sac], do: " has-error" %>">
+            <%= checkbox f, :cul_de_sac, class: "checkbox" %>
+            <%= label f, :cul_de_sac, "Cul de sac?", class: "control-label" %>
+            <%= error_tag f, :cul_de_sac %>
+          </div>
+
+          <div class="row form-group">
+          <!-- 21 -->
+            <div class="col-xs-6<%= if f.errors[:waterfront], do: " has-error" %>">
+              <%= checkbox f, :waterfront, class: "checkbox" %>
+              <%= label f, :waterfront, "Waterfront?", class: "control-label" %>
+              <%= error_tag f, :waterfront %>
+            </div>
+
+            <!-- 22 -->
+            <div class="col-xs-6<%= if f.errors[:water_frontage_ft], do: " has-error" %>">
+              <%= label f, :water_frontage_ft, "Water frontage (ft)", class: "control-label" %>
+              <%= number_input f, :water_frontage_ft, class: "form-control col-xs-2" %>
+              <%= error_tag f, :water_frontage_ft %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 23 -->
+            <div class="col-xs-6<%= if f.errors[:waterfront_type], do: " has-error" %>">
+              <%= label f, :waterfront_type, class: "control-label" %>:&nbsp;
+              <%= select f, :waterfront_type, Mpnetwork.EnumMaps.waterfront_type_select_opts, class: "fancy" %>
+              <%= error_tag f, :waterfront_type %>
+            </div>
+
+            <!-- 24 -->
+            <div class="col-xs-6<%= if f.errors[:waterview], do: " has-error" %>">
+              <%= checkbox f, :waterview, class: "checkbox" %>
+              <%= label f, :waterview, "Waterview?", class: "control-label" %>
+              <%= error_tag f, :waterview %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 25 -->
+            <div class="col-xs-6<%= if f.errors[:bulkhead], do: " has-error" %>">
+              <%= checkbox f, :bulkhead, class: "checkbox" %>
+              <%= label f, :bulkhead, "Bulkhead?", class: "control-label" %>
+              <%= error_tag f, :bulkhead %>
+            </div>
+
+            <!-- 26 -->
+            <div class="col-xs-6<%= if f.errors[:bulkhead_ft], do: " has-error" %>">
+              <%= label f, :bulkhead_ft, "Bulkhead (ft)", class: "control-label" %>
+              <%= number_input f, :bulkhead_ft, class: "form-control" %>
+              <%= error_tag f, :bulkhead_ft %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 27 -->
+            <div class="col-xs-6<%= if f.errors[:dock_rights], do: " has-error" %>">
+              <%= checkbox f, :dock_rights, class: "checkbox" %>
+              <%= label f, :dock_rights, "Dock rights?", class: "control-label" %>
+              <%= error_tag f, :dock_rights %>
+            </div>
+
+            <!-- 28 -->
+            <div class="col-xs-6<%= if f.errors[:beach_rights], do: " has-error" %>">
+              <%= checkbox f, :beach_rights, class: "checkbox" %>
+              <%= label f, :beach_rights, "Beach rights?", class: "control-label" %>
+              <%= error_tag f, :beach_rights %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 29 -->
+            <div class="col-xs-6<%= if f.errors[:adult_comm], do: " has-error" %>">
+              <%= checkbox f, :adult_comm, class: "checkbox" %>
+              <%= label f, :adult_comm, "Adult community?", class: "control-label" %>
+              <%= error_tag f, :adult_comm %>
+            </div>
+
+            <!-- 30 -->
+            <div class="col-xs-6<%= if f.errors[:gated_comm], do: " has-error" %>">
+              <%= checkbox f, :gated_comm, class: "checkbox" %>
+              <%= label f, :gated_comm, "Gated community?", class: "control-label" %>
+              <%= error_tag f, :gated_comm %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 31 -->
+            <div class="col-xs-12<%= if f.errors[:front_exposure_type], do: " has-error" %>">
+              <%= label f, :front_exposure_type, "Front exposure", class: "control-label" %>:&nbsp;
+              <%= select f, :front_exposure_type, Mpnetwork.EnumMaps.front_exposure_type_select_opts, class: "fancy", style: "min-width:85px" %>
+              <%= error_tag f, :front_exposure_type %>
+            </div>
+          </div>
+        </div> <!-- box-body -->
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-success">
+        <div class="box-header">
+          <h3 class="box-title">Price/Dates</h3>
+        </div>
+        <div class="box-body">
+          <!-- 32 -->
+          <div class="form-group<%= if f.errors[:price_usd], do: " has-error" %>">
+            <%= label f, :price_usd, "Price", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :price_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :price_usd %>
+          </div>
+
+          <!-- 33 -->
+          <div class="form-group<%= if f.errors[:prior_price_usd], do: " has-error" %>">
+            <%= label f, :prior_price_usd, "Prior price", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :prior_price_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :prior_price_usd %>
+          </div>
+
+          <!-- 34 -->
+          <div class="form-group<%= if f.errors[:original_price_usd], do: " has-error" %>">
+            <%= label f, :original_price_usd, "Original price", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :original_price_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :original_price_usd %>
+          </div>
+
+          <!-- 35 -->
+          <div class="form-group<%= if f.errors[:tax_rate_code_area], do: " has-error" %>">
+            <%= label f, :tax_rate_code_area, class: "control-label" %>
+            <%= number_input f, :tax_rate_code_area, class: "form-control" %>
+            <%= error_tag f, :tax_rate_code_area %>
+          </div>
+
+          <!-- 36 -->
+          <div class="form-group<%= if f.errors[:prop_tax_usd], do: " has-error" %>">
+            <%= label f, :prop_tax_usd, "Property taxes (annual)", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :prop_tax_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :prop_tax_usd %>
+          </div>
+
+          <!-- 37 -->
+          <div class="form-group<%= if f.errors[:vill_tax_usd], do: " has-error" %>">
+            <%= label f, :vill_tax_usd, "Village taxes (annual)", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :vill_tax_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :vill_tax_usd %>
+          </div>
+
+          <!-- 38 -->
+          <div class="form-group<%= if f.errors[:star_deduc_usd], do: " has-error" %>">
+            <%= label f, :star_deduc_usd, "STAR deduction", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :star_deduc_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :star_deduc_usd %>
+          </div>
+
+          <div class="form-group row">
+            <!-- 39 -->
+            <div class="col-xs-6<%= if f.errors[:visible_on], do: " has-error" %>">
+              <%= label f, :visible_on, "Listing visible on", class: "control-label" %>
+              <%
+                {{year, month, day}, _} = if f.data.visible_on do
+                  Timex.to_erl(Timex.now("EDT"))
+                else
+                  {{1, 1, 1}, 1}
+                end
+              %>
+              <div class="input-group date">
+                <label class="input-group-addon" for="visible_on">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :visible_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "visible_on" %>
+              </div>
+              <%= error_tag f, :visible_on %>
+            </div>
+
+            <!-- 40 -->
+            <div class="col-xs-6<%= if f.errors[:expires_on], do: " has-error" %>">
+              <%= label f, :expires_on, "Listing expires on", class: "control-label" %>
+              <%
+                {{year, month, day}, _} = if f.data.expires_on do
+                  Timex.to_erl(Timex.now("EDT"))
+                else
+                  {{1, 1, 1}, 1}
+                end
+              %>
+              <div class="input-group date">
+                <label class="input-group-addon" for="expires_on">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :expires_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "expires_on" %>
+              </div>
+              <%= error_tag f, :expires_on %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-<% end %>
-<%= if @existing do %>
-  <div><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></div>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Characteristics</h3>
+        </div>
+        <div class="box-body">
+          <div class="row form-group">
+            <!-- 41 -->
+            <div class="col-xs-12<%= if f.errors[:listing_status_type], do: " has-error" %>">
+              <%= label f, :listing_status_type, "Listing Status", class: "control-label" %>:&nbsp;
+              <%= select f, :listing_status_type, Mpnetwork.EnumMaps.listing_status_type_select_opts, class: "fancy" %>
+              <%= error_tag f, :listing_status_type %>
+            </div>
+          </div>
+          <div class="row form-group">
+            <!-- 42 -->
+            <div class="col-xs-8<%= if f.errors[:style_type], do: " has-error" %>">
+              <%= label f, :style_type, "Style", class: "control-label" %>:&nbsp;
+              <%= select f, :style_type, Mpnetwork.EnumMaps.style_type_select_opts, class: "fancy", style: "min-width:200px" %>
+              <%= error_tag f, :style_type %>
+            </div>
+
+            <!-- 43 -->
+            <div class="col-xs-3<%= if f.errors[:stories], do: " has-error" %>">
+              <%= label f, :stories, class: "control-label" %>
+              <%= number_input f, :stories, class: "form-control" %>
+              <%= error_tag f, :stories %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 44 -->
+            <div class="col-xs-6<%= if f.errors[:num_rooms], do: " has-error" %>">
+              <%= label f, :num_rooms, "# Rooms", class: "control-label" %>
+              <%= number_input f, :num_rooms, class: "form-control" %>
+              <%= error_tag f, :num_rooms %>
+            </div>
+
+            <!-- 45 -->
+            <div class="col-xs-6<%= if f.errors[:num_bedrooms], do: " has-error" %>">
+              <%= label f, :num_bedrooms, "# Bedrooms", class: "control-label" %>
+              <%= number_input f, :num_bedrooms, class: "form-control" %>
+              <%= error_tag f, :num_bedrooms %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 46 -->
+            <div class="col-xs-4<%= if f.errors[:num_baths], do: " has-error" %>">
+              <%= label f, :num_baths, "# Baths", class: "control-label" %>
+              <%= number_input f, :num_baths, class: "form-control" %>
+              <%= error_tag f, :num_baths %>
+            </div>
+
+            <!-- 47 -->
+            <div class="col-xs-4<%= if f.errors[:num_half_baths], do: " has-error" %>">
+              <%= label f, :num_half_baths, "# Half Baths", class: "control-label" %>
+              <%= number_input f, :num_half_baths, class: "form-control" %>
+              <%= error_tag f, :num_half_baths %>
+            </div>
+
+            <!-- 48 -->
+            <div class="col-xs-4<%= if f.errors[:num_families], do: " has-error" %>">
+              <%= label f, :num_families, "# Families", class: "control-label" %>
+              <%= number_input f, :num_families, class: "form-control" %>
+              <%= error_tag f, :num_families %>
+            </div>
+          </div>
+
+          <!-- 49 -->
+          <div class="form-group<%= if f.errors[:att_type], do: " has-error" %>">
+            <%= label f, :att_type, "Attachment", class: "control-label" %>:&nbsp;
+            <%= select f, :att_type, Mpnetwork.EnumMaps.att_type_select_opts, class: "fancy", style: "min-width:200px" %>
+            <%= error_tag f, :att_type %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 50 -->
+            <div class="col-xs-6<%= if f.errors[:num_kitchens], do: " has-error" %>">
+              <%= label f, :num_kitchens, "# Kitchens", class: "control-label" %>
+              <%= number_input f, :num_kitchens, class: "form-control" %>
+              <%= error_tag f, :num_kitchens %>
+            </div>
+
+            <!-- 51 -->
+            <div class="col-xs-6<%= if f.errors[:eat_in_kitchen], do: " has-error" %>">
+              <%= checkbox f, :eat_in_kitchen, class: "checkbox" %>
+              <%= label f, :eat_in_kitchen, "Eat-in kitchen?", class: "control-label" %>
+              <%= error_tag f, :eat_in_kitchen %>
+            </div>
+          </div>
+
+          <!-- 52 -->
+          <div class="form-group<%= if f.errors[:dining_room_type], do: " has-error" %>">
+            <%= label f, :dining_room_type, class: "control-label" %>:&nbsp;
+            <%= select f, :dining_room_type, Mpnetwork.EnumMaps.dining_room_type_select_opts, class: "fancy", style: "width:50%" %>
+            <%= error_tag f, :dining_room_type %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 53 -->
+            <div class="col-xs-4<%= if f.errors[:den], do: " has-error" %>">
+              <%= checkbox f, :den, class: "checkbox" %>
+              <%= label f, :den, "Den?", class: "control-label" %>
+              <%= error_tag f, :den %>
+            </div>
+
+            <!-- 54 -->
+            <div class="col-xs-4<%= if f.errors[:office], do: " has-error" %>">
+              <%= checkbox f, :office, class: "checkbox" %>
+              <%= label f, :office, "Office?", class: "control-label" %>
+              <%= error_tag f, :office %>
+            </div>
+
+            <!-- 55 -->
+            <div class="col-xs-4<%= if f.errors[:attic], do: " has-error" %>">
+              <%= checkbox f, :attic, class: "checkbox" %>
+              <%= label f, :attic, "Attic?", class: "control-label" %>
+              <%= error_tag f, :attic %>
+            </div>
+          </div>
+
+          <!-- 56 -->
+          <div class="form-group<%= if f.errors[:mbr_first_fl], do: " has-error" %>">
+            <%= checkbox f, :mbr_first_fl, class: "checkbox" %>
+            <%= label f, :mbr_first_fl, "Master bedroom on 1st floor?", class: "control-label" %>
+            <%= error_tag f, :mbr_first_fl %>
+          </div>
+
+          <!-- 57 -->
+          <div class="form-group<%= if f.errors[:permit], do: " has-error" %>">
+            <%= label f, :permit, "Permit", class: "control-label" %>
+            <%= text_input f, :permit, class: "form-control" %>
+            <%= error_tag f, :permit %>
+          </div>
+
+          <!-- 58 -->
+          <div class="form-group<%= if f.errors[:handicap_access], do: " has-error" %>">
+            <%= checkbox f, :handicap_access, class: "checkbox" %>
+            <%= label f, :handicap_access, "Handicap access?", class: "control-label" %>
+            <%= error_tag f, :handicap_access %>
+          </div>
+
+          <!-- 59 -->
+          <div class="form-group<%= if f.errors[:handicap_access_desc], do: " has-error" %>">
+            <%= label f, :handicap_access_desc, "Describe handicap access", class: "control-label" %>
+            <%= text_input f, :handicap_access_desc, class: "form-control" %>
+            <%= error_tag f, :handicap_access_desc %>
+          </div>
+
+          <!-- 60 -->
+          <div class="form-group<%= if f.errors[:sq_ft], do: " has-error" %>">
+            <%= label f, :sq_ft, "Approx. intl. sq ft", class: "control-label" %>
+            <%= number_input f, :sq_ft, class: "form-control" %>
+            <%= error_tag f, :sq_ft %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 61 -->
+            <div class="col-xs-6<%= if f.errors[:basement], do: " has-error" %>">
+              <%= checkbox f, :basement, class: "checkbox" %>
+              <%= label f, :basement, "Basement?", class: "control-label" %>
+              <%= error_tag f, :basement %>
+            </div>
+
+            <!-- 63 -->
+            <div class="col-xs-6<%= if f.errors[:finished_basement], do: " has-error" %>">
+              <%= checkbox f, :finished_basement, class: "checkbox" %>
+              <%= label f, :finished_basement, "Finished basement?", class: "control-label" %>
+              <%= error_tag f, :finished_basement %>
+            </div>
+
+          </div>
+
+          <div class="row form-group">
+            <!-- 62 -->
+            <div class="col-xs-9<%= if f.errors[:basement_type], do: " has-error" %>">
+              <%= label f, :basement_type, class: "control-label" %>:&nbsp;
+              <%= select f, :basement_type, Mpnetwork.EnumMaps.basement_type_select_opts, class: "fancy", style: "min-width:200px"  %>
+              <%= error_tag f, :basement_type %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 65 -->
+            <div class="col-xs-6<%= if f.errors[:w_w_carpet], do: " has-error" %>">
+              <%= checkbox f, :w_w_carpet, class: "checkbox" %>
+              <%= label f, :w_w_carpet, "Wall-to-wall carpet?", class: "control-label" %>
+              <%= error_tag f, :w_w_carpet %>
+            </div>
+
+            <!-- 66 -->
+            <div class="col-xs-6<%= if f.errors[:wood_floors], do: " has-error" %>">
+              <%= checkbox f, :wood_floors, class: "checkbox" %>
+              <%= label f, :wood_floors, "Hardwood floors?", class: "control-label" %>
+              <%= error_tag f, :wood_floors %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 67 -->
+            <div class="col-xs-6<%= if f.errors[:year_built], do: " has-error" %>">
+              <%= label f, :year_built, class: "control-label" %>
+              <%= number_input f, :year_built, class: "form-control" %>
+              <%= error_tag f, :year_built %>
+            </div>
+            <!-- 68 -->
+            <div class="col-xs-6<%= if f.errors[:new_construction], do: " has-error" %>">
+              <%= checkbox f, :new_construction, class: "checkbox" %>
+              <%= label f, :new_construction, "New construction?", class: "control-label" %>
+              <%= error_tag f, :new_construction %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 64 -->
+            <div class="col-xs-6<%= if f.errors[:num_fireplaces], do: " has-error" %>">
+              <%= label f, :num_fireplaces, "# Fireplaces", class: "control-label" %>
+              <%= number_input f, :num_fireplaces, class: "form-control" %>
+              <%= error_tag f, :num_fireplaces %>
+            </div>
+
+            <!-- 69 -->
+            <div class="col-xs-6<%= if f.errors[:num_skylights], do: " has-error" %>">
+              <%= label f, :num_skylights, "# Skylights", class: "control-label" %>
+              <%= number_input f, :num_skylights, class: "form-control" %>
+              <%= error_tag f, :num_skylights %>
+            </div>
+          </div>
+
+          <!-- 70 -->
+          <div class="form-group<%= if f.errors[:appearance], do: " has-error" %>">
+            <%= label f, :appearance, "Describe appearance", class: "control-label" %>
+            <%= text_input f, :appearance, class: "form-control" %>
+            <%= error_tag f, :appearance %>
+          </div>
+
+          <!-- 71 -->
+          <div class="form-group<%= if f.errors[:basement_desc], do: " has-error" %>">
+            <%= label f, :basement_desc, "Describe basement", class: "control-label" %>
+            <%= text_input f, :basement_desc, class: "form-control" %>
+            <%= error_tag f, :basement_desc %>
+          </div>
+
+          <!-- 72 -->
+          <div class="form-group<%= if f.errors[:first_fl_desc], do: " has-error" %>">
+            <%= label f, :first_fl_desc, "Describe 1st floor", class: "control-label" %>
+            <%= text_input f, :first_fl_desc, class: "form-control" %>
+            <%= error_tag f, :first_fl_desc %>
+          </div>
+
+          <!-- 73 -->
+          <div class="form-group<%= if f.errors[:second_fl_desc], do: " has-error" %>">
+            <%= label f, :second_fl_desc, "Describe 2nd floor", class: "control-label" %>
+            <%= text_input f, :second_fl_desc, class: "form-control" %>
+            <%= error_tag f, :second_fl_desc %>
+          </div>
+
+          <!-- 74 -->
+          <div class="form-group<%= if f.errors[:third_fl_desc], do: " has-error" %>">
+            <%= label f, :third_fl_desc, "Describe 3rd floor", class: "control-label" %>
+            <%= text_input f, :third_fl_desc, class: "form-control" %>
+            <%= error_tag f, :third_fl_desc %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 152 -->
+            <div class="col-xs-6<%= if f.errors[:security_system], do: " has-error" %>">
+              <%= checkbox f, :security_system, class: "checkbox" %>
+              <%= label f, :security_system, "Security system?", class: "control-label" %>
+              <%= error_tag f, :security_system %>
+            </div>
+
+            <!-- 151 -->
+            <div class="col-xs-6<%= if f.errors[:central_vac], do: " has-error" %>">
+              <%= checkbox f, :central_vac, class: "checkbox" %>
+              <%= label f, :central_vac, "Central vac?", class: "control-label" %>
+              <%= error_tag f, :central_vac %>
+            </div>
+          </div>
+
+          <!-- 153 -->
+          <div class="form-group<%= if f.errors[:fios_available], do: " has-error" %>">
+            <%= checkbox f, :fios_available, class: "checkbox" %>
+            <%= label f, :fios_available, "FIOS available?", class: "control-label" %>
+            <%= error_tag f, :fios_available %>
+          </div>
+
+          <!-- 154 -->
+          <div class="form-group<%= if f.errors[:high_speed_internet_available], do: " has-error" %>">
+            <%= checkbox f, :high_speed_internet_available, class: "checkbox" %>
+            <%= label f, :high_speed_internet_available, "High speed internet available? (including FIOS)", class: "control-label" %>
+            <%= error_tag f, :high_speed_internet_available %>
+          </div>
+
+          <!-- 155 -->
+          <div class="form-group<%= if f.errors[:modern_kitchen_countertops], do: " has-error" %>">
+            <%= checkbox f, :modern_kitchen_countertops, class: "checkbox" %>
+            <%= label f, :modern_kitchen_countertops, "Modern kitchen countertops?", class: "control-label" %>
+            <%= error_tag f, :modern_kitchen_countertops %>
+          </div>
+
+          <!-- 156 -->
+          <div class="form-group<%= if f.errors[:cellular_coverage_quality], do: " has-error" %>">
+            <%= label f, :cellular_coverage_quality, "Cellular coverage quality (# bars on average, 0-5, or leave blank)", class: "control-label" %>
+            <%= number_input f, :cellular_coverage_quality, class: "form-control" %>
+            <%= error_tag f, :cellular_coverage_quality %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-warning">
+        <div class="box-header">
+          <h3 class="box-title">Exterior/Appliances/Utilities</h3>
+        </div>
+        <div class="box-body">
+          <!-- 75 -->
+          <div class="form-group<%= if f.errors[:siding_desc], do: " has-error" %>">
+            <%= label f, :siding_desc, "Exterior construction", class: "control-label" %>
+            <%= datalist_input f, :siding_desc, %{
+              list_name: "sidingList",
+              data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"],
+              class: "form-control"} %>
+            <%= error_tag f, :siding_desc %>
+          </div>
+
+          <!-- 76 -->
+          <div class="form-group<%= if f.errors[:construction], do: " has-error" %>">
+            <%= label f, :construction, "Frame construction", class: "control-label" %>
+            <%= text_input f, :construction, class: "form-control" %>
+            <%= error_tag f, :construction %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 77 -->
+            <div class="col-xs-4<%= if f.errors[:num_garages], do: " has-error" %>">
+              <%= label f, :num_garages, "# Garages", class: "control-label" %>
+              <%= number_input f, :num_garages, class: "form-control" %>
+              <%= error_tag f, :num_garages %>
+            </div>
+
+            <!-- 78 -->
+            <div class="col-xs-4<%= if f.errors[:num_half_garages], do: " has-error" %>">
+              <%= label f, :num_half_garages, "# Half Garages", class: "control-label" %>
+              <%= number_input f, :num_half_garages, class: "form-control" %>
+              <%= error_tag f, :num_half_garages %>
+            </div>
+            <!-- 81 -->
+            <div class="col-xs-4<%= if f.errors[:parking_spaces], do: " has-error" %>">
+              <%= label f, :parking_spaces, "Parking Spots", class: "control-label" %>
+              <%= number_input f, :parking_spaces, class: "form-control" %>
+              <%= error_tag f, :parking_spaces %>
+            </div>
+          </div>
+
+          <!-- 79 -->
+          <div class="form-group<%= if f.errors[:attached_garage], do: " has-error" %>">
+            <%= checkbox f, :attached_garage, class: "checkbox" %>
+            <%= label f, :attached_garage, "Attached garage?", class: "control-label" %>
+            <%= error_tag f, :attached_garage %>
+          </div>
+
+          <!-- 80 -->
+          <div class="form-group<%= if f.errors[:driveway], do: " has-error" %>">
+            <%= label f, :driveway, "Driveway description", class: "control-label" %>
+            <%= text_input f, :driveway, class: "form-control" %>
+            <%= error_tag f, :driveway %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 82 -->
+            <div class="col-xs-3<%= if f.errors[:deck], do: " has-error" %>">
+              <%= checkbox f, :deck, class: "checkbox" %>
+              <%= label f, :deck, "Deck?", class: "control-label" %>
+              <%= error_tag f, :deck %>
+            </div>
+
+            <!-- 83 -->
+            <div class="col-xs-9<%= if f.errors[:deck_type], do: " has-error" %>">
+              <%= label f, :deck_type, class: "control-label" %>:&nbsp;
+              <%= select f, :deck_type, Mpnetwork.EnumMaps.deck_type_select_opts, class: "fancy", style: "min-width:166px" %>
+              <%= error_tag f, :deck_type %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 84 -->
+            <div class="col-xs-3<%= if f.errors[:patio], do: " has-error" %>">
+              <%= checkbox f, :patio, class: "checkbox" %>
+              <%= label f, :patio, "Patio?", class: "control-label" %>
+              <%= error_tag f, :patio %>
+            </div>
+
+            <!-- 85 -->
+            <div class="col-xs-9<%= if f.errors[:patio_type], do: " has-error" %>">
+              <%= label f, :patio_type, class: "control-label" %>:&nbsp;
+              <%= select f, :patio_type, Mpnetwork.EnumMaps.patio_type_select_opts, class: "fancy", style: "min-width:166px" %>
+              <%= error_tag f, :patio_type %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 86 -->
+            <div class="col-xs-3<%= if f.errors[:porch], do: " has-error" %>">
+              <%= checkbox f, :porch, class: "checkbox" %>
+              <%= label f, :porch, "Porch?", class: "control-label" %>
+              <%= error_tag f, :porch %>
+            </div>
+
+            <!-- 87 -->
+            <div class="col-xs-9<%= if f.errors[:porch_type], do: " has-error" %>">
+              <%= label f, :porch_type, class: "control-label" %>:&nbsp;
+              <%= select f, :porch_type, Mpnetwork.EnumMaps.porch_type_select_opts, class: "fancy", style: "min-width:166px" %>
+              <%= error_tag f, :porch_type %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 88 -->
+            <div class="col-xs-3<%= if f.errors[:pool], do: " has-error" %>">
+              <%= checkbox f, :pool, class: "checkbox" %>
+              <%= label f, :pool, "Pool?", class: "control-label" %>
+              <%= error_tag f, :pool %>
+            </div>
+
+            <!-- 89 -->
+            <div class="col-xs-9<%= if f.errors[:pool_type], do: " has-error" %>">
+              <%= label f, :pool_type, class: "control-label" %>:&nbsp;
+              <%= select f, :pool_type, Mpnetwork.EnumMaps.pool_type_select_opts, class: "fancy", style: "min-width:166px" %>
+              <%= error_tag f, :pool_type %>
+            </div>
+          </div>
+
+          <!-- 90 -->
+          <div class="form-group<%= if f.errors[:hot_tub], do: " has-error" %>">
+            <%= checkbox f, :hot_tub, class: "checkbox" %>
+            <%= label f, :hot_tub, "Hot tub?", class: "control-label" %>
+            <%= error_tag f, :hot_tub %>
+          </div>
+
+          <!-- 91 -->
+          <div class="form-group<%= if f.errors[:ing_sprinks], do: " has-error" %>">
+            <%= checkbox f, :ing_sprinks, class: "checkbox" %>
+            <%= label f, :ing_sprinks, "Inground sprinkler?", class: "control-label" %>
+            <%= error_tag f, :ing_sprinks %>
+          </div>
+
+          <!-- 92 -->
+          <div class="form-group<%= if f.errors[:tennis_ct], do: " has-error" %>">
+            <%= checkbox f, :tennis_ct, class: "checkbox" %>
+            <%= label f, :tennis_ct, "Tennis court?", class: "control-label" %>
+            <%= error_tag f, :tennis_ct %>
+          </div>
+
+          <!-- 93 -->
+          <div class="form-group<%= if f.errors[:tennis_ct_desc], do: " has-error" %>">
+            <%= label f, :tennis_ct_desc, "Tennis court details", class: "control-label" %>
+            <%= text_input f, :tennis_ct_desc, class: "form-control" %>
+            <%= error_tag f, :tennis_ct_desc %>
+          </div>
+
+          <!-- 94 -->
+          <div class="form-group<%= if f.errors[:equestrian], do: " has-error" %>">
+            <%= checkbox f, :equestrian, class: "checkbox" %>
+            <%= label f, :equestrian, "Horse property?", class: "control-label" %>
+            <%= error_tag f, :equestrian %>
+          </div>
+
+          <!-- 95 -->
+          <div class="form-group<%= if f.errors[:lot_size], do: " has-error" %>">
+            <%= label f, :lot_size, "Lot Size (dimensions)", class: "control-label" %>
+            <%= text_input f, :lot_size, class: "form-control" %>
+            <%= error_tag f, :lot_size %>
+          </div>
+
+          <!-- 96 -->
+          <div class="form-group<%= if f.errors[:lot_sqft], do: " has-error" %>">
+            <%= label f, :lot_sqft, "Lot (square footage)", class: "control-label" %>
+            <%= number_input f, :lot_sqft, class: "form-control" %>
+            <%= error_tag f, :lot_sqft %>
+          </div>
+
+          <!-- 97 -->
+          <div class="form-group<%= if f.errors[:building_size_sqft], do: " has-error" %>">
+            <%= label f, :building_size_sqft, "Building size (square footage)", class: "control-label" %>
+            <%= number_input f, :building_size_sqft, class: "form-control" %>
+            <%= error_tag f, :building_size_sqft %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 98 -->
+            <div class="col-xs-6<%= if f.errors[:num_stoves], do: " has-error" %>">
+              <%= label f, :num_stoves, "# Stoves", class: "control-label" %>
+              <%= number_input f, :num_stoves, class: "form-control" %>
+              <%= error_tag f, :num_stoves %>
+            </div>
+
+            <!-- 99 -->
+            <div class="col-xs-6<%= if f.errors[:num_refrigs], do: " has-error" %>">
+              <%= label f, :num_refrigs, "# Fridges", class: "control-label" %>
+              <%= number_input f, :num_refrigs, class: "form-control" %>
+              <%= error_tag f, :num_refrigs %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 100 -->
+            <div class="col-xs-4<%= if f.errors[:num_washers], do: " has-error" %>">
+              <%= label f, :num_washers, "# Washers", class: "control-label" %>
+              <%= number_input f, :num_washers, class: "form-control" %>
+              <%= error_tag f, :num_washers %>
+            </div>
+
+            <!-- 101 -->
+            <div class="col-xs-4<%= if f.errors[:num_dryers], do: " has-error" %>">
+              <%= label f, :num_dryers, "# Dryers", class: "control-label" %>
+              <%= number_input f, :num_dryers, class: "form-control" %>
+              <%= error_tag f, :num_dryers %>
+            </div>
+
+            <!-- 102 -->
+            <div class="col-xs-4<%= if f.errors[:num_dishwashers], do: " has-error" %>">
+              <%= label f, :num_dishwashers, "# Dishwashers", class: "control-label" %>
+              <%= number_input f, :num_dishwashers, class: "form-control" %>
+              <%= error_tag f, :num_dishwashers %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 103 -->
+            <div class="col-xs-4<%= if f.errors[:fuel_type], do: " has-error" %>">
+              <%= label f, :fuel_type, class: "control-label" %>:&nbsp;
+              <%= select f, :fuel_type, Mpnetwork.EnumMaps.fuel_type_select_opts, class: "fancy", style: "min-width:100px" %>
+              <%= error_tag f, :fuel_type %>
+            </div>
+
+            <!-- 104 -->
+            <div class="col-xs-5<%= if f.errors[:heating_type], do: " has-error" %>">
+              <%= label f, :heating_type, class: "control-label" %>:&nbsp;
+              <%= select f, :heating_type, Mpnetwork.EnumMaps.heating_type_select_opts, class: "fancy", style: "min-width:150px" %>
+              <%= error_tag f, :heating_type %>
+            </div>
+
+            <!-- 106 -->
+            <div class="col-xs-3<%= if f.errors[:central_air], do: " has-error" %>">
+              <%= checkbox f, :central_air, class: "checkbox" %>
+              <%= label f, :central_air, "Central air?", class: "control-label" %>
+              <%= error_tag f, :central_air %>
+            </div>
+
+          </div>
+
+          <div class="row form-group">
+            <!-- 105 -->
+            <div class="col-xs-6<%= if f.errors[:heat_num_zones], do: " has-error" %>">
+              <%= label f, :heat_num_zones, "# Heat Zones", class: "control-label" %>
+              <%= number_input f, :heat_num_zones, class: "form-control" %>
+              <%= error_tag f, :heat_num_zones %>
+            </div>
+            <!-- 111 -->
+            <div class="col-xs-6<%= if f.errors[:ac_num_zones], do: " has-error" %>">
+              <%= label f, :ac_num_zones, "# A/C Zones (or # of window A/C units)", class: "control-label" %>
+              <%= number_input f, :ac_num_zones, class: "form-control" %>
+              <%= error_tag f, :ac_num_zones %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 107 -->
+            <div class="col-xs-6<%= if f.errors[:sewer], do: " has-error" %>">
+              <%= checkbox f, :sewer, class: "checkbox" %>
+              <%= label f, :sewer, "Sewer?", class: "control-label" %>
+              <%= error_tag f, :sewer %>
+            </div>
+
+            <!-- 108 -->
+            <div class="col-xs-6<%= if f.errors[:sewage_type], do: " has-error" %>">
+              <%= label f, :sewage_type, class: "control-label" %>:&nbsp;
+              <%= select f, :sewage_type, Mpnetwork.EnumMaps.sewage_type_select_opts, class: "fancy", style: "min-width:150px" %>
+              <%= error_tag f, :sewage_type %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 109 -->
+            <div class="col-xs-6<%= if f.errors[:sep_hw_heater], do: " has-error" %>">
+              <%= checkbox f, :sep_hw_heater, class: "checkbox" %>
+              <%= label f, :sep_hw_heater, "Separate hw heater?", class: "control-label" %>
+              <%= error_tag f, :sep_hw_heater %>
+            </div>
+
+            <!-- 110 -->
+            <div class="col-xs-6<%= if f.errors[:sep_hw_heater_type], do: " has-error" %>">
+              <%= label f, :sep_hw_heater_type, class: "control-label" %>:&nbsp;
+              <%= select f, :sep_hw_heater_type, Mpnetwork.EnumMaps.sep_hw_heater_type_select_opts, class: "fancy", style: "min-width:150px" %>
+              <%= error_tag f, :sep_hw_heater_type %>
+            </div>
+          </div>
+
+          <!-- 112 -->
+          <div class="form-group<%= if f.errors[:water_type], do: " has-error" %>">
+            <%= label f, :water_type, "Water source", class: "control-label" %>:&nbsp;
+            <%= select f, :water_type, Mpnetwork.EnumMaps.water_type_select_opts, class: "fancy", style: "min-width:200px" %>
+            <%= error_tag f, :water_type %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-success">
+        <div class="box-header">
+          <h3 class="box-title">Green/Energy-Efficient Features</h3>
+        </div>
+        <div class="box-body">
+          <!-- 113 -->
+          <div class="form-group<%= if f.errors[:energy_eff], do: " has-error" %>">
+            <%= checkbox f, :energy_eff, class: "checkbox" %>
+            <%= label f, :energy_eff, "Energy-efficient features?", class: "control-label" %>
+            <%= error_tag f, :energy_eff %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 114 -->
+            <div class="col-xs-6<%= if f.errors[:eef_led_lighting], do: " has-error" %>">
+              <%= checkbox f, :eef_led_lighting, class: "checkbox" %>
+              <%= label f, :eef_led_lighting, "LED lighting", class: "control-label" %>
+              <%= error_tag f, :eef_led_lighting %>
+            </div>
+
+            <!-- 115 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_stove], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_stove, class: "checkbox" %>
+              <%= label f, :eef_energy_star_stove, "Energy✩ stove", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_stove %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 116 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_refrigerator], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_refrigerator, class: "checkbox" %>
+              <%= label f, :eef_energy_star_refrigerator, "Energy✩ refrigerator", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_refrigerator %>
+            </div>
+
+            <!-- 117 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_dishwasher], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_dishwasher, class: "checkbox" %>
+              <%= label f, :eef_energy_star_dishwasher, "Energy✩ dishwasher", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_dishwasher %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 118 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_washer], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_washer, class: "checkbox" %>
+              <%= label f, :eef_energy_star_washer, "Energy✩ washer", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_washer %>
+            </div>
+
+            <!-- 119 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_dryer], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_dryer, class: "checkbox" %>
+              <%= label f, :eef_energy_star_dryer, "Energy✩ dryer", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_dryer %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 120 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_water_heater], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_water_heater, class: "checkbox" %>
+              <%= label f, :eef_energy_star_water_heater, "Energy✩ water heater", class: "control-label", style: "width:55%" %>
+              <%= error_tag f, :eef_energy_star_water_heater %>
+            </div>
+
+            <!-- 121 -->
+            <div class="col-xs-6<%= if f.errors[:eef_geothermal_water_heater], do: " has-error" %>">
+              <%= checkbox f, :eef_geothermal_water_heater, class: "checkbox" %>
+              <%= label f, :eef_geothermal_water_heater, "Geothermal water heater", class: "control-label", style: "width:65%" %>
+              <%= error_tag f, :eef_geothermal_water_heater %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 122 -->
+            <div class="col-xs-6<%= if f.errors[:eef_solar_water_heater], do: " has-error" %>">
+              <%= checkbox f, :eef_solar_water_heater, class: "checkbox" %>
+              <%= label f, :eef_solar_water_heater, "Solar water heater", class: "control-label" %>
+              <%= error_tag f, :eef_solar_water_heater %>
+            </div>
+
+            <!-- 123 -->
+            <div class="col-xs-6<%= if f.errors[:eef_tankless_water_heater], do: " has-error" %>">
+              <%= checkbox f, :eef_tankless_water_heater, class: "checkbox" %>
+              <%= label f, :eef_tankless_water_heater, "Tankless water heater", class: "control-label", style: "width:65%" %>
+              <%= error_tag f, :eef_tankless_water_heater %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 124 -->
+            <div class="col-xs-6<%= if f.errors[:eef_double_pane_windows], do: " has-error" %>">
+              <%= checkbox f, :eef_double_pane_windows, class: "checkbox" %>
+              <%= label f, :eef_double_pane_windows, "Double-pane windows", class: "control-label", style: "width:75%" %>
+              <%= error_tag f, :eef_double_pane_windows %>
+            </div>
+
+            <!-- 125 -->
+            <div class="col-xs-6<%= if f.errors[:eef_insulated_windows], do: " has-error" %>">
+              <%= checkbox f, :eef_insulated_windows, class: "checkbox" %>
+              <%= label f, :eef_insulated_windows, "Insulated windows", class: "control-label" %>
+              <%= error_tag f, :eef_insulated_windows %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 126 -->
+            <div class="col-xs-6<%= if f.errors[:eef_tinted_windows], do: " has-error" %>">
+              <%= checkbox f, :eef_tinted_windows, class: "checkbox" %>
+              <%= label f, :eef_tinted_windows, "Tinted windows", class: "control-label" %>
+              <%= error_tag f, :eef_tinted_windows %>
+            </div>
+
+            <!-- 127 -->
+            <div class="col-xs-6<%= if f.errors[:eef_triple_pane_windows], do: " has-error" %>">
+              <%= checkbox f, :eef_triple_pane_windows, class: "checkbox" %>
+              <%= label f, :eef_triple_pane_windows, "Triple-pane windows", class: "control-label" %>
+              <%= error_tag f, :eef_triple_pane_windows %>
+            </div>
+          </div>
+
+          <!-- 128 -->
+          <div class="form-group<%= if f.errors[:eef_energy_star_windows], do: " has-error" %>">
+            <%= checkbox f, :eef_energy_star_windows, class: "checkbox" %>
+            <%= label f, :eef_energy_star_windows, "Energy✩ windows", class: "control-label" %>
+            <%= error_tag f, :eef_energy_star_windows %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 129 -->
+            <div class="col-xs-6<%= if f.errors[:eef_storm_doors], do: " has-error" %>">
+              <%= checkbox f, :eef_storm_doors, class: "checkbox" %>
+              <%= label f, :eef_storm_doors, "Storm doors", class: "control-label" %>
+              <%= error_tag f, :eef_storm_doors %>
+            </div>
+
+            <!-- 130 -->
+            <div class="col-xs-6<%= if f.errors[:eef_insulated_doors], do: " has-error" %>">
+              <%= checkbox f, :eef_insulated_doors, class: "checkbox" %>
+              <%= label f, :eef_insulated_doors, "Insulated doors", class: "control-label" %>
+              <%= error_tag f, :eef_insulated_doors %>
+            </div>
+          </div>
+
+          <!-- 131 -->
+          <div class="form-group<%= if f.errors[:eef_energy_star_doors], do: " has-error" %>">
+            <%= checkbox f, :eef_energy_star_doors, class: "checkbox" %>
+            <%= label f, :eef_energy_star_doors, "Energy✩ doors", class: "control-label" %>
+            <%= error_tag f, :eef_energy_star_doors %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 132 -->
+            <div class="col-xs-6<%= if f.errors[:eef_foam_insulation], do: " has-error" %>">
+              <%= checkbox f, :eef_foam_insulation, class: "checkbox" %>
+              <%= label f, :eef_foam_insulation, "Foam insulation", class: "control-label" %>
+              <%= error_tag f, :eef_foam_insulation %>
+            </div>
+
+            <!-- 133 -->
+            <div class="col-xs-6<%= if f.errors[:eef_cellulose_insulation], do: " has-error" %>">
+              <%= checkbox f, :eef_cellulose_insulation, class: "checkbox" %>
+              <%= label f, :eef_cellulose_insulation, "Cellulose insulation", class: "control-label" %>
+              <%= error_tag f, :eef_cellulose_insulation %>
+            </div>
+          </div>
+
+          <!-- 134 -->
+          <div class="form-group<%= if f.errors[:eef_blown_insulation], do: " has-error" %>">
+            <%= checkbox f, :eef_blown_insulation, class: "checkbox" %>
+            <%= label f, :eef_blown_insulation, "Blown insulation", class: "control-label" %>
+            <%= error_tag f, :eef_blown_insulation %>
+          </div>
+
+          <!-- 135 -->
+          <div class="form-group<%= if f.errors[:eef_programmable_thermostat], do: " has-error" %>">
+            <%= checkbox f, :eef_programmable_thermostat, class: "checkbox" %>
+            <%= label f, :eef_programmable_thermostat, "Programmable thermostat", class: "control-label" %>
+            <%= error_tag f, :eef_programmable_thermostat %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 136 -->
+            <div class="col-xs-6<%= if f.errors[:eef_low_flow_showers_fixtures], do: " has-error" %>">
+              <%= checkbox f, :eef_low_flow_showers_fixtures, class: "checkbox" %>
+              <%= label f, :eef_low_flow_showers_fixtures, "Low-flow shower fixtures", class: "control-label", style: "width:75%" %>
+              <%= error_tag f, :eef_low_flow_showers_fixtures %>
+            </div>
+
+            <!-- 137 -->
+            <div class="col-xs-6<%= if f.errors[:eef_low_flow_dual_flush_toilet], do: " has-error" %>">
+              <%= checkbox f, :eef_low_flow_dual_flush_toilet, class: "checkbox" %>
+              <%= label f, :eef_low_flow_dual_flush_toilet, "Low-flow dual-flush toilet", class: "control-label", style: "width:75%" %>
+              <%= error_tag f, :eef_low_flow_dual_flush_toilet %>
+            </div>
+          </div>
+
+          <!-- 138 -->
+          <div class="form-group<%= if f.errors[:eef_gray_water_system], do: " has-error" %>">
+            <%= checkbox f, :eef_gray_water_system, class: "checkbox" %>
+            <%= label f, :eef_gray_water_system, "Greywater system", class: "control-label" %>
+            <%= error_tag f, :eef_gray_water_system %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 139 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_furnace], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_furnace, class: "checkbox" %>
+              <%= label f, :eef_energy_star_furnace, "Energy✩ furnace", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_furnace %>
+            </div>
+
+            <!-- 140 -->
+            <div class="col-xs-6<%= if f.errors[:eef_geothermal_heating], do: " has-error" %>">
+              <%= checkbox f, :eef_geothermal_heating, class: "checkbox" %>
+              <%= label f, :eef_geothermal_heating, "Geothermal heating", class: "control-label" %>
+              <%= error_tag f, :eef_geothermal_heating %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 141 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_ac], do: " has-error" %>" title="(Non-central A/C)">
+              <%= checkbox f, :eef_energy_star_ac, class: "checkbox" %>
+              <%= label f, :eef_energy_star_ac, "Energy✩ A/C", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_ac %>
+            </div>
+
+            <!-- 142 -->
+            <div class="col-xs-6<%= if f.errors[:eef_energy_star_cac], do: " has-error" %>">
+              <%= checkbox f, :eef_energy_star_cac, class: "checkbox" %>
+              <%= label f, :eef_energy_star_cac, "Energy✩ CAC", class: "control-label" %>
+              <%= error_tag f, :eef_energy_star_cac %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 143 -->
+            <div class="col-xs-6<%= if f.errors[:eef_geothermal_ac], do: " has-error" %>">
+              <%= checkbox f, :eef_geothermal_ac, class: "checkbox" %>
+              <%= label f, :eef_geothermal_ac, "Geothermal A/C", class: "control-label" %>
+              <%= error_tag f, :eef_geothermal_ac %>
+            </div>
+
+            <!-- 144 -->
+            <div class="col-xs-6<%= if f.errors[:eef_solar_ac], do: " has-error" %>">
+              <%= checkbox f, :eef_solar_ac, class: "checkbox" %>
+              <%= label f, :eef_solar_ac, "Solar A/C", class: "control-label" %>
+              <%= error_tag f, :eef_solar_ac %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 145 -->
+            <div class="col-xs-6<%= if f.errors[:eef_solar_panels], do: " has-error" %>">
+              <%= checkbox f, :eef_solar_panels, class: "checkbox" %>
+              <%= label f, :eef_solar_panels, "Solar panels", class: "control-label" %>
+              <%= error_tag f, :eef_solar_panels %>
+            </div>
+
+            <!-- 146 -->
+            <div class="col-xs-6<%= if f.errors[:eef_solar_pool_cover], do: " has-error" %>">
+              <%= checkbox f, :eef_solar_pool_cover, class: "checkbox" %>
+              <%= label f, :eef_solar_pool_cover, "Solar pool cover", class: "control-label" %>
+              <%= error_tag f, :eef_solar_pool_cover %>
+            </div>
+          </div>
+
+          <!-- 147 -->
+          <div class="form-group<%= if f.errors[:eef_windmill], do: " has-error" %>">
+            <%= checkbox f, :eef_windmill, class: "checkbox" %>
+            <%= label f, :eef_windmill, "Windmill", class: "control-label" %>
+            <%= error_tag f, :eef_windmill %>
+          </div>
+
+          <!-- 148 -->
+          <div class="form-group<%= if f.errors[:green_certified], do: " has-error" %>">
+            <%= checkbox f, :green_certified, class: "checkbox" %>
+            <%= label f, :green_certified, "Green-certified?", class: "control-label" %>
+            <%= error_tag f, :green_certified %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 149 -->
+            <div class="col-xs-6<%= if f.errors[:green_cert_type], do: " has-error" %>">
+              <%= label f, :green_cert_type, "Green cert. type", class: "control-label" %>
+              <%= select f, :green_cert_type, Mpnetwork.EnumMaps.green_cert_type_select_opts, class: "fancy" %>
+              <%= error_tag f, :green_cert_type %>
+            </div>
+
+            <!-- 150 -->
+            <div class="col-xs-5<%= if f.errors[:green_cert_year], do: " has-error" %>">
+              <%= label f, :green_cert_year, "Green cert. year", class: "control-label" %>
+              <%= number_input f, :green_cert_year, class: "form-control" %>
+              <%= error_tag f, :green_cert_year %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header">
+          <h3 class="box-title">Owner/Broker</h3>
+        </div>
+        <div class="box-body">
+          <!-- 157 -->
+          <div class="form-group<%= if f.errors[:owner_name], do: " has-error" %>">
+            <%= label f, :owner_name, class: "control-label" %>
+            <%= text_input f, :owner_name, class: "form-control" %>
+            <%= error_tag f, :owner_name %>
+          </div>
+
+          <!-- 158 -->
+          <div class="form-group<%= if f.errors[:status_showing_phone], do: " has-error" %>">
+            <%= label f, :status_showing_phone, class: "control-label" %>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <%= telephone_input f, :status_showing_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+            </div>
+            <%= error_tag f, :status_showing_phone %>
+          </div>
+
+          <!-- 159 -->
+          <div class="form-group<%= if f.errors[:broker_id], do: " has-error" %>" title="note: can only be changed by admins">
+            <%= label f, :broker_id, "Broker:", class: "control-label" %>
+            <%= if is_admin(@conn) do %>
+              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy" %>
+            <% else %>
+              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", disabled: "disabled" %>
+            <% end %>
+            <%= error_tag f, :broker_id %>
+          </div>
+
+          <!-- 160 -->
+          <div class="form-group<%= if f.errors[:broker_agent_owned], do: " has-error" %>">
+            <%= checkbox f, :broker_agent_owned, class: "checkbox" %>
+            <%= label f, :broker_agent_owned, "Broker/agent-owned?", class: "control-label" %>
+            <%= error_tag f, :broker_agent_owned %>
+          </div>
+
+          <!-- 161 -->
+          <div class="form-group<%= if f.errors[:user_id], do: " has-error" %>" title="note: can only be changed by admins">
+            <%= label f, :user_id, "Agent:", class: "control-label" %>
+            <%= if is_admin(@conn) do %>
+              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
+            <% else %>
+              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px", disabled: "disabled" %>
+            <% end %>
+            <%= error_tag f, :user_id %>
+          </div>
+
+          <!-- 162 -->
+          <div class="form-group<%= if f.errors[:listing_agent_phone], do: " has-error" %>">
+            <%= label f, :listing_agent_phone, class: "control-label" %>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <%= telephone_input f, :listing_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+            </div>
+            <%= error_tag f, :listing_agent_phone %>
+          </div>
+
+          <!-- 163 -->
+          <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>" title="note: can only be changed by admins">
+            <%= label f, :colisting_agent_id, "Co-listing agent", class: "control-label" %>:&nbsp;
+            <%= select f, :colisting_agent_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
+            <%= error_tag f, :colisting_agent_id %>
+          </div>
+
+          <!-- 164 -->
+          <div class="form-group<%= if f.errors[:colisting_agent_phone], do: " has-error" %>">
+            <%= label f, :colisting_agent_phone, "Co-listing agent phone", class: "control-label" %>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <%= telephone_input f, :colisting_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+            </div>
+            <%= error_tag f, :colisting_agent_phone %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 165 -->
+            <div class="col-xs-4<%= if f.errors[:seller_agency_comp], do: " has-error" %>">
+              <%= label f, :seller_agency_comp, class: "control-label" %>
+              <div class="input-group">
+                <%= number_input f, :seller_agency_comp, class: "form-control" %>
+                <div class="input-group-addon">
+                  &#37;
+                </div>
+              </div>
+              <%= error_tag f, :seller_agency_comp %>
+            </div>
+
+            <!-- 166 -->
+            <div class="col-xs-4<%= if f.errors[:buyer_agency_comp], do: " has-error" %>">
+              <%= label f, :buyer_agency_comp, class: "control-label" %>
+              <div class="input-group">
+                <%= number_input f, :buyer_agency_comp, class: "form-control" %>
+                <div class="input-group-addon">
+                  &#37;
+                </div>
+              </div>
+              <%= error_tag f, :buyer_agency_comp %>
+            </div>
+
+            <!-- 167 -->
+            <div class="col-xs-4<%= if f.errors[:broker_agency_comp], do: " has-error" %>">
+              <%= label f, :broker_agency_comp, class: "control-label" %>
+              <div class="input-group">
+                <%= number_input f, :broker_agency_comp, class: "form-control" %>
+                <div class="input-group-addon">
+                  &#37;
+                </div>
+              </div>
+              <%= error_tag f, :broker_agency_comp %>
+            </div>
+          </div>
+
+          <!-- 168 -->
+          <div class="form-group<%= if f.errors[:listing_broker_comp_rental], do: " has-error" %>">
+            <%= label f, :listing_broker_comp_rental, class: "control-label" %>
+            <%= text_input f, :listing_broker_comp_rental, class: "form-control" %>
+            <%= error_tag f, :listing_broker_comp_rental %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 169 -->
+            <div class="col-xs-6<%= if f.errors[:buyer_exclusions], do: " has-error" %>">
+              <%= checkbox f, :buyer_exclusions, class: "checkbox" %>
+              <%= label f, :buyer_exclusions, "Buyer exclusions?", class: "control-label" %>
+              <%= error_tag f, :buyer_exclusions %>
+            </div>
+
+            <!-- 170 -->
+            <div class="col-xs-6<%= if f.errors[:negotiate_direct], do: " has-error" %>">
+              <%= checkbox f, :negotiate_direct, class: "checkbox" %>
+              <%= label f, :negotiate_direct, "Negotiate direct?", class: "control-label" %>
+              <%= error_tag f, :negotiate_direct %>
+            </div>
+          </div>
+
+          <!-- 171 -->
+          <div class="form-group<%= if f.errors[:offers_presentable], do: " has-error" %>">
+            <%= checkbox f, :offers_presentable, class: "checkbox" %>
+            <%= label f, :offers_presentable, "Offers presentable?", class: "control-label" %>
+            <%= error_tag f, :offers_presentable %>
+          </div>
+
+          <!-- 172 -->
+          <div class="form-group<%= if f.errors[:occupancy], do: " has-error" %>">
+            <%= label f, :occupancy, class: "control-label" %>
+            <%= text_input f, :occupancy, class: "form-control" %>
+            <%= error_tag f, :occupancy %>
+          </div>
+
+          <!-- 173 -->
+          <div class="form-group<%= if f.errors[:show_instr], do: " has-error" %>">
+            <%= label f, :show_instr, "Showing instructions", class: "control-label" %>
+            <%= text_input f, :show_instr, class: "form-control" %>
+            <%= error_tag f, :show_instr %>
+          </div>
+
+          <!-- 174 -->
+          <div class="form-group<%= if f.errors[:lockbox], do: " has-error" %>">
+            <%= checkbox f, :lockbox, class: "checkbox" %>
+            <%= label f, :lockbox, "Lockbox?", class: "control-label" %>
+            <%= error_tag f, :lockbox %>
+          </div>
+
+          <!-- 175 -->
+          <div class="form-group<%= if f.errors[:owner_financing], do: " has-error" %>">
+            <%= checkbox f, :owner_financing, class: "checkbox" %>
+            <%= label f, :owner_financing, "Owner-financed?", class: "control-label" %>
+            <%= error_tag f, :owner_financing %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Remarks/Misc</h3>
+        </div>
+        <div class="box-body">
+          <!-- 176 -->
+          <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
+            <%= label f, :remarks, class: "control-label" %><i>&nbsp;&nbsp;(for other realtors)</i>
+            <%= textarea f, :remarks, class: "form-control" %>
+            <%= error_tag f, :remarks %>
+          </div>
+
+          <!-- 177 -->
+          <div class="form-group<%= if f.errors[:directions], do: " has-error" %>">
+            <%= label f, :directions, class: "control-label" %>
+            <%= textarea f, :directions, class: "form-control" %>
+            <%= error_tag f, :directions %>
+          </div>
+
+          <!-- 178 -->
+          <div class="form-group<%= if f.errors[:description], do: " has-error" %>">
+            <%= label f, :description, class: "control-label" %>
+            <%= textarea f, :description, class: "form-control" %>
+            <%= error_tag f, :description %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 179 -->
+            <div class="col-xs-6<%= if f.errors[:rental_income_usd], do: " has-error" %>">
+              <%= label f, :rental_income_usd, "Rental income", class: "control-label" %>
+              <div class="input-group">
+                <div class="input-group-addon">
+                  $
+                </div>
+                <%= number_input f, :rental_income_usd, class: "form-control" %>
+              </div>
+              <%= error_tag f, :rental_income_usd %>
+            </div>
+
+            <!-- 180 -->
+            <div class="col-xs-6<%= if f.errors[:also_for_rent], do: " has-error" %>">
+              <%= checkbox f, :also_for_rent, class: "checkbox" %>
+              <%= label f, :also_for_rent, "Also for rent?", class: "control-label" %>
+              <%= error_tag f, :also_for_rent %>
+            </div>
+          </div>
+
+          <!-- 181 -->
+          <div class="form-group<%= if f.errors[:rental_price_usd], do: " has-error" %>">
+            <%= label f, :rental_price_usd, "Rental price", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :rental_price_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :rental_price_usd %>
+          </div>
+
+        <!-- 182 -->
+          <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
+            <%= label f, :personal_prop_exclusions, "Personal property exclusions", class: "control-label" %>
+            <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
+            <%= error_tag f, :personal_prop_exclusions %>
+          </div>
+
+          <!-- 183 -->
+          <div class="form-group<%= if f.errors[:mls_source_id], do: " has-error" %>">
+            <%= label f, :mls_source_id, "MLS source ID", class: "control-label" %><i>&nbsp;&nbsp;(not mandatory; just informational)</i>
+            <%= number_input f, :mls_source_id, class: "form-control" %>
+            <%= error_tag f, :mls_source_id %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 184 -->
+            <div class="col-xs-6<%= if f.errors[:reo], do: " has-error" %>">
+              <%= checkbox f, :reo, class: "checkbox" %>
+              <%= label f, :reo, "REO?", class: "control-label" %>
+              <%= error_tag f, :reo %>
+            </div>
+
+            <!-- 185 -->
+            <div class="col-xs-6<%= if f.errors[:short_sale], do: " has-error" %>">
+              <%= checkbox f, :short_sale, class: "checkbox" %>
+              <%= label f, :short_sale, "Short sale?", class: "control-label" %>
+              <%= error_tag f, :short_sale %>
+            </div>
+          </div>
+
+          <!-- 186 -->
+          <% if f.data.ext_urls do %>
+            <%= for {url, idx} <- Enum.with_index(Enum.filter(f.data.ext_urls, &(&1!="")), 1) do %>
+              <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
+                <%= label f, :ext_urls, "External URL #{idx}", class: "control-label" %>
+                <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: url, class: "form-control" %>
+                <%= error_tag f, :ext_urls %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <div class="form-group">
+            <%= label f, :ext_urls, "Add an external URL", class: "control-label" %><i>&nbsp;&nbsp;(You can add multiple URL's by saving the listing after each one)</i>
+            <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: "", class: "form-control" %>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-warning">
+        <div class="box-header">
+          <h3 class="box-title">Open House</h3>
+        </div>
+        <div class="box-body">
+          <div><i>Note: All of the following times are in your current physically-local timezone</i></div>
+
+          <div class="row form-group">
+            <!-- 187 -->
+            <div class="col-md-6<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
+              <%= label f, :next_broker_oh_start_at, "Next broker open-house starts on/at:", class: "control-label" %>
+              <div class="input-group datetime">
+                <label class="input-group-addon" for="next_broker_oh_start_at">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
+                <label class="input-group-addon" for="next_broker_oh_start_at">
+                  <span class="fa fa-clock-o"></span>
+                </label>
+              </div>
+              <%= error_tag f, :next_broker_oh_start_at %>
+            </div>
+            <!-- 188 -->
+            <div class="col-md-6<%= if f.errors[:next_broker_oh_end_at], do: " has-error" %>">
+              <%= label f, :next_broker_oh_end_at, "Next broker open-house ends on/at:", class: "control-label" %>
+              <div class="input-group datetime">
+                <label class="input-group-addon" for="next_broker_oh_end_at">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :next_broker_oh_end_at, class: "form-control", id: "next_broker_oh_end_at" %>
+                <label class="input-group-addon" for="next_broker_oh_end_at">
+                  <span class="fa fa-clock-o"></span>
+                </label>
+              </div>
+              <%= error_tag f, :next_broker_oh_end_at %>
+            </div>
+          </div>
+
+          <!-- 189 -->
+          <div class="form-group<%= if f.errors[:next_broker_oh_note], do: " has-error" %>">
+            <%= label f, :next_broker_oh_note, "Broker open-house notes", class: "control-label" %>
+            <%= textarea f, :next_broker_oh_note, class: "form-control" %>
+            <%= error_tag f, :next_broker_oh_note %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 190 -->
+            <div class="col-md-6<%= if f.errors[:next_cust_oh_start_at], do: " has-error" %>">
+              <%= label f, :next_cust_oh_start_at, "Next customer open-house starts on/at:", class: "control-label" %>
+              <div class="input-group datetime">
+                <label class="input-group-addon" for="next_cust_oh_start_at">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :next_cust_oh_start_at, class: "form-control", id: "next_cust_oh_start_at" %>
+                <label class="input-group-addon" for="next_cust_oh_start_at">
+                  <span class="fa fa-clock-o"></span>
+                </label>
+              </div>
+              <%= error_tag f, :next_cust_oh_start_at %>
+            </div>
+            <!-- 191 -->
+            <div class="col-md-6<%= if f.errors[:next_cust_oh_end_at], do: " has-error" %>">
+              <%= label f, :next_cust_oh_end_at, "Next customer open-house ends on/at:", class: "control-label" %>
+              <div class="input-group datetime">
+                <label class="input-group-addon" for="next_cust_oh_end_at">
+                  <span class="fa fa-calendar"></span>
+                </label>
+                <%= text_input f, :next_cust_oh_end_at, class: "form-control", id: "next_cust_oh_end_at" %>
+                <label class="input-group-addon" for="next_cust_oh_end_at">
+                  <span class="fa fa-clock-o"></span>
+                </label>
+              </div>
+              <%= error_tag f, :next_cust_oh_end_at %>
+            </div>
+          </div>
+
+          <!-- 192 -->
+          <div class="form-group<%= if f.errors[:next_cust_oh_note], do: " has-error" %>">
+            <%= label f, :next_cust_oh_note, "Customer open-house notes", class: "control-label" %>
+            <%= textarea f, :next_cust_oh_note, class: "form-control" %>
+            <%= error_tag f, :next_cust_oh_note %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group">
+      <%= submit "Save", class: "btn btn-primary", style: "width: 100px" %>
+    </div>
+    <%= if @existing do %>
+      <div><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></div>
+    <% end %>
+  </div>
+</div>
 <% end %>
 <br />
