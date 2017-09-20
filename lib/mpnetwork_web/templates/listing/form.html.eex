@@ -456,16 +456,16 @@
           </div>
           <div class="row form-group">
             <!-- 42 -->
-            <div class="col-xs-8<%= if f.errors[:style_type], do: " has-error" %>">
+            <div class="col-xs-5<%= if f.errors[:style_type], do: " has-error" %>">
               <%= label f, :style_type, "Style", class: "control-label" %>:&nbsp;
               <%= select f, :style_type, Mpnetwork.EnumMaps.style_type_select_opts, class: "fancy", style: "min-width:200px" %>
               <%= error_tag f, :style_type %>
             </div>
 
             <!-- 43 -->
-            <div class="col-xs-3<%= if f.errors[:stories], do: " has-error" %>">
-              <%= label f, :stories, class: "control-label" %>
-              <%= number_input f, :stories, class: "form-control" %>
+            <div class="col-xs-5<%= if f.errors[:stories], do: " has-error" %>">
+              <%= label f, :stories, class: "control-label" %>:&nbsp;
+              <%= number_input f, :stories, class: "form-control", style: "display:inline;width:100px" %>
               <%= error_tag f, :stories %>
             </div>
           </div>
