@@ -15,8 +15,8 @@ defmodule Mpnetwork.EnumMaps do
   def map_class_type_ext_to_int(k) when is_binary(k), do: @class_types_ext_to_int_map[k]
 
   # Listing Status Types
-  @listing_status_types_ext ["For Sale", "Under Contract", "Closed", "Price Change", "Withdrawn", "Sold", "Temporarily Off Market"]
-  @listing_status_types_int ~w[FS UC CL PC WR SL TOM]a
+  @listing_status_types_ext ["New", "For Sale", "Extended", "Under Contract", "Closed (Sold)", "Price Change", "Withdrawn", "Temporarily Off Market"]
+  @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM]a
   def listing_status_types_int, do: @listing_status_types_int
   @listing_status_type_opts Enum.zip([" " | @listing_status_types_ext], [nil | @listing_status_types_int])
   def listing_status_type_select_opts, do: @listing_status_type_opts
@@ -243,7 +243,7 @@ defmodule Mpnetwork.EnumMaps do
 
   # Attachment Types
   @att_types_ext ["Single-family detached", "Attached", "Semi"]
-  @att_types_int ~w[ det att semi ]
+  @att_types_int ~w[ det att semi ]a
   def att_types_int, do: @att_types_int
   @att_type_opts Enum.zip([" " | @att_types_ext], [nil | @att_types_int])
   def att_type_select_opts, do: @att_type_opts

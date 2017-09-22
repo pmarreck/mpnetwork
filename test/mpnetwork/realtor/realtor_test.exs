@@ -112,7 +112,7 @@ defmodule Mpnetwork.RealtorTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Realtor.create_listing()
-      listing
+      listing |> Repo.preload([:broker, :user])
     end
 
     test "list_listings/2 returns all listings" do

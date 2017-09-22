@@ -1,10 +1,12 @@
 <div><br /></div>
+<%= render("_jumpto.html", existing: @existing) %>
 <%= if @existing do %>
   <section class="content">
     <div class="row">
       <div class="col-md-12">
         <div class="box box-info">
           <div class="box-header">
+            <a name="attachments"></a>
             <h3 class="box-title">Attachments/Photos</h3>
           </div>
           <div class="box-body">
@@ -37,6 +39,7 @@
     <div class="col-md-6">
       <div class="box box-primary">
         <div class="box-header">
+          <a name="basics"></a>
           <h3 class="box-title">Basics</h3>
         </div>
         <div class="box-body">
@@ -44,7 +47,7 @@
           <div class="form-group<%= if f.errors[:draft], do: " has-error" %>">
             <%= checkbox f, :draft, class: "checkbox" %>
             <%= label f, :draft, "Draft?", class: "control-label" %>
-            <i>Work-in-progress that only you can see.</i>
+            <i>Work-in-progress that only you can see. Uncheck and save to publish/make public.</i>
             <%= error_tag f, :draft %>
           </div>
 
@@ -96,6 +99,7 @@
     <div class="col-md-6">
       <div class="box box-info">
         <div class="box-header">
+          <a name="location"></a>
           <h3 class="box-title">Location</h3>
         </div>
         <div class="box-body">
@@ -311,6 +315,7 @@
     <div class="col-md-6">
       <div class="box box-success">
         <div class="box-header">
+          <a name="price-dates"></a>
           <h3 class="box-title">Price/Dates</h3>
         </div>
         <div class="box-body">
@@ -443,6 +448,7 @@
     <div class="col-md-6">
       <div class="box box-primary">
         <div class="box-header">
+          <a name="characteristics"></a>
           <h3 class="box-title">Characteristics</h3>
         </div>
         <div class="box-body">
@@ -458,7 +464,7 @@
             <!-- 42 -->
             <div class="col-xs-5<%= if f.errors[:style_type], do: " has-error" %>">
               <%= label f, :style_type, "Style", class: "control-label" %>:&nbsp;
-              <%= select f, :style_type, Mpnetwork.EnumMaps.style_type_select_opts, class: "fancy", style: "min-width:200px" %>
+              <%= select f, :style_type, Mpnetwork.EnumMaps.style_type_select_opts, class: "fancy", style: "min-width:145px" %>
               <%= error_tag f, :style_type %>
             </div>
 
@@ -756,6 +762,7 @@
     <div class="col-md-6">
       <div class="box box-warning">
         <div class="box-header">
+          <a name="exterior"></a>
           <h3 class="box-title">Exterior/Appliances/Utilities</h3>
         </div>
         <div class="box-body">
@@ -980,14 +987,14 @@
             </div>
 
             <!-- 104 -->
-            <div class="col-xs-5<%= if f.errors[:heating_type], do: " has-error" %>">
+            <div class="col-xs-4<%= if f.errors[:heating_type], do: " has-error" %>">
               <%= label f, :heating_type, class: "control-label" %>:&nbsp;
-              <%= select f, :heating_type, Mpnetwork.EnumMaps.heating_type_select_opts, class: "fancy", style: "min-width:150px" %>
+              <%= select f, :heating_type, Mpnetwork.EnumMaps.heating_type_select_opts, class: "fancy", style: "min-width:130px" %>
               <%= error_tag f, :heating_type %>
             </div>
 
             <!-- 106 -->
-            <div class="col-xs-3<%= if f.errors[:central_air], do: " has-error" %>">
+            <div class="col-xs-4<%= if f.errors[:central_air], do: " has-error" %>">
               <%= checkbox f, :central_air, class: "checkbox" %>
               <%= label f, :central_air, "Central air?", class: "control-label" %>
               <%= error_tag f, :central_air %>
@@ -1059,6 +1066,7 @@
     <div class="col-md-6">
       <div class="box box-success">
         <div class="box-header">
+          <a name="green"></a>
           <h3 class="box-title">Green/Energy-Efficient Features</h3>
         </div>
         <div class="box-body">
@@ -1345,8 +1353,8 @@
           <div class="row form-group">
             <!-- 149 -->
             <div class="col-xs-6<%= if f.errors[:green_cert_type], do: " has-error" %>">
-              <%= label f, :green_cert_type, "Green cert. type", class: "control-label" %>
-              <%= select f, :green_cert_type, Mpnetwork.EnumMaps.green_cert_type_select_opts, class: "fancy" %>
+              <%= label f, :green_cert_type, "Green cert. type", class: "control-label", style: "display:block" %>
+              <%= select f, :green_cert_type, Mpnetwork.EnumMaps.green_cert_type_select_opts, class: "fancy", style: "min-width:175px" %>
               <%= error_tag f, :green_cert_type %>
             </div>
 
@@ -1364,6 +1372,7 @@
     <div class="col-md-6">
       <div class="box box-info">
         <div class="box-header">
+          <a name="owner"></a>
           <h3 class="box-title">Owner/Broker</h3>
         </div>
         <div class="box-body">
@@ -1553,12 +1562,13 @@
     <div class="col-md-6">
       <div class="box box-primary">
         <div class="box-header">
+          <a name="misc"></a>
           <h3 class="box-title">Remarks/Misc</h3>
         </div>
         <div class="box-body">
           <!-- 176 -->
           <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
-            <%= label f, :remarks, class: "control-label" %><i>&nbsp;&nbsp;(for other realtors)</i>
+            <%= label f, :remarks, class: "control-label" %><i>&nbsp;&nbsp;(for other realtors... This also appears in the Round Robin Report)</i>
             <%= textarea f, :remarks, class: "form-control" %>
             <%= error_tag f, :remarks %>
           </div>
@@ -1663,6 +1673,7 @@
     <div class="col-md-6">
       <div class="box box-warning">
         <div class="box-header">
+          <a name="openhouse"></a>
           <h3 class="box-title">Open House</h3>
         </div>
         <div class="box-body">
@@ -1749,6 +1760,8 @@
     </div>
   </div>
 </section>
+
+<%= render("_jumpto.html", existing: @existing) %>
 
 <div class="row">
   <div class="col-md-12">

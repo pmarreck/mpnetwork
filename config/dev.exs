@@ -36,9 +36,9 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/mpnetwork/web/.*(ex)$},
-      ~r{lib/mpnetwork/web/views/.*(ex)$},
-      ~r{lib/mpnetwork/web/templates/.*(eex)$}
+      ~r{lib/mpnetwork_web/.*(ex)$},
+      ~r{lib/mpnetwork_web/views/.*(ex)$},
+      ~r{lib/mpnetwork_web/templates/.*(eex)$}
     ]
   ]
 

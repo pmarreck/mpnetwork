@@ -13,7 +13,14 @@ defmodule MpnetworkWeb.ListingController do
   def index(conn, _params) do
     listings = Realtor.list_latest_listings(nil, 30)
     primaries = Listing.primary_images_for_listings(listings)
-    render(conn, "index.html", listings: listings, primaries: primaries)
+    draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
+    draft_primaries = Listing.primary_images_for_listings(draft_listings)
+    render(conn, "index.html",
+      listings: listings,
+      primaries: primaries,
+      draft_listings: draft_listings,
+      draft_primaries: draft_primaries
+    )
   end
 
   def new(conn, _params) do

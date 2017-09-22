@@ -46,7 +46,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
 
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, listing_path(conn, :index)
-    assert html_response(conn, 200) =~ ~r/Latest [0-9]+ listings/
+    assert html_response(conn, 200) =~ ~r/Latest [0-9]+/
   end
 
   test "renders form for new listings", %{conn: conn} do

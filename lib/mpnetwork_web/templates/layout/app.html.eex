@@ -112,7 +112,7 @@
                   </span>
               </a>
               <ul class="treeview-menu">
-                <li><%= link "Browse", to: listing_path(@conn, :index) %></li>
+                <li><%= link "Round Robin Report", to: listing_path(@conn, :index) %></li>
                 <li><%= link "Add", to: listing_path(@conn, :new) %></li>
               </ul>
             </li>

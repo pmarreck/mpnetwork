@@ -1,5 +1,5 @@
 <%#= render("_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{title: "Broadcasts", breadcrumb_path: ~w[ Broadcasts Latest ]})) %>
 <%= render(MpnetworkWeb.BroadcastView, "_latest_n.html", conn: @conn, broadcasts: @broadcasts, current_user: @current_user) %>
 <div style="border-top: 1px solid #ccc;">
-<%= render(MpnetworkWeb.ListingView, "_latest_n.html", conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
+<%= render(MpnetworkWeb.ListingView, "_latest_n.html", draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
 </div>
