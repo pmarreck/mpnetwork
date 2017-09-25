@@ -1,6 +1,6 @@
 script:
-  - mix test
-  - git remote add gigalixir https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
+  - mix test &&
+  - git remote add gigalixir https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git &&
   - git push gigalixir HEAD:master
 language: elixir
 elixir: 1.5.1
