@@ -3,7 +3,7 @@ script:
   - mix test && git push gigalixir HEAD:master
 language: elixir
 elixir: 1.5.1
-otp_release: 20.0
+otp_release: 20.1
 services:
   - postgresql
 before_script:

@@ -75,4 +75,5 @@ defmodule MpnetworkWeb.Coherence.Messages do
     do: dgettext(@domain, "You are using an invalid security token for this site! This security\n" <>
       "violation has been logged.\n")
   def mailer_required, do: dgettext(@domain, "Mailer configuration required!")
+  def account_is_inactive, do: dgettext(@domain, "Your account is inactive.")
 end
