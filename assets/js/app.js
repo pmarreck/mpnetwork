@@ -27,13 +27,13 @@ import moment from "moment"
 
 import moment_timezone from "moment-timezone"
 
-import "admin-lte/plugins/datepicker/bootstrap-datepicker"
+import "admin-lte/plugins/datepicker/bootstrap-datepicker.js"
 
 import daterangepicker from "bootstrap-daterangepicker"
 
-import "admin-lte/plugins/input-mask/jquery.inputmask"
+import "admin-lte/plugins/input-mask/jquery.inputmask.js"
 
-import "admin-lte/plugins/select2/select2.full.min"
+import "admin-lte/plugins/select2/select2.full.min.js"
 
 import "admin-lte"
 
