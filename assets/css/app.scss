@@ -1,14 +1,9 @@
-@import 'node_modules/admin-lte/bootstrap/css/bootstrap.min.css';
-
-@import 'node_modules/admin-lte/dist/css/AdminLTE.min.css';
-
-@import 'node_modules/admin-lte/dist/css/skins/_all-skins.min.css';
-
-@import 'node_modules/admin-lte/plugins/select2/select2.css';
-
-@import 'node_modules/admin-lte/plugins/datepicker/datepicker3.css';
-
-@import 'node_modules/admin-lte/plugins/daterangepicker/daterangepicker.css';
+@import 'node_modules/admin-lte/bootstrap/css/bootstrap.min';
+@import 'node_modules/admin-lte/dist/css/AdminLTE.min';
+@import 'node_modules/admin-lte/dist/css/skins/_all-skins.min';
+@import 'node_modules/admin-lte/plugins/select2/select2';
+@import 'node_modules/admin-lte/plugins/datepicker/datepicker3';
+@import 'node_modules/admin-lte/plugins/daterangepicker/daterangepicker';
 
 // .fancy {
 //   width: 100%
