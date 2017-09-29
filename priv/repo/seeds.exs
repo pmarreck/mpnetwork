@@ -10,13 +10,13 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-case Mix.env do
-  :prod ->
-    raise "Cannot re-seed the production database!"
-  _     ->
-    Mpnetwork.Repo.delete_all Mpnetwork.User
-
-    Mpnetwork.User.changeset(%Mpnetwork.User{}, %{username: "testuser", email: "testuser@example.com", office_id: 1, role_id: 1, password: "secret", password_confirmation: "secret"})
-    |> Mpnetwork.Repo.insert!
-    |> Coherence.ControllerHelpers.confirm!
+if (Mix.env == :prod) && (System.argv != ["confirm"]) do
+  raise "Cannot re-seed the production database unless you pass in the argument 'confirm' via '-- confirm'!"
+else
+  Mpnetwork.Repo.delete_all Mpnetwork.Realtor.Office
+  Mpnetwork.Repo.delete_all Mpnetwork.User
+  oid = Mpnetwork.Realtor.Office.changeset(%Mpnetwork.Realtor.Office{}, %{name: "Coach Realtors", address: "321 Plandome Rd.", city: "Manhasset", state: "NY", zip: "11030", phone: "(516) 627-0120"}) |> Mpnetwork.Repo.insert!
+  pw = "OdsPYMk8SY3CYBKADb1k0NKfwj6bW73tQQ"
+  user = Mpnetwork.User.changeset(%Mpnetwork.User{}, %{name: "Admin", username: "admin", email: "admin@mpwrealestateboard.network", office_id: oid.id, role_id: 1, password: pw, password_confirmation: pw}) |> Mpnetwork.Repo.insert!
+  {:ok, user} = Coherence.Controller.confirm!(user)
 end
