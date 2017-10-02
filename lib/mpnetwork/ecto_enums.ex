@@ -17,7 +17,10 @@ defmodule Mpnetwork.EnumMaps do
   # Listing Status Types
   @listing_status_types_ext ["New", "For Sale", "Extended", "Under Contract", "Closed (Sold)", "Price Change", "Withdrawn", "Temporarily Off Market"]
   @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM]a
+  @listing_status_types_int_bin Enum.map(@listing_status_types_int, fn atom -> Atom.to_string(atom) end)
   def listing_status_types_int, do: @listing_status_types_int
+  def listing_status_types_int_bin, do: @listing_status_types_int_bin
+
   @listing_status_type_opts Enum.zip([" " | @listing_status_types_ext], [nil | @listing_status_types_int])
   def listing_status_type_select_opts, do: @listing_status_type_opts
   # perhaps instead attribute "New" if listing is under a month old?

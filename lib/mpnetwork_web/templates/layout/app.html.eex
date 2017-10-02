@@ -79,11 +79,23 @@
           </div>
 
           <!-- search form (Optional) -->
-          <form action="#" method="get" class="sidebar-form">
+          <form action="<%= listing_path(@conn, :index) %>" method="get" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" class="form-control" placeholder="Search... (coming soon!)">
+              <input type="text" name="q" class="form-control" value="<%= @conn.params["q"] %>" placeholder="Search..." title="<%=
+                """
+                Example search queries (omitting quotes):
+                -----------------------------------------
+                by id number: "5"
+                by address fragment: "55 plandome" (case-insensitive)
+                by price range: "500,000-1000000"
+                listings owned by you: "my" or "mine" (case-insensitive)
+                by listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM) (case-sensitive! all-caps!)
+                Results are sorted by most recently updated first.
+                You cannot (yet) search by multiple attributes.
+                """
+               %>">
               <span class="input-group-btn">
-                  <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                  <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                   </button>
                 </span>
             </div>

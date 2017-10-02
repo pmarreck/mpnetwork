@@ -79,6 +79,7 @@ defmodule MpnetworkWeb.Router do
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController, except: [:show]
+    get "/search", ListingController, :search, as: :search
   end
 
   scope "/", MpnetworkWeb do

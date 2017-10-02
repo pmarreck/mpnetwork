@@ -4,10 +4,9 @@ defmodule Mpnetwork.Realtor do
   """
 
   import Ecto.Query, warn: false
-  alias Mpnetwork.Repo
 
   alias Mpnetwork.Realtor.{Broadcast, Listing, Office}
-  alias Mpnetwork.User
+  alias Mpnetwork.{Repo, User, EnumMaps}
 
   @doc """
   Creates a user.
@@ -172,7 +171,6 @@ defmodule Mpnetwork.Realtor do
       [%Listing{}, ...]
 
   """
-
   def list_listings(realtor, limit \\ 30) do
     list_latest_listings(realtor, limit)
   end
@@ -208,6 +206,63 @@ defmodule Mpnetwork.Realtor do
 
   def list_latest_draft_listings(current_user) when current_user != nil do
     Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 30) |> Repo.preload([:broker, :user])
+  end
+
+  @doc """
+  Queries listings.
+  """
+  def query_listings(query, current_user) do
+    id = _try_integer(query)
+    lst = _try_listing_status_type(query)
+    my  = _try_mine(query)
+    pricerange = _try_pricerange(query)
+    cond do
+      query == ""              -> Repo.all(Listing) |> Repo.preload([:broker, :user])
+      id                       -> [get_listing!(id)] |> Repo.preload([:broker, :user])
+      lst                      -> Repo.all(from l in Listing, where: l.listing_status_type == ^lst, order_by: [desc: l.updated_at], limit: 30) |> Repo.preload([:broker, :user])
+      my                       -> Repo.all(from l in Listing, where: l.user_id == ^(current_user.id), order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
+      pricerange               -> {start, finish} = pricerange; Repo.all(from l in Listing, where: l.price_usd >= ^start and l.price_usd <= ^finish, order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
+      true                     -> _search_all_fields(query)
+    end
+  end
+
+  defp _try_integer(maybe_num) when is_binary(maybe_num) do
+    _try_int_result(Integer.parse(maybe_num))
+  end
+  defp _try_int_result({num, ""}) do
+    num
+  end
+  defp _try_int_result(_) do
+    nil
+  end
+
+  defp _try_listing_status_type(maybe_lst) when is_binary(maybe_lst) do
+    cond do
+      Enum.member?(EnumMaps.listing_status_types_int_bin, maybe_lst) -> maybe_lst
+      true -> nil
+    end
+  end
+
+  defp _try_mine(maybe_my) when is_binary(maybe_my) do
+    Enum.member?(["my", "mine"], String.downcase(maybe_my))
+  end
+
+  @pricerange_regex ~r/^\$?([0-9,_ ]+)-\$?([0-9,_ ]+)$/
+  defp _try_pricerange(maybe_pr) when is_binary(maybe_pr) do
+    case Regex.run(@pricerange_regex, maybe_pr) do
+      [_, start, finish] -> {_filter_nonnumeric(start), _filter_nonnumeric(finish)}
+      _ -> nil
+    end
+  end
+
+  defp _filter_nonnumeric(num) when is_binary(num) do
+    {num, _} = Integer.parse(Regex.replace(~r/[^0-9]+/, num, ""))
+    num
+  end
+
+  defp _search_all_fields(q) do
+    Repo.all(from l in Listing, where: ilike(l.address, ^("%#{q}%")), order_by: [desc: l.updated_at], limit: 30 )
+    |> Repo.preload([:broker, :user])
   end
 
   @doc """
