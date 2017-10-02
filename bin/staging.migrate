@@ -2,4 +2,4 @@
 # The sleep is due to the SSH keys needing time to be copied over to the new container
 # so the migration (which goes over SSH) can connect
 sleep 2
-gigalixir migrate mpnetwork
+gigalixir migrate mpnetwork-staging

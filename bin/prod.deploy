@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mix phx.digest && git push gigalixir master && prod.migrate
+mix phx.digest && git push production master && prod.migrate
