@@ -37,6 +37,7 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"B8ZQgmmb&FehGImXOA;tF>AQ<DKkTSt.7eB}[F|[90{PMR9evUweg%tU!!OI[s~s"
+  set pre_start_hook: "rel/commands/migrate.sh"
 end
 
 # You may define one or more releases in this file.
@@ -46,6 +47,9 @@ end
 
 release :mpnetwork do
   set version: current_version(:mpnetwork)
+  set commands: [
+    "migrate": "rel/commands/migrate.sh"
+  ]
   set applications: [
     :runtime_tools
   ]
