@@ -49,7 +49,7 @@ defmodule Mpnetwork.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.1"},
       {:number, "~> 0.5"},
-      {:timber, "~> 2.5"},
+      {:timber, "~> 2.6"},
       {:ex_image_info, "~> 0.1.1"},
       {:eliver, "~> 2.0"}, # provides `mix eliver.bump` for hot prod upgrades
       {:cachex, "~> 2.1"},
