@@ -4,8 +4,9 @@ defmodule Mpnetwork.Coherence.Invitation do
   """
   use Ecto.Schema
   import Ecto.Changeset
+  alias Mpnetwork.User
 
-  
+
 
   schema "invitations" do
     field :name, :string
@@ -27,7 +28,7 @@ defmodule Mpnetwork.Coherence.Invitation do
     |> cast(params, ~w(name email token))
     |> validate_required([:name, :email])
     |> unique_constraint(:email)
-    |> validate_format(:email, ~r/@/)
+    |> validate_format(:email, User.email_regex)
   end
 
   @doc """

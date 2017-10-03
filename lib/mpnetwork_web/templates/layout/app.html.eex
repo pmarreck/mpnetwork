@@ -90,8 +90,10 @@
                 by price range: "500,000-1000000"
                 listings owned by you: "my" or "mine" (case-insensitive)
                 by listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM) (case-sensitive! all-caps!)
+                Or by any text in the following fields: address, description, remarks, association, neighborhood, schools, zoning, district, construction, appearance, cross street, owner name.
                 Results are sorted by most recently updated first.
                 You cannot (yet) search by multiple attributes.
+                I will be adding more power to the search feature as time goes on and based on user feedback.
                 """
                %>">
               <span class="input-group-btn">

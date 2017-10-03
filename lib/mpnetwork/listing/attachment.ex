@@ -2,11 +2,12 @@ defmodule Mpnetwork.Listing.Attachment do
   use Ecto.Schema
   import Ecto.Changeset
   alias Mpnetwork.Listing.Attachment
+  alias Mpnetwork.Realtor.Listing
 
 
   schema "listing_attachments" do
     # field :listing_id, :id
-    belongs_to :listing, Mpnetwork.Listing
+    belongs_to :listing, Listing
     field :content_type, :string
     field :is_image, :boolean, default: false
     field :width_pixels, :integer

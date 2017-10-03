@@ -7,13 +7,13 @@ defmodule Mpnetwork.Coherence.Rememberable do
 
   alias Coherence.Config
 
-  
+
 
   schema "rememberables" do
     field :series_hash, :string
     field :token_hash, :string
     field :token_created_at, Timex.Ecto.DateTime
-    belongs_to :user, Module.concat(Config.module, Config.user_schema)
+    belongs_to :user, Config.user_schema
 
     timestamps()
   end

@@ -61,6 +61,7 @@ defmodule Mpnetwork.Mixfile do
       {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
       {:briefly, "~> 0.3"}, # for easily working with tempfiles
       {:ex_crypto, "~> 0.4", override: true},
+      {:ecto, "~> 2.2.6", override: true},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
     ]

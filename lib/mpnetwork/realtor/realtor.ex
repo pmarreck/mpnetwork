@@ -222,7 +222,7 @@ defmodule Mpnetwork.Realtor do
       lst                      -> Repo.all(from l in Listing, where: l.listing_status_type == ^lst, order_by: [desc: l.updated_at], limit: 30) |> Repo.preload([:broker, :user])
       my                       -> Repo.all(from l in Listing, where: l.user_id == ^(current_user.id), order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
       pricerange               -> {start, finish} = pricerange; Repo.all(from l in Listing, where: l.price_usd >= ^start and l.price_usd <= ^finish, order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
-      true                     -> _search_all_fields(query)
+      true                     -> _search_all_fields_using_postgres_fulltext_search(query)
     end
   end
 
@@ -260,10 +260,34 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
-  defp _search_all_fields(q) do
-    Repo.all(from l in Listing, where: ilike(l.address, ^("%#{q}%")), order_by: [desc: l.updated_at], limit: 30 )
-    |> Repo.preload([:broker, :user])
+  defp _search_all_fields_using_postgres_fulltext_search(q) do
+    Repo.all(
+      from l in Listing,
+      where: fragment("search_vector @@ plainto_tsquery(?)", ^q),
+      order_by: [asc: fragment("ts_rank_cd(search_vector, plainto_tsquery(?), 32)", ^q), desc: l.updated_at],
+      limit: 30
+    ) |> Repo.preload([:broker, :user])
   end
+
+  # defp _search_all_fields(q) do
+  #   q = String.downcase(q) # index is on the lower(fieldname) of all fields
+  #   like_query = "%#{q}%"
+  #   Repo.all(from l in Listing, where:
+  #        like(fragment("lower(?)", l.address), ^like_query)
+  #     or like(fragment("lower(?)", l.description), ^like_query)
+  #     or like(fragment("lower(?)", l.remarks), ^like_query)
+  #     or like(fragment("lower(?)", l.association), ^like_query)
+  #     or like(fragment("lower(?)", l.neighborhood), ^like_query)
+  #     or like(fragment("lower(?)", l.schools), ^like_query)
+  #     or like(fragment("lower(?)", l.zoning), ^like_query)
+  #     or like(fragment("lower(?)", l.district), ^like_query)
+  #     or like(fragment("lower(?)", l.construction), ^like_query)
+  #     or like(fragment("lower(?)", l.appearance), ^like_query)
+  #     or like(fragment("lower(?)", l.cross_street), ^like_query)
+  #     or like(fragment("lower(?)", l.owner_name), ^like_query),
+  #     order_by: [desc: l.updated_at], limit: 30 )
+  #   |> Repo.preload([:broker, :user])
+  # end
 
   @doc """
   Gets a single listing.

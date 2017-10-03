@@ -70,7 +70,7 @@ defmodule Mpnetwork.User do
 
   # taken from http://www.regular-expressions.info/email.html
   # Added A-Z to char classes to avoid having to use /i switch
-  defp email_regex do
+  def email_regex do
     ~r/\A(?=[A-Za-z0-9@.!#$%&'*+\/=?^_`{|}~-]{6,254}\z)
     (?=[A-Za-z0-9.!#$%&'*+\/=?^_`{|}~-]{1,64}@)
     [A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*
