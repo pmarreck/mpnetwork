@@ -85,14 +85,15 @@
                 """
                 Example search queries (omitting quotes):
                 -----------------------------------------
+                get the latest listings: just hit return with an empty search field
                 by id number: "5"
                 by address fragment: "55 plandome" (case-insensitive)
                 by price range: "500,000-1000000"
                 listings owned by you: "my" or "mine" (case-insensitive)
-                by listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM) (case-sensitive! all-caps!)
-                Or by any text in the following fields: address, description, remarks, association, neighborhood, schools, zoning, district, construction, appearance, cross street, owner name.
-                Results are sorted by most recently updated first.
-                You cannot (yet) search by multiple attributes.
+                by listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM)
+                Or by any text in the following fields: address, description, remarks, association, neighborhood, schools, zoning, district, construction, appearance, cross street, owner name, most of the true/false values (just search by their name such as "waterfront"), housing class, housing style, and a few other fields.
+                Results are sorted by most recently updated first (mostly... direct address searches get priority).
+                You can search by multiple attributes (it filters on all of them), so "rent waterfront" will find rentals on the waterfront.
                 I will be adding more power to the search feature as time goes on and based on user feedback.
                 """
                %>">

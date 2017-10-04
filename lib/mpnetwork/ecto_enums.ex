@@ -6,6 +6,7 @@ defmodule Mpnetwork.EnumMaps do
   def class_types_int, do: @class_types_int
   @class_type_opts Enum.zip([" " | @class_types_ext], [nil | @class_types_int])
   def class_type_select_opts, do: @class_type_opts
+  def class_types, do: Enum.zip(@class_types_int, @class_types_ext)
 
   @class_types_int_to_ext_map Enum.zip(@class_types_int, @class_types_ext) |> Map.new
   @class_types_ext_to_int_map Enum.zip(@class_types_ext, @class_types_int) |> Map.new
@@ -24,6 +25,9 @@ defmodule Mpnetwork.EnumMaps do
   @listing_status_type_opts Enum.zip([" " | @listing_status_types_ext], [nil | @listing_status_types_int])
   def listing_status_type_select_opts, do: @listing_status_type_opts
   # perhaps instead attribute "New" if listing is under a month old?
+  def listing_status_types, do: Enum.zip(@listing_status_types_int, @listing_status_types_ext)
+  # fulltext search should key off the code, not the full english text IMHO
+  def listing_status_types_for_search, do: Enum.zip(@listing_status_types_int, @listing_status_types_int)
 
   @listing_status_types_int_to_ext_map Enum.zip(@listing_status_types_int, @listing_status_types_ext) |> Map.new
   @listing_status_types_ext_to_int_map Enum.zip(@listing_status_types_ext, @listing_status_types_int) |> Map.new
@@ -82,6 +86,7 @@ defmodule Mpnetwork.EnumMaps do
   def style_types_int, do: @style_types_int
   @style_type_opts Enum.zip([" " | @style_types_ext], [nil | @style_types_int])
   def style_type_select_opts, do: @style_type_opts
+  def style_types, do: Enum.zip(@style_types_int, @style_types_ext)
 
   @style_types_int_to_ext_map Enum.zip(@style_types_int, @style_types_ext) |> Map.new
   @style_types_ext_to_int_map Enum.zip(@style_types_ext, @style_types_int) |> Map.new

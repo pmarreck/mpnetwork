@@ -212,17 +212,18 @@ defmodule Mpnetwork.Realtor do
   Queries listings.
   """
   def query_listings(query, current_user) do
+    default_scope = from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: 50
     id = _try_integer(query)
     lst = _try_listing_status_type(query)
     my  = _try_mine(query)
     pricerange = _try_pricerange(query)
     cond do
-      query == ""              -> Repo.all(Listing) |> Repo.preload([:broker, :user])
+      query == ""              -> Repo.all(default_scope) |> Repo.preload([:broker, :user])
       id                       -> [get_listing!(id)] |> Repo.preload([:broker, :user])
-      lst                      -> Repo.all(from l in Listing, where: l.listing_status_type == ^lst, order_by: [desc: l.updated_at], limit: 30) |> Repo.preload([:broker, :user])
-      my                       -> Repo.all(from l in Listing, where: l.user_id == ^(current_user.id), order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
-      pricerange               -> {start, finish} = pricerange; Repo.all(from l in Listing, where: l.price_usd >= ^start and l.price_usd <= ^finish, order_by: [desc: l.updated_at], limit: 50) |> Repo.preload([:broker, :user])
-      true                     -> _search_all_fields_using_postgres_fulltext_search(query)
+      lst                      -> default_scope |> where([l], l.listing_status_type == ^lst) |> Repo.all |> Repo.preload([:broker, :user])
+      my                       -> default_scope |> where([l], l.user_id == ^current_user.id) |> Repo.all |> Repo.preload([:broker, :user])
+      pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.preload([:broker, :user])
+      true                     -> _search_all_fields_using_postgres_fulltext_search(query, default_scope)
     end
   end
 
@@ -260,13 +261,12 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
-  defp _search_all_fields_using_postgres_fulltext_search(q) do
-    Repo.all(
-      from l in Listing,
-      where: fragment("search_vector @@ plainto_tsquery(?)", ^q),
-      order_by: [asc: fragment("ts_rank_cd(search_vector, plainto_tsquery(?), 32)", ^q), desc: l.updated_at],
-      limit: 30
-    ) |> Repo.preload([:broker, :user])
+  defp _search_all_fields_using_postgres_fulltext_search(q, scope) do
+    scope
+    |> where([l], fragment("search_vector @@ plainto_tsquery(?)", ^q))
+    |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, plainto_tsquery(?), 32)", ^q), desc: l.updated_at])
+    |> Repo.all
+    |> Repo.preload([:broker, :user])
   end
 
   # defp _search_all_fields(q) do

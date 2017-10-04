@@ -1,6 +1,8 @@
 defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
   use Ecto.Migration
 
+  alias Mpnetwork.EnumMaps
+
   # The migration wherein we marry Postgres because the cost of using another fulltext
   # search engine is greater than just using Postgres' built-in (and apparently quite capable)
   # fulltext search.
@@ -8,6 +10,9 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
   # note that if you add to these later or change the ranks, you'll have to rerun a similar migration
   @fulltext_searchable_fields [
     address: "A",
+    city: "B",
+    state: "B",
+    zip: "B",
     description: "C",
     remarks: "C",
     association: "C",
@@ -18,14 +23,91 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
     construction: "C",
     appearance: "C",
     cross_street: "C",
-    owner_name: "C"
+    owner_name: "C",
   ]
+
+  @boolean_text_searchable_fields [
+    studio: "studio",
+    for_sale: "for sale",
+    for_rent: "for rent",
+    basement: "basement",
+    attached_garage: "attached garage",
+    new_construction: "new construction",
+    patio: "patio",
+    deck: "deck",
+    pool: "pool",
+    hot_tub: "hot tub",
+    porch: "porch",
+    central_air: "central air",
+    central_vac: "central vac",
+    security_system: "security system",
+    fios_available: "FIOS",
+    high_speed_internet_available: "high speed internet",
+    modern_kitchen_countertops: "modern kitchen countertops",
+    eef_led_lighting: "LED lighting",
+    tennis_ct: "tennis court",
+    mbr_first_fl: "master bedroom first floor",
+    office: "office",
+    den: "den",
+    attic: "attic",
+    finished_basement: "finished basement",
+    w_w_carpet: "wall to wall carpet",
+    wood_floors: "wood floors",
+    dock_rights: "dock rights",
+    beach_rights: "beach rights",
+    waterfront: "waterfront",
+    waterview: "waterview",
+    bulkhead: "bulkhead",
+    cul_de_sac: "cul de sac",
+    corner: "corner",
+    adult_comm: "adult community",
+    gated_comm: "gated community",
+    eat_in_kitchen: "eat-in kitchen",
+    energy_eff: "energy efficient",
+    green_certified: "green certified",
+    eef_geothermal_heating: "geothermal heating",
+    eef_solar_panels: "solar",
+    eef_windmill: "windmill",
+    ing_sprinks: "inground sprinklers",
+    short_sale: "short sale",
+    reo: "REO",
+    handicap_access: "handicapped handicap",
+    equestrian: "horse",
+    also_for_rent: "for rent",
+    buyer_exclusions: "buyer exclusions",
+    broker_agent_owned: "broker/agent broker agent owned"
+  ]
+
+  @enum_text_searchable_fields [
+    class_type: EnumMaps.class_types,
+    listing_status_type: EnumMaps.listing_status_types_for_search,
+    style_type: EnumMaps.style_types
+  ]
+
+  defp assemble_boolean_search_vector(existing_fields, boolean_fields) do
+    existing_fields ++ Enum.map(boolean_fields, fn {column, text_if_true} ->
+      "setweight(to_tsvector('pg_catalog.english', (case when new.#{column} then '#{text_if_true}' else '' end)), 'C')"
+    end)
+  end
+
+  defp assemble_enum_search_vector(existing_fields, enum_fields) do
+    new_enum_search_vectors = Enum.map(enum_fields, fn {column, int_ext_tuples} ->
+      full_case = Enum.map(int_ext_tuples, fn {int, ext} ->
+        "when new.#{column}='#{int}' then '#{ext}'"
+      end) |> Enum.join(" ")
+      "setweight(to_tsvector('pg_catalog.english', (case #{full_case} else '' end)), 'C')"
+    end)
+    existing_fields ++ new_enum_search_vectors
+  end
 
   defp assemble_search_vector(fields) do
     fields
-    |> Enum.map(fn {column, rank} ->
+    |> (Enum.map(fn {column, rank} ->
       "setweight(to_tsvector('pg_catalog.english', coalesce(new.#{column},'')), '#{rank}')"
-    end) |> Enum.join(" || ")
+    end)
+    |> assemble_boolean_search_vector(@boolean_text_searchable_fields)
+    |> assemble_enum_search_vector(@enum_text_searchable_fields))
+    |> Enum.join(" || ")
     |> String.replace_suffix("", ";")
   end
 
@@ -59,7 +141,7 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
 
     execute("""
       CREATE TRIGGER listing_search_update
-      BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@fulltext_searchable_fields)}
+      BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@fulltext_searchable_fields ++ @boolean_text_searchable_fields ++ @enum_text_searchable_fields)}
       ON listings
       FOR EACH ROW EXECUTE PROCEDURE listing_search_trigger();
     ""","""
@@ -83,6 +165,7 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
        listing_status_type
        style_type
        att_type
+       price_usd
     ]a |> Enum.each(fn col ->
       create_if_not_exists index(:listings, [col])
     end)
