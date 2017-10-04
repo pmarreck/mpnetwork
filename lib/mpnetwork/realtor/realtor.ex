@@ -222,7 +222,7 @@ defmodule Mpnetwork.Realtor do
       id                       -> [get_listing!(id)] |> Repo.preload([:broker, :user])
       lst                      -> default_scope |> where([l], l.listing_status_type == ^lst) |> Repo.all |> Repo.preload([:broker, :user])
       my                       -> default_scope |> where([l], l.user_id == ^current_user.id) |> Repo.all |> Repo.preload([:broker, :user])
-      pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.preload([:broker, :user])
+      pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.all |> Repo.preload([:broker, :user])
       true                     -> _search_all_fields_using_postgres_fulltext_search(query, default_scope)
     end
   end

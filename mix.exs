@@ -44,7 +44,7 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:cowboy, "~> 1.1.2"},
       {:coherence, github: "smpallen99/coherence", branch: "master"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.1"},
