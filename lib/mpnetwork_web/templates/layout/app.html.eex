@@ -85,16 +85,17 @@
                 """
                 Example search queries (omitting quotes):
                 -----------------------------------------
-                get the latest listings: just hit return with an empty search field
-                by id number: "5"
-                by address fragment: "55 plandome" (case-insensitive)
-                by price range: "500,000-1000000"
-                listings owned by you: "my" or "mine" (case-insensitive)
-                by listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM)
-                Or by any text in the following fields: address, description, remarks, association, neighborhood, schools, zoning, district, construction, appearance, cross street, owner name, most of the true/false values (just search by their name such as "waterfront"), housing class, housing style, and a few other fields.
-                Results are sorted by most recently updated first (mostly... direct address searches get priority).
-                You can search by multiple attributes (it filters on all of them), so "rent waterfront" will find rentals on the waterfront.
-                I will be adding more power to the search feature as time goes on and based on user feedback.
+                Get the latest listings: just hit return with an empty search field
+                By id number: "5"
+                By listing agent name or broker name.
+                By address fragment: "55 plandome" (case-insensitive)
+                By price range: "500,000-1,000,000"
+                Listings owned by you: "my" or "mine" (case-insensitive)
+                By listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM) (capitalized)
+                An exact phrase (include double quotes in this case!): "manhasset high"
+                Or by almost any other attributes.
+                You can search by multiple attributes (it filters on all of them), so "rent waterfront" will find rentals on the waterfront (rent AND waterfront).
+                You can also use and, or, not (or the equivalent symbols &, |, !) and parentheses: "waterfront or colonial"
                 """
                %>">
               <span class="input-group-btn">

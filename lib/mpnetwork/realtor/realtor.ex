@@ -261,16 +261,24 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
-  defp _activate_default_AND_search_unless_special_chars_exist(q) do
-    if Regex.match?(~r/^[A-Za-z0-9\.\-\/\,%\$\' ]+$/, q) do
-      "(#{Regex.replace(~r/ +/,q,"&")})"
-    else
-      q
-    end
+  defp normalize_query(q) do
+    q = String.trim(q)
+    q = Regex.replace(~r/ *\<([0-9]+|-)\> */, q, "<\\1>")
+    q = Regex.replace(~r/"([^"]+)"/, q, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end)
+    q = Regex.replace(~r/ +and +/i, q, "&")
+    q = Regex.replace(~r/ +or +/i, q, "|")
+    q = Regex.replace(~r/ *&not\b/i, q, "&!")
+    q = Regex.replace(~r/ *\|not\b/i, q, "|!")
+    q = Regex.replace(~r/\bnot +/i, q, "!")
+    q = Regex.replace(~r/ +& +/, q, "&")
+    q = Regex.replace(~r/ +\| +/, q, "|")
+    q = Regex.replace(~r/! +/, q, "!")
+    q = Regex.replace(~r/ +/,q,"&")
+    q
   end
 
   defp _search_all_fields_using_postgres_fulltext_search(q, scope) do
-    q = _activate_default_AND_search_unless_special_chars_exist(q)
+    q = normalize_query(q)
     scope
     |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
     |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q), desc: l.updated_at])

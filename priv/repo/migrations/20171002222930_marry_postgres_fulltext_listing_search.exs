@@ -84,6 +84,11 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
     style_type: EnumMaps.style_types
   ]
 
+  @foreign_key_searchable_fields [
+    user_id: {:users, :name},
+    broker_id: {:offices, :name}
+  ]
+
   defp assemble_boolean_search_vector(existing_fields, boolean_fields) do
     existing_fields ++ Enum.map(boolean_fields, fn {column, text_if_true} ->
       "setweight(to_tsvector('pg_catalog.english', (case when new.#{column} then '#{text_if_true}' else '' end)), 'C')"
@@ -100,11 +105,30 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
     existing_fields ++ new_enum_search_vectors
   end
 
-  defp assemble_search_vector(fields) do
-    fields
+  defp assemble_fk_search_vector(existing_fields, fk_fields) do
+    existing_fields ++ Enum.map(fk_fields, fn {column, {table, varchar_column}} ->
+      "setweight(to_tsvector('pg_catalog.english', coalesce(#{table}_#{varchar_column},'')), 'B')"
+    end)
+  end
+
+  defp assemble_declarations_for_fk_search_vector(fk_fields) do
+    "DECLARE\n" <> Enum.join(Enum.map(fk_fields, fn {column, {table, varchar_column}} ->
+      "#{table}_#{varchar_column} VARCHAR(255);"
+    end),"\n") <> "\n"
+  end
+
+  defp assemble_select_intos_for_fk_search_vector(fk_fields) do
+    Enum.join(Enum.map(fk_fields, fn {column, {table, varchar_column}} ->
+      "SELECT #{table}.#{varchar_column} INTO #{table}_#{varchar_column} FROM #{table} WHERE id = new.#{column};"
+    end), "\n") <> "\n"
+  end
+
+  defp assemble_search_vector() do
+    @fulltext_searchable_fields
     |> (Enum.map(fn {column, rank} ->
       "setweight(to_tsvector('pg_catalog.english', coalesce(new.#{column},'')), '#{rank}')"
     end)
+    |> assemble_fk_search_vector(@foreign_key_searchable_fields)
     |> assemble_boolean_search_vector(@boolean_text_searchable_fields)
     |> assemble_enum_search_vector(@enum_text_searchable_fields))
     |> Enum.join(" || ")
@@ -130,8 +154,10 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
     # Note that execute/2 requires ecto ~2.2
     execute("""
       CREATE OR REPLACE FUNCTION listing_search_trigger() RETURNS trigger AS $$
+      #{assemble_declarations_for_fk_search_vector(@foreign_key_searchable_fields)}
         begin
-          new.search_vector := #{assemble_search_vector(@fulltext_searchable_fields)}
+          #{assemble_select_intos_for_fk_search_vector(@foreign_key_searchable_fields)}
+          new.search_vector := #{assemble_search_vector()}
           return new;
         end
       $$ LANGUAGE plpgsql
@@ -141,7 +167,7 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
 
     execute("""
       CREATE TRIGGER listing_search_update
-      BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@fulltext_searchable_fields ++ @boolean_text_searchable_fields ++ @enum_text_searchable_fields)}
+      BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@foreign_key_searchable_fields ++ @fulltext_searchable_fields ++ @boolean_text_searchable_fields ++ @enum_text_searchable_fields)}
       ON listings
       FOR EACH ROW EXECUTE PROCEDURE listing_search_trigger();
     ""","""
