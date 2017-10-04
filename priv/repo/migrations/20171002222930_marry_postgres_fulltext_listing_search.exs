@@ -106,13 +106,13 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
   end
 
   defp assemble_fk_search_vector(existing_fields, fk_fields) do
-    existing_fields ++ Enum.map(fk_fields, fn {column, {table, varchar_column}} ->
+    existing_fields ++ Enum.map(fk_fields, fn {_column, {table, varchar_column}} ->
       "setweight(to_tsvector('pg_catalog.english', coalesce(#{table}_#{varchar_column},'')), 'B')"
     end)
   end
 
   defp assemble_declarations_for_fk_search_vector(fk_fields) do
-    "DECLARE\n" <> Enum.join(Enum.map(fk_fields, fn {column, {table, varchar_column}} ->
+    "DECLARE\n" <> Enum.join(Enum.map(fk_fields, fn {_column, {table, varchar_column}} ->
       "#{table}_#{varchar_column} VARCHAR(255);"
     end),"\n") <> "\n"
   end

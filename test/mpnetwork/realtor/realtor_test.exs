@@ -3,7 +3,7 @@ defmodule Mpnetwork.RealtorTest do
 
   alias Mpnetwork.Realtor
 
-  @valid_user_attrs %{email: "test@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
+  @valid_user_attrs %{name: "Realtortest User", email: "test@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
 
   defp user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -11,6 +11,10 @@ defmodule Mpnetwork.RealtorTest do
         |> Enum.into(@valid_user_attrs)
         |> Realtor.create_user()
       user
+  end
+
+  defp random_uniquifying_string do
+    trunc(:rand.uniform()*100000000000000000) |> Integer.to_string
   end
 
   describe "broadcasts" do
@@ -244,6 +248,50 @@ defmodule Mpnetwork.RealtorTest do
       listing = listing_fixture()
       assert %Ecto.Changeset{} = Realtor.change_listing(listing)
     end
+
+    test "listing fulltext search query normalization" do
+      assert Realtor.test_normalize_query()
+    end
+
+    test "listing query listings with id only" do
+      listing = listing_fixture() |> Repo.preload(:user)
+      assert [listing] == Realtor.query_listings("#{listing.id}", listing.user)
+    end
+
+    test "listing query listings with listing status type only" do
+      listing = listing_fixture() |> Repo.preload(:user)
+      user = listing.user
+      assert {:ok, listing} = Realtor.update_listing(listing, %{listing_status_type: "UC"})
+      assert [listing] == Realtor.query_listings("UC", user)
+    end
+
+    test "listing query listings with my or mine only" do
+      listing = listing_fixture() |> Repo.preload(:user)
+      assert [listing] == Realtor.query_listings("my", listing.user)
+      assert [listing] == Realtor.query_listings("mine", listing.user)
+    end
+
+    test "listing query listings with price range only" do
+      listing = listing_fixture() |> Repo.preload(:user)
+      user = listing.user
+      assert {:ok, listing} = Realtor.update_listing(listing, %{price_usd: 200})
+      assert [listing] == Realtor.query_listings("150-$250", user)
+    end
+
+    test "listing fulltext search" do
+      listing = listing_fixture() |> Repo.preload(:user)
+      user = listing.user
+      user2 = user_fixture(%{username: "inigo", email: "inigo@montoya.com", name: "Inigo Montoya"})
+      listing2 = listing_fixture(user: user2, user_id: user2.id)
+      assert {:ok, listing} = Realtor.update_listing(listing, %{draft: false, for_sale: true, description: "This is stupendous!"})
+      assert {:ok, listing2} = Realtor.update_listing(listing2, %{draft: false, for_sale: true, description: "inconceivable"})
+      assert [listing] == Realtor.query_listings("stupendous", user)
+      assert [listing] == Realtor.query_listings("realtortest", user) # by user's name
+      assert [listing] == Realtor.query_listings("stupendous realtortest", user)
+      assert [listing] == Realtor.query_listings("stupendous sale", user) # boolean attribute
+      assert [] == Realtor.query_listings("stupendous not realtortest", user)
+      assert [listing2, listing] == Realtor.query_listings("stupendous | inconceivable", user2)
+    end
   end
 
   describe "offices" do
@@ -253,10 +301,15 @@ defmodule Mpnetwork.RealtorTest do
     @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
     @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
 
+    def valid_office_attrs do
+      %{name: "some name #{random_uniquifying_string()}"}
+      |> Enum.into(@valid_attrs)
+    end
+
     def office_fixture(attrs \\ %{}) do
       {:ok, office} =
         attrs
-        |> Enum.into(@valid_attrs)
+        |> Enum.into(valid_office_attrs())
         |> Realtor.create_office()
       office
     end

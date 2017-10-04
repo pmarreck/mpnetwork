@@ -223,10 +223,11 @@ defmodule Mpnetwork.Realtor do
       lst                      -> default_scope |> where([l], l.listing_status_type == ^lst) |> Repo.all |> Repo.preload([:broker, :user])
       my                       -> default_scope |> where([l], l.user_id == ^current_user.id) |> Repo.all |> Repo.preload([:broker, :user])
       pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.all |> Repo.preload([:broker, :user])
-      true                     -> _search_all_fields_using_postgres_fulltext_search(query, default_scope)
+      true                     -> search_all_fields_using_postgres_fulltext_search(query, default_scope)
     end
   end
 
+  defp _try_integer(num) when is_integer(num), do: num
   defp _try_integer(maybe_num) when is_binary(maybe_num) do
     _try_int_result(Integer.parse(maybe_num))
   end
@@ -261,23 +262,47 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
-  defp normalize_query(q) do
-    q = String.trim(q)
-    q = Regex.replace(~r/ *\<([0-9]+|-)\> */, q, "<\\1>")
-    q = Regex.replace(~r/"([^"]+)"/, q, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end)
-    q = Regex.replace(~r/ +and +/i, q, "&")
-    q = Regex.replace(~r/ +or +/i, q, "|")
-    q = Regex.replace(~r/ *&not\b/i, q, "&!")
-    q = Regex.replace(~r/ *\|not\b/i, q, "|!")
-    q = Regex.replace(~r/\bnot +/i, q, "!")
-    q = Regex.replace(~r/ +& +/, q, "&")
-    q = Regex.replace(~r/ +\| +/, q, "|")
-    q = Regex.replace(~r/! +/, q, "!")
-    q = Regex.replace(~r/ +/,q,"&")
-    q
+  defp normalization_transformations() do
+    [
+      {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"},
+      {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end},
+      {~r/\s+and\s+/i, "&"},
+      {~r/\s+or\s+/i, "|"},
+      {~r/\s+or\s+/i, "|"},
+      {~r/\s*&not\b/i, "&!"},
+      {~r/\s*\|not\b/i, "|!"},
+      {~r/\bnot\s+/i, "!"},
+      {~r/\s*&\s*/, "&"},
+      {~r/\s*\|\s*/, "|"},
+      {~r/!\s+/, "!"},
+      {~r/\s+/, "&"},
+    ]
   end
 
-  defp _search_all_fields_using_postgres_fulltext_search(q, scope) do
+  defp normalize_query(q) do
+    Enum.reduce(normalization_transformations(), String.trim(q), fn({regex, repl}, acc) -> Regex.replace(regex, acc, repl) end)
+  end
+
+  def test_normalize_query() do
+    test_cases = [
+      {"a|b"," a or b"},
+      {"a&b"," a  b "},
+      {"a&!b","a not b"},
+      {"a&!b","a and not b"},
+      {"a|!b","a or !b"},
+      {"a&!b","a ! b"},
+      {"a<->b|c","\"a b\" or c"},
+      {"yabba<->dabba<->do&barney", " \" yabba  dabba do  \"  barney "},
+      {"a<->b|c<->d", "\"a b\" |\"c d\""},
+      {"a<2>b"," a  <2> b"},
+      {"!b","not b"},
+    ]
+    for {expected, input} <- test_cases, do: ^expected = normalize_query(input)
+    true
+  end
+
+
+  defp search_all_fields_using_postgres_fulltext_search(q, scope) do
     q = normalize_query(q)
     scope
     |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
