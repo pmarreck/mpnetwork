@@ -261,10 +261,19 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
+  defp _activate_default_AND_search_unless_special_chars_exist(q) do
+    if Regex.match?(~r/^[A-Za-z0-9\.\-\/\,%\$\' ]+$/, q) do
+      "(#{Regex.replace(~r/ +/,q,"&")})"
+    else
+      q
+    end
+  end
+
   defp _search_all_fields_using_postgres_fulltext_search(q, scope) do
+    q = _activate_default_AND_search_unless_special_chars_exist(q)
     scope
-    |> where([l], fragment("search_vector @@ plainto_tsquery(?)", ^q))
-    |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, plainto_tsquery(?), 32)", ^q), desc: l.updated_at])
+    |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
+    |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q), desc: l.updated_at])
     |> Repo.all
     |> Repo.preload([:broker, :user])
   end
