@@ -27,23 +27,6 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-# Configures Swoosh (email wrapper)
-config :mpnetwork, Mpnetwork.Mailer,
-  adapter: Swoosh.Adapters.SparkPost,
-  api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
-  endpoint: "https://api.sparkpost.com/api/v1"
-
-# Configures Guardian
-# config :guardian, Guardian,
-#   allowed_algos: ["HS512"], # optional
-#   verify_module: Guardian.JWT,  # optional
-#   issuer: "Mpnetwork",
-#   ttl: { 30, :days },
-#   allowed_drift: 2000,
-#   verify_issuer: true, # optional
-#   secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
-#   serializer: MyApp.GuardianSerializer
-
 # %% Coherence Configuration %%   Don't remove this line
 config :coherence,
   user_schema: Mpnetwork.User,
@@ -67,11 +50,17 @@ config :coherence,
   unlock_token_expire_minutes: 15,
   rememberable_cookie_expire_hours: 14*24
 
-config :coherence, Mpnetwork.Coherence.Mailer,
+config :coherence, MpnetworkWeb.Coherence.Mailer,
   adapter: Swoosh.Adapters.SparkPost,
   api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
   endpoint: "https://api.sparkpost.com/api/v1"
 # %% End Coherence Configuration %%
+
+# Configures Swoosh (email wrapper) for the mpnetwork app
+config :mpnetwork, Mpnetwork.Mailer,
+  adapter: Swoosh.Adapters.SparkPost,
+  api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
+  endpoint: "https://api.sparkpost.com/api/v1"
 
 # Import Timber, structured logging
 import_config "timber.exs"

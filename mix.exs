@@ -45,7 +45,7 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.1.2"},
-      {:coherence, github: "smpallen99/coherence", branch: "master"},
+      {:coherence, "~> 0.5"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.1"},
       {:number, "~> 0.5"},
@@ -55,9 +55,8 @@ defmodule Mpnetwork.Mixfile do
       {:cachex, "~> 2.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
-      {:swoosh, "~> 0.8"},
-      # phoenix_swoosh newer version already included by Coherence (and conflicts with this)
-      # {:phoenix_swoosh, git: "https://github.com/vircung/phoenix_swoosh.git", branch: "phx-1.3"},
+      {:swoosh, "~> 0.10"},
+      {:phoenix_swoosh, "~> 0.2"},
       {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
       {:briefly, "~> 0.3"}, # for easily working with tempfiles
       {:ex_crypto, "~> 0.4", override: true},

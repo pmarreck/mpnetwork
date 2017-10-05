@@ -50,6 +50,9 @@ config :logger, :console, format: "[$level] $message\n"
 config :mpnetwork, Mpnetwork.Mailer,
   adapter: Swoosh.Adapters.Local
 
+config :coherence, MpnetworkWeb.Coherence.Mailer,
+  adapter: Swoosh.Adapters.Local
+
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20

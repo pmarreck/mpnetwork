@@ -25,3 +25,6 @@ config :mpnetwork, Mpnetwork.Repo,
 # Mailer stub for Swoosh
 config :mpnetwork, Mpnetwork.Mailer,
   adapter: Swoosh.Adapters.Test
+
+config :coherence, MpnetworkWeb.Coherence.Mailer,
+  adapter: Swoosh.Adapters.Test

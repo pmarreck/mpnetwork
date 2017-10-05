@@ -16,7 +16,7 @@ defmodule MpnetworkWeb.Coherence.Messages do
 
   # Change this to override the "coherence" gettext domain. If you would like
   # the coherence message to be part of your projects domain change it to "default"
-  @domain "coherence"
+  @domain "default"
 
   ##################
   # Messages
