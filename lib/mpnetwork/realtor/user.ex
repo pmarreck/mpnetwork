@@ -42,7 +42,7 @@ defmodule Mpnetwork.User do
     |> default_role_to_realtor
     model
     |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
-    |> validate_required([:username, :email])
+    |> validate_required([:username, :email, :office_id])
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
     |> validate_coherence(params)
