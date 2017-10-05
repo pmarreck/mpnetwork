@@ -3,11 +3,17 @@ defmodule Mpnetwork.User do
   use Ecto.Schema
   use Coherence.Schema
 
-  @role_names ~w[root admin office_admin realtor readonly]
+  @role_names_int ~w[root site_admin office_admin realtor readonly]a
+  @role_names ["Root", "Site Admin", "Office Admin", "Realtor", "Read-only"]
+  @roles_int for {v, k} <- @role_names_int |> Enum.with_index, into: %{}, do: {k, v}
   @roles for {v, k} <- @role_names |> Enum.with_index, into: %{}, do: {k, v}
 
+  def roles_int, do: @roles_int
   def roles, do: @roles
+  def role_names_int, do: @role_names_int
   def role_names, do: @role_names
+  def map_role_id_to_role_name(id), do: roles[id]
+  def map_role_id_to_role_name_int(id), do: roles_int[id]
 
   schema "users" do
     field :username, :string, unique: true

@@ -35,7 +35,7 @@ defmodule MpnetworkWeb.ListingController do
   def new(conn, _params) do
     changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{
       user_id: current_user(conn).id,
-      broker_id: conn.assigns.current_office.id
+      broker_id: conn.assigns.current_office && conn.assigns.current_office.id
     })
     render(conn, "new.html",
       changeset: changeset,
