@@ -3,11 +3,18 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
   alias Mpnetwork.Realtor
 
-  @create_attrs %{address: "some address", city: "some city", name: "some name", phone: "some phone", state: "some state", zip: "some zip"}
   @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
   @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
 
-  def valid_user_attrs, do: %{email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2}
+  def valid_user_attrs do
+    t = Ecto.DateTime.utc
+    o = fixture(:office)
+    %{office_id: o.id, email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2, last_sign_in_at: t, current_sign_in_at: t}
+  end
+
+  def create_attrs do
+    %{address: "some address", city: "some city", name: "some name #{:rand.uniform(9999999999999)}", phone: "some phone", state: "some state", zip: "some zip"}
+  end
 
   setup %{conn: conn} do
     user = user_fixture()
@@ -23,7 +30,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   end
 
   def fixture(:office) do
-    {:ok, office} = Realtor.create_office(@create_attrs)
+    {:ok, office} = Realtor.create_office(create_attrs())
     office
   end
 
@@ -44,7 +51,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   describe "create office" do
     test "redirects to show when data is valid", %{conn: conn} do
       original_conn = conn
-      conn = post conn, office_path(conn, :create), office: @create_attrs
+      conn = post conn, office_path(conn, :create), office: create_attrs()
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == office_path(conn, :show, id)

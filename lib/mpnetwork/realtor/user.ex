@@ -12,8 +12,8 @@ defmodule Mpnetwork.User do
   def roles, do: @roles
   def role_names_int, do: @role_names_int
   def role_names, do: @role_names
-  def map_role_id_to_role_name(id), do: roles[id]
-  def map_role_id_to_role_name_int(id), do: roles_int[id]
+  def map_role_id_to_role_name(id), do: roles()[id]
+  def map_role_id_to_role_name_int(id), do: roles_int()[id]
 
   schema "users" do
     field :username, :string, unique: true

@@ -12,16 +12,23 @@ defmodule MpnetworkWeb.ListingControllerTest do
   @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, prop_tax_usd: 43, num_skylights: 43, lot_size: "430x720", attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["some updated ext_urls"], visible_on: ~D[2011-05-18], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 43, draft: true, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 4, hot_tub: false, basement: false, price_usd: 43, remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
   @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, prop_tax_usd: nil, num_skylights: nil, lot_size: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_urls: nil, visible_on: nil, city: nil, num_fireplaces: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: false, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: 10, hot_tub: nil, basement: nil, price_usd: nil, remarks: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, eef_led_lighting: nil}
 
-  def valid_user_attrs, do: %{email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2}
+  def valid_user_attrs do
+    %{email: "test@example#{:rand.uniform(1000000000000)}.com", username: "testuser#{:rand.uniform(1000000000000)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2}
+  end
+
+  def valid_office_attrs do
+    %{name: "Coach#{trunc :rand.uniform*1000000000000}"}
+  end
 
   setup %{conn: conn} do
-    office = office_fixture()
-    user = user_fixture(%{office: office, office_id: office.id})
-    conn = assign(conn, :current_office, office)
+    user = user_fixture()
+    conn = assign(conn, :current_office, user.broker)
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end
 
   def user_fixture(attrs \\ %{}) do
+    office = office_fixture()
+    attrs = attrs |> Enum.into(%{broker: office, office_id: office.id})
     {:ok, user} =
       attrs
       |> Enum.into(valid_user_attrs())
@@ -29,11 +36,10 @@ defmodule MpnetworkWeb.ListingControllerTest do
     user
   end
 
-  @valid_office_attrs %{name: "Coach"}
   def office_fixture(attrs \\ %{}) do
     {:ok, office} =
       attrs
-      |> Enum.into(@valid_office_attrs)
+      |> Enum.into(valid_office_attrs())
       |> Realtor.create_office()
     office
   end

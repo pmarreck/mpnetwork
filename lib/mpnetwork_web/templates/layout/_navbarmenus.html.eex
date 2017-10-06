@@ -121,7 +121,7 @@
 
                     <p>
                       <%= @current_user.name %> - <%= role_id_to_name(@current_user.role_id) %>
-                      <small>Member since <%= short_month_and_year(@current_user.confirmed_at) %></small>
+                      <small>Member since <%= short_month_and_year(@current_user.inserted_at) %></small>
                     </p>
                   </li>
                   <!-- Menu Body -->

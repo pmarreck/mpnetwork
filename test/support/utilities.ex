@@ -4,12 +4,12 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def valid_user_attrs do
     t = Ecto.DateTime.utc
     o = office_fixture()
-    %{office_id: o.id, email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2, last_sign_in_at: t, confirmed_at: t, current_sign_in_at: t, confirmation_sent_at: t}
+    %{office_id: o.id, email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2, last_sign_in_at: t, current_sign_in_at: t}
   end
 
   def current_user_stubbed do
     t = Ecto.DateTime.utc
-    %User{id: 1, last_sign_in_at: t, confirmed_at: t, current_sign_in_at: t, confirmation_sent_at: t, inserted_at: t, username: "testuser", email: "test_user@tester.com", name: "Test User", role_id: 2}
+    %User{id: 1, last_sign_in_at: t, current_sign_in_at: t, inserted_at: t, username: "testuser", email: "test_user@tester.com", name: "Test User", role_id: 2}
   end
 
   @valid_office_attrs %{name: "Coach"}

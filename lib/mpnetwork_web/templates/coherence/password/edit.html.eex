@@ -19,7 +19,14 @@
   </div>
 
   <div class="form-group">
-    <%= submit dgettext("coherence", "Update Password"), class: "btn btn-primary" %>
+    <%= required_label f, dgettext("coherence", "Please select your office"), class: "control-label" %>
+    <br />
+    <%= select f, :office_id, for(o <- Mpnetwork.Realtor.list_offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id}), class: "fancy", style: "width: 450px" %>
+    <%= error_tag f, :office_id %>
+  </div>
+
+  <div class="form-group">
+    <%= submit dgettext("coherence", "Update Password/Office"), class: "btn btn-primary" %>
     <%= link dgettext("coherence", "Cancel"), to: Coherence.Config.logged_out_url("/"), class: "btn" %>
   </div>
 <% end %>

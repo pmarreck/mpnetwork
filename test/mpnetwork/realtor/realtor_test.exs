@@ -3,14 +3,30 @@ defmodule Mpnetwork.RealtorTest do
 
   alias Mpnetwork.Realtor
 
-  @valid_user_attrs %{name: "Realtortest User", email: "test@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
+  def valid_user_attrs do
+    %{name: "Realtortest User", email: "test#{random_uniquifying_string()}@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
+  end
 
-  defp user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_user_attrs)
-        |> Realtor.create_user()
-      user
+  def valid_office_attrs do
+    %{name: "Coach#{trunc :rand.uniform*1000000000000}"}
+  end
+
+  def user_fixture(attrs \\ %{}) do
+    office = office_fixture()
+    attrs = attrs |> Enum.into(%{broker: office, office_id: office.id})
+    {:ok, user} =
+      attrs
+      |> Enum.into(valid_user_attrs())
+      |> Realtor.create_user()
+    user
+  end
+
+  def office_fixture(attrs \\ %{}) do
+    {:ok, office} =
+      attrs
+      |> Enum.into(valid_office_attrs())
+      |> Realtor.create_office()
+    office
   end
 
   defp random_uniquifying_string do
@@ -300,19 +316,6 @@ defmodule Mpnetwork.RealtorTest do
     @valid_attrs %{address: "some address", city: "some city", name: "some name", phone: "some phone", state: "some state", zip: "some zip"}
     @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
     @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
-
-    def valid_office_attrs do
-      %{name: "some name #{random_uniquifying_string()}"}
-      |> Enum.into(@valid_attrs)
-    end
-
-    def office_fixture(attrs \\ %{}) do
-      {:ok, office} =
-        attrs
-        |> Enum.into(valid_office_attrs())
-        |> Realtor.create_office()
-      office
-    end
 
     test "list_offices/0 returns all offices" do
       office = office_fixture()
