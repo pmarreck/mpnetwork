@@ -223,9 +223,45 @@ defmodule Mpnetwork.Realtor.Listing do
   end
 
   defp constraints(listing) do
+    this_year = Timex.today.year
     listing
     |> validate_inclusion(:cellular_coverage_quality, 0..5)
-    |> validate_inclusion(:price_usd, 0..2147483647, message: "Price must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
+    |> validate_inclusion(:price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
+    |> validate_inclusion(:prior_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:original_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:prop_tax_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:vill_tax_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:star_deduc_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:rental_income_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:rental_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
+    |> validate_inclusion(:year_built, 1600..this_year, message: "Year built must currently be between 1600 and #{this_year}.")
+    |> validate_inclusion(:seller_agency_comp, 0..30, message: "Comp points must currently be between 0 and 30")
+    |> validate_inclusion(:buyer_agency_comp, 0..30, message: "Comp points must currently be between 0 and 30")
+    |> validate_inclusion(:broker_agency_comp, 0..30, message: "Comp points must currently be between 0 and 30")
+    |> validate_number(:water_frontage_ft, greater_than_or_equal_to: 0)
+    |> validate_number(:bulkhead_ft, greater_than_or_equal_to: 0)
+    |> validate_number(:num_rooms, greater_than_or_equal_to: 0)
+    |> validate_number(:num_bedrooms, greater_than_or_equal_to: 0)
+    |> validate_number(:num_baths, greater_than_or_equal_to: 0)
+    |> validate_number(:num_half_baths, greater_than_or_equal_to: 0)
+    |> validate_number(:num_families, greater_than_or_equal_to: 0)
+    |> validate_number(:num_kitchens, greater_than_or_equal_to: 0)
+    |> validate_number(:num_fireplaces, greater_than_or_equal_to: 0)
+    |> validate_number(:num_skylights, greater_than_or_equal_to: 0)
+    |> validate_number(:num_garages, greater_than_or_equal_to: 0)
+    |> validate_number(:num_half_garages, greater_than_or_equal_to: 0)
+    |> validate_number(:parking_spaces, greater_than_or_equal_to: 0)
+    |> validate_number(:lot_sqft, greater_than_or_equal_to: 0)
+    |> validate_number(:building_size_sqft, greater_than_or_equal_to: 0)
+    |> validate_number(:num_stoves, greater_than_or_equal_to: 0)
+    |> validate_number(:num_refrigs, greater_than_or_equal_to: 0)
+    |> validate_number(:num_washers, greater_than_or_equal_to: 0)
+    |> validate_number(:num_dryers, greater_than_or_equal_to: 0)
+    |> validate_number(:num_dishwashers, greater_than_or_equal_to: 0)
+    |> validate_number(:heat_num_zones, greater_than_or_equal_to: 0)
+    |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
+    |> foreign_key_constraint(:user_id)
+    |> foreign_key_constraint(:broker_id)
   end
 
   defp casts(%Listing{} = listing, attrs) do
@@ -425,8 +461,6 @@ defmodule Mpnetwork.Realtor.Listing do
       :next_cust_oh_note,
       :selling_agent_name
     ])
-    |> foreign_key_constraint(:user_id)
-    |> foreign_key_constraint(:broker_id)
   end
 
 end
