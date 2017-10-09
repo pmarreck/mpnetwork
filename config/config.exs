@@ -43,7 +43,6 @@ config :coherence,
   opts: [:authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token, :invitable, :rememberable],
   require_current_password: true, # Current password is required when updating new password.
   reset_token_expire_days: 2,
-  confirmation_token_expire_days: 5,
   allow_unconfirmed_access_for: 0,
   max_failed_login_attempts: 5,
   unlock_timeout_minutes: 15,
