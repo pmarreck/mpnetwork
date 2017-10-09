@@ -63,9 +63,18 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def show(conn, %{"id" => id}) do
-    listing = Realtor.get_listing!(id)
+    listing = Realtor.get_listing!(id) |> Repo.preload([:user, :broker, :colisting_agent])
+    broker = listing.broker
+    agent = listing.user
+    colisting_agent = listing.colisting_agent
     attachments = Listing.list_attachments(id)
-    render(conn, "show.html", listing: listing, attachments: attachments)
+    render(conn, "show.html",
+      listing: listing,
+      broker: broker,
+      agent: agent,
+      colisting_agent: colisting_agent,
+      attachments: attachments
+    )
   end
 
   def edit(conn, %{"id" => id} = params) do

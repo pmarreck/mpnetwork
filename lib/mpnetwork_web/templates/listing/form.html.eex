@@ -75,7 +75,7 @@
 
 
           <div class="row">
-          <!-- 4 -->
+            <!-- 4 -->
             <div class="form-group col-xs-6<%= if f.errors[:class_type], do: " has-error" %>">
               <%= label f, :class_type, "Property Class:", class: "control-label" %>
               <%= select f, :class_type, Mpnetwork.EnumMaps.class_type_select_opts, class: "fancy" %>
@@ -110,7 +110,7 @@
             <%= error_tag f, :address %>
           </div>
 
-          <div class="row form-grouop">
+          <div class="row form-group">
             <!-- 7 -->
             <div class="col-xs-5<%= if f.errors[:city], do: " has-error" %>">
               <%= label f, :city, class: "control-label" %>
@@ -187,7 +187,7 @@
 
           <!-- 16 -->
           <div class="form-group<%= if f.errors[:schools], do: " has-error" %>">
-            <%= label f, :schools, "Schools", class: "control-label" %>
+            <%= label f, :schools, "School systems", class: "control-label" %>
             <%= text_input f, :schools, class: "form-control" %>
             <%= error_tag f, :schools %>
           </div>
@@ -216,7 +216,7 @@
           <!-- 20 -->
           <div class="form-group<%= if f.errors[:cul_de_sac], do: " has-error" %>">
             <%= checkbox f, :cul_de_sac, class: "checkbox" %>
-            <%= label f, :cul_de_sac, "Cul de sac?", class: "control-label" %>
+            <%= label f, :cul_de_sac, "Cul-de-sac?", class: "control-label" %>
             <%= error_tag f, :cul_de_sac %>
           </div>
 
@@ -797,6 +797,7 @@
               <%= number_input f, :num_half_garages, class: "form-control" %>
               <%= error_tag f, :num_half_garages %>
             </div>
+
             <!-- 81 -->
             <div class="col-xs-4<%= if f.errors[:parking_spaces], do: " has-error" %>">
               <%= label f, :parking_spaces, "Parking Spots", class: "control-label" %>
@@ -1385,7 +1386,7 @@
 
           <!-- 158 -->
           <div class="form-group<%= if f.errors[:status_showing_phone], do: " has-error" %>">
-            <%= label f, :status_showing_phone, class: "control-label" %>
+            <%= label f, :status_showing_phone, "Status/showing phone:", class: "control-label" %>
             <div class="input-group">
               <div class="input-group-addon">
                 <i class="fa fa-phone"></i>
@@ -1620,7 +1621,7 @@
             <%= error_tag f, :rental_price_usd %>
           </div>
 
-        <!-- 182 -->
+          <!-- 182 -->
           <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
             <%= label f, :personal_prop_exclusions, "Personal property exclusions", class: "control-label" %>
             <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
@@ -1665,7 +1666,7 @@
             <%= label f, :ext_urls, "Add an external URL", class: "control-label" %><i>&nbsp;&nbsp;(You can add multiple URL's by saving the listing after each one)</i>
             <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: "", class: "form-control" %>
           </div>
-        
+
         </div>
       </div>
     </div>

@@ -62,6 +62,21 @@ defmodule MpnetworkWeb.GlobalHelpers do
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 
+  def datetime_to_standard_humanized(_, tz \\ "EDT")
+  def datetime_to_standard_humanized(nil, _), do: ""
+  def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, _tz) do
+    datetime
+    |> Ecto.DateTime.to_erl
+    |> NaiveDateTime.from_erl!
+    |> DateTime.from_naive!("Etc/UTC")
+    |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
+  end
+  def datetime_to_standard_humanized(%NaiveDateTime{} = naive_datetime, _tz) do
+    naive_datetime
+    |> DateTime.from_naive!("Etc/UTC")
+    |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
+  end
+
   # convert falsey values to "N", anything else to "Y"
   def yn(bool), do: if bool, do: "Y", else: "N"
 

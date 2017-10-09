@@ -1,4 +1,4 @@
-<%= render(MpnetworkWeb.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Show ]})) %>
+<%= render(MpnetworkWeb.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: (~w[ Listings Show ] ++ ["#{@listing.id}"])})) %>
 
 <div class="form-group">
   <%= if @listing.user_id == @current_user.id do %>
@@ -11,224 +11,1151 @@
   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
 </div>
 
-<ul style="list-style-type: none;">
+<div><br /></div>
+<%= render("_jumpto.html", existing: true) %>
 
-  <li>
-    <strong>Draft?</strong>
-    <%= @listing.draft %>
-  </li>
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <a name="basics"></a>
+          <h3 class="box-title">Basics</h3>
+        </div>
+        <div class="box-body">
+          <!-- 1 -->
+          <div class="draft">
+            <strong>Draft?</strong>
+            <%= yn(@listing.draft) %>
+          </div>
 
-  <li>
-    <strong>For sale?</strong>
-    <%= @listing.for_sale %>
-  </li>
+          <div class="row form-group">
+            <div class="col-xs-6">
+              <!-- 2 -->
+              <div class="for_sale">
+                <strong>For Sale?</strong>
+                <%= yn(@listing.for_sale) %>
+              </div>
+            </div>
 
-  <li>
-    <strong>For rent?</strong>
-    <%= @listing.for_rent %>
-  </li>
+            <div class="col-xs-6">
+              <!-- 3 -->
+              <div class="for_rent">
+                <strong>For Rent?</strong>
+                <%= yn(@listing.for_rent) %>
+              </div>
+            </div>
+          </div>
 
-  <li>
-    <strong>Description:</strong>
-    <%= @listing.description %>
-  </li>
+          <div class="row">
+            <!-- 4 -->
+            <div class="form-group col-xs-6 class_type">
+              <strong>Property Class:</strong>
+              <%= Mpnetwork.EnumMaps.map_class_type_int_to_ext(@listing.class_type) %>
+            </div>
 
-  <li>
-    <strong>Listing status:</strong>
-    <%= @listing.listing_status_type %>
-  </li>
+            <!-- 5 -->
+            <div class="form-group col-xs-6 studio">
+              <strong>Studio?</strong>
+              <%= yn(@listing.studio) %>
+            </div>
+          </div>
+        </div> <!-- box-body -->
+      </div>
+    </div>
+  </div>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header">
+          <a name="location"></a>
+          <h3 class="box-title">Location</h3>
+        </div>
+        <div class="box-body">
+          <!-- 6, 7, 8, 9 -->
+          <div class="address">
+            <strong>Address:</strong>
+            <%= Enum.join([@listing.address, @listing.city, "#{@listing.state} #{@listing.zip}"], ", ") %>
+          </div>
 
-  <li>
-    <strong>Address:</strong>
-    <%= @listing.address %>
-  </li>
+          <!-- 10 -->
+          <div class="district">
+            <strong>District:</strong>
+            <%= @listing.district %>
+          </div>
 
-  <li>
-    <strong>City:</strong>
-    <%= @listing.city %>
-  </li>
+          <!-- 11 -->
+          <div class="section_num">
+            <strong>Section #:</strong>
+            <%= @listing.section_num %>
+          </div>
 
-  <li>
-    <strong>State:</strong>
-    <%= @listing.state %>
-  </li>
+          <!-- 12 -->
+          <div class="block_num">
+            <strong>Block #:</strong>
+            <%= @listing.block_num %>
+          </div>
 
-  <li>
-    <strong>Zip:</strong>
-    <%= @listing.zip %>
-  </li>
+          <!-- 13 -->
+          <div class="lot_num">
+            <strong>Lot #:</strong>
+            <%= @listing.lot_num %>
+          </div>
 
-  <li>
-    <strong>Price (USD):</strong>
-    <%= Number.Currency.number_to_currency(@listing.price_usd, precision: 0) %>
-  </li>
+          <!-- 14 -->
+          <div class="association">
+            <strong>Development:</strong>
+            <%= @listing.association %>
+          </div>
 
-  <li>
-    <strong>Studio:</strong>
-    <%= @listing.studio %>
-  </li>
+          <!-- 15 -->
+          <div class="neighborhood">
+            <strong>Neighborhood:</strong>
+            <%= @listing.neighborhood %>
+          </div>
 
-  <li>
-    <strong># bedrooms:</strong>
-    <%= @listing.num_bedrooms %>
-  </li>
+          <!-- 16 -->
+          <div class="schools">
+            <strong>School systems:</strong>
+            <%= @listing.schools %>
+          </div>
 
-  <li>
-    <strong># baths:</strong>
-    <%= @listing.num_baths %>
-  </li>
+          <!-- 17 -->
+          <div class="zoning">
+            <strong>Zoning:</strong>
+            <%= @listing.zoning %>
+          </div>
 
-  <li>
-    <strong># half baths:</strong>
-    <%= @listing.num_half_baths %>
-  </li>
+          <!-- 18 -->
+          <div class="corner">
+            <strong>Corner property?</strong>
+            <%= yn(@listing.corner) %>
+          </div>
 
-  <li>
-    <strong>Square feet:</strong>
-    <%= @listing.sq_ft %>
-  </li>
+          <!-- 19 -->
+          <div class="cross_street">
+            <strong>Cross street:</strong>
+            <%= @listing.cross_street %>
+          </div>
 
-  <li>
-    <strong>Lot size:</strong>
-    <%= @listing.lot_size %>
-  </li>
+          <!-- 20 -->
+          <div class="cul_de_sac">
+            <strong>Cul-de-sac?</strong>
+            <%= yn(@listing.cul_de_sac) %>
+          </div>
 
-  <li>
-    <strong>Year built:</strong>
-    <%= @listing.year_built %>
-  </li>
+          <div class="row form-group">
+          <!-- 21 -->
+            <div class="col-xs-6 waterfront">
+              <strong>Waterfront?</strong>
+              <%= yn(@listing.waterfront) %>
+            </div>
 
-  <li>
-    <strong>Stories:</strong>
-    <%= @listing.stories %>
-  </li>
+            <!-- 22 -->
+            <div class="col-xs-6 water_frontage_ft">
+              <strong>Water frontage (ft):</strong>
+              <%= @listing.water_frontage_ft %>
+            </div>
+          </div>
 
-  <li>
-    <strong>Basement?</strong>
-    <%= @listing.basement %>
-  </li>
+          <div class="row form-group">
+            <!-- 23 -->
+            <div class="col-xs-6 waterfront_type">
+              <strong>Waterfront type:</strong>
+              <%= Mpnetwork.EnumMaps.map_waterfront_type_int_to_ext(@listing.waterfront_type) %>
+            </div>
 
-  <li>
-    <strong>Fireplaces:</strong>
-    <%= @listing.num_fireplaces %>
-  </li>
+            <!-- 24 -->
+            <div class="col-xs-6 waterview">
+              <strong>Waterview?</strong>
+              <%= yn(@listing.waterview) %>
+            </div>
+          </div>
 
-  <li>
-    <strong>Parking spaces:</strong>
-    <%= @listing.parking_spaces %>
-  </li>
+          <div class="row form-group">
+            <!-- 25 -->
+            <div class="col-xs-6 bulkhead">
+              <strong>Bulkhead?</strong>
+              <%= yn(@listing.bulkhead) %>
+            </div>
 
-  <li>
-    <strong>MLS source identifier:</strong>
-    <%= @listing.mls_source_id %>
-  </li>
+            <!-- 26 -->
+            <div class="col-xs-6 bulkhead_ft">
+              <strong>Bulkhead (ft):</strong>
+              <%= @listing.bulkhead_ft %>
+            </div>
+          </div>
 
-  <li>
-    <strong># garages:</strong>
-    <%= @listing.num_garages %>
-  </li>
+          <div class="row form-group">
+            <!-- 27 -->
+            <div class="col-xs-6 dock_rights">
+              <strong>Dock rights?</strong>
+              <%= yn(@listing.dock_rights) %>
+            </div>
 
-  <li>
-    <strong>Attached garage?</strong>
-    <%= @listing.attached_garage %>
-  </li>
+            <!-- 28 -->
+            <div class="col-xs-6 beach_rights">
+              <strong>Beach rights?</strong>
+              <%= yn(@listing.beach_rights) %>
+            </div>
+          </div>
 
-  <li>
-    <strong>New construction?</strong>
-    <%= @listing.new_construction %>
-  </li>
+          <div class="row form-group">
+            <!-- 29 -->
+            <div class="col-xs-6 adult_comm">
+              <strong>Adult community?</strong>
+              <%= yn(@listing.adult_comm) %>
+            </div>
 
-  <li>
-    <strong>Tax rate code area:</strong>
-    <%= @listing.tax_rate_code_area %>
-  </li>
+            <!-- 30 -->
+            <div class="col-xs-6 gated_comm">
+              <strong>Gated community?</strong>
+              <%= yn(@listing.gated_comm) %>
+            </div>
+          </div>
 
-  <li>
-    <strong>Property taxes (USD):</strong>
-    <%= Number.Currency.number_to_currency(@listing.prop_tax_usd, precision: 0) %>
-  </li>
+          <div class="row form-group">
+            <!-- 31 -->
+            <div class="col-xs-12 front_exposure_type">
+              <strong>Front exposure:</strong>
+              <%= Mpnetwork.EnumMaps.map_front_exposure_type_int_to_ext_long(@listing.front_exposure_type) %>
+            </div>
+          </div>
+        </div> <!-- box-body -->
+      </div>
+    </div>
 
-  <li>
-    <strong>Patio?</strong>
-    <%= @listing.patio %>
-  </li>
+    <div class="col-md-6">
+      <div class="box box-success">
+        <div class="box-header">
+          <a name="price-dates"></a>
+          <h3 class="box-title">Price/Dates</h3>
+        </div>
+        <div class="box-body">
+          <!-- 32 -->
+          <div class="price_usd">
+            <strong>Price:</strong>
+            <%= @listing.price_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Deck?</strong>
-    <%= @listing.deck %>
-  </li>
+          <!-- 33 -->
+          <div class="prior_price_usd">
+            <strong>Prior price:</strong>
+            <%= @listing.prior_price_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Pool?</strong>
-    <%= @listing.pool %>
-  </li>
+          <!-- 34 -->
+          <div class="original_price_usd">
+            <strong>Original price:</strong>
+            <%= @listing.original_price_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Hot tub?</strong>
-    <%= @listing.hot_tub %>
-  </li>
+          <!-- 35 -->
+          <div class="tax_rate_code_area">
+            <strong>Tax rate code area:</strong>
+            <%= @listing.tax_rate_code_area %>
+          </div>
 
-  <li>
-    <strong># skylights:</strong>
-    <%= @listing.num_skylights %>
-  </li>
+          <!-- 36 -->
+          <div class="prop_tax_usd">
+            <strong>Property taxes (annual):</strong>
+            <%= @listing.prop_tax_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Central air?</strong>
-    <%= @listing.central_air %>
-  </li>
+          <!-- 37 -->
+          <div class="vill_tax_usd">
+            <strong>Village taxes (annual):</strong>
+            <%= @listing.vill_tax_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Central vac?</strong>
-    <%= @listing.central_vac %>
-  </li>
+          <!-- 38 -->
+          <div class="star_deduc_usd">
+            <strong>STAR deduction:</strong>
+            <%= @listing.star_deduc_usd |> dollars %>
+          </div>
 
-  <li>
-    <strong>Security system?</strong>
-    <%= @listing.security_system %>
-  </li>
+          <div class="form-group row">
+            <!-- 39 -->
+            <div class="col-xs-6 visible_on">
+              <strong>Listing visible on:</strong>
+              <%= @listing.visible_on %>
+            </div>
 
-  <li>
-    <strong>FIOS available?</strong>
-    <%= @listing.fios_available %>
-  </li>
+            <!-- 40 -->
+            <div class="col-xs-6 expires_on">
+              <strong>Listing expires on:</strong>
+              <%= @listing.expires_on %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <li>
-    <strong>High speed internet available?</strong>
-    <%= @listing.high_speed_internet_available %>
-  </li>
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <a name="characteristics"></a>
+          <h3 class="box-title">Characteristics</h3>
+        </div>
+        <div class="box-body">
+          <div class="row form-group">
+            <!-- 41 -->
+            <div class="col-xs-12 listing_status_type">
+              <strong>Listing status:</strong>
+              <%= Mpnetwork.EnumMaps.map_listing_status_type_int_to_ext(@listing.listing_status_type) %> (<%= @listing.listing_status_type %>)
+            </div>
+          </div>
+          <div class="row form-group">
+            <!-- 42 -->
+            <div class="col-xs-5 style_type">
+              <strong>Style:</strong>
+              <%= Mpnetwork.EnumMaps.map_style_type_int_to_ext(@listing.style_type) %>
+            </div>
 
-  <li>
-    <strong>Modern kitchen countertops?</strong>
-    <%= @listing.modern_kitchen_countertops %>
-  </li>
+            <!-- 43 -->
+            <div class="col-xs-5 stories">
+              <strong>Stories:</strong>
+              <%= @listing.stories %>
+            </div>
+          </div>
 
-  <li>
-    <strong>Cellular coverage quality (how many bars on average):</strong>
-    <%= @listing.cellular_coverage_quality %>
-  </li>
+          <div class="row form-group">
+            <!-- 44 -->
+            <div class="col-xs-6 num_rooms">
+              <strong># Rooms:</strong>
+              <%= @listing.num_rooms %>
+            </div>
 
-  <li>
-    <strong>LED lighting?</strong>
-    <%= @listing.eef_led_lighting %>
-  </li>
+            <!-- 45 -->
+            <div class="col-xs-6 num_bedrooms">
+              <strong># Bedrooms:</strong>
+              <%= @listing.num_bedrooms %>
+            </div>
+          </div>
 
-  <li>
-    <strong>Remarks:</strong>
-    <%= @listing.remarks %>
-  </li>
+          <div class="row form-group">
+            <!-- 46 -->
+            <div class="col-xs-4 num_baths">
+              <strong># Baths:</strong>
+              <%= @listing.num_baths %>
+            </div>
 
-  <li>
-    <strong>Visible on:</strong>
-    <%= @listing.visible_on %>
-  </li>
+            <!-- 47 -->
+            <div class="col-xs-4 num_half_baths">
+              <strong># Half Baths:</strong>
+              <%= @listing.num_half_baths %>
+            </div>
 
-  <li>
-    <strong>Expires on:</strong>
-    <%= @listing.expires_on %>
-  </li>
+            <!-- 48 -->
+            <div class="col-xs-4 num_families">
+              <strong># Families:</strong>
+              <%= @listing.num_families %>
+            </div>
+          </div>
 
-</ul>
+          <!-- 49 -->
+          <div class="att_type">
+            <strong>Attachment:</strong>
+            <%= Mpnetwork.EnumMaps.map_att_type_int_to_ext(@listing.att_type) %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 50 -->
+            <div class="col-xs-6 num_kitchens">
+              <strong># Kitchens:</strong>
+              <%= @listing.num_kitchens %>
+            </div>
+
+            <!-- 51 -->
+            <div class="col-xs-6 eat_in_kitchen">
+              <strong>Eat-in kitchen?</strong>
+              <%= yn(@listing.eat_in_kitchen) %>
+            </div>
+          </div>
+
+          <!-- 52 -->
+          <div class="dining_room_type">
+            <strong>Dining room type:</strong>
+            <%= Mpnetwork.EnumMaps.map_dining_room_type_int_to_ext(@listing.dining_room_type) %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 53 -->
+            <div class="col-xs-4 den">
+              <strong>Den?</strong>
+              <%= yn(@listing.den) %>
+            </div>
+
+            <!-- 54 -->
+            <div class="col-xs-4 office">
+              <strong>Office?</strong>
+              <%= yn(@listing.office) %>
+            </div>
+
+            <!-- 55 -->
+            <div class="col-xs-4 attic">
+              <strong>Attic?</strong>
+              <%= yn(@listing.attic) %>
+            </div>
+          </div>
+
+          <!-- 56 -->
+          <div class="mbr_first_fl">
+            <strong>Master bedroom on 1st floor?</strong>
+            <%= yn(@listing.mbr_first_fl) %>
+          </div>
+
+          <!-- 57 -->
+          <div class="permit">
+            <strong>Permit:</strong>
+            <%= @listing.permit %>
+          </div>
+
+          <!-- 58 -->
+          <div class="handicap_access">
+            <strong>Handicapped access?</strong>
+            <%= yn(@listing.handicap_access) %>
+          </div>
+
+          <!-- 59 -->
+          <div class="handicap_access_desc">
+            <strong>Handicapped access description:</strong>
+            <%= @listing.handicap_access_desc %>
+          </div>
+
+          <!-- 60 -->
+          <div class="sq_ft">
+            <strong>Approx. intl. sq ft:</strong>
+            <%= @listing.sq_ft %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 61 -->
+            <div class="col-xs-6 basement">
+              <strong>Basement?</strong>
+              <%= yn(@listing.basement) %>
+            </div>
+
+            <!-- 63 -->
+            <div class="col-xs-6 finished_basement">
+              <strong>Finished basement?</strong>
+              <%= @listing.finished_basement %>
+            </div>
+
+          </div>
+
+          <div class="row form-group">
+            <!-- 62 -->
+            <div class="col-xs-9 basement_type">
+              <strong>Basement type:</strong>
+              <%= Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 65 -->
+            <div class="col-xs-6 w_w_carpet">
+              <strong>Wall-to-wall carpet?</strong>
+              <%= yn(@listing.w_w_carpet) %>
+            </div>
+
+            <!-- 66 -->
+            <div class="col-xs-6 wood_floors">
+              <strong>Wood floors?</strong>
+              <%= yn(@listing.wood_floors) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 67 -->
+            <div class="col-xs-6 year_built">
+              <strong>Year built:</strong>
+              <%= @listing.year_built %>
+            </div>
+            <!-- 68 -->
+            <div class="col-xs-6 new_construction">
+              <strong>New construction?</strong>
+              <%= yn(@listing.new_construction) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 64 -->
+            <div class="col-xs-6 num_fireplaces">
+              <strong># Fireplaces:</strong>
+              <%= @listing.num_fireplaces %>
+            </div>
+
+            <!-- 69 -->
+            <div class="col-xs-6 num_skylights">
+              <strong># Skylights:</strong>
+              <%= @listing.num_skylights %>
+            </div>
+          </div>
+
+          <!-- 70 -->
+          <div class="appearance">
+            <strong>Appearance:</strong>
+            <%= @listing.appearance %>
+          </div>
+
+          <!-- 71 -->
+          <div class="basement_desc">
+            <strong>Basement description:</strong>
+            <%= @listing.basement_desc %>
+          </div>
+
+          <!-- 72 -->
+          <div class="first_fl_desc">
+            <strong>1st floor description:</strong>
+            <%= @listing.first_fl_desc %>
+          </div>
+
+          <!-- 73 -->
+          <div class="second_fl_desc">
+            <strong>2nd floor description:</strong>
+            <%= @listing.second_fl_desc %>
+          </div>
+
+          <!-- 74 -->
+          <div class="third_fl_desc">
+            <strong>3rd floor description:</strong>
+            <%= @listing.third_fl_desc %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 152 -->
+            <div class="col-xs-6 security_system">
+              <strong>Security system?</strong>
+              <%= yn(@listing.security_system) %>
+            </div>
+
+            <!-- 151 -->
+            <div class="col-xs-6 central_vac">
+              <strong>Central vac?</strong>
+              <%= yn(@listing.central_vac) %>
+            </div>
+          </div>
+
+          <!-- 153 -->
+          <div class="fios_available">
+            <strong>FIOS available?</strong>
+            <%= yn(@listing.fios_available) %>
+          </div>
+
+          <!-- 154 -->
+          <div class="high_speed_internet_available">
+            <strong>High speed internet available (including FIOS)?</strong>
+            <%= yn(@listing.high_speed_internet_available) %>
+          </div>
+
+          <!-- 155 -->
+          <div class="modern_kitchen_countertops">
+            <strong>Modern kitchen countertops?</strong>
+            <%= yn(@listing.modern_kitchen_countertops) %>
+          </div>
+
+          <!-- 156 -->
+          <div class="cellular_coverage_quality">
+            <strong>Cellular coverage quality (# bars on average, 0-5):</strong>
+            <%= @listing.cellular_coverage_quality %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-warning">
+        <div class="box-header">
+          <a name="exterior"></a>
+          <h3 class="box-title">Exterior/Appliances/Utilities</h3>
+        </div>
+        <div class="box-body">
+          <!-- 75 -->
+          <div class="siding_desc">
+            <strong>Exterior construction:</strong>
+            <%= @listing.siding_desc %>
+          </div>
+
+          <!-- 76 -->
+          <div class="construction">
+            <strong>Frame construction:</strong>
+            <%= @listing.construction %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 77 -->
+            <div class="col-xs-4 num_garages">
+              <strong># Garages:</strong>
+              <%= @listing.num_garages %>
+            </div>
+
+            <!-- 78 -->
+            <div class="col-xs-4 num_half_garages">
+              <strong># Half Garages:</strong>
+              <%= @listing.num_half_garages %>
+            </div>
+
+            <!-- 81 -->
+            <div class="col-xs-4 parking_spaces">
+              <strong>Parking Spots:</strong>
+              <%= @listing.parking_spaces %>
+            </div>
+          </div>
+
+          <!-- 79 -->
+          <div class="attached_garage">
+            <strong>Attached garage?</strong>
+            <%= yn(@listing.attached_garage) %>
+          </div>
+
+          <!-- 80 -->
+          <div class="driveway">
+            <strong>Driveway description:</strong>
+            <%= @listing.driveway %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 82 -->
+            <div class="col-xs-3 deck">
+              <strong>Deck?</strong>
+              <%= yn(@listing.deck) %>
+            </div>
+
+            <!-- 83 -->
+            <div class="col-xs-9 deck_type">
+              <strong>Deck type:</strong>
+              <%= Mpnetwork.EnumMaps.map_deck_type_int_to_ext(@listing.deck_type) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 84 -->
+            <div class="col-xs-3 patio">
+              <strong>Patio?</strong>
+              <%= yn(@listing.patio) %>
+            </div>
+
+            <!-- 85 -->
+            <div class="col-xs-9 patio_type">
+              <strong>Patio type:</strong>
+              <%= Mpnetwork.EnumMaps.map_patio_type_int_to_ext(@listing.patio_type) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 86 -->
+            <div class="col-xs-3 porch">
+              <strong>Porch?</strong>
+              <%= yn(@listing.porch) %>
+            </div>
+
+            <!-- 87 -->
+            <div class="col-xs-9 porch_type">
+              <strong>Porch type:</strong>
+              <%= Mpnetwork.EnumMaps.map_porch_type_int_to_ext(@listing.porch_type) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 88 -->
+            <div class="col-xs-3 pool">
+              <strong>Pool?</strong>
+              <%= yn(@listing.pool) %>
+            </div>
+
+            <!-- 89 -->
+            <div class="col-xs-9 pool_type">
+              <strong>Pool type:</strong>
+              <%= Mpnetwork.EnumMaps.map_pool_type_int_to_ext(@listing.pool_type) %>
+            </div>
+          </div>
+
+          <!-- 90 -->
+          <div class="hot_tub">
+            <strong>Hot tub?</strong>
+            <%= yn(@listing.hot_tub) %>
+          </div>
+
+          <!-- 91 -->
+          <div class="ing_sprinks">
+            <strong>Inground sprinkler?</strong>
+            <%= yn(@listing.ing_sprinks) %>
+          </div>
+
+          <!-- 92 -->
+          <div class="tennis_ct">
+            <strong>Tennis court?</strong>
+            <%= yn(@listing.tennis_ct) %>
+          </div>
+
+          <!-- 93 -->
+          <div class="tennis_ct_desc">
+            <strong>Tennis court details:</strong>
+            <%= @listing.tennis_ct_desc %>
+          </div>
+
+          <!-- 94 -->
+          <div class="equestrian">
+            <strong>Horse property?</strong>
+            <%= yn(@listing.equestrian) %>
+          </div>
+
+          <!-- 95 -->
+          <div class="lot_size">
+            <strong>Lot Size (dimensions):</strong>
+            <%= @listing.lot_size %>
+          </div>
+
+          <!-- 96 -->
+          <div class="lot_sqft">
+            <strong>Lot (square footage):</strong>
+            <%= @listing.lot_sqft %>
+          </div>
+
+          <!-- 97 -->
+          <div class="building_size_sqft">
+            <strong>Building size (square footage):</strong>
+            <%= @listing.building_size_sqft %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 98 -->
+            <div class="col-xs-6 num_stoves">
+              <strong># Stoves:</strong>
+              <%= @listing.num_stoves %>
+            </div>
+
+            <!-- 99 -->
+            <div class="col-xs-6 num_refrigs">
+              <strong># Fridges:</strong>
+              <%= @listing.num_refrigs %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 100 -->
+            <div class="col-xs-4 num_washers">
+              <strong># Washers:</strong>
+              <%= @listing.num_washers %>
+            </div>
+
+            <!-- 101 -->
+            <div class="col-xs-4 num_dryers">
+              <strong># Dryers:</strong>
+              <%= @listing.num_dryers %>
+            </div>
+
+            <!-- 102 -->
+            <div class="col-xs-4 num_dishwashers">
+              <strong># Dishwashers:</strong>
+              <%= @listing.num_dishwashers %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 103 -->
+            <div class="col-xs-4 fuel_type">
+              <strong>Fuel type:</strong>
+              <%= Mpnetwork.EnumMaps.map_fuel_type_int_to_ext(@listing.fuel_type) %>
+            </div>
+
+            <!-- 104 -->
+            <div class="col-xs-4 heating_type">
+              <strong>Heating type:</strong>
+              <%= Mpnetwork.EnumMaps.map_heating_type_int_to_ext(@listing.heating_type) %>
+            </div>
+
+            <!-- 106 -->
+            <div class="col-xs-4 central_air">
+              <strong>Central air?</strong>
+              <%= yn(@listing.central_air) %>
+            </div>
+
+          </div>
+
+          <div class="row form-group">
+            <!-- 105 -->
+            <div class="col-xs-6 heat_num_zones">
+              <strong># Heat Zones:</strong>
+              <%= @listing.heat_num_zones %>
+            </div>
+            <!-- 111 -->
+            <div class="col-xs-6 ac_num_zones">
+              <strong># A/C Zones (or # of window A/C units):</strong>
+              <%= @listing.ac_num_zones %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 107 -->
+            <div class="col-xs-6 sewer">
+              <strong>Sewer?</strong>
+              <%= yn(@listing.sewer) %>
+            </div>
+
+            <!-- 108 -->
+            <div class="col-xs-6 sewage_type">
+              <strong>Sewage type:</strong>
+              <%= Mpnetwork.EnumMaps.map_sewage_type_int_to_ext(@listing.sewage_type) %>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <!-- 109 -->
+            <div class="col-xs-6 sep_hw_heater">
+              <strong>Separate hw heater?</strong>
+              <%= yn(@listing.sep_hw_heater) %>
+            </div>
+
+            <!-- 110 -->
+            <div class="col-xs-6 sep_hw_heater_type">
+              <strong>Sep. hw heater type:</strong>
+              <%= Mpnetwork.EnumMaps.map_sep_hw_heater_type_int_to_ext(@listing.sep_hw_heater_type) %>
+            </div>
+          </div>
+
+          <!-- 112 -->
+          <div class="water_type">
+            <strong>Water source:</strong>
+            <%= Mpnetwork.EnumMaps.map_water_type_int_to_ext(@listing.water_type) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-success">
+        <div class="box-header">
+          <a name="green"></a>
+          <h3 class="box-title">Green/Energy-Efficient Features</h3>
+        </div>
+        <div class="box-body">
+          <!-- 113 -->
+          <div class="energy_eff">
+            <strong>Energy-efficient features?</strong>
+            <%= yn(@listing.energy_eff) %>
+          </div>
+
+          <div class="list_of_green_features">
+            <!-- 114 - 147 -->
+            <strong>List of green features:</strong>
+            <%= Mpnetwork.EnumMaps.eef_features_int
+                |> Enum.filter(fn eef -> Map.fetch!(@listing, eef) end)
+                |> Enum.map(&Mpnetwork.EnumMaps.map_eef_feature_int_to_ext/1)
+                |> Enum.join(", ")
+            %>
+
+          </div>
+          <!-- 148 -->
+          <div class="green_certified">
+            <strong>Green-certified?</strong>
+            <%= yn(@listing.green_certified) %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 149 -->
+            <div class="col-xs-6 green_cert_type">
+              <strong>Green cert. type:</strong>
+              <%= Mpnetwork.EnumMaps.map_green_cert_type_int_to_ext(@listing.green_cert_type) %>
+            </div>
+
+            <!-- 150 -->
+            <div class="col-xs-5 green_cert_year">
+              <strong>Green cert. year:</strong>
+              <%= @listing.green_cert_year %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header">
+          <a name="owner"></a>
+          <h3 class="box-title">Owner/Broker</h3>
+        </div>
+        <div class="box-body">
+          <!-- 157 -->
+          <div class="owner_name">
+            <strong>Owner name:</strong>
+            <%= @listing.owner_name %>
+          </div>
+
+          <!-- 158 -->
+          <div class="status_showing_phone">
+            <strong>Status/showing phone:</strong>
+            <%= @listing.status_showing_phone %>
+          </div>
+
+          <!-- 159 -->
+          <div class="broker_id">
+            <strong>Broker:</strong>
+            <%= @broker && "#{@broker.name} @ #{@broker.address}, #{@broker.city}" %>
+          </div>
+
+          <!-- 160 -->
+          <div class="broker_agent_owned">
+            <strong>Broker/agent-owned?</strong>
+            <%= yn(@listing.broker_agent_owned) %>
+          </div>
+
+          <!-- 161 -->
+          <div class="user_id">
+            <strong>Listing agent:</strong>
+            <%= @agent && @agent.name %>
+          </div>
+
+          <!-- 162 -->
+          <div class="listing_agent_phone">
+            <strong>Listing agent phone:</strong>
+            <%= @listing.listing_agent_phone %>
+          </div>
+
+          <!-- 163 -->
+          <div class="colisting_agent_id">
+            <strong>Co-listing agent:</strong>
+            <%= @colisting_agent && @colisting_agent.name %>
+          </div>
+
+          <!-- 164 -->
+          <div class="colisting_agent_phone">
+            <strong>Co-listing agent phone:</strong>
+            <%= @listing.colisting_agent_phone %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 165 -->
+            <div class="col-xs-4 seller_agency_comp">
+              <strong>Seller agency comp:</strong>
+              <%= @listing.seller_agency_comp && "#{@listing.seller_agency_comp}%" %>
+            </div>
+
+            <!-- 166 -->
+            <div class="col-xs-4 buyer_agency_comp">
+              <strong>Buyer agency comp:</strong>
+              <%= @listing.buyer_agency_comp && "#{@listing.buyer_agency_comp}%" %>
+            </div>
+
+            <!-- 167 -->
+            <div class="col-xs-4 broker_agency_comp">
+              <strong>Broker agency comp:</strong>
+              <%= @listing.broker_agency_comp && "#{@listing.broker_agency_comp}%" %>
+            </div>
+          </div>
+
+          <!-- 168 -->
+          <div class="listing_broker_comp_rental">
+            <strong>Listing broker comp. rental:</strong>
+            <%= @listing.listing_broker_comp_rental %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 169 -->
+            <div class="col-xs-6 buyer_exclusions">
+              <strong>Buyer exclusions?</strong>
+              <%= yn(@listing.buyer_exclusions) %>
+            </div>
+
+            <!-- 170 -->
+            <div class="col-xs-6 negotiate_direct">
+              <strong>Negotiate direct?</strong>
+              <%= yn(@listing.negotiate_direct) %>
+            </div>
+          </div>
+
+          <!-- 171 -->
+          <div class="offers_presentable">
+            <strong>Offers presentable?</strong>
+            <%= yn(@listing.offers_presentable) %>
+          </div>
+
+          <!-- 172 -->
+          <div class="occupancy">
+            <strong>Occupancy:</strong>
+            <%= @listing.occupancy %>
+          </div>
+
+          <!-- 173 -->
+          <div class="show_instr">
+            <strong>Showing instructions:</strong>
+            <%= @listing.show_instr %>
+          </div>
+
+          <!-- 174 -->
+          <div class="lockbox">
+            <strong>Lockbox?</strong>
+            <%= yn(@listing.lockbox) %>
+          </div>
+
+          <!-- 175 -->
+          <div class="owner_financing">
+            <strong>Owner-financed?</strong>
+            <%= yn(@listing.owner_financing) %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <a name="misc"></a>
+          <h3 class="box-title">Remarks/Misc</h3>
+        </div>
+        <div class="box-body">
+          <!-- 176 -->
+          <div class="remarks">
+            <strong>Agent-only remarks:</strong>
+            <%= @listing.remarks %>
+          </div>
+
+          <!-- 177 -->
+          <div class="directions">
+            <strong>Directions:</strong>
+            <%= @listing.directions %>
+          </div>
+
+          <!-- 178 -->
+          <div class="description">
+            <strong>Description:</strong>
+            <%= @listing.description %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 179 -->
+            <div class="col-xs-6 rental_income_usd">
+              <strong>Rental income:</strong>
+              <%= @listing.rental_income_usd |> dollars %>
+            </div>
+
+            <!-- 180 -->
+            <div class="col-xs-6 also_for_rent">
+              <strong>Also for rent?</strong>
+              <%= yn(@listing.also_for_rent) %>
+            </div>
+          </div>
+
+          <!-- 181 -->
+          <div class="rental_price_usd">
+            <strong>Rental price:</strong>
+            <%= @listing.rental_price_usd |> dollars %>
+          </div>
+
+          <!-- 182 -->
+          <div class="personal_prop_exclusions">
+            <strong>Personal property exclusions:</strong>
+            <%= @listing.personal_prop_exclusions %>
+          </div>
+
+          <!-- 183 -->
+          <div class="mls_source_id">
+            <strong>MLS source ID:</strong>
+            <%= @listing.mls_source_id %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 184 -->
+            <div class="col-xs-6 reo">
+              <strong>REO?</strong>
+              <%= yn(@listing.reo) %>
+            </div>
+
+            <!-- 185 -->
+            <div class="col-xs-6 short_sale">
+              <strong>Short sale?</strong>
+              <%= yn(@listing.short_sale) %>
+            </div>
+          </div>
+
+          <!-- 186 -->
+          <% if @listing.ext_urls do %>
+            <strong>URLs:</strong>
+            <%= for {url, _} <- Enum.with_index(Enum.filter(@listing.ext_urls, &(&1!="")), 1) do %>
+              <div class="ext_urls">
+                <%= link(url, to: url) %>
+              </div>
+            <% end %>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="box box-warning">
+        <div class="box-header">
+          <a name="openhouse"></a>
+          <h3 class="box-title">Open House</h3>
+        </div>
+        <div class="box-body">
+          <div><i>Note: All of the following times are in EST</i></div>
+
+          <div class="row form-group">
+            <!-- 187 -->
+            <div class="col-md-6 next_broker_oh_start_at">
+              <strong>Next broker open-house starts on/at:</strong>
+              <%= datetime_to_standard_humanized(@listing.next_broker_oh_start_at) %>
+            </div>
+            <!-- 188 -->
+            <div class="col-md-6 next_broker_oh_end_at">
+              <strong>Next broker open-house ends on/at:</strong>
+              <%= datetime_to_standard_humanized(@listing.next_broker_oh_end_at) %>
+            </div>
+          </div>
+
+          <!-- 189 -->
+          <div class="next_broker_oh_note">
+            <strong>Broker open-house notes:</strong>
+            <%= @listing.next_broker_oh_note %>
+          </div>
+
+          <div class="row form-group">
+            <!-- 190 -->
+            <div class="col-md-6 next_cust_oh_start_at">
+              <strong>Next customer open-house starts on/at:</strong>
+              <%= datetime_to_standard_humanized(@listing.next_cust_oh_start_at) %>
+            </div>
+            <!-- 191 -->
+            <div class="col-md-6 next_cust_oh_end_at">
+              <strong>Next customer open-house ends on/at:</strong>
+              <%= datetime_to_standard_humanized(@listing.next_cust_oh_end_at) %>
+            </div>
+          </div>
+
+          <!-- 192 -->
+          <div class="next_cust_oh_note">
+            <strong>Customer open-house notes:</strong>
+            <%= @listing.next_cust_oh_note %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= render("_jumpto.html", existing: true) %>
+
+<br />
 
 <%= if @listing.user_id == @current_user.id do %>
   <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>

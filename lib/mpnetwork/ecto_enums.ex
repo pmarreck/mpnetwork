@@ -66,16 +66,20 @@ defmodule Mpnetwork.EnumMaps do
 
   # Front Exposure Types
   @front_exposure_types_ext ~w[N S E W NE NW SE SW]
+  @front_exposure_types_ext_long ~w[North South East West Northeast Northwest Southeast Southwest]
   @front_exposure_types_int ~w[N S E W NE NW SE SW]a
   def front_exposure_types_int, do: @front_exposure_types_int
   @front_exposure_type_opts Enum.zip([" " | @front_exposure_types_ext], [nil | @front_exposure_types_int])
   def front_exposure_type_select_opts, do: @front_exposure_type_opts
 
   @front_exposure_types_int_to_ext_map Enum.zip(@front_exposure_types_int, @front_exposure_types_ext) |> Map.new
+  @front_exposure_types_int_to_ext_long_map Enum.zip(@front_exposure_types_int, @front_exposure_types_ext_long) |> Map.new
   @front_exposure_types_ext_to_int_map Enum.zip(@front_exposure_types_ext, @front_exposure_types_int) |> Map.new
 
   def map_front_exposure_type_int_to_ext(k) when is_atom(k), do: @front_exposure_types_int_to_ext_map[k]
   def map_front_exposure_type_int_to_ext(k) when is_binary(k), do: map_front_exposure_type_int_to_ext(String.to_existing_atom(k))
+  def map_front_exposure_type_int_to_ext_long(k) when is_atom(k), do: @front_exposure_types_int_to_ext_long_map[k]
+  def map_front_exposure_type_int_to_ext_long(k) when is_binary(k), do: map_front_exposure_type_int_to_ext_long(String.to_existing_atom(k))
   def map_front_exposure_type_ext_to_int(k) when is_binary(k), do: @front_exposure_types_ext_to_int_map[k]
 
   # Housing Style Types
@@ -265,12 +269,12 @@ defmodule Mpnetwork.EnumMaps do
 
   # List of Energy-Efficient Features (note: NOT a type. Just seemed appropriate to keep here.)
   @eef_features_ext [
-    "Energy Star Stove",
-    "Energy Star Refrigerator",
-    "Energy Star Dishwasher",
-    "Energy Star Washer",
-    "Energy Star Dryer",
-    "Energy Star Water Heater",
+    "Energy✩ Stove",
+    "Energy✩ Refrigerator",
+    "Energy✩ Dishwasher",
+    "Energy✩ Washer",
+    "Energy✩ Dryer",
+    "Energy✩ Water Heater",
     "Geothermal Water Heater",
     "Solar Water Heater",
     "Tankless Water Heater",
@@ -278,10 +282,10 @@ defmodule Mpnetwork.EnumMaps do
     "Insulated Windows",
     "Tinted Windows",
     "Triple Pane Windows",
-    "Energy Star Windows",
+    "Energy✩ Windows",
     "Storm Doors",
     "Insulated Doors",
-    "Energy Star Doors",
+    "Energy✩ Doors",
     "Foam Insulation",
     "Cellulose Insulation",
     "Blown Insulation",
@@ -289,10 +293,10 @@ defmodule Mpnetwork.EnumMaps do
     "Low Flow Showers/Fixtures",
     "Low Flow/Dual Flush Toilet",
     "Gray Water System",
-    "Energy Star Furnace",
+    "Energy✩ Furnace",
     "Geothermal Heating",
-    "Energy Star A/C",
-    "Energy Star CAC",
+    "Energy✩ A/C",
+    "Energy✩ CAC",
     "Geothermal A/C",
     "Solar A/C",
     "Solar Panels",

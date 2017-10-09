@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mix phx.digest && git push staging master && staging.migrate
+mix phx.digest && git push staging master # && staging.migrate
