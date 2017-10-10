@@ -445,7 +445,7 @@
             <!-- 63 -->
             <div class="col-xs-6 finished_basement">
               <strong>Finished basement?</strong>
-              <%= @listing.finished_basement %>
+              <%= yn(@listing.finished_basement) %>
             </div>
 
           </div>
@@ -1087,7 +1087,7 @@
           </div>
 
           <!-- 186 -->
-          <% if @listing.ext_urls do %>
+          <%= if @listing.ext_urls do %>
             <strong>URLs:</strong>
             <%= for {url, _} <- Enum.with_index(Enum.filter(@listing.ext_urls, &(&1!="")), 1) do %>
               <div class="ext_urls">
@@ -1112,38 +1112,40 @@
           <div class="row form-group">
             <!-- 187 -->
             <div class="col-md-6 next_broker_oh_start_at">
-              <strong>Next broker open-house starts on/at:</strong>
+              <strong style="display:block">Next broker open-house starts on/at:</strong>
               <%= datetime_to_standard_humanized(@listing.next_broker_oh_start_at) %>
             </div>
             <!-- 188 -->
             <div class="col-md-6 next_broker_oh_end_at">
-              <strong>Next broker open-house ends on/at:</strong>
+              <strong style="display:block">Next broker open-house ends on/at:</strong>
               <%= datetime_to_standard_humanized(@listing.next_broker_oh_end_at) %>
             </div>
           </div>
 
-          <!-- 189 -->
-          <div class="next_broker_oh_note">
-            <strong>Broker open-house notes:</strong>
-            <%= @listing.next_broker_oh_note %>
+          <div class="row form-group">
+            <!-- 189 -->
+            <div class="col-md-12 next_broker_oh_note">
+              <strong style="display:block">Broker open-house notes:</strong>
+              <%= @listing.next_broker_oh_note %>
+            </div>
           </div>
 
           <div class="row form-group">
             <!-- 190 -->
             <div class="col-md-6 next_cust_oh_start_at">
-              <strong>Next customer open-house starts on/at:</strong>
+              <strong style="display:block">Next customer open-house starts on/at:</strong>
               <%= datetime_to_standard_humanized(@listing.next_cust_oh_start_at) %>
             </div>
             <!-- 191 -->
             <div class="col-md-6 next_cust_oh_end_at">
-              <strong>Next customer open-house ends on/at:</strong>
+              <strong style="display:block">Next customer open-house ends on/at:</strong>
               <%= datetime_to_standard_humanized(@listing.next_cust_oh_end_at) %>
             </div>
           </div>
 
           <!-- 192 -->
           <div class="next_cust_oh_note">
-            <strong>Customer open-house notes:</strong>
+            <strong style="display:block">Customer open-house notes:</strong>
             <%= @listing.next_cust_oh_note %>
           </div>
 
