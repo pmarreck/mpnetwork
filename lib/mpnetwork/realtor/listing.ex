@@ -218,7 +218,7 @@ defmodule Mpnetwork.Realtor.Listing do
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :sq_ft, :year_built, :basement, :visible_on, :expires_on])
+    |> validate_required([:user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :year_built, :basement, :visible_on, :expires_on])
     |> constraints
   end
 

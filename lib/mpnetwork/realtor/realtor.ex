@@ -219,7 +219,7 @@ defmodule Mpnetwork.Realtor do
     pricerange = _try_pricerange(query)
     cond do
       query == ""              -> Repo.all(default_scope) |> Repo.preload([:broker, :user])
-      id                       -> [get_listing!(id)] |> Repo.preload([:broker, :user])
+      id                       -> ((get_listings([id]) ++ search_all_fields_using_postgres_fulltext_search(query, default_scope)) |> Enum.uniq) |> Repo.preload([:broker, :user])
       lst                      -> default_scope |> where([l], l.listing_status_type == ^lst) |> Repo.all |> Repo.preload([:broker, :user])
       my                       -> default_scope |> where([l], l.user_id == ^current_user.id) |> Repo.all |> Repo.preload([:broker, :user])
       pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.all |> Repo.preload([:broker, :user])
@@ -346,6 +346,24 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_listing!(id), do: Repo.get!(Listing, id) |> Repo.preload([:broker, :user])
+
+  @doc """
+  Gets a list of listings based on a list of ID's.
+
+  Returns empty list if no matches.
+
+  ## Examples
+
+      iex> get_listings([123])
+      [%Listing{}]
+
+      iex> get_listings([456, 789])
+      []
+
+  """
+  def get_listings(ids) when is_list(ids) do
+    Repo.all(from l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]) |> Repo.preload([:broker, :user])
+  end
 
   @doc """
   Creates a listing.

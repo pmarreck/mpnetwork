@@ -401,7 +401,7 @@
           <div class="form-group row">
             <!-- 39 -->
             <div class="col-xs-6<%= if f.errors[:visible_on], do: " has-error" %>">
-              <%= label f, :visible_on, "Listing visible on", class: "control-label" %>
+              <%= label f, :visible_on, "Listing date", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.visible_on do
                   Timex.to_erl(Timex.now("EDT"))
@@ -577,7 +577,7 @@
 
           <!-- 57 -->
           <div class="form-group<%= if f.errors[:permit], do: " has-error" %>">
-            <%= label f, :permit, "Permit", class: "control-label" %>
+            <%= label f, :permit, "Rental Permit #", class: "control-label" %>
             <%= text_input f, :permit, class: "form-control" %>
             <%= error_tag f, :permit %>
           </div>
