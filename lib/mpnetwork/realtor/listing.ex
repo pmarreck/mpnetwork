@@ -204,6 +204,34 @@ defmodule Mpnetwork.Realtor.Listing do
     timestamps()
   end
 
+  defp validate_consecutive_datetimes(changeset, {field_first, field_last}) do
+    earlier = get_field(changeset, field_first)
+    hopefully_later = get_field(changeset, field_last)
+    if earlier && hopefully_later do
+      case hopefully_later > earlier do
+        true -> changeset
+        _    -> add_error(changeset, field_first, "Start datetime needs to be earlier than end datetime")
+                |> add_error(field_last, "Start datetime needs to be earlier than end datetime")
+      end
+    else
+      changeset
+    end
+  end
+
+  defp validate_happens_on_same_day(changeset, {field_first, field_last}) do
+    earlier = get_field(changeset, field_first)
+    hsd = get_field(changeset, field_last) # hsd = "hopefully same day"
+    if earlier && hsd do
+      sameday = {earlier.year, earlier.month, earlier.day} == {hsd.year, hsd.month, hsd.day}
+      case sameday do
+        true -> changeset
+        _    -> add_error(changeset, field_last, "End day must be same as start day for one-day events")
+      end
+    else
+      changeset
+    end
+  end
+
   @doc """
     Relaxed requireds for listing attributes in "draft" status.
     That was easy...
@@ -260,6 +288,11 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:num_dishwashers, greater_than_or_equal_to: 0)
     |> validate_number(:heat_num_zones, greater_than_or_equal_to: 0)
     |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
+    |> validate_consecutive_datetimes({:next_broker_oh_start_at, :next_broker_oh_end_at})
+    |> validate_consecutive_datetimes({:next_cust_oh_start_at, :next_cust_oh_end_at})
+    |> validate_consecutive_datetimes({:visible_on, :expires_on})
+    |> validate_happens_on_same_day({:next_broker_oh_start_at, :next_broker_oh_end_at})
+    |> validate_happens_on_same_day({:next_cust_oh_start_at, :next_cust_oh_end_at})
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:broker_id)
   end
