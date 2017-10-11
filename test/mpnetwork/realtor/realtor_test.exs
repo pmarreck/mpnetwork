@@ -109,9 +109,9 @@ defmodule Mpnetwork.RealtorTest do
   describe "listings" do
     alias Mpnetwork.Realtor.Listing
 
-    @valid_attrs %{expires_on: ~D[2017-09-17], state: "NY", new_construction: false, fios_available: true, tax_rate_code_area: 42, prop_tax_usd: 42, num_skylights: 42, lot_size: "42x42", attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["http://ext_urls"], visible_on: ~D[2018-04-17], city: "New York", num_fireplaces: 3, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 2, num_half_baths: 2, year_built: 1993, draft: false, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: false, cellular_coverage_quality: 3, hot_tub: true, basement: true, price_usd: 1000000, remarks: "some remarks", parking_spaces: 6, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "1 Fancy Place", num_garages: 4, num_baths: 5, central_vac: true, eef_led_lighting: true}
-    @update_attrs %{expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, prop_tax_usd: 43, num_skylights: 43, lot_size: "43x43", attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["http://updated_ext_urls"], visible_on: ~D[2011-05-18], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 2000, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 4, hot_tub: false, basement: false, price_usd: 43, remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
-    @invalid_attrs %{expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, prop_tax_usd: nil, num_skylights: nil, lot_size: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_urls: nil, visible_on: nil, city: nil, num_fireplaces: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, remarks: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, eef_led_lighting: nil}
+    @valid_attrs %{visible_on: ~D[2017-04-17], expires_on: ~D[2017-05-17], state: "NY", new_construction: false, fios_available: true, tax_rate_code_area: 42, prop_tax_usd: 42, num_skylights: 42, lot_size: "42x42", attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["http://ext_urls"], city: "New York", num_fireplaces: 3, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 2, num_half_baths: 2, year_built: 1993, draft: false, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: false, cellular_coverage_quality: 3, hot_tub: true, basement: true, price_usd: 1000000, remarks: "some remarks", parking_spaces: 6, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "1 Fancy Place", num_garages: 4, num_baths: 5, central_vac: true, eef_led_lighting: true}
+    @update_attrs %{visible_on: ~D[2017-04-17], expires_on: ~D[2017-09-17], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, prop_tax_usd: 43, num_skylights: 43, lot_size: "43x43", attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["http://updated_ext_urls"], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 2000, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 4, hot_tub: false, basement: false, price_usd: 43, remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
+    @invalid_attrs %{visible_on: nil, expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, prop_tax_usd: nil, num_skylights: nil, lot_size: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_urls: nil, city: nil, num_fireplaces: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, remarks: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, eef_led_lighting: nil}
 
     def listing_fixture(attrs \\ %{}) do
       # first add an associated user if none exists
@@ -150,7 +150,7 @@ defmodule Mpnetwork.RealtorTest do
       office = office_fixture()
       valid_attrs_with_user_id_and_broker_id = Enum.into(%{user_id: user.id, broker_id: office.id}, @valid_attrs)
       assert {:ok, %Listing{} = listing} = Realtor.create_listing(valid_attrs_with_user_id_and_broker_id)
-      assert listing.expires_on == ~D[2017-09-17]
+      assert listing.expires_on == ~D[2017-05-17]
       assert listing.state == "NY"
       assert listing.new_construction == false
       assert listing.fios_available == true
@@ -162,7 +162,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.for_rent == true
       assert listing.zip == "11050"
       assert listing.ext_urls == ["http://ext_urls"]
-      assert listing.visible_on == ~D[2018-04-17]
+      assert listing.visible_on == ~D[2017-04-17]
       assert listing.city == "New York"
       assert listing.num_fireplaces == 3
       assert listing.modern_kitchen_countertops == true
@@ -203,7 +203,7 @@ defmodule Mpnetwork.RealtorTest do
       listing = listing_fixture()
       assert {:ok, listing} = Realtor.update_listing(listing, @update_attrs)
       assert %Listing{} = listing
-      assert listing.expires_on == ~D[2011-05-18]
+      assert listing.expires_on == ~D[2017-09-17]
       assert listing.state == "some updated state"
       assert listing.new_construction == false
       assert listing.fios_available == false
@@ -215,7 +215,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.for_rent == false
       assert listing.zip == "some updated zip"
       assert listing.ext_urls == ["http://updated_ext_urls"]
-      assert listing.visible_on == ~D[2011-05-18]
+      assert listing.visible_on == ~D[2017-04-17]
       assert listing.city == "some updated city"
       assert listing.num_fireplaces == 43
       assert listing.modern_kitchen_countertops == false

@@ -204,14 +204,30 @@ defmodule Mpnetwork.Realtor.Listing do
     timestamps()
   end
 
+  @datetime_order_constraint_violation_message "Start datetime needs to be earlier than end datetime"
+  @datetime_sameday_constraint_violation_message "End day must be same as start day for one-day events"
+  defp validate_db_datetime_constraints(changeset) do
+    changeset
+    |> check_constraint(:next_broker_oh_start_at, name: "broker_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:next_broker_oh_end_at, name: "broker_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:next_cust_oh_start_at, name: "cust_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:next_cust_oh_end_at, name: "cust_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:visible_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:expires_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:next_broker_oh_start_at, name: "broker_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
+    |> check_constraint(:next_broker_oh_end_at, name: "broker_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
+    |> check_constraint(:next_cust_oh_start_at, name: "cust_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
+    |> check_constraint(:next_cust_oh_end_at, name: "cust_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
+   end
+
   defp validate_consecutive_datetimes(changeset, {field_first, field_last}) do
     earlier = get_field(changeset, field_first)
     hopefully_later = get_field(changeset, field_last)
     if earlier && hopefully_later do
       case hopefully_later > earlier do
         true -> changeset
-        _    -> add_error(changeset, field_first, "Start datetime needs to be earlier than end datetime")
-                |> add_error(field_last, "Start datetime needs to be earlier than end datetime")
+        _    -> add_error(changeset, field_first, @datetime_order_constraint_violation_message)
+                |> add_error(field_last, @datetime_order_constraint_violation_message)
       end
     else
       changeset
@@ -225,7 +241,7 @@ defmodule Mpnetwork.Realtor.Listing do
       sameday = {earlier.year, earlier.month, earlier.day} == {hsd.year, hsd.month, hsd.day}
       case sameday do
         true -> changeset
-        _    -> add_error(changeset, field_last, "End day must be same as start day for one-day events")
+        _    -> add_error(changeset, field_last, @datetime_sameday_constraint_violation_message)
       end
     else
       changeset
@@ -288,6 +304,7 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:num_dishwashers, greater_than_or_equal_to: 0)
     |> validate_number(:heat_num_zones, greater_than_or_equal_to: 0)
     |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
+    |> validate_db_datetime_constraints()
     |> validate_consecutive_datetimes({:next_broker_oh_start_at, :next_broker_oh_end_at})
     |> validate_consecutive_datetimes({:next_cust_oh_start_at, :next_cust_oh_end_at})
     |> validate_consecutive_datetimes({:visible_on, :expires_on})
