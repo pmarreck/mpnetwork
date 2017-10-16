@@ -11,9 +11,11 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   import Mpnetwork.Test.Support.Utilities
 
   # supposedly a png of a red dot
-  @test_attachment_binary_data "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" |> Base.decode64!
+  @test_attachment_binary_data_base64 "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+  @test_attachment_binary_data  @test_attachment_binary_data_base64 |> Base.decode64!
   # supposedly a gif
-  @test_attachment_new_binary_data "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" |> Base.decode64!
+  @test_attachment_new_binary_data_base64 "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+  @test_attachment_new_binary_data @test_attachment_new_binary_data_base64 |> Base.decode64!
 
   @listing_create_attrs %{visible_on: ~D[2010-03-17], expires_on: ~D[2010-04-17], state: "some state", new_construction: true, fios_available: true, tax_rate_code_area: 42, prop_tax_usd: 42, num_skylights: 42, lot_size: "420x240", attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["some ext_urls"], city: "some city", num_fireplaces: 2, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 42, num_half_baths: 42, year_built: 1984, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: true, cellular_coverage_quality: 3, hot_tub: true, basement: true, price_usd: 42, remarks: "some remarks", parking_spaces: 42, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "N7 Mass Effect Galaxy", num_garages: 42, num_baths: 42, central_vac: true, eef_led_lighting: true}
   @post_create_attrs %{sha256_hash: Upload.sha256_hash(@test_attachment_binary_data), content_type: "image/png", data: %Upload{content_type: "image/png", filename: "test.png", binary: @test_attachment_binary_data}, original_filename: "some_original_filename.png", is_image: true, primary: false}
@@ -97,7 +99,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
 
     conn = get conn, attachment_path(conn, :show, attachment)
-    assert response(conn, 200) =~ @test_attachment_new_binary_data
+    assert response(conn, 200) == @test_attachment_new_binary_data
   end
 
   test "does not update chosen attachment and renders errors when data is invalid", %{conn: conn} do
@@ -114,4 +116,11 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
       get conn, attachment_path(conn, :show, attachment)
     end
   end
+
+  test "shows attachment based on base64-encoded sha256 hash of attachment", %{conn: conn} do
+    {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
+    conn = get conn, attachment_path(conn, :show, (attachment.sha256_hash |> Base.url_encode64))
+    assert response(conn, 200) == @test_attachment_binary_data
+  end
+
 end

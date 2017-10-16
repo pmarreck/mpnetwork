@@ -9,7 +9,7 @@ defmodule Mpnetwork.Listing do
   require Mpnetwork.Upload
   alias Mpnetwork.Upload
 
-  alias Mpnetwork.Listing.Attachment
+  alias Mpnetwork.Listing.{Attachment, AttachmentMetadata}
 
   # @doc """
   # Returns the list of attachments.
@@ -33,7 +33,17 @@ defmodule Mpnetwork.Listing do
       [%Attachment{}, ...]
 
   """
-  def list_attachments(listing_id) do
+  def list_attachments(listing_id, attachment_schema \\ Attachment)
+
+  def list_attachments(listing_id, AttachmentMetadata) do
+    Repo.all(
+      from attachment in AttachmentMetadata,
+      where: attachment.listing_id == ^listing_id,
+      order_by: [desc: attachment.is_image, desc: attachment.primary]
+    )
+  end
+
+  def list_attachments(listing_id, Attachment) do
     Repo.all(
       from attachment in Attachment,
       where: attachment.listing_id == ^listing_id,
@@ -50,9 +60,19 @@ defmodule Mpnetwork.Listing do
       [%Attachment{}, ...]
 
   """
-  def find_primary_image(listing_id) do
+  def find_primary_image(listing_id, attachment_schema \\ Attachment)
+  def find_primary_image(listing_id, Attachment) do
     Repo.one(
       from attachment in Attachment,
+      where: attachment.listing_id == ^listing_id,
+      where: attachment.is_image == true,
+      order_by: [desc: attachment.primary],
+      limit: 1
+    )
+  end
+  def find_primary_image(listing_id, AttachmentMetadata) do
+    Repo.one(
+      from attachment in AttachmentMetadata,
       where: attachment.listing_id == ^listing_id,
       where: attachment.is_image == true,
       order_by: [desc: attachment.primary],
@@ -70,9 +90,9 @@ defmodule Mpnetwork.Listing do
       %{1 => %Attachment{}, ...}
 
   """
-  def primary_images_for_listings(listings) do
+  def primary_images_for_listings(listings, attachment_schema \\ Attachment) do
     Enum.reduce(listings, %{}, fn(listing, map) ->
-      %{listing.id => find_primary_image(listing.id)}
+      %{listing.id => find_primary_image(listing.id, attachment_schema)}
       |> Enum.into(map)
       end
     )
@@ -92,16 +112,31 @@ defmodule Mpnetwork.Listing do
       ** (Ecto.NoResultsError)
 
   """
-  def get_attachment!({id, width, height}) do
-    import Mogrify
+  def get_attachment!({id, width, height}) when is_integer(id) do
     # first we will get the original attachment from the DB, filtering on images-only
     # Repo.get!(Attachment, id)
-    attachment = Repo.one!(
+    Repo.one!(
       from attachment in Attachment,
       where: attachment.id == ^id,
       where: attachment.is_image == true,
       limit: 1
     )
+    |> do_get_attachment(width, height)
+  end
+
+  def get_attachment!({id, width, height}) when is_binary(id) do
+    # first we will get the original attachment from the DB BY SHA256, filtering on images-only
+    Repo.one!(
+      from attachment in Attachment,
+      where: attachment.sha256_hash == ^id,
+      where: attachment.is_image == true,
+      limit: 1
+    )
+    |> do_get_attachment(width, height)
+  end
+
+  defp do_get_attachment(attachment, width, height) do
+    import Mogrify
     # then we will write its binary data to a local tempfile
     {:ok, path} = Temp.create
     File.write!(path, attachment.data) # should close file automatically
@@ -140,7 +175,9 @@ defmodule Mpnetwork.Listing do
       ** (Ecto.NoResultsError)
 
   """
-  def get_attachment!(id), do: Repo.get!(Attachment, id)
+  def get_attachment!(id, attachment_schema \\ Attachment)
+  def get_attachment!(id, attachment_schema) when is_integer(id), do: Repo.get!(attachment_schema, id)
+  def get_attachment!(id, attachment_schema) when is_binary(id), do: Repo.get_by!(attachment_schema, sha256_hash: id)
 
   @doc """
   Creates a attachment.
@@ -191,6 +228,10 @@ defmodule Mpnetwork.Listing do
 
   """
   def delete_attachment(%Attachment{} = attachment) do
+    Repo.delete(attachment)
+  end
+
+  def delete_attachment(%AttachmentMetadata{} = attachment) do
     Repo.delete(attachment)
   end
 

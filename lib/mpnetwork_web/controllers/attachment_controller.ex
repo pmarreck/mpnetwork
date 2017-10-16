@@ -3,13 +3,24 @@ defmodule MpnetworkWeb.AttachmentController do
 
   require Mpnetwork.Upload
   alias Mpnetwork.{Listing, Realtor, Upload, Config}
-  alias Mpnetwork.Listing.Attachment
+  alias Mpnetwork.Listing.{Attachment, AttachmentMetadata}
 
   require Logger
 
+  @is_probably_int_pk ~r/^[0-9]{1,10}$/ # match numeric id of length 1-10
+  # attachments can be gotten by either primary key OR base64-encoded sha256 hash
+  defp convert_to_right_identifier(bin) when is_binary(bin) do
+    if bin =~ @is_probably_int_pk do
+      String.to_integer(bin)
+    else
+      bin |> Base.url_decode64!
+    end
+  end
+  defp convert_to_right_identifier(i) when is_integer(i), do: i
+
   defp get_cached(id, touch \\ true), do: get_cached(id, nil, nil, touch)
   defp get_cached(id, width, height, touch \\ true) do
-    id = if is_binary(id), do: String.to_integer(id), else: id
+    id = convert_to_right_identifier(id)
     width = if is_binary(width), do: String.to_integer(width), else: width
     height = if is_binary(height), do: String.to_integer(height), else: height
     key = case {id, width, height} do
@@ -42,19 +53,22 @@ defmodule MpnetworkWeb.AttachmentController do
 
   defp purge_all_cached_dimensions(%Attachment{} = attachment) do
     id = attachment.id
+    sha256_hash = attachment.sha256_hash
     keys_to_delete = Config.get(:cache_name)
     |> Cachex.stream!(of: :key)
     |> Enum.filter(fn key ->
       case key do
         {^id, _, _} -> true
+        {^sha256_hash, _, _} -> true
         ^id -> true
+        ^sha256_hash -> true
         _ -> false
       end
     end)
     Logger.info "Purging these keys from cache: #{inspect keys_to_delete}"
     Cachex.transaction(Config.get(:cache_name), keys_to_delete, fn(worker) ->
       keys_to_delete
-      |> Enum.each(fn key -> 
+      |> Enum.each(fn key ->
         Logger.info "Purging key #{inspect key} from cache"
         Cachex.del(worker, key)
       end)
@@ -95,7 +109,7 @@ defmodule MpnetworkWeb.AttachmentController do
     listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
     listing = Realtor.get_listing!(listing_id)
     if listing.user_id == current_user(conn).id do
-      attachments = Listing.list_attachments(listing_id)
+      attachments = Listing.list_attachments(listing_id, AttachmentMetadata)
       render(conn, "index.html", attachments: attachments, listing: listing)
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
@@ -111,7 +125,7 @@ defmodule MpnetworkWeb.AttachmentController do
     listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
     listing = Realtor.get_listing!(listing_id)
     if listing.user_id == current_user(conn).id do
-      changeset = Listing.change_attachment(%Mpnetwork.Listing.Attachment{})
+      changeset = Listing.change_attachment(%Attachment{})
       render(conn, "new.html", changeset: changeset, listing: listing)
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
@@ -166,6 +180,17 @@ defmodule MpnetworkWeb.AttachmentController do
   end
   # when no width/height provided, default to nil (for pattern match)
   def show(conn, %{"id" => id}), do: show(conn, %{"id" => id, "w" => nil, "h" => nil})
+
+  # this is the attachment show for public MLS-style listings only
+  def show_public(conn, %{"id" => id, "w" => _width, "h" => _height} = params) do
+    # do not allow id's that look like integer pk's through the public listing path, only base64-encoded sha256 hashes
+    if id =~ @is_probably_int_pk do
+      send_resp(conn, 404, "Not Found")
+    else
+      show(conn, params)
+    end
+  end
+  def show_public(conn, %{"id" => id}), do: show_public(conn, %{"id" => id, "w" => nil, "h" => nil})
 
   def edit(conn, %{"id" => id}) do
     attachment = get_cached(id)

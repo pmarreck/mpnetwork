@@ -5,6 +5,7 @@ defmodule MpnetworkWeb.ListingController do
 
   alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer}
   # alias Mpnetwork.Realtor.Office
+  alias Mpnetwork.Listing.AttachmentMetadata
 
   import Listing, only: [public_client_listing_code: 1, public_agent_listing_code: 1]
 
@@ -21,9 +22,9 @@ defmodule MpnetworkWeb.ListingController do
 
   def index(conn, _params) do
     listings = Realtor.list_latest_listings(nil, 30)
-    primaries = Listing.primary_images_for_listings(listings)
+    primaries = Listing.primary_images_for_listings(listings, AttachmentMetadata)
     draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
-    draft_primaries = Listing.primary_images_for_listings(draft_listings)
+    draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
     render(conn, "index.html",
       listings: listings,
       primaries: primaries,
@@ -67,7 +68,7 @@ defmodule MpnetworkWeb.ListingController do
     broker = listing.broker
     agent = listing.user
     colisting_agent = listing.colisting_agent
-    attachments = Listing.list_attachments(id)
+    attachments = Listing.list_attachments(id, AttachmentMetadata)
     render(conn, "show.html",
       listing: listing,
       broker: broker,
@@ -83,7 +84,7 @@ defmodule MpnetworkWeb.ListingController do
     else
       listing = Realtor.get_listing!(id)
       ensure_owner_or_admin(conn, listing, fn ->
-        attachments = Listing.list_attachments(listing.id)
+        attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
         changeset = Realtor.change_listing(listing)
         render(conn, "edit.html",
           listing: listing,
@@ -123,7 +124,7 @@ defmodule MpnetworkWeb.ListingController do
           |> put_flash(:info, "Listing updated successfully.")
           |> redirect(to: listing_path(conn, :show, listing))
         {:error, %Ecto.Changeset{} = changeset} ->
-          attachments = Listing.list_attachments(id)
+          attachments = Listing.list_attachments(id, AttachmentMetadata)
           render(conn, "edit.html",
             listing: listing,
             attachments: attachments,
@@ -150,7 +151,7 @@ defmodule MpnetworkWeb.ListingController do
     # conn = put_layout(conn, "public_listing.html")
     listing = Realtor.get_listing!(id)
     id = listing.id
-    %{^id => showcase_image} = Listing.primary_images_for_listings([listing])
+    %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
     computed_sig = public_client_listing_code(listing)
     if computed_sig == signature do
       render(conn, "client_listing.html", listing: listing, showcase_image: showcase_image)
@@ -164,7 +165,7 @@ defmodule MpnetworkWeb.ListingController do
     # conn = put_layout(conn, "public_listing.html")
     listing = Realtor.get_listing!(id)
     id = listing.id
-    %{^id => showcase_image} = Listing.primary_images_for_listings([listing])
+    %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
     computed_sig = public_agent_listing_code(listing)
     if computed_sig == signature do
       render(conn, "agent_listing.html", listing: listing, showcase_image: showcase_image)
