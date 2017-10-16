@@ -147,30 +147,33 @@ defmodule MpnetworkWeb.ListingController do
     end)
   end
 
-  def client_listing(conn, %{"id" => id, "sig" => signature}) do
+  def client_listing(conn, %{"id" => signature}) do
     # conn = put_layout(conn, "public_listing.html")
-    listing = Realtor.get_listing!(id)
+    {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, :client)
+    listing = Realtor.get_listing!(decrypted_id)
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
-    computed_sig = public_client_listing_code(listing)
-    if computed_sig == signature do
+
+    if decrypted_expiration_date > Timex.now() do
       render(conn, "client_listing.html", listing: listing, showcase_image: showcase_image)
     else
       # 410 is "Gone"
-      send_resp(conn, 410, "Original listing may have changed, please request a new link from the sender")
+      send_resp(conn, 410, "Link has expired")
     end
   end
 
-  def agent_listing(conn, %{"id" => id, "sig" => signature}) do
+  def agent_listing(conn, %{"id" => signature}) do
     # conn = put_layout(conn, "public_listing.html")
-    listing = Realtor.get_listing!(id)
+    {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, :agent)
+    listing = Realtor.get_listing!(decrypted_id)
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
-    computed_sig = public_agent_listing_code(listing)
-    if computed_sig == signature do
+
+    if decrypted_expiration_date > Timex.now() do
       render(conn, "agent_listing.html", listing: listing, showcase_image: showcase_image)
     else
-      send_resp(conn, 410, "Original listing may have changed, please request a new link from the listing agent")
+      # 410 is "Gone"
+      send_resp(conn, 410, "Link has expired")
     end
   end
 

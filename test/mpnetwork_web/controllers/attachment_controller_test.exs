@@ -72,6 +72,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     assert listing_id == listing.id
     assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
     [%Attachment{id: attachment_id} = attachment] = Repo.all(from a in Attachment, where: a.listing_id == ^listing_id)
+    conn = initial_conn
     conn = get conn, attachment_path(conn, :show, attachment_id)
     assert response(conn, 200) =~ @test_attachment_binary_data
     conn = initial_conn
@@ -94,10 +95,11 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   end
 
   test "updates chosen attachment and redirects when data is valid", %{conn: conn} do
+    initial_conn = conn
     {listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
     conn = put conn, attachment_path(conn, :update, attachment), attachment: @post_update_attrs
     assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
-
+    conn = initial_conn
     conn = get conn, attachment_path(conn, :show, attachment)
     assert response(conn, 200) == @test_attachment_new_binary_data
   end
@@ -109,9 +111,11 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   end
 
   test "deletes chosen attachment", %{conn: conn} do
+    initial_conn = conn
     {listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
     conn = delete conn, attachment_path(conn, :delete, attachment)
     assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
+    conn = initial_conn
     assert_error_sent 404, fn ->
       get conn, attachment_path(conn, :show, attachment)
     end

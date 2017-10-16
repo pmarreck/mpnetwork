@@ -85,8 +85,8 @@ defmodule MpnetworkWeb.Router do
   scope "/", MpnetworkWeb do
     pipe_through :browser # Use the default browser stack
     # Add public routes below
-    get "/client_listing/:id/:sig", ListingController, :client_listing, as: :public_client_listing
-    get "/agent_listing/:id/:sig", ListingController, :agent_listing, as: :public_agent_listing
+    get "/client_listing/:id", ListingController, :client_listing, as: :public_client_listing
+    get "/agent_listing/:id", ListingController, :agent_listing, as: :public_agent_listing
     # Image (and all) attachments are currently unauthenticated due to the need to make them available
     # in public links to listings... could this end up being a security problem due to autoincrementing IDs?
     get "/attachments/show_public/:id", AttachmentController, :show_public

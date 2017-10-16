@@ -7,7 +7,7 @@ defmodule Mpnetwork.Listing do
   alias Mpnetwork.Repo
   alias Briefly, as: Temp
   require Mpnetwork.Upload
-  alias Mpnetwork.Upload
+  alias Mpnetwork.{Upload, Crypto}
 
   alias Mpnetwork.Listing.{Attachment, AttachmentMetadata}
 
@@ -258,7 +258,7 @@ defmodule Mpnetwork.Listing do
 
   """
   def public_client_listing_code(listing) do
-    do_listing_code(listing, "client")
+    do_listing_code(listing, :client)
   end
 
   @doc """
@@ -271,16 +271,29 @@ defmodule Mpnetwork.Listing do
 
   """
   def public_agent_listing_code(listing) do
-    do_listing_code(listing, "agent")
+    do_listing_code(listing, :agent)
   end
 
   defp do_listing_code(listing, recipient_type) do
-    updated_secs_since_epoch = listing.updated_at
-      |> DateTime.from_naive!("Etc/UTC")
-      |> DateTime.to_unix
-    :crypto.hash(:sha256, "#{recipient_type}#{listing.id}#{updated_secs_since_epoch}#{MpnetworkWeb.Endpoint.config(:secret_key_base)}")
-      |> Base.encode32(case: :lower)
-      |> String.trim_trailing("=")
+    {listing.id, two_weeks_from_now_in_unix_epoch_days(), recipient_type}
+    |> Crypto.encrypt
+  end
+
+  def from_listing_code(ciphertext, recip) do
+    {listing_id, exp_day, ^recip} = Crypto.decrypt(ciphertext)
+    {listing_id, timex_datetime_from_unix_epoch_days(exp_day)}
+  end
+
+  defp now_in_unix_epoch_days do
+    Timex.to_unix(Timex.today()) / (60 * 60 * 24) |> trunc
+  end
+
+  defp two_weeks_from_now_in_unix_epoch_days do
+    now_in_unix_epoch_days() + 14
+  end
+
+  defp timex_datetime_from_unix_epoch_days(days) do
+    Timex.from_unix(days * 24 * 60 * 60)
   end
 
 end
