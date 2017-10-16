@@ -192,7 +192,7 @@ defmodule MpnetworkWeb.ListingController do
     # if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
       # name = if params["name"] && params["name"] != "", do: params["name"], else: nil
       # send email here with link to public MLS sheet
-      url = public_client_listing_url(conn, :client_listing, id, public_client_listing_code(listing))
+      url = public_client_listing_url(conn, :client_listing, public_client_listing_code(listing))
       # url = "/"
       {:ok, results} = ClientEmail.send_client(email_address, name, listing, url)
       |> Mailer.deliver

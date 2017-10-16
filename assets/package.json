@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "babel-brunch": "^6",
+    "babel-preset-env": "^1.6.0",
     "brunch": "^2",
     "clean-css-brunch": "^2",
     "css-brunch": "^2",
