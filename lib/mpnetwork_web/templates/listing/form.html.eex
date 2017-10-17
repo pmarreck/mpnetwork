@@ -1,9 +1,17 @@
 <div><br /></div>
 <%= render("_jumpto.html", existing: @existing) %>
-<%= if @existing do %>
-  <section class="content">
-    <div class="row">
-      <div class="col-md-12">
+
+<%= form_for @changeset, @action, [class: "contains-datetimes"], fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+<section class="content">
+  <div class="row">
+    <%= if @existing do %>
+      <div class="col-md-6">
         <div class="box box-info">
           <div class="box-header">
             <a name="attachments"></a>
@@ -23,19 +31,7 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-<% end %>
-
-<%= form_for @changeset, @action, [class: "contains-datetimes"], fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
-
-<section class="content">
-  <div class="row">
+    <% end %>
     <div class="col-md-6">
       <div class="box box-primary">
         <div class="box-header">

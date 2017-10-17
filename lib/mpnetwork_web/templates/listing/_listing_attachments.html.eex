@@ -1,33 +1,43 @@
 <%= if @attachments != [] do %>
-  <table class="table">
-    <tbody>
-  <%= for attachment <- @attachments do %>
-      <tr>
-        <%= if attachment.primary && @listing.user_id == @current_user.id do %>
-          <td style="vertical-align: middle">
-            <b>Designated Primary Photo ⇨</b>
-          </td>
-        <% else %>
-          <td></td>
-        <% end %>
-        <td>
-          <%= if attachment.is_image do %>
-            <%= link to: attachment_path(@conn, :show, attachment), title: "Click to view in original size" do %>
-              <img style="width:50%;max-width:400px;" src="<%= attachment_path(@conn, :show, attachment, w: 400, h: 400) %>" />
-            <% end %>
-          <% else %>
-            <i class="<%= html_icon_class_by_content_type(attachment.content_type) %>"></i>
-            <%= link attachment.original_filename, to: attachment_path(@conn, :show, attachment) %>
+
+<% {photo_attachments, other_attachments} = Enum.split_with(@attachments, &(&1.is_image)) %>
+<div class="box-body">
+  <div id="photo-carousel" class="carousel slide" data-interval="false">
+    <ol class="carousel-indicators">
+      <%= for {attachment, idx} <- Enum.with_index(photo_attachments) do %>
+        <li data-target="#photo-carousel" data-slide-to="<%= idx %>"<%= if attachment.primary, do: " class=\"active\"", else: "" %>></li>
+      <% end %>
+    </ol>
+    <div class="carousel-inner">
+      <%= for attachment <- photo_attachments do %>
+        <div class="item<%= if attachment.primary, do: " active", else: "" %>">
+          <%= link to: attachment_path(@conn, :show, attachment), title: "Click to view in original size" do %>
+            <img style="width: 100%; height: 100%" class="img-responsive" src="<%= attachment_path(@conn, :show, attachment, w: 600, h: 600) %>" />
           <% end %>
-        </td>
-        <td class="text-right">
-          <%= if @listing.user_id == @current_user.id do %>
-            <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
-            <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
+          <%= if attachment.primary do %>
+            <div class="carousel-caption">
+              Featured Photo
+            </div>
           <% end %>
-        </td>
-      </tr>
+        </div>
+      <% end %>
+    </div>
+    <a class="left carousel-control" href="#photo-carousel" data-slide="prev">
+      <span class="fa fa-angle-left"></span>
+    </a>
+    <a class="right carousel-control" href="#photo-carousel" data-slide="next">
+      <span class="fa fa-angle-right"></span>
+    </a>
+  </div>
+</div>
+
+<div class="box-body">
+  <%= for attachment <- other_attachments do %>
+    <div>
+      <i class="<%= html_icon_class_by_content_type(attachment.content_type) %>"></i>
+      <%= link attachment.original_filename, to: attachment_path(@conn, :show, attachment) %>
+    </div>
   <% end %>
-    </tbody>
-  </table>
+</div>
+
 <% end %>
