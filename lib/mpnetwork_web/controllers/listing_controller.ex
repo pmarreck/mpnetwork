@@ -150,12 +150,14 @@ defmodule MpnetworkWeb.ListingController do
   def client_listing(conn, %{"id" => signature}) do
     # conn = put_layout(conn, "public_listing.html")
     {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, :client)
-    listing = Realtor.get_listing!(decrypted_id)
+    listing = Realtor.get_listing!(decrypted_id) |> Repo.preload([:user, :broker, :colisting_agent])
+    broker = listing.broker
+    agent = listing.user
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
     case DateTime.compare(decrypted_expiration_date, Timex.now()) do
       :gt ->
-        render(conn, "client_listing.html", listing: listing, showcase_image: showcase_image)
+        render(conn, "client_listing.html", listing: listing, broker: broker, agent: agent, showcase_image: showcase_image)
       _ ->
         # 410 is "Gone"
         send_resp(conn, 410, "Link has expired")

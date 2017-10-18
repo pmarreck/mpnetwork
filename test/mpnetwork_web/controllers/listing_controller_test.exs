@@ -7,6 +7,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
   alias Mpnetwork.{Realtor, Repo}
   alias Mpnetwork.Realtor.Listing
   # import Mpnetwork.Test.Support.Utilities
+  import Mpnetwork.Listing, only: [public_client_listing_code: 1, public_client_listing_code: 2, now_in_unix_epoch_days: 0]
 
   @create_attrs %{visible_on: ~D[2010-03-17], expires_on: ~D[2010-04-17], state: "some state", new_construction: true, fios_available: true, tax_rate_code_area: 42, prop_tax_usd: 42, num_skylights: 42, lot_size: "420x240", attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["some ext_urls"], city: "some city", num_fireplaces: 2, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 42, num_half_baths: 42, year_built: 1984, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: true, cellular_coverage_quality: 3, hot_tub: true, basement: true, price_usd: 42, remarks: "some remarks", parking_spaces: 42, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "some address", num_garages: 42, num_baths: 42, central_vac: true, eef_led_lighting: true}
   @update_attrs %{visible_on: ~D[2011-04-18], expires_on: ~D[2011-05-18], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, prop_tax_usd: 43, num_skylights: 43, lot_size: "430x720", attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["some updated ext_urls"], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 1990, draft: true, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 4, hot_tub: false, basement: false, price_usd: 43, remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
@@ -106,5 +107,17 @@ defmodule MpnetworkWeb.ListingControllerTest do
     assert_error_sent 404, fn ->
       get initial_conn, listing_path(initial_conn, :show, listing)
     end
+  end
+
+  test "client_listing URL with expired date in the future returns 200", %{conn: conn} do
+    listing = fixture(:listing, conn.assigns.current_user)
+    conn = get conn, public_client_listing_path(conn, :client_listing, public_client_listing_code(listing))
+    assert html_response(conn, 200)
+  end
+
+  test "client_listing URL with expired date in the past returns 410", %{conn: conn} do
+    listing = fixture(:listing, conn.assigns.current_user)
+    conn = get conn, public_client_listing_path(conn, :client_listing, public_client_listing_code(listing, now_in_unix_epoch_days() - 1))
+    assert response(conn, 410)
   end
 end

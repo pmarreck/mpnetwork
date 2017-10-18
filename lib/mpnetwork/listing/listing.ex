@@ -257,8 +257,8 @@ defmodule Mpnetwork.Listing do
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_client_listing_code(listing) do
-    do_listing_code(listing, :client)
+  def public_client_listing_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+    do_listing_code(listing, :client, expiration_days_since_unix_epoch)
   end
 
   @doc """
@@ -270,12 +270,12 @@ defmodule Mpnetwork.Listing do
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_agent_listing_code(listing) do
-    do_listing_code(listing, :agent)
+  def public_agent_listing_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+    do_listing_code(listing, :agent, expiration_days_since_unix_epoch)
   end
 
-  defp do_listing_code(listing, recipient_type) do
-    {listing.id, two_weeks_from_now_in_unix_epoch_days(), recipient_type}
+  defp do_listing_code(listing, recipient_type, expiration_days_since_unix_epoch) do
+    {listing.id, expiration_days_since_unix_epoch, recipient_type}
     |> Crypto.encrypt
   end
 
@@ -284,8 +284,12 @@ defmodule Mpnetwork.Listing do
     {listing_id, timex_datetime_from_unix_epoch_days(exp_day)}
   end
 
-  defp now_in_unix_epoch_days do
-    Timex.to_unix(Timex.today()) / (60 * 60 * 24) |> trunc
+  def now_in_unix_epoch_days do
+    in_unix_epoch_days()
+  end
+
+  def in_unix_epoch_days(time \\ Timex.today()) do
+    Timex.to_unix(time) / (60 * 60 * 24) |> trunc
   end
 
   defp two_weeks_from_now_in_unix_epoch_days do

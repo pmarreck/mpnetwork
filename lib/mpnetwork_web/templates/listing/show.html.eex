@@ -966,7 +966,7 @@
           <!-- 168 -->
           <div class="listing_broker_comp_rental">
             <strong>Listing broker comp. rental:</strong>
-            <%= @listing.listing_broker_comp_rental %>
+            <%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}%" %>
           </div>
 
           <div class="row form-group">
