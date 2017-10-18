@@ -153,12 +153,12 @@ defmodule MpnetworkWeb.ListingController do
     listing = Realtor.get_listing!(decrypted_id)
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
-
-    if decrypted_expiration_date > Timex.now() do
-      render(conn, "client_listing.html", listing: listing, showcase_image: showcase_image)
-    else
-      # 410 is "Gone"
-      send_resp(conn, 410, "Link has expired")
+    case DateTime.compare(decrypted_expiration_date, Timex.now()) do
+      :gt ->
+        render(conn, "client_listing.html", listing: listing, showcase_image: showcase_image)
+      _ ->
+        # 410 is "Gone"
+        send_resp(conn, 410, "Link has expired")
     end
   end
 
