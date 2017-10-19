@@ -20,7 +20,7 @@ defmodule Mpnetwork.Realtor.Office do
   @doc false
   def changeset(%Office{} = office, attrs) do
     office
-    |> cast(attrs, [:name, :address, :city, :state, :zip, :phone])
+    |> cast(attrs, [:name, :address, :city, :state, :zip, :phone, :url])
     |> validate_required([:name])
     |> validate_format(:url, url_regex())
     |> unique_constraint(:name, name: :offices_name_address_index) # added by migration 20170828180917

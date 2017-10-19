@@ -3,6 +3,7 @@
 <p><%= @office.address %></p>
 <p><%= @office.city %>, <%= @office.state %> <%= @office.zip %></p>
 <p><%= @office.phone %></p>
+<p><%= @office.url %></p>
 
 <span><%= link "Edit", to: office_path(@conn, :edit, @office), class: "btn btn-default btn-xl" %></span>
 &nbsp;
