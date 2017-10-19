@@ -46,6 +46,12 @@
     <%= error_tag f, :phone %>
   </div>
 
+  <div class="form-group<%= if f.errors[:url], do: " has-error" %>">
+    <%= label f, :url, "Homepage URL", class: "control-label" %>
+    <%= text_input f, :url, class: "form-control" %>
+    <%= error_tag f, :url %>
+  </div>
+
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>

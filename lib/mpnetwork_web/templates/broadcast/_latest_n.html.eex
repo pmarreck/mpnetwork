@@ -9,7 +9,7 @@
                     <span class="username">
                       <a href="#"><%= broadcast.user.name %></a>
                     </span>
-                <span class="description"><%= broadcast.inserted_at |> relative_humanized_time %></span>
+                <span class="description">Posted <%= broadcast.inserted_at |> relative_humanized_time %></span>
               </div>
               <!-- /.user-block -->
             </div>

@@ -2,6 +2,7 @@ defmodule Mpnetwork.User do
   @moduledoc false
   use Ecto.Schema
   use Coherence.Schema
+  import Mpnetwork.Utils.Regexen
 
   @role_names_int ~w[root site_admin office_admin realtor readonly]a
   @role_names ["Root", "Site Admin", "Office Admin", "Realtor", "Read-only"]
@@ -21,6 +22,7 @@ defmodule Mpnetwork.User do
     field :name, :string
     field :office_phone, :string
     field :cell_phone, :string
+    field :url, :string
     # field :password, :string, virtual: true #set via coherence_schema()
     # field :office_id, :integer, default: 1
     # Had to rename the following association to "broker"
@@ -44,6 +46,7 @@ defmodule Mpnetwork.User do
     |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
     |> validate_required([:username, :email, :office_id])
     |> validate_format(:email, email_regex())
+    |> validate_format(:url, url_regex())
     |> unique_constraint(:email)
     |> validate_coherence(params)
   end
@@ -72,16 +75,6 @@ defmodule Mpnetwork.User do
       true -> params
     end
     params
-  end
-
-  # taken from http://www.regular-expressions.info/email.html
-  # Added A-Z to char classes to avoid having to use /i switch
-  def email_regex do
-    ~r/\A(?=[A-Za-z0-9@.!#$%&'*+\/=?^_`{|}~-]{6,254}\z)
-    (?=[A-Za-z0-9.!#$%&'*+\/=?^_`{|}~-]{1,64}@)
-    [A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*
-    @ (?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+
-    (?=[A-Za-z0-9-]{1,63}\z)[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\z/x
   end
 
 end

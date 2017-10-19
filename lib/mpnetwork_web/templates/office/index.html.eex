@@ -9,6 +9,7 @@
       <th>State</th>
       <th>Zip</th>
       <th>Phone</th>
+      <th>URL</th>
 
       <th></th>
     </tr>
@@ -22,6 +23,7 @@
       <td><%= office.state %></td>
       <td><%= office.zip %></td>
       <td><%= office.phone %></td>
+      <td><%= office.url %></td>
 
       <td class="text-right">
         <span><%= link "Show", to: office_path(@conn, :show, office), class: "btn btn-default btn-xs" %></span>
