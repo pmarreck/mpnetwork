@@ -6,14 +6,11 @@ defmodule Mpnetwork.Utils.RegexenTest do
 
   # I couldn't figure out how to handle these corner cases in the allotted time. :/
   # @too_difficult_positive_test_cases_hurt_my_brain ~w[
-  #   http://⌘.ws
-  #   http://➡.ws/䨹
-  #   http://⌘.ws/
-  #   http://code.google.com/events/#&product=browser
+  # Note that some of these are input backwards. I think it's just a problem of matching on the foreign TLD properly
+  # or just changing the matching to not match on specific TLD's.
   #   http://مثال.إختبار
   #   http://例子.测试
   #   http://उदाहरण.परीक्षा
-  #   http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com
   # ]
 
   @positive_test_cases ~w[
@@ -29,8 +26,14 @@ defmodule Mpnetwork.Utils.RegexenTest do
     http://www.example.com/wpstyle/?massacre\[subval\]=364
     http://www.example.com/wpstyle/compute.html?poo=364
     https://www.example.com/foo/?bar=baz&inga=42&quux
+    http://code.google.com/events/#product=browser
+    http://code.google.com/events/#&product=browser
+    http://a.ws
     http://✪df.ws
     http://✪df.ws/123
+    http://⌘.ws
+    http://⌘.ws/
+    http://➡.ws/䨹
     http://userid:password@example.com
     http://example.com:8080
     http://userid:password@example.com:8080
@@ -57,6 +60,14 @@ defmodule Mpnetwork.Utils.RegexenTest do
     http://a.baba-caca.de
     http://a.b-c.de
     http://223.255.255.254
+    http://FE80:0000:0000:0000:0202:B3FF:FE1E:8329/path.html
+    http://FE80::0202:B3FF:FE1E:8329
+    http://2001:db8:0:1
+    http://\[FE80::0202:B3FF:FE1E:8329\]:80
+    http://\[2001:db8::1\]:8080/path
+    http://fe80::7:8%eth0/whoa
+    https://::ffff:0:255.255.255.255/test
+    http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com
   ]
 
   # I disagreed that some of these should fail, so I commented them out... But can follow up again some other time.
