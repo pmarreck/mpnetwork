@@ -25,11 +25,15 @@ defmodule MpnetworkWeb.ListingController do
     primaries = Listing.primary_images_for_listings(listings, AttachmentMetadata)
     draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
     draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
+    upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(current_user(conn), 10)
+    upcoming_broker_oh_primaries = Listing.primary_images_for_listings(upcoming_broker_oh_listings, AttachmentMetadata)
     render(conn, "index.html",
       listings: listings,
       primaries: primaries,
       draft_listings: draft_listings,
-      draft_primaries: draft_primaries
+      draft_primaries: draft_primaries,
+      upcoming_broker_oh_listings: upcoming_broker_oh_listings,
+      upcoming_broker_oh_primaries: upcoming_broker_oh_primaries
     )
   end
 

@@ -1,10 +1,14 @@
 <%= render(MpnetworkWeb.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings List ]})) %>
 
-<h2>Latest 30 public new/recently-edited listings</h2>
+<h3>Next 10 upcoming broker open houses</h3>
+
+<%= render("_latest_n.html", draft: false, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user) %>
+
+<h3>Latest 30 public new/recently-edited listings</h3>
 
 <%= render("_latest_n.html", draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
 
-<h2>Your draft listings</h2>
+<h3>Your draft listings</h3>
 
 <%= render("_latest_n.html", draft: true, conn: @conn, listings: @draft_listings, primaries: @draft_primaries, current_user: @current_user) %>
 

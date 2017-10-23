@@ -209,6 +209,20 @@ defmodule Mpnetwork.Realtor do
   end
 
   @doc """
+  Returns the next N listings with upcoming broker open houses.
+
+  ## Examples
+
+      iex> list_next_broker_oh_listings()
+      [%Listing{}, ...]
+
+  """
+  def list_next_broker_oh_listings(current_user, number) do
+    now = Timex.now()
+    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.next_broker_oh_start_at], limit: ^number) |> Repo.preload([:broker, :user])
+  end
+
+  @doc """
   Queries listings.
   """
   def query_listings(query, current_user) do
