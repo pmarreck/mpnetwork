@@ -7,7 +7,7 @@ defmodule Mpnetwork.Listing.AttachmentMetadata do
   alias Mpnetwork.Realtor.Listing
 
 
-  schema "listing_attachments" do
+  schema "attachments" do
     # field :listing_id, :id
     belongs_to :listing, Listing
     field :content_type, :string

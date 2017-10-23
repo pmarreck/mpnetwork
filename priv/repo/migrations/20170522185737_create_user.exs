@@ -5,17 +5,20 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.User do
     create table(:users) do
       add :username, :string
       add :email, :string
-      add :fullname, :string
-      add :firstname, :string
-      add :lastname, :string
+      add :name, :string
       add :office_phone, :string
       add :cell_phone, :string
       add :encrypted_password, :string
-      add :office_id, :integer
+      add :office_id, references(:offices, on_delete: :nothing)
       add :role_id, :integer
+      add :email_sig, :text
 
       timestamps()
     end
+
+    # alter table(:users) do
+    #   modify(:id, :bigint)
+    # end
 
     create unique_index(:users, [:username])
     create unique_index(:users, [:email])

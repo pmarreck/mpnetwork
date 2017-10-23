@@ -1,0 +1,43 @@
+<h2><%= @user.name %></h2>
+
+<ul>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+
+  <li>
+    <strong>Office phone:</strong>
+    <%= @user.office_phone %>
+  </li>
+
+  <li>
+    <strong>Cell phone:</strong>
+    <%= @user.cell_phone %>
+  </li>
+
+  <li>
+    <strong>Url:</strong>
+    <%= @user.url %>
+  </li>
+
+  <li>
+    <strong>Email signature:</strong>
+    <%= @user.email_sig %>
+  </li>
+
+  <li>
+    <strong>Office:</strong>
+    <%= @user.broker && @user.broker.name %>
+  </li>
+
+  <li>
+    <strong>Role:</strong>
+    <%= role_id_to_name(@user.role_id) %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>
+<span><%= link "Back", to: user_path(@conn, :index) %></span>

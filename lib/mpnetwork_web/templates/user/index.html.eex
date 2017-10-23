@@ -1,0 +1,38 @@
+<h2>Listing Users</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Username/Email</th>
+      <th>Name</th>
+      <th>Office phone</th>
+      <th>Cell phone</th>
+      <th>Url</th>
+      <th>Office</th>
+      <th>Role</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td><%= user.email %></td>
+      <td><%= user.name %></td>
+      <td><%= user.office_phone %></td>
+      <td><%= user.cell_phone %></td>
+      <td><%= user.url %></td>
+      <td><%= user.broker && user.broker.name %></td>
+      <td><%= role_id_to_name(user.role_id) %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure? You will have to first delete or reassign all broadcasts, listings and attachments that this user currently owns."], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Invite New User", to: invitation_path(@conn, :new) %></span>

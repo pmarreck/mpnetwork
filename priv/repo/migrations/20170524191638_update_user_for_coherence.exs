@@ -21,10 +21,6 @@ defmodule Mpnetwork.Repo.Migrations.UpdateUserForCoherence do
       add :last_sign_in_ip, :string
       # unlockable_with_token
       add :unlock_token, :string
-      # confirmable
-      add :confirmation_token, :string
-      add :confirmed_at, :utc_datetime
-      add :confirmation_sent_at, :utc_datetime
     end
 
     create index(:users, [:office_id])

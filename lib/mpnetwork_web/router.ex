@@ -67,6 +67,7 @@ defmodule MpnetworkWeb.Router do
   scope "/", MpnetworkWeb do
     pipe_through [:protected, :admin_protected]
     resources "/offices", OfficeController
+    resources "/users", UserController, except: [:new, :create]
   end
 
   scope "/", MpnetworkWeb do
@@ -79,6 +80,7 @@ defmodule MpnetworkWeb.Router do
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController
+    resources "/profiles", UserController, as: :profile, only: [:edit, :update]
     get "/search", ListingController, :search, as: :search
   end
 

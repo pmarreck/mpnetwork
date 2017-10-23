@@ -2,8 +2,8 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Listing.Attachment do
   use Ecto.Migration
 
   def change do
-    create table(:listing_attachments) do
-      add :listing_id, references(:listings, on_delete: :nothing)
+    create table(:attachments) do
+      add :listing_id, :bigint
       add :primary, :boolean, default: false, null: false
       add :content_type, :string
       add :is_image, :boolean, default: false, null: false
@@ -15,7 +15,10 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Listing.Attachment do
 
       timestamps()
     end
+    alter table(:attachments) do
+      modify :listing_id, references(:listings, on_delete: :delete_all)
+    end
 
-    create index(:listing_attachments, [:listing_id])
+    create index(:attachments, [:listing_id])
   end
 end

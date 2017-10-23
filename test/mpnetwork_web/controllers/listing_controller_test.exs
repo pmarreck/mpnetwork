@@ -24,7 +24,8 @@ defmodule MpnetworkWeb.ListingControllerTest do
   setup %{conn: conn} do
     user = user_fixture()
     conn = assign(conn, :current_office, user.broker)
-    {:ok, conn: assign(conn, :current_user, user), user: user}
+    conn = assign(conn, :current_user, user)
+    {:ok, conn: conn, user: user}
   end
 
   def user_fixture(attrs \\ %{}) do

@@ -208,7 +208,7 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   defp offices do
-    Realtor.list_offices
+    Realtor.list_offices()
   end
 
   # defp users do

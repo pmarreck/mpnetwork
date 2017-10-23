@@ -47,13 +47,15 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Realtor.Listing do
       add :special_notes, :text
       add :visible_on, :date
       add :expires_on, :date
-      add :user_id, references(:users, on_delete: :nothing)
-      add :building_type_id, references(:building_types, on_delete: :nothing)
+      add :user_id, :bigint
 
       timestamps()
     end
 
+    alter table(:listings) do
+      modify :user_id, references(:users, on_delete: :delete_all)
+    end
+
     create index(:listings, [:user_id])
-    create index(:listings, [:building_type_id])
   end
 end

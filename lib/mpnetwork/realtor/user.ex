@@ -23,15 +23,16 @@ defmodule Mpnetwork.User do
     field :office_phone, :string
     field :cell_phone, :string
     field :url, :string
+    field :email_sig, :string
     # field :password, :string, virtual: true #set via coherence_schema()
     # field :office_id, :integer, default: 1
     # Had to rename the following association to "broker"
     # after "office" became a boolean. Oops.
     belongs_to :broker, Mpnetwork.Realtor.Office, foreign_key: :office_id
-    # field :role_id, :integer, default: 3 # Realtor
-    belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
-    has_many :listings, Mpnetwork.Realtor.Listing
-    has_many :broadcasts, Mpnetwork.Realtor.Broadcast
+    field :role_id, :integer, default: 3 # Realtor
+    # belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
+    has_many :listings, Mpnetwork.Realtor.Listing, on_delete: :delete_all
+    has_many :broadcasts, Mpnetwork.Realtor.Broadcast, on_delete: :delete_all
 
     coherence_schema() # adds :password_hash
 
@@ -43,11 +44,15 @@ defmodule Mpnetwork.User do
     |> copy_email_to_username_unless_username_exists
     |> default_role_to_realtor
     model
-    |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id] ++ coherence_fields())
+    |> cast(params, [:username, :email, :name, :office_phone, :cell_phone, :office_id, :role_id, :url, :email_sig] ++ coherence_fields())
     |> validate_required([:username, :email, :office_id])
     |> validate_format(:email, email_regex())
     |> validate_format(:url, url_regex())
     |> unique_constraint(:email)
+    |> foreign_key_constraint(:office_id)
+    |> check_constraint(:listings, name: "attachments_listing_id_fkey", message: "still has listings and/or listing attachments assigned to them")
+    # |> check_constraint(:listings, name: "listings_user_id_fkey", message: "still has listings assigned to them")
+    # |> check_constraint(:broadcasts, name: "broadcasts_user_id_fkey", message: "still has broadcasts assigned to them")
     |> validate_coherence(params)
   end
 

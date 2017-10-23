@@ -3,58 +3,10 @@ defmodule Mpnetwork.RealtorTest do
 
   alias Mpnetwork.Realtor
 
-  def valid_user_attrs do
-    %{name: "Realtortest User", email: "test#{random_uniquifying_string()}@example.com", password: "unit test all the things!", password_confirmation: "unit test all the things!"}
-  end
-
-  def valid_office_attrs do
-    %{name: "Coach#{trunc :rand.uniform*1000000000000}"}
-  end
-
-  def user_fixture(attrs \\ %{}) do
-    office = office_fixture()
-    attrs = attrs |> Enum.into(%{broker: office, office_id: office.id})
-    {:ok, user} =
-      attrs
-      |> Enum.into(valid_user_attrs())
-      |> Realtor.create_user()
-    user
-  end
-
-  def office_fixture(attrs \\ %{}) do
-    {:ok, office} =
-      attrs
-      |> Enum.into(valid_office_attrs())
-      |> Realtor.create_office()
-    office
-  end
-
-  defp random_uniquifying_string do
-    trunc(:rand.uniform()*100000000000000000) |> Integer.to_string
-  end
+  import Mpnetwork.Test.Support.Utilities
 
   describe "broadcasts" do
     alias Mpnetwork.Realtor.Broadcast
-
-    @valid_attrs %{body: "some body", title: "some title"}
-    @update_attrs %{body: "some updated body", title: "some updated title"}
-    @invalid_attrs %{body: nil, title: nil}
-
-    def broadcast_fixture(attrs \\ %{}) do
-      # first add an associated user if none exists
-      attrs = unless attrs[:user_id] do
-        user = user_fixture()
-        Enum.into(%{user_id: user.id}, attrs)
-      else
-        attrs
-      end
-      {:ok, broadcast} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Realtor.create_broadcast()
-
-      broadcast
-    end
 
     test "list_broadcasts/0 returns all broadcasts" do
       broadcast = broadcast_fixture()
@@ -68,29 +20,29 @@ defmodule Mpnetwork.RealtorTest do
 
     test "create_broadcast/1 with valid data creates a broadcast" do
       user = user_fixture()
-      valid_attrs_with_user_id = Enum.into(%{user_id: user.id}, @valid_attrs)
+      valid_attrs_with_user_id = Enum.into(%{user_id: user.id}, valid_broadcast_attrs())
       assert {:ok, %Broadcast{} = broadcast} = Realtor.create_broadcast(valid_attrs_with_user_id)
-      assert broadcast.body == "some body"
-      assert broadcast.title == "some title"
+      assert broadcast.body == "some broadcast body"
+      assert broadcast.title == "some broadcast title"
       assert broadcast.user_id != nil
     end
 
     test "create_broadcast/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Realtor.create_broadcast(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Realtor.create_broadcast(invalid_broadcast_attrs())
     end
 
     test "update_broadcast/2 with valid data updates the broadcast" do
       broadcast = broadcast_fixture()
-      assert {:ok, broadcast} = Realtor.update_broadcast(broadcast, @update_attrs)
+      assert {:ok, broadcast} = Realtor.update_broadcast(broadcast, valid_update_broadcast_attrs())
       assert %Broadcast{} = broadcast
-      assert broadcast.body == "some updated body"
-      assert broadcast.title == "some updated title"
+      assert broadcast.body == "some updated broadcast body"
+      assert broadcast.title == "some updated broadcast title"
       assert broadcast.user_id != nil
     end
 
     test "update_broadcast/2 with invalid data returns error changeset" do
       broadcast = broadcast_fixture()
-      assert {:error, %Ecto.Changeset{}} = Realtor.update_broadcast(broadcast, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Realtor.update_broadcast(broadcast, invalid_broadcast_attrs())
       assert broadcast == Realtor.get_broadcast!(broadcast.id)
     end
 
@@ -368,6 +320,76 @@ defmodule Mpnetwork.RealtorTest do
     test "change_office/1 returns a office changeset" do
       office = office_fixture()
       assert %Ecto.Changeset{} = Realtor.change_office(office)
+    end
+  end
+
+  describe "users" do
+    alias Mpnetwork.User
+
+    test "list_users/0 returns all users" do
+      user = user_fixture()
+      retrieved_users = Realtor.list_users()
+      [retrieved_user] = retrieved_users
+      assert user.email == retrieved_user.email
+    end
+
+    test "get_user!/1 returns the user with given id" do
+      user = user_fixture()
+      assert Realtor.get_user!(user.id).email == user.email
+    end
+
+    test "create_user/1 with valid data creates a user" do
+      office = office_fixture()
+      valid_attrs = valid_user_attrs(office_id: office.id)
+      assert {:ok, %User{} = user} = Realtor.create_user(valid_attrs)
+      assert user.cell_phone == valid_attrs.cell_phone
+      assert user.email == valid_attrs.email
+      assert user.name == valid_attrs.name
+      assert user.office_id == valid_attrs.office_id
+      assert user.office_phone == valid_attrs.office_phone
+      assert user.role_id == valid_attrs.role_id
+      assert user.url == valid_attrs.url
+      assert user.username == valid_attrs.username
+    end
+
+    test "create_user/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Realtor.create_user(invalid_user_attrs())
+    end
+
+    test "update_user/2 with valid data updates the user" do
+      office = office_fixture()
+      user = user_fixture(office_id: office.id)
+      assert user.url
+      valid_update_attrs = valid_update_user_attrs(office_id: office.id)
+      assert {:ok, user} = Realtor.update_user(user, valid_update_attrs)
+      assert %User{} = user
+      assert user.cell_phone == valid_update_attrs.cell_phone
+      assert user.name == valid_update_attrs.name
+      assert user.office_id == valid_update_attrs.office_id
+      assert user.office_phone == valid_update_attrs.office_phone
+      assert user.url == valid_update_attrs.url
+    end
+
+    test "update_user/2 with invalid data returns error changeset" do
+      user = user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Realtor.update_user(user, invalid_user_attrs())
+      # because passwords are cleared in changesets...
+      from_db = Realtor.get_user!(user.id)
+      assert user.name == from_db.name
+      assert user.email == from_db.email
+      assert user.cell_phone == from_db.cell_phone
+      assert user.role_id == from_db.role_id
+    end
+
+    test "delete_user/1 deletes the user" do
+      user = user_fixture()
+      assert {:ok, %User{}} = Realtor.delete_user(user)
+      assert_raise Ecto.NoResultsError, fn -> Realtor.get_user!(user.id) end
+    end
+
+    test "change_user/1 returns a user changeset" do
+      user = user_fixture()
+      assert %Ecto.Changeset{} = Realtor.change_user(user)
     end
   end
 end

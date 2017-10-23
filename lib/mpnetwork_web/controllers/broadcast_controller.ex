@@ -39,7 +39,7 @@ defmodule MpnetworkWeb.BroadcastController do
       changeset = Realtor.change_broadcast(broadcast)
       render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
     else
-      render(conn, 405, "Not allowed")
+      send_resp(conn, 405, "Not allowed")
     end
   end
 
@@ -57,7 +57,7 @@ defmodule MpnetworkWeb.BroadcastController do
           render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
       end
     else
-      render(conn, 405, "Not allowed")
+      send_resp(conn, 405, "Not allowed")
     end
   end
 
@@ -70,7 +70,7 @@ defmodule MpnetworkWeb.BroadcastController do
       |> put_flash(:info, "Broadcast deleted successfully.")
       |> redirect(to: broadcast_path(conn, :index))
     else
-      render(conn, 405, "Not allowed")
+      send_resp(conn, 405, "Not allowed")
     end
   end
 end

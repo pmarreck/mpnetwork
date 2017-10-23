@@ -2,10 +2,16 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   use Phoenix.HTML
 
-  @roles {"Root", "Site Admin", "Office Admin", "Realtor", "User"}
+  @roles {"Root", "Site Admin", "Office Admin", "Realtor", "Read-only"}
+  @roles_as_list Tuple.to_list(@roles)
+  @roles_with_idx Enum.with_index(@roles_as_list)
+
+  def roles, do: @roles
+  def roles_as_list, do: @roles_as_list
+  def roles_with_index, do: @roles_with_idx
 
   def role_id_to_name(role_id) do
-    elem(@roles, role_id)
+    elem(roles(), role_id)
   end
 
   def gravatar_url(email) do
@@ -147,6 +153,14 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   def is_admin(conn) do
     conn.assigns.current_user.role_id < 3
+  end
+
+  @blank_select_opt {" ", nil}
+  def prepend_blank_select_opt([]) do
+    [@blank_select_opt]
+  end
+  def prepend_blank_select_opt([_|_] = one_or_more) do
+    [@blank_select_opt | one_or_more]
   end
 
 end
