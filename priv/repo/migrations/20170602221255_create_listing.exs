@@ -17,23 +17,24 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Realtor.Listing do
       add :num_baths, :integer
       add :num_half_baths, :integer
       add :sq_ft, :integer
-      add :lot_size_acre_cents, :integer
       add :year_built, :integer
       add :stories, :integer
       add :basement, :boolean, default: false, null: false
-      add :fireplaces, :integer
+      add :num_fireplaces, :integer
       add :parking_spaces, :integer
       add :mls_source_id, :integer
       add :num_garages, :integer
       add :attached_garage, :boolean, default: false, null: false
       add :new_construction, :boolean, default: false, null: false
       add :tax_rate_code_area, :integer
-      add :total_annual_property_taxes_usd, :integer
+      add :prop_tax_usd, :integer
       add :patio, :boolean, default: false, null: false
       add :deck, :boolean, default: false, null: false
       add :pool, :boolean, default: false, null: false
       add :hot_tub, :boolean, default: false, null: false
       add :num_skylights, :integer
+      add :handicap_access, :boolean
+      add :handicap_access_desc, :string
       add :central_air, :boolean, default: false, null: false
       add :central_vac, :boolean, default: false, null: false
       add :security_system, :boolean, default: false, null: false
@@ -41,13 +42,12 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Realtor.Listing do
       add :high_speed_internet_available, :boolean, default: false, null: false
       add :modern_kitchen_countertops, :boolean, default: false, null: false
       add :cellular_coverage_quality, :integer
-      add :led_lighting, :boolean, default: false, null: false
-      add :new_appliances, :boolean, default: false, null: false
-      add :ext_url, :string
-      add :special_notes, :text
+      add :eef_led_lighting, :boolean, default: false, null: false
+      add :remarks, :text
       add :visible_on, :date
       add :expires_on, :date
       add :user_id, :bigint
+      add :siding_desc, :string
 
       timestamps()
     end

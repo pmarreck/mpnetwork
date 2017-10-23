@@ -1,7 +1,32 @@
 defmodule Mpnetwork.Repo.Migrations.UpdateListingAddManyEnumTypes do
   use Ecto.Migration
 
+  defp idempotency do
+    ~w[
+      class_type
+      listing_status_type
+      basement_type
+      waterfront_type
+      compass_point_type
+      style_type
+      dining_room_type
+      fuel_type
+      heating_type
+      sewage_type
+      water_type
+      sep_hw_heater_type
+      green_cert_type
+      patio_type
+      porch_type
+      pool_type
+      deck_type
+      att_type
+    ]
+    |> Enum.each(fn t -> execute("DROP TYPE IF EXISTS #{t} CASCADE;") end)
+  end
+
   def up do
+    idempotency()
 
     ClassTypeEnum.create_type
     ListingStatusTypeEnum.create_type
@@ -20,13 +45,12 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingAddManyEnumTypes do
     PorchTypeEnum.create_type
     PoolTypeEnum.create_type
     DeckTypeEnum.create_type
+    AttachmentTypeEnum.create_type
 
     alter table(:listings) do
       add :class_type, :class_type
       add :listing_status_type, :listing_status_type
       add :basement_type, :basement_type
-      remove :new_appliances
-      remove :ext_url
       add :waterfront_type, :waterfront_type
       add :front_exposure_type, :compass_point_type
       add :style_type, :style_type
@@ -39,9 +63,9 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingAddManyEnumTypes do
       add :green_cert_type, :green_cert_type
       add :patio_type, :patio_type
       add :porch_type, :porch_type
-      remove :lot_size_acre_cents
       add :pool_type, :pool_type
       add :deck_type, :deck_type
+      add :att_type, :att_type
     end
 
   end
@@ -52,8 +76,6 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingAddManyEnumTypes do
       remove :class_type
       remove :listing_status_type
       remove :basement_type
-      add :new_appliances, :boolean
-      add :ext_url, :string
       remove :waterfront_type
       remove :front_exposure_type
       remove :style_type
@@ -66,28 +88,30 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingAddManyEnumTypes do
       remove :green_cert_type
       remove :patio_type
       remove :porch_type
-      add :lot_size_acre_cents, :integer
       remove :pool_type
       remove :deck_type
+      remove :att_type
     end
 
-    ClassTypeEnum.drop_type
-    ListingStatusTypeEnum.drop_type
-    BasementTypeEnum.drop_type
-    WaterfrontTypeEnum.drop_type
-    CompassPointEnum.drop_type
-    StyleTypeEnum.drop_type
-    DiningRoomTypeEnum.drop_type
-    FuelTypeEnum.drop_type
-    HeatingTypeEnum.drop_type
-    SewageTypeEnum.drop_type
-    WaterTypeEnum.drop_type
-    SepHwHeaterTypeEnum.drop_type
-    GreenCertTypeEnum.drop_type
-    PatioTypeEnum.drop_type
-    PorchTypeEnum.drop_type
-    PoolTypeEnum.drop_type
-    DeckTypeEnum.drop_type
+    idempotency()
+    # ClassTypeEnum.drop_type
+    # ListingStatusTypeEnum.drop_type
+    # BasementTypeEnum.drop_type
+    # WaterfrontTypeEnum.drop_type
+    # CompassPointEnum.drop_type
+    # StyleTypeEnum.drop_type
+    # DiningRoomTypeEnum.drop_type
+    # FuelTypeEnum.drop_type
+    # HeatingTypeEnum.drop_type
+    # SewageTypeEnum.drop_type
+    # WaterTypeEnum.drop_type
+    # SepHwHeaterTypeEnum.drop_type
+    # GreenCertTypeEnum.drop_type
+    # PatioTypeEnum.drop_type
+    # PorchTypeEnum.drop_type
+    # PoolTypeEnum.drop_type
+    # DeckTypeEnum.drop_type
+    # AttachmentTypeEnum.drop_type
   end
 
 end

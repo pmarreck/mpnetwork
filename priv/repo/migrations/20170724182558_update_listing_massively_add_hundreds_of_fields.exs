@@ -8,7 +8,7 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingMassivelyAddHundredsOfFields do
       add :next_cust_oh_start_at, :naive_datetime
       add :next_cust_oh_end_at, :naive_datetime
       add :ext_urls, {:array, :string}
-      add :office_id, references(:offices, on_delete: :nothing)
+      add :broker_id, references(:offices, on_delete: :nothing)
       # Booleans
       ~w[
         porch
@@ -32,6 +32,7 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingMassivelyAddHundredsOfFields do
         eat_in_kitchen
         sewer
         sep_hw_heater
+        equestrian
         energy_eff
         green_certified
         eef_energy_star_stove
@@ -140,10 +141,6 @@ defmodule Mpnetwork.Repo.Migrations.UpdateListingMassivelyAddHundredsOfFields do
 
     end
 
-    rename table(:listings), :fireplaces, to: :num_fireplaces
-    rename table(:listings), :total_annual_property_taxes_usd, to: :prop_tax_usd
-    rename table(:listings), :special_notes, to: :remarks
-    rename table(:listings), :led_lighting, to: :eef_led_lighting
   end
 
 end
