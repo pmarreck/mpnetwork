@@ -76,10 +76,10 @@ config :logger, level: :info
 
 # Database config
 # Configure your database
+# Note that {:system, "DATABASE_URL"} is deprecated so the db url is now set in the init callback in Mpnetwork.Repo
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: {:system, "DATABASE_URL"}, #System.get_env("DATABASE_URL"),
-  pool_size: 40, # limit in google cloud postgres is 100
+  pool_size: 60, # limit in google cloud postgres is 100
   ssl: true
 
 # Guardian
