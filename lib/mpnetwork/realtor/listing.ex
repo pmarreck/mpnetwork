@@ -248,6 +248,20 @@ defmodule Mpnetwork.Realtor.Listing do
     end
   end
 
+  defp validate_urls(changeset, nil), do: changeset
+  defp validate_urls(changeset, []), do: changeset
+  defp validate_urls(changeset, [""]), do: changeset
+  defp validate_urls(changeset, urls) when is_list(urls) do
+    import Mpnetwork.Utils.Regexen
+    urls
+    |> Enum.reduce(changeset, fn(url, changeset) ->
+      case Regex.match?(url_regex(), url) do
+        true -> changeset
+        _    -> add_error(changeset, :ext_urls, "#{url} is not a valid URL" )
+      end
+    end)
+  end
+
   @doc """
     Relaxed requireds for listing attributes in "draft" status.
     That was easy...
@@ -304,6 +318,7 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:num_dishwashers, greater_than_or_equal_to: 0)
     |> validate_number(:heat_num_zones, greater_than_or_equal_to: 0)
     |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
+    |> validate_urls(get_field(listing, :ext_urls))
     |> validate_db_datetime_constraints()
     |> validate_consecutive_datetimes({:next_broker_oh_start_at, :next_broker_oh_end_at})
     |> validate_consecutive_datetimes({:next_cust_oh_start_at, :next_cust_oh_end_at})

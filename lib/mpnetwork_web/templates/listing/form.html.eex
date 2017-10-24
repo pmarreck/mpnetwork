@@ -1648,8 +1648,10 @@
           </div>
 
           <!-- 186 -->
-          <% if f.data.ext_urls do %>
-            <%= for {url, idx} <- Enum.with_index(Enum.filter(f.data.ext_urls, &(&1!="")), 1) do %>
+          <% vals = f && f.source && f.source.changes && f.source.changes[:ext_urls]
+             vals = vals || f.data.ext_urls %>
+          <%= if vals do %>
+            <%= for {url, idx} <- Enum.with_index(Enum.filter(vals, &(&1!="")), 1) do %>
               <div class="form-group<%= if f.errors[:ext_urls], do: " has-error" %>">
                 <%= label f, :ext_urls, "External URL #{idx}", class: "control-label" %>
                 <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: url, class: "form-control" %>

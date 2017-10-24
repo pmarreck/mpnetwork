@@ -14,6 +14,7 @@ defmodule Mpnetwork.Utils.RegexenTest do
   # ]
 
   @positive_test_cases ~w[
+    https://www.mpwrealestateboard.network
     http://foo.com
     http://foo.com/
     http://foo.com/blah_blah

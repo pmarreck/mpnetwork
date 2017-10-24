@@ -132,10 +132,32 @@ defmodule MpnetworkWeb.GlobalHelpers do
     Map.get(@content_type_to_icon_class_map, content_type, "fa fa-fw fa-file-o")
   end
 
+  def to_atom(name) when is_binary(name), do: String.to_existing_atom(name)
+  def to_atom(name) when is_atom(name), do: name
+
   # datalist element
   def datalist_input(f, name, %{list_name: list_name, data: list} = attrs) do
     struct_name = if f, do: "#{f.name}[#{name}]", else: "#{name}"
-    val = if f, do: Map.get(f.data, name), else: nil
+    val = if f do
+      source = Map.get(f, :source)
+      if source do
+        changes = Map.get(source, :changes)
+        if changes do
+          changed_val = Map.get(changes, to_atom(name))
+          if changed_val do
+            changed_val
+          else
+            Map.get(f.data, name)
+          end
+        else
+          Map.get(f.data, name)
+        end
+      else
+        Map.get(f.data, name)
+      end
+    else
+      nil
+    end
     attrs = attrs
     |> Map.put(:type, "text")
     |> Map.put(:list, list_name)
