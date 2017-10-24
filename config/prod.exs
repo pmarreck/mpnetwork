@@ -79,7 +79,7 @@ config :logger, level: :info
 # Note that {:system, "DATABASE_URL"} is deprecated so the db url is now set in the init callback in Mpnetwork.Repo
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  pool_size: 60, # limit in google cloud postgres is 100
+  pool_size: 40, # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
   ssl: true
 
 # Guardian
