@@ -1,33 +1,10 @@
-defmodule MpnetworkWeb.UserController do
+defmodule MpnetworkWeb.ProfileController do
   use MpnetworkWeb, :controller
 
   alias Mpnetwork.Realtor
   # alias Mpnetwork.User
 
   import MpnetworkWeb.GlobalHelpers, only: [is_admin: 1]
-
-  def index(conn, _params) do
-    users = Realtor.list_users()
-    render(conn, "index.html", users: users)
-  end
-
-  # New users should be invited and go through that workflow
-
-  # def new(conn, _params) do
-  #   changeset = Realtor.change_user(%User{})
-  #   render(conn, "new.html", changeset: changeset)
-  # end
-
-  # def create(conn, %{"user" => user_params}) do
-  #   case Realtor.create_user(user_params) do
-  #     {:ok, user} ->
-  #       conn
-  #       |> put_flash(:info, "User created successfully.")
-  #       |> redirect(to: user_path(conn, :show, user))
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "new.html", changeset: changeset)
-  #   end
-  # end
 
   def show(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
@@ -51,22 +28,11 @@ defmodule MpnetworkWeb.UserController do
       case Realtor.update_user(user, user_params) do
         {:ok, user} ->
           conn
-          |> put_flash(:info, "User updated successfully.")
-          |> redirect(to: user_path(conn, :show, user))
+          |> put_flash(:info, "Profile updated successfully.")
+          |> redirect(to: profile_path(conn, :show, user))
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", user: user, offices: Realtor.list_offices(), roles: filtered_roles(current_user(conn)), changeset: changeset)
       end
-    end)
-  end
-
-  def delete(conn, %{"id" => id}) do
-    user = Realtor.get_user!(id)
-    ensure_owner_or_admin(conn, user, fn ->
-      {:ok, _user} = Realtor.delete_user(user)
-
-      conn
-      |> put_flash(:info, "User deleted successfully.")
-      |> redirect(to: user_path(conn, :index))
     end)
   end
 

@@ -80,7 +80,7 @@ defmodule MpnetworkWeb.Router do
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController
-    resources "/profiles", UserController, as: :profile, only: [:edit, :update]
+    resources "/profiles", ProfileController, as: :profile, only: [:edit, :update, :show]
     get "/search", ListingController, :search, as: :search
   end
 
