@@ -12,8 +12,8 @@
     <!-- /.user-block -->
   </div>
   <div class="col-md-10"
-    <p><strong><%= @broadcast.title %></strong></p>
-    <p><%= @broadcast.body %></p>
+    <p><strong><%= raw HtmlSanitizeEx.html5 @broadcast.title %></strong></p>
+    <p><%= raw HtmlSanitizeEx.html5 @broadcast.body %></p>
   </div>
 </div>
 

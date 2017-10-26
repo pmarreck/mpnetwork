@@ -147,7 +147,7 @@
         </div>
       </div>
       <div class="group orientation-vertical ">
-        <div class="report-field label-visible behavior"><span class="report-label ">Remarks:</span><span class="report-value"><%= @listing.remarks %></span></div>
+        <div class="report-field label-visible behavior"><span class="report-label ">Remarks:</span><span class="report-value"><%= raw HtmlSanitizeEx.basic_html @listing.remarks %></span></div>
       </div>
       <div class="report-literal report-field report-line ">
         <hr>

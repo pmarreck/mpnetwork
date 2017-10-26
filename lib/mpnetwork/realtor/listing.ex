@@ -224,8 +224,10 @@ defmodule Mpnetwork.Realtor.Listing do
     earlier = get_field(changeset, field_first)
     hopefully_later = get_field(changeset, field_last)
     if earlier && hopefully_later do
-      case hopefully_later > earlier do
-        true -> changeset
+      # I wanted to account for all possible datetime structs, they all have the "compare" function, so...
+      specific_datetime_module = earlier.__struct__
+      case specific_datetime_module.compare(earlier, hopefully_later) do
+        :lt  -> changeset
         _    -> add_error(changeset, field_first, @datetime_order_constraint_violation_message)
                 |> add_error(field_last, @datetime_order_constraint_violation_message)
       end

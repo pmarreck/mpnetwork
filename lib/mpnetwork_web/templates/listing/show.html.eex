@@ -1032,7 +1032,7 @@
           <!-- 176 -->
           <div class="remarks">
             <strong>Agent-only remarks:</strong>
-            <%= @listing.remarks %>
+            <%= raw HtmlSanitizeEx.html5 @listing.remarks %>
           </div>
 
           <!-- 177 -->
