@@ -13,7 +13,7 @@ defmodule MpnetworkWeb.PageControllerTest do
     conn = conn
     |> assign(:current_user, user)
     |> get("/")
-    assert html_response(conn, 200) =~ "No listings yet"
+    assert html_response(conn, 200) =~ "No listings"
   end
 
 end
