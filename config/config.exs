@@ -41,12 +41,12 @@ config :coherence,
   email_from_name: "Manhasset-Port Washington Board of Realtors",
   email_from_email: "board@mpwrealestateboard.network",
   opts: [:authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token, :invitable, :rememberable],
-  require_current_password: true, # Current password is required when updating new password.
+  require_current_password: false,
   reset_token_expire_days: 2,
   allow_unconfirmed_access_for: 0,
-  max_failed_login_attempts: 5,
-  unlock_timeout_minutes: 15,
-  unlock_token_expire_minutes: 15,
+  max_failed_login_attempts: 6,
+  unlock_timeout_minutes: 10,
+  unlock_token_expire_minutes: 60,
   rememberable_cookie_expire_hours: 14*24
 
 config :coherence, MpnetworkWeb.Coherence.Mailer,

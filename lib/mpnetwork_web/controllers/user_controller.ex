@@ -1,8 +1,7 @@
 defmodule MpnetworkWeb.UserController do
   use MpnetworkWeb, :controller
 
-  alias Mpnetwork.Realtor
-  # alias Mpnetwork.User
+  alias Mpnetwork.{Realtor, User}
 
   import MpnetworkWeb.GlobalHelpers, only: [is_admin: 1]
 
@@ -12,22 +11,31 @@ defmodule MpnetworkWeb.UserController do
   end
 
   # New users should be invited and go through that workflow
+  # But admins insisted on being able to create users and manage their passwords, so...
 
-  # def new(conn, _params) do
-  #   changeset = Realtor.change_user(%User{})
-  #   render(conn, "new.html", changeset: changeset)
-  # end
+  def new(conn, _params) do
+    ensure_owner_or_admin(conn, nil, fn ->
+      offices = Realtor.list_offices()
+      roles = filtered_roles(current_user(conn))
+      changeset = Realtor.change_user(%User{})
+      render(conn, "new.html", offices: offices, roles: roles, changeset: changeset)
+    end)
+  end
 
-  # def create(conn, %{"user" => user_params}) do
-  #   case Realtor.create_user(user_params) do
-  #     {:ok, user} ->
-  #       conn
-  #       |> put_flash(:info, "User created successfully.")
-  #       |> redirect(to: user_path(conn, :show, user))
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "new.html", changeset: changeset)
-  #   end
-  # end
+  def create(conn, %{"user" => user_params}) do
+    ensure_owner_or_admin(conn, nil, fn ->
+      offices = Realtor.list_offices()
+      roles = filtered_roles(current_user(conn))
+      case Realtor.create_user(user_params) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "User created successfully.")
+          |> redirect(to: user_path(conn, :show, user))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html", offices: offices, roles: roles, changeset: changeset)
+      end
+    end)
+  end
 
   def show(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
@@ -72,7 +80,7 @@ defmodule MpnetworkWeb.UserController do
 
   defp ensure_owner_or_admin(conn, resource, lambda) do
     u = current_user(conn)
-    oid = resource.id
+    oid = resource && resource.id
     admin = u.role_id < 3
     if u.id == oid || admin do
       lambda.()

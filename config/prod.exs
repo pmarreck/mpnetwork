@@ -18,14 +18,11 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   root: ".",
   server: true,
-  # url: [scheme: "https", host: "murmuring-meadow-65796.herokuapp.com", port: 443],
-  # url: [scheme: "https", host: "mpwrealestateboard.network", port: 443],
-  # url: [host: "www.mpwrealestateboard.network", port: 80],
   url: [scheme: "https", host: "${FQDN}", port: 443],
   static_url: [scheme: "https", host: "${STATIC_URL}", port: 443],
   force_ssl: [hsts: true, rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: "${SECRET_KEY_BASE}" #System.get_env("SECRET_KEY_BASE")
+  secret_key_base: "${SECRET_KEY_BASE}"
 
 # Do not print debug messages in production
 config :logger, level: :info

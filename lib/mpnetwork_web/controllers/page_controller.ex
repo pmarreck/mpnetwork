@@ -18,4 +18,9 @@ defmodule MpnetworkWeb.PageController do
       draft_primaries: draft_primaries
     )
   end
+
+  def bare_session_redirect(conn, _params) do
+    redirect(conn, to: page_path(conn, :index))
+  end
+
 end

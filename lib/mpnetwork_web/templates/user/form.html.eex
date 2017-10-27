@@ -6,7 +6,7 @@
   <% end %>
 
   <div class="form-group">
-    <%= label f, :email, "Username/Email", class: "control-label" %>
+    <%= label f, :email, "Email (login username)", class: "control-label" %>
     <%= text_input f, :email, class: "form-control" %>
     <%= error_tag f, :email %>
   </div>
@@ -68,6 +68,18 @@
       <%= error_tag f, :role_id %>
     </div>
   <% end %>
+
+  <div class="form-group">
+    <%= label f, :password, "New Password", class: "control-label" %>
+    <%= password_input f, :password, class: "form-control" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :password_confirmation, "New Password Confirmation", class: "control-label" %>
+    <%= password_input f, :password_confirmation, class: "form-control" %>
+    <%= error_tag f, :password_confirmation %>
+  </div>
 
   <div>
     <span>For a profile photo:</span>

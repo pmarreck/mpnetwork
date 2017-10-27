@@ -1,11 +1,3 @@
 <div>
-  <p><%= dgettext "coherence", "Hello %{name}!", name: @name %><p>
-  <p>
-    <%= dgettext "coherence", "You have been invited to create an account on mpwrealestateboard.network, the Manhasset-Port Washington Real Estate Network. Use the link below to create an account." %>
-  </p>
-  <p>
-    <a href="<%= @url %>"><%= dgettext "coherence", "Create my Account" %></a>
-  </p>
-  <p><%= dgettext "coherence", "Thank you!" %></p>
+  <a href="<%= @url %>"><%= dgettext "coherence", "Create my Account" %></a>
 </div>
-

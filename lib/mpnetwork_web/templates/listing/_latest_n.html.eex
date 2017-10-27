@@ -68,6 +68,6 @@
         </tbody>
     </table>
   <% else %>
-    <p>No <%= if @draft, do: "draft " %>listings yet!</p>
+    <p>No listings!</p>
   <% end %>
 </div>

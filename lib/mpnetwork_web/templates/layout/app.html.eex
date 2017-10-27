@@ -140,7 +140,7 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><%= link "Invite a user", to: invitation_path(@conn, :new) %></li>
+                  <li><%= link "Invite a new user", to: invitation_path(@conn, :new) %></li>
                 </ul>
                 <ul class="treeview-menu">
                   <li><%= link "Edit users", to: user_path(@conn, :index) %></li>

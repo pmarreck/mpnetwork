@@ -27,8 +27,8 @@
               </div>
             <% else %>
               <div class="col-md-10">
-                <p><strong><%= broadcast.title %></strong></p>
-                <p><%= broadcast.body %>
+                <p><strong><%= raw HtmlSanitizeEx.html5 broadcast.title %></strong></p>
+                <p><%= raw HtmlSanitizeEx.html5 broadcast.body %>
                   <%= if @current_user.id == broadcast.user_id do %>
                     <div class="text-right">
                       <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>

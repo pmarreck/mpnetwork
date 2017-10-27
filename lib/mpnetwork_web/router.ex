@@ -67,7 +67,7 @@ defmodule MpnetworkWeb.Router do
   scope "/", MpnetworkWeb do
     pipe_through [:protected, :admin_protected]
     resources "/offices", OfficeController
-    resources "/users", UserController, except: [:new, :create]
+    resources "/users", UserController
   end
 
   scope "/", MpnetworkWeb do
@@ -82,6 +82,8 @@ defmodule MpnetworkWeb.Router do
     resources "/attachments", AttachmentController
     resources "/profiles", ProfileController, as: :profile, only: [:edit, :update, :show]
     get "/search", ListingController, :search, as: :search
+    # solves bug with multiple login attempts trying to redirect back to /sessions after success due to referer changing
+    get "/sessions", PageController, :bare_session_redirect
   end
 
   scope "/", MpnetworkWeb do

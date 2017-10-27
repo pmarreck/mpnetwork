@@ -3,7 +3,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Username/Email</th>
+      <th>Email</th>
       <th>Name</th>
       <th>Office phone</th>
       <th>Cell phone</th>
@@ -35,4 +35,6 @@
   </tbody>
 </table>
 
-<span><%= link "Invite New User", to: invitation_path(@conn, :new) %></span>
+<p><%= link "Invite New User", to: invitation_path(@conn, :new) %></p>
+
+<p><%= link "Create New User", to: user_path(@conn, :new) %> <br /><i>note: it is strongly recommended to invite new users instead</i></p>
