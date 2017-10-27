@@ -5,14 +5,16 @@
         <tr>
             <th>Address</th>
             <th>Town</th>
-            <th>Thumb</th>
+            <%= if @primaries do %>
+              <th>Thumb</th>
+            <% end %>
             <th>Owner</th>
             <th>Style</th>
             <th>Status</th>
             <th>List Price</th>
             <th>Agency</th>
             <th>Rental</th>
-            <th>Next Broker OH<th>
+            <th>Next Broker OH</th>
             <th>Remarks</th>
             <th></th>
         </tr>
@@ -35,13 +37,15 @@
             <td>
               <%= listing.city %>
             </td>
-            <td>
-                <%= if @primaries[listing.id] do %>
-                  <%= link to: listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
-                    <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
+            <%= if @primaries do %>
+              <td>
+                  <%= if @primaries[listing.id] do %>
+                    <%= link to: listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
+                      <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
+                    <% end %>
                   <% end %>
-                <% end %>
-            </td>
+              </td>
+            <% end %>
             <td>
               <%= listing.owner_name %>
             </td>

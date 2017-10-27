@@ -1,0 +1,47 @@
+<div style="padding-top: 20px">
+  <%= if @listings && @listings != [] do %>
+    <table class="table inspection" style="border: 1px solid grey;">
+        <thead>
+          <tr>
+              <th>Agency</th>
+              <th>Listing #</th>
+              <th>Owner</th>
+              <th>Address</th>
+              <th>Town</th>
+              <th>List Price</th>
+              <th>Inspection Date/Time</th>
+              <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+    <%= for listing <- @listings do %>
+        <tr>
+            <td><%= if listing.broker, do: "#{listing.broker.name} / #{listing.broker.city}" %></td>
+            <td><%= listing.id %></td>
+            <td>
+              <%= listing.owner_name %>
+            </td>
+            <td>
+              <%
+                address_text = listing.address
+                #if listing.city && listing.state && listing.zip do
+                #  "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}"
+                #else
+                #  listing.address
+                #end
+              %>
+              <%= link address_text, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
+              <%= if listing.draft && !@draft do %> (Draft)<% end %>
+            </td>
+            <td><%= listing.city %></td>
+            <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
+            <td><%= listing.next_broker_oh_start_at && (listing.next_broker_oh_start_at |> Timex.format!("%a, %b %e @ %l:%M %p", :strftime)) %></td>
+            <td><%= raw HtmlSanitizeEx.html5 listing.remarks %></td>
+        </tr>
+    <% end %>
+        </tbody>
+    </table>
+  <% else %>
+    <p>No listings!</p>
+  <% end %>
+</div>

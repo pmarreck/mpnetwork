@@ -77,6 +77,7 @@ defmodule MpnetworkWeb.Router do
 
     get "/listings/:id/email_listing", ListingController, :email_listing, as: :email_listing
     post "/listings/:id/send_email", ListingController, :send_email, as: :email_listing
+    get "/listings/inspections", ListingController, :inspection_sheet, as: :upcoming_inspections
     resources "/broadcasts", BroadcastController
     resources "/listings", ListingController
     resources "/attachments", AttachmentController

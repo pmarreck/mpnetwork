@@ -1,5 +1,5 @@
 defmodule Mpnetwork.Test.Support.Utilities do
-  alias Mpnetwork.{User, Realtor}
+  alias Mpnetwork.{User, Realtor, Repo}
 
   defp random_uniquifying_string do
     trunc(:rand.uniform()*100000000000000000) |> Integer.to_string
@@ -89,7 +89,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
     office = office_fixture()
     attrs = Enum.into(attrs, Enum.into(%{broker: office, office_id: office.id}, valid_user_attrs()))
     {:ok, user} = Realtor.create_user(attrs)
-    user
+    Repo.preload(user, :broker)
   end
 
   def office_fixture(attrs \\ %{}) do

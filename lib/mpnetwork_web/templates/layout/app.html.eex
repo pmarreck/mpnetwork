@@ -129,7 +129,8 @@
               </a>
               <ul class="treeview-menu">
                 <li><%= link "Round Robin Report", to: listing_path(@conn, :index) %></li>
-                <li><%= link "Add", to: listing_path(@conn, :new) %></li>
+                <li><%= link "Inspection Sheet", to: upcoming_inspections_path(@conn, :inspection_sheet) %></li>
+                <li><%= link "Add New Listing", to: listing_path(@conn, :new) %></li>
               </ul>
             </li>
             <%= if @current_user.role_id < 3 do %>

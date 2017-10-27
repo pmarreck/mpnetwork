@@ -37,6 +37,11 @@ defmodule MpnetworkWeb.ListingController do
     )
   end
 
+  def inspection_sheet(conn, _params) do
+    upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(nil, 30)
+    render(conn, "inspection_sheet.html", upcoming_broker_oh_listings: upcoming_broker_oh_listings)
+  end
+
   def new(conn, _params) do
     changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{
       user_id: current_user(conn).id,

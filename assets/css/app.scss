@@ -34,3 +34,9 @@
     visibility: hidden;
   }
 }
+
+.inspection {
+  table, th, td {
+    border: 1px solid lightgrey !important;
+  }
+}
