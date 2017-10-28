@@ -24,7 +24,7 @@ defmodule Mpnetwork.Repo.Migrations.AddDbConstraintsToReflectAllowedDatetimeValu
   ]
 
   def up do
-    warn "WARNING: this constraint migration is destructive and will result in irreversible autocorrection of invalid datetime values"
+    # warn "WARNING: this constraint migration is destructive and will result in irreversible autocorrection of invalid datetime values"
     @idempotent_deconstruction ++ @enforce_initial_validity ++ @implementation
     |> Enum.each(fn statement ->
       execute statement
@@ -32,15 +32,15 @@ defmodule Mpnetwork.Repo.Migrations.AddDbConstraintsToReflectAllowedDatetimeValu
   end
 
   def down do
-    warn "WARNING: Previously-invalid datetime values are irretrievable."
+    # warn "WARNING: Previously-invalid datetime values are irretrievable."
     @idempotent_deconstruction
     |> Enum.each(fn statement ->
       execute statement
     end)
   end
 
-  defp warn(w) do
-    IO.puts IO.ANSI.format [:red, :blink_slow, w]
-  end
+  # defp warn(w) do
+  #   IO.puts IO.ANSI.format [:red, :blink_slow, w]
+  # end
 
 end
