@@ -81,16 +81,6 @@
     <%= error_tag f, :password_confirmation %>
   </div>
 
-  <div>
-    <span>For a profile photo:</span>
-    <ol>
-      <li>Go to <%= link "http://en.gravatar.com/", to: "http://en.gravatar.com/" %></li>
-      <li>Create an account with the exact same email address you use here.</li>
-      <li>Add a profile photo there.</li>
-      <li>After a couple minutes (may require logout/login), your new mugshot will start showing up on this site (as well as on other sites which use gravatar.com for profile photos).</li>
-    </ol>
-  </div>
-
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>

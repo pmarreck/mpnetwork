@@ -1,27 +1,25 @@
-<h2>Listing Users</h2>
+<h2>All Users</h2>
+
+<p><%= link "Invite New User", to: invitation_path(@conn, :new), class: "btn btn-default btn-xs" %></p>
+
+<p><%= link "Create New User", to: user_path(@conn, :new), class: "btn btn-default btn-xs" %> <i>note: it is strongly recommended to invite new users instead</i></p>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Email</th>
-      <th>Name</th>
-      <th>Office phone</th>
-      <th>Cell phone</th>
-      <th>Url</th>
+      <th>Name/Email</th>
+      <th>Phone #'s</th>
       <th>Office</th>
       <th>Role</th>
-
       <th></th>
     </tr>
   </thead>
   <tbody>
 <%= for user <- @users do %>
     <tr>
-      <td><%= user.email %></td>
-      <td><%= user.name %></td>
-      <td><%= user.office_phone %></td>
-      <td><%= user.cell_phone %></td>
-      <td><%= user.url %></td>
+      <td><%= user.name %><br/><%= user.email %></td>
+      <td><%= if user.office_phone && user.office_phone != "", do: "(o) #{user.office_phone}" %><br/>
+      <%= if user.cell_phone && user.cell_phone != "", do: "(c) #{user.cell_phone}" %></td>
       <td><%= user.broker && user.broker.name %></td>
       <td><%= role_id_to_name(user.role_id) %></td>
 
@@ -34,7 +32,3 @@
 <% end %>
   </tbody>
 </table>
-
-<p><%= link "Invite New User", to: invitation_path(@conn, :new) %></p>
-
-<p><%= link "Create New User", to: user_path(@conn, :new) %> <br /><i>note: it is strongly recommended to invite new users instead</i></p>
