@@ -183,7 +183,7 @@
 
           <!-- 16 -->
           <div class="form-group<%= if f.errors[:schools], do: " has-error" %>">
-            <%= label f, :schools, "School systems", class: "control-label" %>
+            <%= label f, :schools, "School district(s)", class: "control-label" %>
             <%= text_input f, :schools, class: "form-control" %>
             <%= error_tag f, :schools %>
           </div>

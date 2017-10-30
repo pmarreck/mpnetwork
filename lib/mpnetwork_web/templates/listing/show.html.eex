@@ -125,7 +125,7 @@
 
           <!-- 16 -->
           <div class="schools">
-            <strong>School systems:</strong>
+            <strong>School district(s):</strong>
             <%= @listing.schools %>
           </div>
 

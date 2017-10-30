@@ -15,9 +15,9 @@ defmodule Mpnetwork.Realtor.Listing do
     field :state, :string
     field :zip, :string
     field :district, :string
-    field :section_num, :integer
-    field :block_num, :integer
-    field :lot_num, :integer
+    field :section_num, :string
+    field :block_num, :string
+    field :lot_num, :string
     field :association, :string
     field :neighborhood, :string
     field :schools, :string
@@ -278,7 +278,7 @@ defmodule Mpnetwork.Realtor.Listing do
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :year_built, :basement, :visible_on, :expires_on])
+    |> validate_required([:user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :schools, :prop_tax_usd, :vill_tax_usd, :section_num, :block_num, :lot_num, :visible_on, :expires_on])
     |> constraints
   end
 
@@ -286,6 +286,9 @@ defmodule Mpnetwork.Realtor.Listing do
     this_year = Timex.today.year
     listing
     |> validate_inclusion(:cellular_coverage_quality, 0..5)
+    |> validate_number(:price_usd, greater_than_or_equal_to: 0)
+    |> validate_number(:prior_price_usd, greater_than_or_equal_to: 0)
+    |> validate_number(:original_price_usd, greater_than_or_equal_to: 0)
     |> validate_inclusion(:price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
     |> validate_inclusion(:prior_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
     |> validate_inclusion(:original_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
