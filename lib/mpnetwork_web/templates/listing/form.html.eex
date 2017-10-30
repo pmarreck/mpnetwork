@@ -149,21 +149,21 @@
           <!-- 11 -->
           <div class="form-group<%= if f.errors[:section_num], do: " has-error" %>">
             <%= label f, :section_num, "Section #", class: "control-label" %>
-            <%= number_input f, :section_num, class: "form-control" %>
+            <%= text_input f, :section_num, class: "form-control" %>
             <%= error_tag f, :section_num %>
           </div>
 
           <!-- 12 -->
           <div class="form-group<%= if f.errors[:block_num], do: " has-error" %>">
             <%= label f, :block_num, "Block #", class: "control-label" %>
-            <%= number_input f, :block_num, class: "form-control" %>
+            <%= text_input f, :block_num, class: "form-control" %>
             <%= error_tag f, :block_num %>
           </div>
 
           <!-- 13 -->
           <div class="form-group<%= if f.errors[:lot_num], do: " has-error" %>">
             <%= label f, :lot_num, "Lot #", class: "control-label" %>
-            <%= number_input f, :lot_num, class: "form-control" %>
+            <%= text_input f, :lot_num, class: "form-control" %>
             <%= error_tag f, :lot_num %>
           </div>
 
