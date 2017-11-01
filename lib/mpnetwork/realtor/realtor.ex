@@ -307,78 +307,79 @@ defmodule Mpnetwork.Realtor do
 
   # list of ordinals:
   # room, bedroom, bathroom, fireplace, skylight, garage, family, story
+  # Upper range limit of these being processed correctly is 29
   defp normalization_transformations() do
     [
       {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"}, # normalizes <-> and <number>
       {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end}, # normalizes quoted strings from "exact order" to exact<->order
       # ranges
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (room)s?/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (room)s?/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y room" or "X-Y rooms" to "(Xroo|X+1roo|...|Yroo)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (?:(bed|bath))(?:room)?s?/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (?:(bed|bath))(?:room)?s?/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y bedrooms" or "X-Y beds" or "X-Y bed" to "(Xbed|X+1bed|...|Ybed) (and same for bathrooms)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (fireplace)s?/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (fireplace)s?/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y fireplace" or "X-Y fireplaces" to "(Xfir|X+1fir|...|Yfir)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (skylight)s?/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (skylight)s?/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y skylight" or "X-Y skylights" to "(Xsky|X+1sky|...|Ysky)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (garage)s?/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (garage)s?/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y garage" or "X-Y garages" to "(Xgar|X+1gar|...|Ygar)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (familys?|families)/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (familys?|families)/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y family" or "X-Y familys" (people misspell!) or "X-Y families" to "(Xfam|X+1fam|...|Yfam)"
-      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (storys?|stories)/,
+      {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (storys?|stories)/,
         fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
           "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
         end
       }, # normalizes "X-Y story" or "X-Y storys" (people misspell!) or "X-Y stories" to "(Xsto|X+1sto|...|Ysto)"
       # singles
-      {~r/([0-9]{1,2}) (room)s?/,
+      {~r/\b([12]?[0-9]) (room)s?/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X room" or "X rooms" to "Xroo"
-      {~r/([0-9]{1,2}) (?:(bed|bath))(?:room)?s?/,
+      {~r/\b([12]?[0-9]) (?:(bed|bath))(?:room)?s?/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X bedrooms" or "X beds" or "X bed" to "Xbed" (and same for bathrooms, Xbat)
-      {~r/([0-9]{1,2}) (fireplace)s?/,
+      {~r/\b([12]?[0-9]) (fireplace)s?/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X fireplace" or "X fireplaces" to "Xfir"
-      {~r/([0-9]{1,2}) (skylight)s?/,
+      {~r/\b([12]?[0-9]) (skylight)s?/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X skylight" or "X skylights" to "Xsky"
-      {~r/([0-9]{1,2}) (garage)s?/,
+      {~r/\b([12]?[0-9]) (garage)s?/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X garage" or "X garages" to "Xgar"
-      {~r/([0-9]{1,2})(?: |\-)(familys?|families)/,
+      {~r/\b([12]?[0-9])(?: |\-)(familys?|families)/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
       }, # normalizes "X family" or "X familys" (people misspell!) or "X families" to "Xfam"
-      {~r/([0-9]{1,2}) (storys?|stories)/,
+      {~r/\b([12]?[0-9]) (storys?|stories)/,
         fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
           to_string(num) <> abbrev
         end
@@ -401,6 +402,7 @@ defmodule Mpnetwork.Realtor do
 
   def test_normalize_query() do
     test_cases = [
+      {"30&bedroom", "30 bedroom"}, # This should not be processed as an ordinal, 29 is limit
       {"(2roo|3roo)", "2-3 rooms"},
       {"2roo", "2 rooms"},
       {"(2bed|3bed|4bed)", "2-4 bedrooms"},
