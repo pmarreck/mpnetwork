@@ -32,7 +32,7 @@
                 #end
               %>
               <%= link address_text, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
-              <%= if listing.draft && !@draft do %> (Draft)<% end %>
+              <%= if listing.draft && @draft do %> (Your Draft)<% end %>
             </td>
             <td>
               <%= listing.city %>
