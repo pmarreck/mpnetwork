@@ -1036,6 +1036,12 @@
             <%= raw HtmlSanitizeEx.html5 @listing.realtor_remarks %>
           </div>
 
+          <!-- ? (new) -->
+          <div class="round_robin_remarks">
+            <strong>Round robin remarks:</strong>
+            <%= raw HtmlSanitizeEx.html5 @listing.round_robin_remarks %>
+          </div>
+
           <!-- 177 -->
           <div class="directions">
             <strong>Directions:</strong>

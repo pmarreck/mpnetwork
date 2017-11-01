@@ -6,7 +6,7 @@ defmodule MpnetworkWeb.PageController do
   def index(conn, _params) do
     u = conn.assigns.current_user
     broadcasts = Realtor.list_latest_broadcasts(4) |> Enum.reverse
-    listings = Realtor.list_latest_listings(u)
+    listings = Realtor.list_latest_listings(u, 20)
     draft_listings = Realtor.list_latest_draft_listings(u)
     primary_images = Listing.primary_images_for_listings(listings)
     draft_primaries = Listing.primary_images_for_listings(draft_listings)

@@ -201,7 +201,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(nil, limit) do
-    Repo.all(from l in Listing, where: l.draft == false, order_by: [desc: l.updated_at], limit: ^limit) |> Repo.preload([:broker, :user])
+    Repo.all(from l in Listing, where: l.draft == false, order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
   end
 
   @doc """
@@ -214,11 +214,11 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(current_user, limit) do
-    Repo.all(from l in Listing, where: l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: ^limit) |> Repo.preload([:broker, :user])
+    Repo.all(from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
   end
 
   def list_latest_draft_listings(current_user) when current_user != nil do
-    Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 30) |> Repo.preload([:broker, :user])
+    Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 30, preload: [:broker, :user])
   end
 
   @doc """
