@@ -40,7 +40,7 @@ defmodule Mpnetwork.Realtor do
       from u in User,
       join: o in assoc(u, :broker),
       preload: [broker: o],
-      order_by: [asc: o.name, asc: u.name]
+      order_by: [asc: o.name, asc: o.city, asc: u.name]
     )# |> Repo.preload(:broker)
   end
 
