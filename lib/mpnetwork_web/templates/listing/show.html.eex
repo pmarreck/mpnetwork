@@ -1031,9 +1031,9 @@
         </div>
         <div class="box-body">
           <!-- 176 -->
-          <div class="remarks">
+          <div class="realtor_remarks">
             <strong>Agent-only remarks:</strong>
-            <%= raw HtmlSanitizeEx.html5 @listing.remarks %>
+            <%= raw HtmlSanitizeEx.html5 @listing.realtor_remarks %>
           </div>
 
           <!-- 177 -->

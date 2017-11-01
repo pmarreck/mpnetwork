@@ -1569,17 +1569,17 @@
         </div>
         <div class="box-body">
           <!-- 176 -->
-          <div class="form-group<%= if f.errors[:remarks], do: " has-error" %>">
-            <%= label f, :remarks, class: "control-label" %><i>&nbsp;&nbsp;(for other realtors... This also appears in the Round Robin Report)</i>
-            <%= textarea f, :remarks, class: "form-control" %>
-            <%= error_tag f, :remarks %>
+          <div class="form-group<%= if f.errors[:realtor_remarks], do: " has-error" %>">
+            <%= label f, :realtor_remarks, class: "control-label" %><i>&nbsp;&nbsp;(only seen by other realtors)</i>
+            <%= textarea f, :realtor_remarks, class: "form-control" %>
+            <%= error_tag f, :realtor_remarks %>
           </div>
 
-          <!-- 177 -->
-          <div class="form-group<%= if f.errors[:directions], do: " has-error" %>">
-            <%= label f, :directions, class: "control-label" %>
-            <%= textarea f, :directions, class: "form-control" %>
-            <%= error_tag f, :directions %>
+          <!-- ? (new) -->
+          <div class="form-group<%= if f.errors[:round_robin_remarks], do: " has-error" %>">
+            <%= label f, :round_robin_remarks, class: "control-label" %><i>&nbsp;&nbsp;(shows up on the Round Robin Report)</i>
+            <%= textarea f, :round_robin_remarks, class: "form-control" %>
+            <%= error_tag f, :round_robin_remarks %>
           </div>
 
           <!-- 178 -->
@@ -1587,6 +1587,13 @@
             <%= label f, :description, class: "control-label" %>
             <%= textarea f, :description, class: "form-control" %>
             <%= error_tag f, :description %>
+          </div>
+
+          <!-- 177 -->
+          <div class="form-group<%= if f.errors[:directions], do: " has-error" %>">
+            <%= label f, :directions, class: "control-label" %>
+            <%= textarea f, :directions, class: "form-control" %>
+            <%= error_tag f, :directions %>
           </div>
 
           <div class="row form-group">

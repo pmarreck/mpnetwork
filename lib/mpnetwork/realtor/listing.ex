@@ -180,7 +180,8 @@ defmodule Mpnetwork.Realtor.Listing do
     field :show_instr, :string
     field :lockbox, :boolean
     field :owner_financing, :boolean
-    field :remarks, :string #actually :text
+    field :realtor_remarks, :string #actually :text
+    field :round_robin_remarks, :string #actually :text
     field :directions, :string #actually :text
     field :description, :string #actually :text
     field :rental_income_usd, :integer
@@ -513,7 +514,8 @@ defmodule Mpnetwork.Realtor.Listing do
       :show_instr,
       :lockbox,
       :owner_financing,
-      :remarks,
+      :realtor_remarks,
+      :round_robin_remarks,
       :directions,
       :description,
       :rental_income_usd,
