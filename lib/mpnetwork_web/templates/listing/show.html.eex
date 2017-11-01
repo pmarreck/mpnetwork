@@ -11,6 +11,7 @@
       <br/>
     <% end %>
     <span><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xl" %></span>
+    <span><%= link "View listing sheet (client full)", to: public_client_listing_path(@conn, :client_listing, public_client_listing_code(@listing)), class: "btn btn-default btn-xl" %>
     <div><br /></div>
     <div class="row">
       <div class="col-md-6">

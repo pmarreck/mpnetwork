@@ -139,6 +139,14 @@ defmodule Mpnetwork.SearchTest do
       assert [closed_listing, expired_listing] == Realtor.query_listings("expired", user)
     end
 
+    test "my/mine in conjunction with other search filter" do
+      listing = listing_fixture(address: "ALL THINGS BELONG TO ME")
+      user = listing.user
+      _nonmatching_listing = listing_fixture()
+      assert [listing] == Realtor.query_listings("my all things belong to me", user)
+      assert [listing] == Realtor.query_listings("all things belong to mine", user)
+    end
+
   end
 
 end

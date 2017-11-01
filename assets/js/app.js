@@ -110,6 +110,12 @@ $(function() {
   });
   // trigger phone input masks
   $(":input").inputmask();
+
+  // add link toggle behavior in search examples
+  $('a#toggle_examples').click(function(e) {
+    e.preventDefault();
+    $('#examples').toggle();
+  })
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

@@ -278,9 +278,10 @@ defmodule Mpnetwork.Realtor do
     nil
   end
 
+  @mine_regex ~r/ ?\b(?:my|mine)\b ?/i
   defp try_mine({query, scope}, current_user) do
-    if Enum.member?(["my", "mine"], String.downcase(String.trim(query))) do
-      {"", scope |> where([l], l.user_id == ^current_user.id)}
+    if Regex.match?(@mine_regex, query) do
+      {Regex.replace(@mine_regex, query, ""), scope |> where([l], l.user_id == ^current_user.id)}
     else
       {query, scope}
     end

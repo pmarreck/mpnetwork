@@ -81,23 +81,7 @@
           <!-- search form (Optional) -->
           <form action="<%= listing_path(@conn, :index) %>" method="get" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" class="form-control" value="<%= @conn.params["q"] %>" placeholder="Search..." title="<%=
-                """
-                Example search queries (omitting quotes):
-                -----------------------------------------
-                Get the latest listings: just hit return with an empty search field
-                By id number: "5"
-                By listing agent name or broker name.
-                By address fragment: "55 plandome" (case-insensitive)
-                By price range: "500,000-1,000,000"
-                Listings owned by you: "my" or "mine" (case-insensitive)
-                By listing status: "NEW" (or: FS, EXT, UC, CL, PC, WR, TOM) (capitalized)
-                An exact phrase (include double quotes in this case!): "manhasset high"
-                Or by almost any other attributes.
-                You can search by multiple attributes (it filters on all of them), so "rent waterfront" will find rentals on the waterfront (rent AND waterfront).
-                You can also use and, or, not (or the equivalent symbols &, |, !) and parentheses: "waterfront or colonial"
-                """
-               %>">
+              <input type="text" name="q" class="form-control" value="<%= @conn.params["q"] %>" placeholder="Search..." title="Try a search to see results, plus examples of other possible searches.">
               <span class="input-group-btn">
                   <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                   </button>
