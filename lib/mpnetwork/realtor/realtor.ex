@@ -6,7 +6,7 @@ defmodule Mpnetwork.Realtor do
   import Ecto.Query, warn: false
 
   alias Mpnetwork.Realtor.{Broadcast, Listing, Office}
-  alias Mpnetwork.{Repo, User, EnumMaps}
+  alias Mpnetwork.{Repo, User}
 
   @doc """
   Creates a user.
@@ -240,22 +240,30 @@ defmodule Mpnetwork.Realtor do
     Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false or l.user_id == ^current_user.id, order_by: [asc: l.next_broker_oh_start_at], limit: ^number) |> Repo.preload([:broker, :user])
   end
 
+  defp default_search_scope(current_user) do
+    from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
+  end
+
   @doc """
   Queries listings.
   """
+  def query_listings("", current_user), do: Repo.all(default_search_scope(current_user))
   def query_listings(query, current_user) do
-    default_scope = from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: 50
+    {query, default_search_scope(current_user)}
+    |> try_id() # should return {"unconsumed_query", new_scope}
+    |> try_mine(current_user)
+    |> try_pricerange()
+    |> search_all_fields_using_postgres_fulltext_search()
+# |> IO.inspect(limit: :infinity)
+    |> Repo.all
+  end
+
+  defp try_id({query, scope}) do
     id = _try_integer(query)
-    lst = _try_listing_status_type(query)
-    my  = _try_mine(query)
-    pricerange = _try_pricerange(query)
-    cond do
-      query == ""              -> Repo.all(default_scope) |> Repo.preload([:broker, :user])
-      id                       -> ((get_listings([id]) ++ search_all_fields_using_postgres_fulltext_search(query, default_scope)) |> Enum.uniq) |> Repo.preload([:broker, :user])
-      lst                      -> default_scope |> where([l], l.listing_status_type == ^lst) |> Repo.all |> Repo.preload([:broker, :user])
-      my                       -> default_scope |> where([l], l.user_id == ^current_user.id) |> Repo.all |> Repo.preload([:broker, :user])
-      pricerange               -> {start, finish} = pricerange; default_scope |> where([l], l.price_usd >= ^start and l.price_usd <= ^finish) |> Repo.all |> Repo.preload([:broker, :user])
-      true                     -> search_all_fields_using_postgres_fulltext_search(query, default_scope)
+    if id do
+      {"", scope |> where([l], l.id == ^id)}
+    else
+      {query, scope}
     end
   end
 
@@ -270,22 +278,25 @@ defmodule Mpnetwork.Realtor do
     nil
   end
 
-  defp _try_listing_status_type(maybe_lst) when is_binary(maybe_lst) do
-    cond do
-      Enum.member?(EnumMaps.listing_status_types_int_bin, maybe_lst) -> maybe_lst
-      true -> nil
+  defp try_mine({query, scope}, current_user) do
+    if Enum.member?(["my", "mine"], String.downcase(String.trim(query))) do
+      {"", scope |> where([l], l.user_id == ^current_user.id)}
+    else
+      {query, scope}
     end
   end
 
-  defp _try_mine(maybe_my) when is_binary(maybe_my) do
-    Enum.member?(["my", "mine"], String.downcase(maybe_my))
-  end
-
-  @pricerange_regex ~r/^\$?([0-9,_ ]+)-\$?([0-9,_ ]+)$/
-  defp _try_pricerange(maybe_pr) when is_binary(maybe_pr) do
-    case Regex.run(@pricerange_regex, maybe_pr) do
+  @pricerange_regex ~r/\$?([0-9,]{3,}) ?\- ?\$?([0-9,]{3,})/
+  defp try_pricerange({query, scope}) do
+    pr = case Regex.run(@pricerange_regex, query) do
       [_, start, finish] -> {_filter_nonnumeric(start), _filter_nonnumeric(finish)}
       _ -> nil
+    end
+    if pr do
+      {start, finish} = pr
+      {Regex.replace(@pricerange_regex, query, ""), scope |> where([l], (l.price_usd >= ^start and l.price_usd <= ^finish) or (l.rental_price_usd >= ^start and l.rental_price_usd <= ^finish))}
+    else
+      {query, scope}
     end
   end
 
@@ -294,20 +305,93 @@ defmodule Mpnetwork.Realtor do
     num
   end
 
+  # list of ordinals:
+  # room, bedroom, bathroom, fireplace, skylight, garage, family, story
   defp normalization_transformations() do
     [
-      {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"},
-      {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end},
-      {~r/\s+and\s+/i, "&"},
-      {~r/\s+or\s+/i, "|"},
-      {~r/\s+or\s+/i, "|"},
-      {~r/\s*&not\b/i, "&!"},
-      {~r/\s*\|not\b/i, "|!"},
-      {~r/\bnot\s+/i, "!"},
-      {~r/\s*&\s*/, "&"},
-      {~r/\s*\|\s*/, "|"},
-      {~r/!\s+/, "!"},
-      {~r/\s+/, "&"},
+      {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"}, # normalizes <-> and <number>
+      {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end}, # normalizes quoted strings from "exact order" to exact<->order
+      # ranges
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (room)s?/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y room" or "X-Y rooms" to "(Xroo|X+1roo|...|Yroo)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (?:(bed|bath))(?:room)?s?/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y bedrooms" or "X-Y beds" or "X-Y bed" to "(Xbed|X+1bed|...|Ybed) (and same for bathrooms)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (fireplace)s?/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y fireplace" or "X-Y fireplaces" to "(Xfir|X+1fir|...|Yfir)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (skylight)s?/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y skylight" or "X-Y skylights" to "(Xsky|X+1sky|...|Ysky)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (garage)s?/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y garage" or "X-Y garages" to "(Xgar|X+1gar|...|Ygar)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (familys?|families)/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y family" or "X-Y familys" (people misspell!) or "X-Y families" to "(Xfam|X+1fam|...|Yfam)"
+      {~r/([0-9]{1,2}) ?\- ?([0-9]{1,2}) (storys?|stories)/,
+        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
+          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
+        end
+      }, # normalizes "X-Y story" or "X-Y storys" (people misspell!) or "X-Y stories" to "(Xsto|X+1sto|...|Ysto)"
+      # singles
+      {~r/([0-9]{1,2}) (room)s?/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X room" or "X rooms" to "Xroo"
+      {~r/([0-9]{1,2}) (?:(bed|bath))(?:room)?s?/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X bedrooms" or "X beds" or "X bed" to "Xbed" (and same for bathrooms, Xbat)
+      {~r/([0-9]{1,2}) (fireplace)s?/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X fireplace" or "X fireplaces" to "Xfir"
+      {~r/([0-9]{1,2}) (skylight)s?/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X skylight" or "X skylights" to "Xsky"
+      {~r/([0-9]{1,2}) (garage)s?/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X garage" or "X garages" to "Xgar"
+      {~r/([0-9]{1,2})(?: |\-)(familys?|families)/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X family" or "X familys" (people misspell!) or "X families" to "Xfam"
+      {~r/([0-9]{1,2}) (storys?|stories)/,
+        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
+          to_string(num) <> abbrev
+        end
+      }, # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
+      {~r/\s+and\s+/i, "&"}, # normalizes "X and Y" or "X AND Y" to "X&Y"
+      {~r/\s+or\s+/i, "|"}, # normalizes "X or Y" or "X OR Y" to "X|Y"
+      {~r/\s*&not\b/i, "&!"}, # normalizes  " &not" to "&!"
+      {~r/\s*\|not\b/i, "|!"}, # normalizes " |not" to "|!"
+      {~r/\bnot\s+/i, "!"}, # normalizes a word boundary "not" plus 1 or more spaces to just "!"
+      {~r/\s*&\s*/, "&"}, # removes spaces around any &
+      {~r/\s*\|\s*/, "|"}, # removes spaces around any |
+      {~r/!\s+/, "!"}, # removes spaces after any !
+      {~r/\s+/, "&"}, # finally, changes any remaining spaces to & (and's the rest) since spaces are not allowed
     ]
   end
 
@@ -317,6 +401,31 @@ defmodule Mpnetwork.Realtor do
 
   def test_normalize_query() do
     test_cases = [
+      {"(2roo|3roo)", "2-3 rooms"},
+      {"2roo", "2 rooms"},
+      {"(2bed|3bed|4bed)", "2-4 bedrooms"},
+      {"2bed", "2 bedroom"},
+      {"(2bed|3bed)", "2-3 beds"},
+      {"(2bed|3bed)", "2-3 bed"},
+      {"(2bat|3bat)", "2-3 bathrooms"},
+      {"2bat", "2 bathroom"},
+      {"(2bed|3bed)&2bat", "2-3 bed 2 bath"},
+      {"(2bat|3bat)", "2-3 baths"},
+      {"(2bat|3bat)", "2-3 bath"},
+      {"(2bat|3bat)&(2bed|3bed)", "2-3 bath 2-3 bed"},
+      {"(2fir|3fir)", "2-3 fireplace"},
+      {"3fir", "3 fireplaces"},
+      {"(2sky|3sky)", "2-3 skylights"},
+      {"3sky", "3 skylights"},
+      {"(2gar|3gar)", "2-3 garage"},
+      {"3gar", "3 garage"},
+      {"(2fam|3fam)", "2-3 family"},
+      {"2fam", "2 family"},
+      {"10fam", "10-family"},
+      {"(2sto|3sto)", "2-3 story"},
+      {"(2sto|3sto)", "2-3 stories"},
+      {"(2sto|3sto)", "2-3 storys"},
+      {"(3bed|4bed|5bed)&cape&den", "3-5 beds cape den"},
       {"a|b"," a or b"},
       {"a&b"," a  b "},
       {"a&!b","a not b"},
@@ -333,14 +442,15 @@ defmodule Mpnetwork.Realtor do
     true
   end
 
-
-  defp search_all_fields_using_postgres_fulltext_search(q, scope) do
-    q = normalize_query(q)
-    scope
-    |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
-    |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q), desc: l.updated_at])
-    |> Repo.all
-    |> Repo.preload([:broker, :user])
+  defp search_all_fields_using_postgres_fulltext_search({q, scope}) do
+    if String.trim(q) != "" do
+      q = normalize_query(q)
+      scope
+      |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
+      |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q)])
+    else
+      scope
+    end
   end
 
   # defp _search_all_fields(q) do

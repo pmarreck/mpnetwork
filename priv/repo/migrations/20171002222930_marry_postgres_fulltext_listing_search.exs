@@ -91,7 +91,7 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
 
   defp assemble_boolean_search_vector(existing_fields, boolean_fields) do
     existing_fields ++ Enum.map(boolean_fields, fn {column, text_if_true} ->
-      "setweight(to_tsvector('pg_catalog.english', (case when new.#{column} then '#{text_if_true}' else '' end)), 'C')"
+      "setweight(to_tsvector('english', (case when new.#{column} then '#{text_if_true}' else '' end)), 'C')"
     end)
   end
 
@@ -100,14 +100,14 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
       full_case = Enum.map(int_ext_tuples, fn {int, ext} ->
         "when new.#{column}='#{int}' then '#{ext}'"
       end) |> Enum.join(" ")
-      "setweight(to_tsvector('pg_catalog.english', (case #{full_case} else '' end)), 'C')"
+      "setweight(to_tsvector('english', (case #{full_case} else '' end)), 'C')"
     end)
     existing_fields ++ new_enum_search_vectors
   end
 
   defp assemble_fk_search_vector(existing_fields, fk_fields) do
     existing_fields ++ Enum.map(fk_fields, fn {_column, {table, varchar_column}} ->
-      "setweight(to_tsvector('pg_catalog.english', coalesce(#{table}_#{varchar_column},'')), 'B')"
+      "setweight(to_tsvector('english', coalesce(#{table}_#{varchar_column},'')), 'B')"
     end)
   end
 
@@ -126,7 +126,7 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
   defp assemble_search_vector() do
     @fulltext_searchable_fields
     |> (Enum.map(fn {column, rank} ->
-      "setweight(to_tsvector('pg_catalog.english', coalesce(new.#{column},'')), '#{rank}')"
+      "setweight(to_tsvector('english', coalesce(new.#{column},'')), '#{rank}')"
     end)
     |> assemble_fk_search_vector(@foreign_key_searchable_fields)
     |> assemble_boolean_search_vector(@boolean_text_searchable_fields)
@@ -142,6 +142,28 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
     end) |> Enum.join(", ")
   end
 
+  def search_trigger_function_creation_sql do
+    """
+    CREATE OR REPLACE FUNCTION listing_search_trigger() RETURNS trigger AS $$
+    #{assemble_declarations_for_fk_search_vector(@foreign_key_searchable_fields)}
+      begin
+        #{assemble_select_intos_for_fk_search_vector(@foreign_key_searchable_fields)}
+        new.search_vector := #{assemble_search_vector()}
+        return new;
+      end
+    $$ LANGUAGE plpgsql
+    """
+  end
+
+  def listing_search_update_trigger_creation_sql do
+    """
+    CREATE TRIGGER listing_search_update
+    BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@foreign_key_searchable_fields ++ @fulltext_searchable_fields ++ @boolean_text_searchable_fields ++ @enum_text_searchable_fields)}
+    ON listings
+    FOR EACH ROW EXECUTE PROCEDURE listing_search_trigger();
+    """
+  end
+
   def change do
 
     alter table(:listings) do
@@ -152,25 +174,11 @@ defmodule Mpnetwork.Repo.MarryPostgresFulltextListingSearch do
 
     # trying to make these idempotent so they can run inside a "change" migration...
     # Note that execute/2 requires ecto ~2.2
-    execute("""
-      CREATE OR REPLACE FUNCTION listing_search_trigger() RETURNS trigger AS $$
-      #{assemble_declarations_for_fk_search_vector(@foreign_key_searchable_fields)}
-        begin
-          #{assemble_select_intos_for_fk_search_vector(@foreign_key_searchable_fields)}
-          new.search_vector := #{assemble_search_vector()}
-          return new;
-        end
-      $$ LANGUAGE plpgsql
-    ""","""
+    execute(search_trigger_function_creation_sql(),"""
       DROP FUNCTION IF EXISTS listing_search_trigger();
     """)
 
-    execute("""
-      CREATE TRIGGER listing_search_update
-      BEFORE INSERT OR UPDATE OF #{assemble_insert_update_trigger_fields(@foreign_key_searchable_fields ++ @fulltext_searchable_fields ++ @boolean_text_searchable_fields ++ @enum_text_searchable_fields)}
-      ON listings
-      FOR EACH ROW EXECUTE PROCEDURE listing_search_trigger();
-    ""","""
+    execute(listing_search_update_trigger_creation_sql(),"""
       DROP TRIGGER IF EXISTS listing_search_update ON listings;
     """)
 

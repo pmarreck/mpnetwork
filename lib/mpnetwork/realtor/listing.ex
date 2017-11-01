@@ -198,6 +198,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field :next_cust_oh_end_at, :naive_datetime
     field :next_cust_oh_note, :string #actually :text
     field :selling_agent_name, :string
+    # field :search_vector, :tsvector # this won't work. wish I could assert on this!
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many :attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all
 

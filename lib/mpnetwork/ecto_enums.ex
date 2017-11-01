@@ -17,6 +17,7 @@ defmodule Mpnetwork.EnumMaps do
 
   # Listing Status Types
   @listing_status_types_ext ["New", "For Sale", "Extended", "Under Contract", "Closed (Sold)", "Price Change", "Withdrawn", "Temporarily Off Market"]
+  @listing_status_types_ext_alpha_only Enum.map(@listing_status_types_ext, fn w -> Regex.replace(~r/[^a-zA-Z ]+/, w, "") end)
   @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM]a
   @listing_status_types_int_bin Enum.map(@listing_status_types_int, fn atom -> Atom.to_string(atom) end)
   def listing_status_types_int, do: @listing_status_types_int
@@ -27,7 +28,9 @@ defmodule Mpnetwork.EnumMaps do
   # perhaps instead attribute "New" if listing is under a month old?
   def listing_status_types, do: Enum.zip(@listing_status_types_int, @listing_status_types_ext)
   # fulltext search should key off the code, not the full english text IMHO
-  def listing_status_types_for_search, do: Enum.zip(@listing_status_types_int, @listing_status_types_int)
+  def listing_status_types_for_priority_search, do: Enum.zip(@listing_status_types_int, @listing_status_types_int)
+  def listing_status_types_for_search, do: Enum.zip(@listing_status_types_int, @listing_status_types_ext_alpha_only)
+
 
   @listing_status_types_int_to_ext_map Enum.zip(@listing_status_types_int, @listing_status_types_ext) |> Map.new
   @listing_status_types_ext_to_int_map Enum.zip(@listing_status_types_ext, @listing_status_types_int) |> Map.new
