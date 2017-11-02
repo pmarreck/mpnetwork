@@ -197,7 +197,7 @@
             <div class="report-field label-visible"><span class="report-label ">Washers:</span><span class="report-value"><%= @listing.num_washers %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Dryers:</span><span class="report-value"><%= @listing.num_dryers %></span></div>
             <div class="report-field label-visible"><span class="report-label ">A/C zones:</span><span class="report-value"><%= @listing.ac_num_zones %></span></div>
-            <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">CAC Zones:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">CAC:</span><span class="report-value"><%= yn @listing.central_air %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Heat:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_heating_type_int_to_ext(@listing.heating_type) %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Heat Zones:</span><span class="report-value"><%= @listing.heat_num_zones %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Sep HW Heater:</span><span class="report-value"><%= yn @listing.sep_hw_heater %></span></div>
