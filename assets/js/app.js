@@ -31,6 +31,8 @@ import "bootstrap-datepicker"
 
 import daterangepicker from "bootstrap-daterangepicker"
 
+import "bootstrap-carousel-swipe"
+
 import "admin-lte/plugins/input-mask/jquery.inputmask"
 
 import "select2"
@@ -116,6 +118,11 @@ $(function() {
     e.preventDefault();
     $('#examples').toggle();
   })
+
+  // carousel swipe config
+  $("#photo-carousel").carousel({
+    swipe: 30 // percent-per-second, default is 50. Pass false to disable swipe
+  });
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

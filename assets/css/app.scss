@@ -44,3 +44,8 @@
 pre.search_example {
   width: 500px;
 }
+
+// so that tables in certain views which MUST contain some certain amount of information can at least be scrolled left-right on mobile devices
+main.main {
+  overflow-x: scroll;
+}
