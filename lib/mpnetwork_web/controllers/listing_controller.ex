@@ -7,9 +7,9 @@ defmodule MpnetworkWeb.ListingController do
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
-  import Listing, only: [public_client_listing_code: 1] #, public_agent_listing_code: 1]
+  import Listing, only: [public_client_full_code: 1, public_broker_full_code: 1, public_customer_full_code: 1]
 
-  plug :put_layout, "public_listing.html" when action in [:client_listing, :agent_listing]
+  plug :put_layout, "public_listing.html" when action in [:client_full, :broker_full, :customer_full]
 
   def index(conn, %{"q" => query} = _params) do
     listings = Realtor.query_listings(query, current_user(conn))
@@ -87,40 +87,36 @@ defmodule MpnetworkWeb.ListingController do
     )
   end
 
-  def edit(conn, %{"id" => id} = params) do
-    if params["version"] == "mls" do
-      edit_mls(conn, params)
-    else
-      listing = Realtor.get_listing!(id)
-      ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
-        attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
-        changeset = Realtor.change_listing(listing)
-        render(conn, "edit.html",
-          listing: listing,
-          attachments: attachments,
-          changeset: changeset,
-          broker: listing.broker,
-          offices: offices(),
-          users: users(conn.assigns.current_office)
-        )
-      end)
-    end
-  end
-
-  def edit_mls(conn, %{"id" => id}) do
+  def edit(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    ensure_owner_or_admin(conn, listing, fn ->
-      attachments = Listing.list_attachments(listing.id)
+    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
+      attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
       changeset = Realtor.change_listing(listing)
-      render(conn, "edit_mls.html",
+      render(conn, "edit.html",
         listing: listing,
         attachments: attachments,
         changeset: changeset,
+        broker: listing.broker,
         offices: offices(),
         users: users(conn.assigns.current_office)
       )
     end)
   end
+
+  # def edit_mls(conn, %{"id" => id}) do
+  #   listing = Realtor.get_listing!(id)
+  #   ensure_owner_or_admin(conn, listing, fn ->
+  #     attachments = Listing.list_attachments(listing.id)
+  #     changeset = Realtor.change_listing(listing)
+  #     render(conn, "edit_mls.html",
+  #       listing: listing,
+  #       attachments: attachments,
+  #       changeset: changeset,
+  #       offices: offices(),
+  #       users: users(conn.assigns.current_office)
+  #     )
+  #   end)
+  # end
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
 # IO.inspect listing_params, limit: :infinity
@@ -156,35 +152,33 @@ defmodule MpnetworkWeb.ListingController do
     end)
   end
 
-  def client_listing(conn, %{"id" => signature}) do
-    # conn = put_layout(conn, "public_listing.html")
-    {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, :client)
+  def broker_full(conn, %{"id" => signature}) do
+    _do_public_listing(conn, signature, :broker)
+  end
+
+  def client_full(conn, %{"id" => signature}) do
+    _do_public_listing(conn, signature, :client)
+  end
+
+  def customer_full(conn, %{"id" => signature}) do
+    _do_public_listing(conn, signature, :customer)
+  end
+
+  defp _do_public_listing(conn, signature, type_of_listing) do
+    {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, type_of_listing)
     listing = Realtor.get_listing!(decrypted_id) |> Repo.preload([:user, :broker, :colisting_agent])
     broker = listing.broker
     agent = listing.user
+    co_agent = listing.colisting_agent
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
+
     case DateTime.compare(decrypted_expiration_date, Timex.now()) do
       :gt ->
-        render(conn, "client_listing.html", listing: listing, broker: broker, agent: agent, showcase_image: showcase_image)
+        render(conn, "#{type_of_listing}_full.html", listing: listing, broker: broker, agent: agent, co_agent: co_agent, showcase_image: showcase_image)
       _ ->
         # 410 is "Gone"
         send_resp(conn, 410, "Link has expired")
-    end
-  end
-
-  def agent_listing(conn, %{"id" => signature}) do
-    # conn = put_layout(conn, "public_listing.html")
-    {decrypted_id, decrypted_expiration_date} = Listing.from_listing_code(signature, :agent)
-    listing = Realtor.get_listing!(decrypted_id)
-    id = listing.id
-    %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
-
-    if decrypted_expiration_date > Timex.now() do
-      render(conn, "agent_listing.html", listing: listing, showcase_image: showcase_image)
-    else
-      # 410 is "Gone"
-      send_resp(conn, 410, "Link has expired")
     end
   end
 
@@ -197,23 +191,21 @@ defmodule MpnetworkWeb.ListingController do
     # end
   end
 
-  def send_email(conn, %{"id" => id, "email" => %{"email_address" => email_address, "type" => type, "name" => name}} = _params) when type in ["client", "agent"] do
+  def send_email(conn, %{"id" => id, "email" => %{"email_address" => email_address, "type" => type, "name" => name}} = _params) when type in ~w[broker client customer] do
     listing = Realtor.get_listing!(id) |> Repo.preload(:user)
     id = listing.id
-    # if current_user(conn).id == listing.user_id || current_user(conn).role_id < 3 do
-      # name = if params["name"] && params["name"] != "", do: params["name"], else: nil
-      # send email here with link to public MLS sheet
-      url = public_client_listing_url(conn, :client_listing, public_client_listing_code(listing))
-      # url = "/"
-      {:ok, results} = ClientEmail.send_client(email_address, name, listing, url)
-      |> Mailer.deliver
-      Logger.info "Sent listing id #{id} of type #{type} to #{email_address}, result: #{inspect results}"
-      conn
-        |> put_flash(:info, "Listing emailed to #{type} at #{email_address} successfully.")
-        |> redirect(to: listing_path(conn, :show, id))
-    # else
-    #   send_resp(conn, 405, "Not allowed to email a listing that is not yours")
-    # end
+    url = case type do
+      "broker" -> public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
+      "client" -> public_client_full_url(conn, :client_full, public_client_full_code(listing))
+      "customer" -> public_customer_full_url(conn, :customer_full, public_customer_full_code(listing))
+      _ -> raise "unknown public listing type: #{type}"
+    end
+    {:ok, results} = ClientEmail.send_client(email_address, name, listing, url)
+    |> Mailer.deliver
+    Logger.info "Sent listing id #{id} of type #{type} to #{email_address}, result: #{inspect results}"
+    conn
+      |> put_flash(:info, "Listing emailed to #{type} at #{email_address} successfully.")
+      |> redirect(to: listing_path(conn, :show, id))
   end
 
   defp offices do
@@ -228,16 +220,16 @@ defmodule MpnetworkWeb.ListingController do
     Realtor.list_users(office)
   end
 
-  defp ensure_owner_or_admin(conn, resource, lambda) do
-    u = current_user(conn)
-    oid = resource.user_id
-    admin = u.role_id < 3
-    if u.id == oid || admin do
-      lambda.()
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
-  end
+  # defp ensure_owner_or_admin(conn, resource, lambda) do
+  #   u = current_user(conn)
+  #   oid = resource.user_id
+  #   admin = u.role_id < 3
+  #   if u.id == oid || admin do
+  #     lambda.()
+  #   else
+  #     send_resp(conn, 405, "Not allowed")
+  #   end
+  # end
 
   defp ensure_owner_or_admin_of_same_office_or_site_admin(conn, resource, lambda) do
     u = current_user(conn)

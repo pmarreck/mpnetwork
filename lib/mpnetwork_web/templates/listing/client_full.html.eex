@@ -141,17 +141,9 @@
       <div class="group orientation-vertical ">
         <div class="report-field label-visible behavior"><span class="report-label ">Directions:</span><span class="report-value"><%= @listing.directions %></span></div>
       </div>
-      <div class="group orientation-vertical  behavior">
-        <div class="report-literal report-field report-line ">
-          <hr>
-        </div>
-      </div>
-      <!--div class="group orientation-vertical ">
-        <div class="report-field label-visible behavior"><span class="report-label ">Remarks:</span><span class="report-value"><%= raw HtmlSanitizeEx.basic_html @listing.realtor_remarks %></span></div>
-      </div>
       <div class="report-literal report-field report-line ">
         <hr>
-      </div-->
+      </div>
       <div class="group orientation-vertical ">
         <div class="report-field label-visible"><span class="report-label ">Property Description:</span><span class="report-value"><%= @listing.description %></span></div>
       </div>
@@ -242,7 +234,6 @@
           <div class="report-field label-visible"><span class="report-label ">Rental Income:</span><span class="report-value"><%= @listing.rental_income_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Short Sale:</span><span class="report-value"><%= yn @listing.short_sale %></span></div>
           <div class="report-field label-visible"><span class="report-label ">REO:</span><span class="report-value"><%= yn @listing.reo %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">MLS#:</span><span class="report-value"><%= @listing.mls_source_id %></span></div>
         </div>
       </div>
       <div class="report-literal report-field report-line ">
@@ -269,7 +260,10 @@
       </div>
       <div class="report-field label-visible behavior"><span class="report-label ">Handicap Accessible:</span><span class="report-value"><%= yn @listing.handicap_access %><%= if @listing.handicap_access_desc && @listing.handicap_access_desc != "", do: ", " <> @listing.handicap_access_desc %></span></div>
       <div class="group orientation-horizontal ">
-        <div class="report-literal report-field ">&nbsp;</div>
+        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date/Time:</span><span class="report-value"><%= datetime_to_standard_humanized(@listing.next_cust_oh_start_at) %></span></div>
       </div>
       <div class="group orientation-vertical  empty">
         <div class=""></div>
@@ -288,94 +282,20 @@
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 223px;">
           <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= @listing.visible_on %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Exp Date:</span><span class="report-value"><%= @listing.expires_on %></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale UC:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale Cancel:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM Start Date:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM End Date:</span><span class="report-value"></span></div>
         </div>
         <div class="group orientation-vertical " style="width: 200px;">
           <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value"><%= @listing.original_price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Prior LP:</span><span class="report-value"><%= @listing.prior_price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">List Price:</span><span class="report-value"><%= @listing.price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Owner Financing:</span><span class="report-value"><%= yn @listing.owner_financing %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Broker/Agent Owned:</span><span class="report-value"><%= yn @listing.broker_agent_owned %></span></div>
-        </div>
-        <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label ">Seller Agency Comp:</span><span class="report-value"><%= @listing.seller_agency_comp && "#{@listing.seller_agency_comp}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Buyer Agency Comp:</span><span class="report-value"><%= @listing.buyer_agency_comp && "#{@listing.buyer_agency_comp}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Broker Agency Comp:</span><span class="report-value"><%= @listing.broker_agency_comp && "#{@listing.broker_agency_comp}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Listing Broker Comp (For Rental):</span><span class="report-value"><%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Buyer Exclusions:</span><span class="report-value"><%= yn @listing.buyer_exclusions %></span></div>
-          <div class="report-literal report-field "><i>Offers of compensation are for MPW network participants only.</i></div>
         </div>
       </div>
       <div class="report-literal report-field report-line ">
         <hr>
       </div>
-      <div class="group orientation-horizontal ">
+      <div class="group orientation-horizontal last-child">
         <div class="group orientation-vertical " style="width: 150px;">
           <div class="report-field label-visible"><span class="report-label ">Occupancy:</span><span class="report-value"><%= @listing.occupancy %></span></div>
-        </div>
-        <div class="group orientation-vertical " style="width: 290px;">
-          <div class="report-field label-visible"><span class="report-label ">Owner:</span><span class="report-value"><%= @listing.owner_name %></span></div>
-        </div>
-        <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label ">Offers presentable:</span><span class="report-value"><%= yn @listing.offers_presentable %></span></div>
-        </div>
-      </div>
-      <div class="group orientation-horizontal  last-child">
-        <div class="group orientation-vertical " style="width: 440px;">
-          <div class="group orientation-horizontal  behavior">
-            <div class="group orientation-vertical " style="width: 335px;">
-              <div class="group orientation-horizontal  last-child">
-                <div class="report-field label-visible"><span class="report-label ">List Broker:</span><span class="report-value"><%= @broker.name %></span></div>
-              </div>
-            </div>
-            <div class="group orientation-vertical  last-child" style="width: 105px;">
-              <div class="report-field label-hidden"><span class="report-label hidden">[bph_num]:</span><span class="report-value"><%= @broker.phone %></span></div>
-            </div>
-          </div>
-          <div class="group orientation-horizontal  behavior">
-            <div class="group orientation-vertical " style="width: 335px;">
-              <div class="group orientation-horizontal  last-child">
-                <div class="report-field label-visible"><span class="report-label ">List Agent:</span><span class="report-value"><%= @agent && @agent.name %></span></div>
-              </div>
-            </div>
-            <div class="group orientation-vertical  last-child" style="width: 105px;">
-              <div class="report-field label-hidden"><span class="report-label hidden">[lagt_ph]:</span><span class="report-value"><%= @agent.office_phone %></span></div>
-            </div>
-          </div>
-          <div class="group orientation-horizontal  behavior behavior-hidden">
-            <div class="group orientation-vertical " style="width: 335px;">
-              <div class="group orientation-horizontal  last-child">
-                <div class="report-field label-visible"><span class="report-label ">Co-List Agt:</span><span class="report-value"><a class="form-link " href="Javascript:showMemberPopup('');" value=""></a></span></div>
-              </div>
-            </div>
-            <div class="group orientation-vertical  last-child" style="width: 105px;">
-              <div class="report-field label-hidden"><span class="report-label hidden">[co_lagt_ph]:</span><span class="report-value"></span></div>
-            </div>
-          </div>
-          <div class="group orientation-horizontal  behavior behavior-hidden last-child">
-            <div class="group orientation-vertical " style="width: 335px;">
-              <div class="report-field label-visible"><span class="report-label ">Co-List Agt2:</span><span class="report-value"><a class="form-link " href="Javascript:showMemberPopup('');" value=""></a></span></div>
-            </div>
-            <div class="group orientation-vertical  last-child" style="width: 105px;">
-              <div class="report-field label-hidden"><span class="report-label hidden">[co_list_agent2ph]:</span><span class="report-value"></span></div>
-            </div>
-          </div>
-        </div>
-        <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Status/Show#:</span><span class="report-value"><%= @listing.status_showing_phone %></span></div>
-          <div class="group orientation-horizontal  last-child">
-            <div class="group orientation-vertical " style="width: 100px;">
-              <div class="report-field label-visible"><span class="report-label ">Lockbox:</span><span class="report-value"><%= yn(@listing.lockbox) %></span></div>
-            </div>
-            <div class="group orientation-vertical  last-child">
-              <div class="report-field label-visible"><span class="report-label ">Neg Dir:</span><span class="report-value"><%= yn(@listing.negotiate_direct) %></span></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

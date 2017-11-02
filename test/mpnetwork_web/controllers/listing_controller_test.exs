@@ -9,7 +9,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
   alias Mpnetwork.{Realtor, Repo}
   alias Mpnetwork.Realtor.Listing
   # import Mpnetwork.Test.Support.Utilities
-  import Mpnetwork.Listing, only: [public_client_listing_code: 1, public_client_listing_code: 2, now_in_unix_epoch_days: 0]
+  import Mpnetwork.Listing, only: [public_client_full_code: 1, public_client_full_code: 2, now_in_unix_epoch_days: 0]
 
   @create_attrs %{listing_status_type: "FS", schools: "Port", prop_tax_usd: "1000", vill_tax_usd: "1000", section_num: "1", block_num: "1", lot_num: "A", visible_on: ~D[2017-11-17], expires_on: ~D[2018-04-17], state: "some state", new_construction: true, fios_available: true, tax_rate_code_area: 42, num_skylights: 42, lot_size: "420x240", attached_garage: true, for_rent: true, zip: "11050", ext_urls: ["http://www.yahoo.com"], city: "some city", num_fireplaces: 2, modern_kitchen_countertops: true, deck: true, for_sale: true, central_air: true, stories: 42, num_half_baths: 42, year_built: 1984, draft: true, pool: true, mls_source_id: 42, security_system: true, sq_ft: 42, studio: true, cellular_coverage_quality: 3, hot_tub: true, basement: true, price_usd: 42, realtor_remarks: "some remarks", parking_spaces: 42, description: "some description", num_bedrooms: 42, high_speed_internet_available: true, patio: true, address: "some address", num_garages: 42, num_baths: 42, central_vac: true, eef_led_lighting: true}
   @create_upcoming_broker_oh_attrs Enum.into(%{next_broker_oh_start_at: Timex.shift(Timex.now(), hours: 2), address: "inspectionaddress", draft: false}, @create_attrs)
@@ -100,15 +100,15 @@ defmodule MpnetworkWeb.ListingControllerTest do
     end
   end
 
-  test "client_listing URL with expired date in the future returns 200", %{conn: conn} do
+  test "client_full URL with expired date in the future returns 200", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = get conn, public_client_listing_path(conn, :client_listing, public_client_listing_code(listing))
+    conn = get conn, public_client_full_path(conn, :client_full, public_client_full_code(listing))
     assert html_response(conn, 200)
   end
 
-  test "client_listing URL with expired date in the past returns 410", %{conn: conn} do
+  test "client_full URL with expired date in the past returns 410", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = get conn, public_client_listing_path(conn, :client_listing, public_client_listing_code(listing, now_in_unix_epoch_days() - 1))
+    conn = get conn, public_client_full_path(conn, :client_full, public_client_full_code(listing, now_in_unix_epoch_days() - 1))
     assert response(conn, 410)
   end
 

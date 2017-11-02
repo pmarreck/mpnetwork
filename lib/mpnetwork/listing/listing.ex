@@ -249,29 +249,42 @@ defmodule Mpnetwork.Listing do
   end
 
   @doc """
+  Computes the link code for an emailed broker listing.
+
+  ## Examples
+
+      iex> public_broker_full_code(listing)
+      "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
+
+  """
+  def public_broker_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+    do_listing_code(listing, :broker, expiration_days_since_unix_epoch)
+  end
+
+  @doc """
   Computes the link code for an emailed client listing.
 
   ## Examples
 
-      iex> public_client_listing_code(listing)
+      iex> public_client_full_code(listing)
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_client_listing_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+  def public_client_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
     do_listing_code(listing, :client, expiration_days_since_unix_epoch)
   end
 
   @doc """
-  Computes the link code for an emailed agent listing.
+  Computes the link code for an emailed customer listing.
 
   ## Examples
 
-      iex> public_agent_listing_code(listing)
+      iex> public_customer_full_code(listing)
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_agent_listing_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
-    do_listing_code(listing, :agent, expiration_days_since_unix_epoch)
+  def public_customer_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+    do_listing_code(listing, :customer, expiration_days_since_unix_epoch)
   end
 
   defp do_listing_code(listing, recipient_type, expiration_days_since_unix_epoch) do

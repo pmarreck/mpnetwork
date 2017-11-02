@@ -1,0 +1,284 @@
+
+<div class="data-report template-report">
+  <div class="document-viewer-toolbar"></div>
+  <div class="template-report form">
+    <div class="group orientation-vertical legacyBorder last-child" style="width: 750px;">
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-horizontal " style="width: 450px;">
+          <div class="report-field label-hidden"><span class="report-label hidden">[addr]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.address %></span></div>
+          <div class="report-literal report-field ">,&nbsp;</div>
+          <div class="report-field label-hidden behavior"><span class="report-label hidden">[town]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.city %></span></div>
+          <div class="report-field label-hidden behavior behavior-hidden"><span class="report-label hidden">[outof_area]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"></span></div>
+          <div class="report-literal report-field ">,&nbsp;</div>
+          <div class="report-field label-hidden"><span class="report-label hidden">[ste]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.state %></span></div>
+          <div class="report-literal report-field ">&nbsp;</div>
+          <div class="report-field label-hidden"><span class="report-label hidden">[zip]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;"><%= @listing.zip %></span></div>
+          <div class="report-literal report-field ">&nbsp;</div>
+          <div class="report-field label-hidden behavior behavior-hidden"><span class="report-label hidden">[country]:</span><span class="report-value" style="font-weight: bold; font-size: 10pt;">Usa</span></div>
+        </div>
+        <div class="report-field label-visible"><span class="report-label " style="font-size: 10pt; font-weight: bold;">List Price:</span><span class="report-value" style="font-weight: bold; text-align: left; width: 160px; font-size: 10pt;"><%= dollars @listing.price_usd %></span></div>
+      </div>
+      <div class="group orientation-tabular">
+        <div class="group orientation-horizontal last-child">
+          <div class="group orientation-vertical  last-child" style="width: 490px;">
+            <div class="group orientation-horizontal">
+              <div class="group orientation-horizontal last-child" style="width: 490px; position: relative; top: 3px">
+                <div class="group orientation-vertical" style="width: 142px;">
+                  <div class="report-field label-visible"><span class="report-label" style="font-size: 14pt; font-weight: 700; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">MPW</span><span class="report-value" style="font-weight: 700; font-size: 12pt; position: relative; top: 2px"> #<%= @listing.id %></span></div>
+                </div>
+                <div class="group orientation-vertical" style="width: 100px;">
+                  <div class="report-field label-hidden"><span class="report-label hidden">[class]:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_class_type_int_to_ext(@listing.class_type) %></span></div>
+                </div>
+                <div class="group orientation-vertical" style="width: 122px;">
+                  <div class="report-field label-hidden"><span class="report-label hidden">[$familyDet]:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_att_type_int_to_ext(@listing.att_type) %></span></div>
+                </div>
+                <div class="group orientation-vertical last-child" style="width: 100px;">
+                  <div class="report-field label-visible"><span class="report-label ">LSC:</span><span class="report-value"><%= @listing.listing_status_type %></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="report-literal report-field report-line ">
+              <hr>
+            </div>
+            <div class="group orientation-horizontal  last-child">
+              <div class="group orientation-vertical " style="width: 265px;">
+                <div class="report-field label-visible"><span class="report-label ">Sec/Area:</span><span class="report-value"><%= @listing.district %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Devel:</span><span class="report-value"><%= @listing.association %></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Schools:</span><span class="report-value"><%= @listing.schools %></span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 135px;">
+                    <div class="report-field label-visible"><span class="report-label ">Taxes:</span><span class="report-value"><%= dollars @listing.prop_tax_usd %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Vill Tax:</span><span class="report-value"><%= dollars @listing.vill_tax_usd %></span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Total Taxes:</span><span class="report-value"><%= dollars ((@listing.prop_tax_usd || 0) + (@listing.vill_tax_usd || 0)) %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Taxes w/Basic STAR:</span><span class="report-value"><%= dollars ((@listing.prop_tax_usd || 0) + (@listing.vill_tax_usd || 0) - (@listing.star_deduc_usd || 0)) %></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-visible"><span class="report-label ">Dis:</span><span class="report-value"><%= @listing.district %></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Block:</span><span class="report-value"><%= @listing.block_num %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Sec:</span><span class="report-value"><%= @listing.section_num %></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Lot:</span><span class="report-value"><%= @listing.lot_num %></span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 150px;">
+                    <div class="report-field label-visible"><span class="report-label ">Adult Comm:</span><span class="report-value"><%= yn @listing.adult_comm %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Gated Prop:</span><span class="report-value"><%= yn @listing.gated_comm %></span></div>
+                  </div>
+                </div>
+                <div class="group orientation-horizontal  last-child">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-visible"><span class="report-label ">Beach Rts:</span><span class="report-value"><%= yn @listing.beach_rights %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Dock Rts:</span><span class="report-value"><%= yn @listing.dock_rights %></span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 100px;">
+                    <div class="report-field label-hidden"><span class="report-label hidden">[style]:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_style_type_int_to_ext(@listing.style_type) %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">Zone:</span><span class="report-value"><%= @listing.zoning %></span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Rooms:</span><span class="report-value"><%= @listing.num_rooms %></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical " style="width: 75px;">
+                    <div class="report-field label-visible"><span class="report-label ">Br:</span><span class="report-value"><%= @listing.num_bedrooms %></span></div>
+                  </div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="report-field label-visible"><span class="report-label ">MBR 1st Floor:</span><span class="report-value"><%= yn @listing.mbr_first_fl %></span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Baths Full:</span><span class="report-value"><%= @listing.num_baths %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Baths Half:</span><span class="report-value"><%= @listing.num_half_baths %></span></div>
+                <div class="group orientation-horizontal ">
+                  <div class="group orientation-vertical  last-child" style="width: 150px;">
+                    <div class="report-field label-visible"><span class="report-label ">Basement:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Finished Bsmt:</span><span class="report-value"><%= yn @listing.finished_basement %></span></div>
+                    <div class="report-field label-visible"><span class="report-label ">Lot Size:</span><span class="report-value"><%= @listing.lot_size %></span></div>
+                  </div>
+                </div>
+                <div class="report-field label-visible"><span class="report-label ">Lot Sqft:</span><span class="report-value"><%= @listing.lot_sqft %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Zoning:</span><span class="report-value"><%= @listing.zoning %></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="group orientation-vertical" style="width: 250px;">
+            <div class="group orientation-vertical last-child" style="width: 250px;">
+              <div class="multi-photo" style="display: table-cell; vertical-align: middle">
+                <%= if @showcase_image && @showcase_image.is_image do %>
+                  <img class="main-listing-photo" src="<%= attachment_path(@conn, :show_public, (@showcase_image.sha256_hash |> Base.url_encode64), w: 250, h: 192) %>" />
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 525px;">
+          <div class="report-field label-visible behavior"><span class="report-label ">Cross Street:</span><span class="report-value"><%= @listing.cross_street %></span></div>
+        </div>
+        <!--div class="group orientation-horizontal  behavior last-child">
+          <div class="report-literal report-field "><img src="http://cdn.walk.sc/images/walkscore-logo-small.gif">&nbsp;</div>
+          <div class="report-field label-visible"><span class="report-label ">Walk Score®:</span><span class="report-value"><a class="form-link remote-link" href="http://www.mlsstratus.com/walkscore/ws.asp?addr=24 Matinecock Ave, Port Washington, NY 11050&amp;encAddr=24 Matinecock Ave-Port Washington-NY-11050&amp;lat=40.8360649645329&amp;lng=-73.7064962089062" value="">58</a></span></div>
+        </div-->
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible behavior"><span class="report-label ">Directions:</span><span class="report-value"><%= @listing.directions %></span></div>
+      </div>
+      <div class="report-literal report-field report-line ">
+        <hr>
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible"><span class="report-label ">Property Description:</span><span class="report-value"><%= @listing.description %></span></div>
+      </div>
+      <div class="group orientation-tabular ">
+        <div class="group orientation-horizontal  last-child">
+          <div class="group orientation-vertical " style="width: 200px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Property Info</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Appx Yr Built:</span><span class="report-value"><%= @listing.year_built %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">New Constr:</span><span class="report-value"><%= yn @listing.new_construction %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Construction:</span><span class="report-value"><%= @listing.siding_desc %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Front Expose:</span><span class="report-value"><%= @listing.front_exposure_type %></span></div>
+            <div class="group orientation-horizontal ">
+              <div class="group orientation-vertical " style="width: 120px;">
+                <div class="report-field label-visible"><span class="report-label ">Cul-De-Sac:</span><span class="report-value"><%= yn @listing.cul_de_sac %></span></div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="report-field label-visible"><span class="report-label ">Corner:</span><span class="report-value"><%= yn @listing.corner %></span></div>
+              </div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Horse Prop:</span><span class="report-value"><%= yn @listing.equestrian %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Appearance:</span><span class="report-value"><%= @listing.appearance %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Waterfront/Frontage:</span><span class="report-value"><%= yn @listing.waterfront %><%= if @listing.water_frontage_ft, do: ", #{@listing.water_frontage_ft}ft", else: "" %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Waterview:</span><span class="report-value"><%= yn @listing.waterview %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Bulkhead:</span><span class="report-value"><%= yn @listing.bulkhead %><%= if @listing.bulkhead_ft, do: ", #{@listing.bulkhead_ft}ft", else: "" %></span></div>
+          </div>
+          <div class="group orientation-vertical " style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Rooms/Interior</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label "># Kitchens:</span><span class="report-value"><%= @listing.num_kitchens %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Eat In Kitchen:</span><span class="report-value"><%= yn @listing.eat_in_kitchen %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">DiningRm:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_dining_room_type_int_to_ext(@listing.dining_room_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Den/Fam Rm:</span><span class="report-value"><%= yn @listing.den %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Office:</span><span class="report-value"><%= yn @listing.office %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Attic:</span><span class="report-value"><%= yn @listing.attic %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Apx Int Sqft:</span><span class="report-value"><%= @listing.sq_ft %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Wood Flrs:</span><span class="report-value"><%= yn @listing.wood_floors %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">W/W Carpet:</span><span class="report-value"><%= yn @listing.w_w_carpet %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Fireplaces:</span><span class="report-value"><%= @listing.num_fireplaces %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Skylights:</span><span class="report-value"><%= @listing.num_skylights %></span></div>
+          </div>
+          <div class="group orientation-vertical " style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Appliances/Utilities</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Stoves:</span><span class="report-value"><%= @listing.num_stoves %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Refrigerators:</span><span class="report-value"><%= @listing.num_refrigs %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Dishwashers:</span><span class="report-value"><%= @listing.num_dishwashers %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Washers:</span><span class="report-value"><%= @listing.num_washers %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Dryers:</span><span class="report-value"><%= @listing.num_dryers %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">A/C zones:</span><span class="report-value"><%= @listing.ac_num_zones %></span></div>
+            <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">CAC Zones:</span><span class="report-value"></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Heat:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_heating_type_int_to_ext(@listing.heating_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Heat Zones:</span><span class="report-value"><%= @listing.heat_num_zones %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Sep HW Heater:</span><span class="report-value"><%= yn @listing.sep_hw_heater %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Permit:</span><span class="report-value"><%= @listing.permit %></span></div>
+          </div>
+          <div class="group orientation-vertical  last-child" style="width: 188px;">
+            <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
+              <div class="report-literal report-field "><strong>Exterior</strong>&nbsp;</div>
+            </div>
+            <div class="report-field label-visible"><span class="report-label ">Garages:</span><span class="report-value"><%= @listing.num_garages %><%= if @listing.num_half_garages && @listing.num_half_garages > 0, do: ", #{@listing.num_half_garages} half" %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Driveway:</span><span class="report-value"><%= @listing.driveway %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Porch:</span><span class="report-value"><%= yn @listing.porch %><%= if @listing.porch_type, do: ", " <> Mpnetwork.EnumMaps.map_porch_type_int_to_ext(@listing.porch_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Patio:</span><span class="report-value"><%= yn @listing.patio %><%= if @listing.patio_type, do: ", " <> Mpnetwork.EnumMaps.map_patio_type_int_to_ext(@listing.patio_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Deck:</span><span class="report-value"><%= yn @listing.deck %><%= if @listing.deck_type, do: ", " <> Mpnetwork.EnumMaps.map_deck_type_int_to_ext(@listing.deck_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Pool:</span><span class="report-value"><%= yn @listing.pool %><%= if @listing.pool_type, do: ", " <> Mpnetwork.EnumMaps.map_pool_type_int_to_ext(@listing.pool_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Tennis Ct:</span><span class="report-value"><%= yn @listing.tennis_ct %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Ing Sprinks:</span><span class="report-value"><%= yn @listing.ing_sprinks %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Building Size:</span><span class="report-value"><%= @listing.building_size_sqft %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Water:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_water_type_int_to_ext(@listing.water_type) %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Sewer:</span><span class="report-value"><%= yn @listing.sewer %><%= if @listing.sewage_type, do: ", " <> Mpnetwork.EnumMaps.map_sewage_type_int_to_ext(@listing.sewage_type) %></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 500px;">
+          <div class="report-field label-visible"><span class="report-label ">Bsmt/Subfl:</span><span class="report-value"><%= yn @listing.basement %><%= if @listing.basement_type, do: ", " <> Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">1st Floor:</span><span class="report-value"><%= @listing.first_fl_desc %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">2nd Floor:</span><span class="report-value"><%= @listing.second_fl_desc %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">3rd Floor:</span><span class="report-value"><%= @listing.third_fl_desc %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Personal Property Exclusions:</span><span class="report-value"><%= @listing.personal_prop_exclusions %></span></div>
+        </div>
+        <div class="group orientation-vertical  last-child" style="width: 240px;">
+          <div class="report-field label-visible"><span class="report-label ">Also For Rent:</span><span class="report-value"><%= yn(@listing.also_for_rent || (@listing.for_sale && @listing.for_rent)) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Rental Income:</span><span class="report-value"><%= @listing.rental_income_usd |> dollars %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Short Sale:</span><span class="report-value"><%= yn @listing.short_sale %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">REO:</span><span class="report-value"><%= yn @listing.reo %></span></div>
+        </div>
+      </div>
+      <div class="report-literal report-field report-line ">
+        <hr>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="group orientation-vertical " style="width: 225px;">
+          <div class="report-field label-visible"><span class="report-label ">Energy Efficient Feature:</span><span class="report-value"><%= yn @listing.energy_eff %>
+          <%= eef_features = Mpnetwork.EnumMaps.eef_features_int
+                |> Enum.filter(fn eef -> Map.fetch!(@listing, eef) end)
+                |> Enum.map(&Mpnetwork.EnumMaps.map_eef_feature_int_to_ext/1)
+              if eef_features != [], do: "; " <> Enum.join(eef_features, ", "), else: ""
+            %></span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 175px;">
+          <div class="report-field label-visible behavior"><span class="report-label ">Green Certified:</span><span class="report-value"><%= yn @listing.green_certified %></span></div>
+        </div>
+        <div class="group orientation-vertical " style="width: 175px;">
+          <div class="report-field label-visible behavior"><span class="report-label ">Cert Type:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_green_cert_type_int_to_ext(@listing.green_cert_type) %></span></div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible behavior"><span class="report-label ">Cert Year:</span><span class="report-value"><%= @listing.green_cert_year %></span></div>
+        </div>
+      </div>
+      <div class="report-field label-visible behavior"><span class="report-label ">Handicap Accessible:</span><span class="report-value"><%= yn @listing.handicap_access %><%= if @listing.handicap_access_desc && @listing.handicap_access_desc != "", do: ", " <> @listing.handicap_access_desc %></span></div>
+      <div class="group orientation-vertical  empty">
+        <div class=""></div>
+      </div>
+      <div class="group orientation-horizontal ">
+        <div class="report-literal report-field ">&nbsp;</div>
+      </div>
+      <div class="group orientation-vertical  empty">
+        <div class=""></div>
+      </div>
+      <div class="group orientation-vertical  behavior">
+        <div class="report-literal report-field report-line ">
+          <hr>
+        </div>
+      </div>
+      <div class="group orientation-horizontal last-child">
+        <div class="group orientation-vertical " style="width: 200px;">
+          <div class="report-field label-visible"><span class="report-label ">List Price:</span><span class="report-value"><%= @listing.price_usd |> dollars %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Owner Financing:</span><span class="report-value"><%= yn @listing.owner_financing %></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
