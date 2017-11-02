@@ -6,8 +6,6 @@ defmodule Mpnetwork.Repo.Migrations.AddSeparateRoundRobinRemarksToListingAndRena
     alter table(:listings) do
       add :round_robin_remarks, :text
     end
-  rescue
-    err -> nil
   end
 
 end
