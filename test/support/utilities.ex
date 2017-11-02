@@ -56,7 +56,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def valid_office_attrs(attrs \\ %{}) do
     attrs |> Enum.into(%{
       name: "Coach#{trunc :rand.uniform*1000000000000}",
-      address: "1 Test Drive",
+      address: "1 Test Drive #{trunc :rand.uniform*1000000000000}",
       city: "Port Washington",
       state: "NY",
       zip: "11050",
@@ -86,7 +86,11 @@ defmodule Mpnetwork.Test.Support.Utilities do
   end
 
   def user_fixture(attrs \\ %{}) do
-    office = office_fixture()
+    office = if attrs[:broker] do
+      attrs[:broker]
+    else
+      office_fixture()
+    end
     attrs = Enum.into(attrs, Enum.into(%{broker: office, office_id: office.id}, valid_user_attrs()))
     {:ok, user} = Realtor.create_user(attrs)
     Repo.preload(user, :broker)

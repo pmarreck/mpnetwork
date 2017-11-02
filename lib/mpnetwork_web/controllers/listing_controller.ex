@@ -7,7 +7,7 @@ defmodule MpnetworkWeb.ListingController do
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
-  import Listing, only: [public_client_listing_code: 1, public_agent_listing_code: 1]
+  import Listing, only: [public_client_listing_code: 1] #, public_agent_listing_code: 1]
 
   plug :put_layout, "public_listing.html" when action in [:client_listing, :agent_listing]
 
@@ -92,7 +92,7 @@ defmodule MpnetworkWeb.ListingController do
       edit_mls(conn, params)
     else
       listing = Realtor.get_listing!(id)
-      ensure_owner_or_admin(conn, listing, fn ->
+      ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
         attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
         changeset = Realtor.change_listing(listing)
         render(conn, "edit.html",
@@ -126,7 +126,7 @@ defmodule MpnetworkWeb.ListingController do
 # IO.inspect listing_params, limit: :infinity
     listing = Realtor.get_listing!(id)
     listing_params = filter_empty_ext_urls(listing_params)
-    ensure_owner_or_admin(conn, listing, fn ->
+    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
       case Realtor.update_listing(listing, listing_params) do
         {:ok, listing} ->
           conn
@@ -147,7 +147,7 @@ defmodule MpnetworkWeb.ListingController do
 
   def delete(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    ensure_owner_or_admin(conn, listing, fn ->
+    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
       {:ok, _listing} = Realtor.delete_listing(listing)
 
       conn
@@ -239,11 +239,30 @@ defmodule MpnetworkWeb.ListingController do
     end
   end
 
+  defp ensure_owner_or_admin_of_same_office_or_site_admin(conn, resource, lambda) do
+    u = current_user(conn)
+    oid = resource.user_id
+    owner = u.id == oid
+    site_admin = u.role_id < 2
+    office_admin = u.role_id == 2
+    resource_belongs_to_users_office = resource.broker_id == u.office_id
+    admin_of_same_office = office_admin && resource_belongs_to_users_office
+    if (owner || site_admin || admin_of_same_office) do
+      lambda.()
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
+  end
+
   defp filter_empty_ext_urls(listing_params) do
-    %{"ext_urls" => ext_urls} = listing_params
-    if ext_urls do
-      ext_urls = Enum.filter(ext_urls, &(&1!=""))
-      Enum.into(%{"ext_urls" => ext_urls}, listing_params)
+    if listing_params["ext_urls"] do
+      %{"ext_urls" => ext_urls} = listing_params
+      if ext_urls do
+        ext_urls = Enum.filter(ext_urls, &(&1!=""))
+        Enum.into(%{"ext_urls" => ext_urls}, listing_params)
+      else
+        listing_params
+      end
     else
       listing_params
     end
