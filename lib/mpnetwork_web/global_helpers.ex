@@ -76,13 +76,13 @@ defmodule MpnetworkWeb.GlobalHelpers do
     |> NaiveDateTime.from_erl!
     |> DateTime.from_naive!("Etc/UTC")
     |> Timex.Timezone.convert(tz)
-    |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
+    |> Timex.format!("%a, %b %e, %Y %l:%M %p", :strftime)
   end
   def datetime_to_standard_humanized(%NaiveDateTime{} = naive_datetime, tz) do
     naive_datetime
     |> DateTime.from_naive!("Etc/UTC")
     |> Timex.Timezone.convert(tz)
-    |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
+    |> Timex.format!("%a, %b %e, %Y %l:%M %p", :strftime)
   end
 
   # convert falsey values to "N", anything else to "Y"
