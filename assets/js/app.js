@@ -47,24 +47,30 @@ var mpnetwork = {
   }
 }
 
-function ConvertFromUTCToLocal(dt){
-  switch(dt) {
+function ConvertFromUTCToLocal(utc_dt){
+  switch(utc_dt) {
     case "":
       return "";
       break;
     default:
-      return moment(dt).tz(moment.tz.guess()).format(mpnetwork.config.datetimeformat);
+      var local_dt = moment.utc(utc_dt).tz(moment.tz.guess()).format(mpnetwork.config.datetimeformat);
+      // alert("converting from utc " + utc_dt + " to local " + local_dt);
+      return local_dt;
       break;
   }
 }
 
-function ConvertFromLocalToUTC(dt){
-  switch(dt) {
+function ConvertFromLocalToUTC(local_dt){
+  switch(local_dt) {
     case "":
       return "";
       break;
     default:
-      return moment.tz(dt, moment.tz.guess()).toISOString();
+      var utc_dt = moment(local_dt).add(-moment(local_dt).utcOffset(), 'm').local().format();
+      // var utc_dt = moment.utc(moment.local(local_dt)).toISOString();
+      // alert("converting local " + local_dt + " to UTC " + utc_dt);
+      return utc_dt;
+      // return local_dt;
       break;
   }
 }

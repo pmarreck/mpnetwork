@@ -70,16 +70,18 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   def datetime_to_standard_humanized(_, tz \\ "EDT")
   def datetime_to_standard_humanized(nil, _), do: ""
-  def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, _tz) do
+  def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, tz) do
     datetime
     |> Ecto.DateTime.to_erl
     |> NaiveDateTime.from_erl!
     |> DateTime.from_naive!("Etc/UTC")
+    |> Timex.Timezone.convert(tz)
     |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
-  def datetime_to_standard_humanized(%NaiveDateTime{} = naive_datetime, _tz) do
+  def datetime_to_standard_humanized(%NaiveDateTime{} = naive_datetime, tz) do
     naive_datetime
     |> DateTime.from_naive!("Etc/UTC")
+    |> Timex.Timezone.convert(tz)
     |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 
