@@ -272,13 +272,25 @@
         <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Note:</span><span class="report-value"><%= @listing.next_broker_oh_note %></span></div>
       </div>
       <div class="group orientation-horizontal ">
-        <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Date/Time:</span><span class="report-value"><%= datetime_to_standard_humanized(@listing.next_broker_oh_start_at) %></span></div>
+        <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Date/Time:</span><span class="report-value">
+          <%= if @listing.next_broker_oh_start_at do %>
+            <%= @listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+            <span class="nowrap"><%= (@listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+          <% end %>
+        </div>
       </div>
       <div class="group orientation-horizontal ">
         <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
       </div>
       <div class="group orientation-horizontal ">
-        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date/Time:</span><span class="report-value"><%= datetime_to_standard_humanized(@listing.next_cust_oh_start_at) %></span></div>
+        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date/Time:</span>
+          <span class="report-value">
+            <%= if @listing.next_cust_oh_start_at do %>
+              <%= @listing.next_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+              <span class="nowrap"><%= (@listing.next_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.next_cust_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+            <% end %>
+          </span>
+        </div>
       </div>
       <div class="group orientation-vertical  empty">
         <div class=""></div>

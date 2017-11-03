@@ -27,8 +27,7 @@
     <%= for listing <- @listings do %>
         <tr>
             <td>
-              <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
-              <%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
+              <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if listing.draft && @draft do %> (Your Draft)<% end %>
             </td>
             <%= if @primaries do %>
