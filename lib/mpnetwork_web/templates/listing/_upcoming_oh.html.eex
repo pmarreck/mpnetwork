@@ -35,7 +35,7 @@
             </td>
             <td><%= listing.city %></td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
-            <td><%= listing.next_broker_oh_start_at && (listing.next_broker_oh_start_at |> Timex.format!("%a, %b %e @ %l:%M %p", :strftime)) %></td>
+            <td><%= listing.next_broker_oh_start_at && (listing.next_broker_oh_start_at |> datetime_to_standard_humanized) %></td>
             <td><%= raw HtmlSanitizeEx.html5 listing.realtor_remarks %></td>
         </tr>
     <% end %>
