@@ -230,14 +230,14 @@ defmodule Mpnetwork.Realtor do
       [%Listing{}, ...]
 
   """
-  def list_next_broker_oh_listings(_, _, _after_datetime \\ fn -> NaiveDateTime.utc_now end)
+  def list_next_broker_oh_listings(_, _, _after_datetime \\ nil)
   def list_next_broker_oh_listings(nil, number, after_datetime) do
-    now = after_datetime.()
-    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.next_broker_oh_start_at], limit: ^number) |> Repo.preload([:broker, :user])
+    now = after_datetime || NaiveDateTime.utc_now
+    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.next_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
   end
   def list_next_broker_oh_listings(current_user, number, after_datetime) do
-    now = after_datetime.()
-    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false or l.user_id == ^current_user.id, order_by: [asc: l.next_broker_oh_start_at], limit: ^number) |> Repo.preload([:broker, :user])
+    now = after_datetime || NaiveDateTime.utc_now
+    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false or l.user_id == ^current_user.id, order_by: [asc: l.next_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
   end
 
   defp default_search_scope(current_user) do
