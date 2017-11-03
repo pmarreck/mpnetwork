@@ -1,5 +1,3 @@
 <h3>Upcoming broker open houses/inspections</h3>
 
 <%= render("_upcoming_oh.html", draft: false, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: nil, current_user: @current_user) %>
-
-<p><%= link "Back", to: listing_path(@conn, :index) %></p>

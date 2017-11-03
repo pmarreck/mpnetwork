@@ -3,8 +3,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Address</th>
-            <th>Town</th>
+            <th>Address/Town</th>
             <%= if @primaries do %>
               <th>Thumb</th>
             <% end %>
@@ -23,19 +22,9 @@
     <%= for listing <- @listings do %>
         <tr>
             <td>
-              <%
-                address_text = listing.address
-                #if listing.city && listing.state && listing.zip do
-                #  "#{listing.address}, #{listing.city}, #{listing.state} #{listing.zip}"
-                #else
-                #  listing.address
-                #end
-              %>
-              <%= link address_text, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
+              <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %>
+              <%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if listing.draft && @draft do %> (Your Draft)<% end %>
-            </td>
-            <td>
-              <%= listing.city %>
             </td>
             <%= if @primaries do %>
               <td>
@@ -58,7 +47,10 @@
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td><%= if listing.broker, do: listing.broker.name %></td>
             <td><%= yn(listing.for_rent) %></td>
-            <td><%= listing.next_broker_oh_start_at && (listing.next_broker_oh_start_at |> datetime_to_standard_humanized) %></td>
+            <td>
+              <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+              <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") %>-<%= listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") %>
+            </td>
             <td><%= raw HtmlSanitizeEx.html5 (if @rr, do: listing.round_robin_remarks, else: listing.realtor_remarks) %></td>
 
             <td class="text-right">
