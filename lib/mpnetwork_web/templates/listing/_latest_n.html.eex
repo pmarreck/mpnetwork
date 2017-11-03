@@ -13,7 +13,7 @@
             <th>List Price</th>
             <th>Agency</th>
             <th>Rental</th>
-            <th>Next&nbsp;Broker&nbsp;OH</th>
+            <th class="nowrap">Next Broker OH</th>
             <th><%= case @remarks do
                       :rr -> "Round Robin "
                       :inspection -> "Inspection "
@@ -53,8 +53,10 @@
             <td><%= if listing.broker, do: listing.broker.name %></td>
             <td><%= yn(listing.for_rent) %></td>
             <td>
-              <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <%= if listing.next_broker_oh_start_at do %>
+                <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+                <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </td>
             <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
                       :rr -> listing.round_robin_remarks
