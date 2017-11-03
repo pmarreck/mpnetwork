@@ -70,6 +70,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   def datetime_to_standard_humanized(_, format \\ "%a, %b %e, %Y %l:%M %p", tz \\ "EDT")
   def datetime_to_standard_humanized(nil, _, _), do: ""
+  def datetime_to_standard_humanized("", _, _), do: ""
   def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, format, tz) do
     datetime
     |> Ecto.DateTime.to_erl

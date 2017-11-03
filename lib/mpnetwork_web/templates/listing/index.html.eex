@@ -2,14 +2,14 @@
 
 <h3>Upcoming broker open houses/inspections</h3>
 
-<%= render("_latest_n.html", rr: true, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :inspection, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user) %>
 
 <h3>Latest 30 public new/recently-edited listings</h3>
 
-<%= render("_latest_n.html", rr: true, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :rr, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
 
 <h3>Your draft listings</h3>
 
-<%= render("_latest_n.html", rr: true, draft: true, conn: @conn, listings: @draft_listings, primaries: @draft_primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :broker, draft: true, conn: @conn, listings: @draft_listings, primaries: @draft_primaries, current_user: @current_user) %>
 
 <span><%= link "New Listing", to: listing_path(@conn, :new), class: "btn btn-default btn-xl" %></span>

@@ -14,7 +14,12 @@
             <th>Agency</th>
             <th>Rental</th>
             <th>Next&nbsp;Broker&nbsp;OH</th>
-            <th>Remarks</th>
+            <th><%= case @remarks do
+                      :rr -> "Round Robin "
+                      :inspection -> "Inspection "
+                      :broker -> "Realtor "
+                      _ -> ""
+                    end %>Remarks</th>
             <th></th>
         </tr>
         </thead>
@@ -49,9 +54,14 @@
             <td><%= yn(listing.for_rent) %></td>
             <td>
               <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") %>-<%= listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") %>
+              <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
             </td>
-            <td><%= raw HtmlSanitizeEx.html5 (if @rr, do: listing.round_robin_remarks, else: listing.realtor_remarks) %></td>
+            <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
+                      :rr -> listing.round_robin_remarks
+                      :inspection -> listing.next_broker_oh_note
+                      :broker -> listing.realtor_remarks
+                      _ -> ""
+                    end) %></td>
 
             <td class="text-right">
             <%= if @current_user.id == listing.user_id do %>
