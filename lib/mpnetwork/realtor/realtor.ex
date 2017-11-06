@@ -586,7 +586,7 @@ defmodule Mpnetwork.Realtor do
     Repo.all(
       from office in Office,
       select: {office.id, office.name},
-      order_by: [desc: office.name]
+      order_by: [asc: office.name]
     )
   end
 
@@ -602,7 +602,7 @@ defmodule Mpnetwork.Realtor do
   def list_offices do
     Repo.all(
       from office in Office,
-      order_by: [desc: office.name]
+      order_by: [asc: office.name]
     )
   end
 

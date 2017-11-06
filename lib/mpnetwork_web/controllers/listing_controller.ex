@@ -50,7 +50,7 @@ defmodule MpnetworkWeb.ListingController do
     render(conn, "new.html",
       changeset: changeset,
       offices: offices(),
-      users: users(conn.assigns.current_office)
+      users: users(conn.assigns.current_office, conn.assigns.current_user)
     )
   end
 
@@ -67,7 +67,7 @@ defmodule MpnetworkWeb.ListingController do
         render(conn, "new.html",
           changeset: changeset,
           offices: offices(),
-          users: users(conn.assigns.current_office)
+          users: users(conn.assigns.current_office, conn.assigns.current_user)
         )
     end
   end
@@ -98,7 +98,7 @@ defmodule MpnetworkWeb.ListingController do
         changeset: changeset,
         broker: listing.broker,
         offices: offices(),
-        users: users(conn.assigns.current_office)
+        users: users(conn.assigns.current_office, conn.assigns.current_user)
       )
     else
       send_resp(conn, 405, "Not allowed")
@@ -115,7 +115,7 @@ defmodule MpnetworkWeb.ListingController do
   #       attachments: attachments,
   #       changeset: changeset,
   #       offices: offices(),
-  #       users: users(conn.assigns.current_office)
+  #       users: users(conn.assigns.current_office, conn.assigns.current_user)
   #     )
   #   end)
   # end
@@ -137,7 +137,7 @@ defmodule MpnetworkWeb.ListingController do
             attachments: attachments,
             changeset: changeset,
             offices: offices(),
-            users: users(conn.assigns.current_office)
+            users: users(conn.assigns.current_office, conn.assigns.current_user)
           )
       end
     else
@@ -222,8 +222,12 @@ defmodule MpnetworkWeb.ListingController do
   #   Realtor.list_users
   # end
 
-  defp users(office) do
-    Realtor.list_users(office)
+  defp users(office, current_user) do
+    if Permissions.site_admin?(current_user) do
+      Realtor.list_users()
+    else
+      Realtor.list_users(office)
+    end
   end
 
   # defp ensure_owner_or_admin(conn, resource, lambda) do
