@@ -1,10 +1,8 @@
 defmodule MpnetworkWeb.ProfileController do
   use MpnetworkWeb, :controller
 
-  alias Mpnetwork.Realtor
+  alias Mpnetwork.{Realtor, Permissions}
   # alias Mpnetwork.User
-
-  import MpnetworkWeb.GlobalHelpers, only: [is_admin: 1]
 
   def show(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
@@ -13,18 +11,20 @@ defmodule MpnetworkWeb.ProfileController do
 
   def edit(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
-    ensure_owner_or_admin(conn, user, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       offices = Realtor.list_offices()
       roles = filtered_roles(current_user(conn))
       changeset = Realtor.change_user(user)
       render(conn, "edit.html", user: user, offices: offices, roles: roles, changeset: changeset)
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Realtor.get_user!(id)
 
-    ensure_owner_or_admin(conn, user, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       case Realtor.update_user(user, user_params) do
         {:ok, user} ->
           conn
@@ -33,15 +33,6 @@ defmodule MpnetworkWeb.ProfileController do
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", user: user, offices: Realtor.list_offices(), roles: filtered_roles(current_user(conn)), changeset: changeset)
       end
-    end)
-  end
-
-  defp ensure_owner_or_admin(conn, resource, lambda) do
-    u = current_user(conn)
-    oid = resource.id
-    admin = u.role_id < 3
-    if u.id == oid || admin do
-      lambda.()
     else
       send_resp(conn, 405, "Not allowed")
     end

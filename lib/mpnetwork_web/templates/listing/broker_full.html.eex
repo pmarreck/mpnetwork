@@ -379,6 +379,9 @@
               </div>
             </div>
           <% end %>
+          <div class="group orientation-horizontal last-child">
+            <div class="report-field label-visible"><span class="report-label ">Selling Agent:</span><span class="report-value"><%= @listing.selling_agent_name %></span></div>
+          </div>
         </div>
         <div class="group orientation-vertical  last-child">
           <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>

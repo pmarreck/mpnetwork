@@ -1,12 +1,15 @@
 defmodule MpnetworkWeb.UserController do
   use MpnetworkWeb, :controller
 
-  alias Mpnetwork.{Realtor, User}
+  alias Mpnetwork.{Realtor, User, Permissions}
 
-  import MpnetworkWeb.GlobalHelpers, only: [is_admin: 1]
 
   def index(conn, _params) do
-    users = Realtor.list_users()
+    users = if Permissions.site_admin?(conn.assigns.current_user) do
+      Realtor.list_users()
+    else
+      Realtor.list_users(conn.assigns.current_office)
+    end
     render(conn, "index.html", users: users)
   end
 
@@ -14,27 +17,30 @@ defmodule MpnetworkWeb.UserController do
   # But admins insisted on being able to create users and manage their passwords, so...
 
   def new(conn, _params) do
-    ensure_owner_or_admin(conn, nil, fn ->
+    if Permissions.office_admin_or_site_admin?(current_user(conn)) do
       offices = Realtor.list_offices()
       roles = filtered_roles(current_user(conn))
       changeset = Realtor.change_user(%User{})
       render(conn, "new.html", offices: offices, roles: roles, changeset: changeset)
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
-  def create(conn, %{"user" => user_params}) do
-    ensure_owner_or_admin(conn, nil, fn ->
-      offices = Realtor.list_offices()
-      roles = filtered_roles(current_user(conn))
+  def create(conn, %{"user" => %{"office_id" => office_id} = user_params}) do
+    office = Realtor.get_office!(office_id)
+    if Permissions.office_admin_of_office_or_site_admin?(current_user(conn), office) do
       case Realtor.create_user(user_params) do
         {:ok, user} ->
           conn
           |> put_flash(:info, "User created successfully.")
           |> redirect(to: user_path(conn, :show, user))
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "new.html", offices: offices, roles: roles, changeset: changeset)
+          render(conn, "new.html", offices: Realtor.list_offices(), roles: filtered_roles(current_user(conn)), changeset: changeset)
       end
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def show(conn, %{"id" => id}) do
@@ -44,18 +50,20 @@ defmodule MpnetworkWeb.UserController do
 
   def edit(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
-    ensure_owner_or_admin(conn, user, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       offices = Realtor.list_offices()
       roles = filtered_roles(current_user(conn))
       changeset = Realtor.change_user(user)
       render(conn, "edit.html", user: user, offices: offices, roles: roles, changeset: changeset)
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Realtor.get_user!(id)
 
-    ensure_owner_or_admin(conn, user, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       case Realtor.update_user(user, user_params) do
         {:ok, user} ->
           conn
@@ -64,26 +72,19 @@ defmodule MpnetworkWeb.UserController do
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", user: user, offices: Realtor.list_offices(), roles: filtered_roles(current_user(conn)), changeset: changeset)
       end
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def delete(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
-    ensure_owner_or_admin(conn, user, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       {:ok, _user} = Realtor.delete_user(user)
 
       conn
       |> put_flash(:info, "User deleted successfully.")
       |> redirect(to: user_path(conn, :index))
-    end)
-  end
-
-  defp ensure_owner_or_admin(conn, resource, lambda) do
-    u = current_user(conn)
-    oid = resource && resource.id
-    admin = u.role_id < 3
-    if u.id == oid || admin do
-      lambda.()
     else
       send_resp(conn, 405, "Not allowed")
     end

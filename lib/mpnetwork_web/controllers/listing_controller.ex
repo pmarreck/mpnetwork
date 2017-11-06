@@ -3,7 +3,7 @@ defmodule MpnetworkWeb.ListingController do
 
   require Logger
 
-  alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer}
+  alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer, Permissions}
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
@@ -89,7 +89,7 @@ defmodule MpnetworkWeb.ListingController do
 
   def edit(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
       changeset = Realtor.change_listing(listing)
       render(conn, "edit.html",
@@ -100,7 +100,9 @@ defmodule MpnetworkWeb.ListingController do
         offices: offices(),
         users: users(conn.assigns.current_office)
       )
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   # def edit_mls(conn, %{"id" => id}) do
@@ -122,7 +124,7 @@ defmodule MpnetworkWeb.ListingController do
 # IO.inspect listing_params, limit: :infinity
     listing = Realtor.get_listing!(id)
     listing_params = filter_empty_ext_urls(listing_params)
-    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       case Realtor.update_listing(listing, listing_params) do
         {:ok, listing} ->
           conn
@@ -138,18 +140,22 @@ defmodule MpnetworkWeb.ListingController do
             users: users(conn.assigns.current_office)
           )
       end
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def delete(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id)
-    ensure_owner_or_admin_of_same_office_or_site_admin(conn, listing, fn ->
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       {:ok, _listing} = Realtor.delete_listing(listing)
 
       conn
       |> put_flash(:info, "Listing deleted successfully.")
       |> redirect(to: listing_path(conn, :index))
-    end)
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def broker_full(conn, %{"id" => signature}) do
@@ -230,21 +236,6 @@ defmodule MpnetworkWeb.ListingController do
   #     send_resp(conn, 405, "Not allowed")
   #   end
   # end
-
-  defp ensure_owner_or_admin_of_same_office_or_site_admin(conn, resource, lambda) do
-    u = current_user(conn)
-    oid = resource.user_id
-    owner = u.id == oid
-    site_admin = u.role_id < 2
-    office_admin = u.role_id == 2
-    resource_belongs_to_users_office = resource.broker_id == u.office_id
-    admin_of_same_office = office_admin && resource_belongs_to_users_office
-    if (owner || site_admin || admin_of_same_office) do
-      lambda.()
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
-  end
 
   defp filter_empty_ext_urls(listing_params) do
     if listing_params["ext_urls"] do

@@ -24,9 +24,11 @@
       <td><%= role_id_to_name(user.role_id) %></td>
 
       <td class="text-right">
-        <span><%= link "Show", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure? You will have to first delete or reassign all broadcasts, listings and attachments that this user currently owns."], class: "btn btn-danger btn-xs" %></span>
+        <span><%= link "Detail", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+        <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(@conn), user) do %>
+          <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure? You will have to first delete or reassign all broadcasts, listings and attachments that this user currently owns."], class: "btn btn-danger btn-xs" %></span>
+        <% end %>
       </td>
     </tr>
 <% end %>

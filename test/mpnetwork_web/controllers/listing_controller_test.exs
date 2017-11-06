@@ -147,4 +147,18 @@ defmodule MpnetworkWeb.ListingControllerTest do
     assert response(conn, 405)
   end
 
+  # note: what about draft listings?
+  test "office admin from same office can edit anyone's listing in that office", %{conn: conn} do
+    initial_conn = conn
+    office = office_fixture()
+    office_admin = user_fixture(%{role_id: 2, office_id: office.id, broker: office})
+    realtor_in_same_office = user_fixture(%{role_id: 3, office_id: office.id, broker: office})
+    listing = fixture(:listing, realtor_in_same_office)
+    conn = conn |> assign(:current_user, office_admin)
+    conn = put conn, listing_path(conn, :update, listing), listing: %{address: "SHOULD be possible"}
+    assert redirected_to(conn) == listing_path(conn, :show, listing)
+    conn = get initial_conn, listing_path(initial_conn, :show, listing)
+    assert html_response(conn, 200) =~ "SHOULD be possible"
+  end
+
 end

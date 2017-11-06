@@ -1,6 +1,10 @@
 <h2>Attachments for <%= @listing.address %></h2>
 
-<span><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
+<% edit_rights = Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, @listing) %>
+
+<%= if edit_rights do %>
+  <span><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
+<% end %>
 &nbsp;&nbsp;
 <span><%= link "Return to editing listing details", to: listing_path(@conn, :edit, @listing) %></span>
 
@@ -9,7 +13,7 @@
     <tbody>
   <%= for attachment <- @attachments do %>
       <tr>
-        <%= if attachment.primary && @listing.user_id == @current_user.id do %>
+        <%= if attachment.primary && edit_rights do %>
           <td style="vertical-align: middle">
             <b>Designated Primary Photo ⇨</b>
           </td>
@@ -26,7 +30,7 @@
         </td>
         <td class="text-right">
             <span><%= link "#{if attachment.is_image, do: "Enlarge", else: "View/Download"}", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
-          <%= if @listing.user_id == @current_user.id do %>
+          <%= if edit_rights do %>
             <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
             <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
           <% end %>

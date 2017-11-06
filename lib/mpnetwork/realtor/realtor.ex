@@ -41,7 +41,7 @@ defmodule Mpnetwork.Realtor do
       join: o in assoc(u, :broker),
       preload: [broker: o],
       order_by: [asc: o.name, asc: o.city, asc: u.name]
-    )# |> Repo.preload(:broker)
+    )
   end
 
   def list_users(nil) do
@@ -55,6 +55,8 @@ defmodule Mpnetwork.Realtor do
   def list_users(office) do
     Repo.all(
       from u in User,
+      join: o in assoc(u, :broker),
+      preload: [broker: o],
       where: u.office_id == ^office.id,
       order_by: [asc: u.name]
     )

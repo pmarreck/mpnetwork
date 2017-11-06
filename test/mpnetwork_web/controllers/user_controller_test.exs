@@ -3,6 +3,8 @@ defmodule MpnetworkWeb.UserControllerTest do
 
   import Mpnetwork.Test.Support.Utilities
 
+  alias Mpnetwork.Realtor
+
   setup %{conn: conn} do
     user = user_fixture(role_id: 2)
     conn = assign(conn, :current_office, user.broker)
@@ -78,15 +80,22 @@ defmodule MpnetworkWeb.UserControllerTest do
   describe "delete user" do
     setup [:create_user]
 
-    test "deletes chosen user", %{conn: conn, user: user} do
-      initial_conn = conn
+    test "does not delete chosen user if user is not from same office", %{conn: conn, user: user} do
       conn = delete conn, user_path(conn, :delete, user)
+      assert response(conn, 405) =~ "Not allowed"
+    end
+
+    test "deletes chosen user if user is from same office", %{conn: conn, user: user} do
+      initial_conn = conn
+      {:ok, user_from_same_office} = Realtor.update_user(user, %{office_id: conn.assigns.current_user.office_id})
+      conn = delete conn, user_path(conn, :delete, user_from_same_office)
       assert redirected_to(conn) == user_path(conn, :index)
       conn = initial_conn
       assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, user)
+        get conn, user_path(conn, :show, user_from_same_office)
       end
     end
+
   end
 
   defp create_user(_) do

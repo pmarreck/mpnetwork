@@ -1398,12 +1398,12 @@
           </div>
 
           <!-- 159 -->
-          <div class="form-group<%= if f.errors[:broker_id], do: " has-error" %>" title="note: can only be changed by admins">
+          <div class="form-group<%= if f.errors[:broker_id], do: " has-error" %>" title="note: can only be changed by site admins">
             <%= label f, :broker_id, "Broker:", class: "control-label" %>
-            <%= if is_admin(@conn) do %>
-              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy" %>
+            <%= if Permissions.site_admin?(current_user(@conn)) do %>
+              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px" %>
             <% else %>
-              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", disabled: "disabled" %>
+              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px", disabled: "disabled" %>
             <% end %>
             <%= error_tag f, :broker_id %>
           </div>
@@ -1416,12 +1416,12 @@
           </div>
 
           <!-- 161 -->
-          <div class="form-group<%= if f.errors[:user_id], do: " has-error" %>" title="note: can only be changed by admins">
+          <div class="form-group<%= if f.errors[:user_id], do: " has-error" %>" title="note: can only be changed by the owner of the listing or an office admin">
             <%= label f, :user_id, "Agent:", class: "control-label" %>
-            <%= if is_admin(@conn) do %>
-              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
+            <%= if !@existing || Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(@conn), @existing) do %>
+              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px" %>
             <% else %>
-              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px", disabled: "disabled" %>
+              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px", disabled: "disabled" %>
             <% end %>
             <%= error_tag f, :user_id %>
           </div>
@@ -1439,7 +1439,7 @@
           </div>
 
           <!-- 163 -->
-          <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>" title="note: can only be changed by admins">
+          <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>">
             <%= label f, :colisting_agent_id, "Co-listing agent", class: "control-label" %>:&nbsp;
             <%= select f, :colisting_agent_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
             <%= error_tag f, :colisting_agent_id %>
@@ -1455,6 +1455,13 @@
               <%= telephone_input f, :colisting_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
             </div>
             <%= error_tag f, :colisting_agent_phone %>
+          </div>
+
+          <!-- Forgotten! -->
+          <div class="form-group<%= if f.errors[:selling_agent_name], do: " has-error" %>">
+            <%= label f, :selling_agent_name, class: "control-label" %>
+            <%= text_input f, :selling_agent_name, class: "form-control" %>
+            <%= error_tag f, :selling_agent_name %>
           </div>
 
           <div class="row form-group">

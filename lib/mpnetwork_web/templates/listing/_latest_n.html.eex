@@ -14,12 +14,14 @@
             <th>Agency</th>
             <th>Rental</th>
             <th class="nowrap">Next Broker OH</th>
-            <th><%= case @remarks do
-                      :rr -> "Round Robin "
-                      :inspection -> "Inspection "
-                      :broker -> "Realtor "
-                      _ -> ""
-                    end %>Remarks</th>
+            <%= if @remarks do %>
+              <th><%= case @remarks do
+                        :rr -> "Round Robin "
+                        :inspection -> "Inspection "
+                        :broker -> "Realtor "
+                        _ -> ""
+                      end %>Remarks</th>
+            <% end %>
             <th></th>
         </tr>
         </thead>
@@ -57,15 +59,16 @@
                 <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </td>
-            <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
-                      :rr -> listing.round_robin_remarks
-                      :inspection -> listing.next_broker_oh_note
-                      :broker -> listing.realtor_remarks
-                      _ -> ""
-                    end) %></td>
-
+            <%= if @remarks do %>
+              <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
+                        :rr -> listing.round_robin_remarks
+                        :inspection -> listing.next_broker_oh_note
+                        :broker -> listing.realtor_remarks
+                        _ -> ""
+                      end) %></td>
+            <% end %>
             <td class="text-right">
-            <%= if @current_user.id == listing.user_id do %>
+            <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
               <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
               <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
             <% end %>

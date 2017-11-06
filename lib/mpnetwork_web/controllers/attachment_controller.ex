@@ -2,7 +2,7 @@ defmodule MpnetworkWeb.AttachmentController do
   use MpnetworkWeb, :controller
 
   require Mpnetwork.Upload
-  alias Mpnetwork.{Listing, Realtor, Upload, Config}
+  alias Mpnetwork.{Listing, Realtor, Upload, Config, Permissions}
   alias Mpnetwork.Listing.{Attachment, AttachmentMetadata}
 
   require Logger
@@ -108,7 +108,7 @@ defmodule MpnetworkWeb.AttachmentController do
   def index(conn, %{"listing_id" => listing_id} = _params) do
     listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
     listing = Realtor.get_listing!(listing_id)
-    if listing.user_id == current_user(conn).id do
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       attachments = Listing.list_attachments(listing_id, AttachmentMetadata)
       render(conn, "index.html", attachments: attachments, listing: listing)
     else
@@ -124,7 +124,7 @@ defmodule MpnetworkWeb.AttachmentController do
   def new(conn, %{"listing_id" => listing_id} = _params) do
     listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
     listing = Realtor.get_listing!(listing_id)
-    if listing.user_id == current_user(conn).id do
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       changeset = Listing.change_attachment(%Attachment{})
       render(conn, "new.html", changeset: changeset, listing: listing)
     else
@@ -140,7 +140,7 @@ defmodule MpnetworkWeb.AttachmentController do
     end
     listing_id = if is_binary(listing_id), do: String.to_integer(listing_id), else: listing_id
     listing = Realtor.get_listing!(listing_id)
-    if listing.user_id == current_user(conn).id do
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       case Listing.create_attachment(attachment_params) do
         {:ok, attachment} ->
           conn
@@ -195,14 +195,18 @@ defmodule MpnetworkWeb.AttachmentController do
   def edit(conn, %{"id" => id}) do
     attachment = get_cached(id)
     listing = Realtor.get_listing!(attachment.listing_id)
-    changeset = Listing.change_attachment(attachment)
-    render(conn, "edit.html", attachment: attachment, changeset: changeset, listing: listing)
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
+      changeset = Listing.change_attachment(attachment)
+      render(conn, "edit.html", attachment: attachment, changeset: changeset, listing: listing)
+    else
+      send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
+    end
   end
 
   def update(conn, %{"id" => id, "attachment" => attachment_params}) do
     attachment = get_cached(id, false)
     listing = Realtor.get_listing!(attachment.listing_id)
-    if listing.user_id == current_user(conn).id do
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       # only parse attachment data if one is actually posted
       attachment_params = case attachment_params["data"] do
         nil -> attachment_params
@@ -225,7 +229,7 @@ defmodule MpnetworkWeb.AttachmentController do
   def delete(conn, %{"id" => id}) do
     attachment = get_cached(id, false)
     listing = Realtor.get_listing!(attachment.listing_id)
-    if listing.user_id == current_user(conn).id do
+    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
       purge_cached(attachment) # not strictly necessary, would get evicted on next cache cleanup anyway due to disuse
                                # but I did it anyway to satisfy the test correctly asserting 404 on a re-retrieval :)
       {:ok, _attachment} = Listing.delete_attachment(attachment)

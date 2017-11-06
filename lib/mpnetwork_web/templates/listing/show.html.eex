@@ -3,9 +3,11 @@
 <div><br /></div>
 <%= render("_jumpto.html", existing: true) %>
 
+<% edit_rights = Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, @listing) %>
+
 <section class="content">
   <div class="form-group">
-    <%= if @listing.user_id == @current_user.id do %>
+    <%= if edit_rights do %>
       <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
     <% else %>
       <br/>
@@ -27,10 +29,14 @@
               <div class="col-xs-12">
 
                 <div class="form-group">
-                  <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></div>
+                  <%= if edit_rights do %>
+                    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></div>
+                  <% end %>
                   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
                 </div>
-                <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
+                <%= if edit_rights do %>
+                  <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
+                <% end %>
               </div>
             </div>
           </div>
@@ -944,6 +950,12 @@
           <div class="colisting_agent_phone">
             <strong>Co-listing agent phone:</strong>
             <%= @listing.colisting_agent_phone %>
+          </div>
+
+          <!-- ??? Forgotten! -->
+          <div class="selling_agent_name">
+            <strong>Selling agent:</strong>
+            <%= @listing.selling_agent_name %>
           </div>
 
           <div class="row form-group">
