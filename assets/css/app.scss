@@ -53,3 +53,88 @@ main.main {
 .nowrap {
   white-space: nowrap;
 }
+
+//// LISTING TABLE STYLES
+
+// body {
+//   font-family: arial;
+// }
+
+table.listing {
+  // border: 1px solid #ccc;
+  width: 100%;
+  margin:0;
+  padding:0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  tr {
+    border: 1px solid #aaa;
+    padding: 5px;
+  }
+  tr.include-with-next, tr.include-with-next td {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+  tr.include-with-previous, tr.include-with-previous td {
+    border-top: 0;
+    margin-top: 0;
+  }
+}
+
+table.listing th, table td {
+  border: 0 !important;
+  padding: 10px;
+  text-align: center;
+}
+
+table.listing th {
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+@media screen and (max-width: 1000px) {
+
+  table.listing {
+    border: 0;
+  }
+
+  table.listing thead {
+    display: none;
+  }
+
+  table.listing {
+    tr {
+      margin-bottom: 10px;
+      display: block;
+      :nth-child(odd) {
+        background-color: #ddd;
+      }
+      :nth-child(even) {
+        background-color: inherit;
+      }
+    }
+    tr.include-with-next {
+      margin-bottom: 0px;
+    }
+  }
+
+  table.listing td {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    border-bottom: 1px dotted #ccc;
+    min-height: 35px;
+  }
+
+  table.listing td:last-child {
+    border-bottom: 0;
+  }
+
+  table.listing td:before {
+    content: attr(data-label);
+    float: left;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}

@@ -2,6 +2,7 @@ defmodule Mpnetwork.Search do
 
   def examples do
     """
+    <br />
     <a id="toggle_examples" href="#">Click here for some example search queries</a>
     <br />
     <div id="examples" style="display: none">

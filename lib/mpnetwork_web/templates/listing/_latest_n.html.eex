@@ -1,11 +1,19 @@
-<div style="padding-top: 20px">
+<div style="padding-top: 30px">
+
+<% remarks_label = case @remarks do
+    :rr -> "Round Robin "
+    :inspection -> "Inspection "
+    :broker -> "Realtor "
+    _ -> ""
+   end <> "Remarks"
+%>
   <%= if @listings && @listings != [] do %>
-    <table class="table">
+    <table class="table listing">
         <thead>
         <tr>
             <th>Address/Town</th>
             <%= if @primaries do %>
-              <th>Thumb</th>
+              <th>Photo</th>
             <% end %>
             <th>Owner</th>
             <th>Style</th>
@@ -14,26 +22,18 @@
             <th>Agency</th>
             <th>Rental</th>
             <th class="nowrap">Next Broker OH</th>
-            <%= if @remarks do %>
-              <th><%= case @remarks do
-                        :rr -> "Round Robin "
-                        :inspection -> "Inspection "
-                        :broker -> "Realtor "
-                        _ -> ""
-                      end %>Remarks</th>
-            <% end %>
             <th></th>
         </tr>
         </thead>
         <tbody>
     <%= for listing <- @listings do %>
-        <tr>
-            <td>
+        <tr<%= if @remarks do %> class="include-with-next"<% end %>>
+            <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if listing.draft && @draft do %> (Your Draft)<% end %>
             </td>
             <%= if @primaries do %>
-              <td>
+              <td data-label="Photo">
                   <%= if @primaries[listing.id] do %>
                     <%= link to: listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
                       <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
@@ -41,32 +41,24 @@
                   <% end %>
               </td>
             <% end %>
-            <td>
+            <td data-label="Owner">
               <%= listing.owner_name %>
             </td>
-            <td>
+            <td data-label="Style">
               <%= Mpnetwork.EnumMaps.map_style_type_int_to_ext(listing.style_type) %>
             </td>
-            <td>
+            <td data-label="Status">
               <%= listing.listing_status_type %>
             </td>
-            <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
-            <td><%= if listing.broker, do: listing.broker.name %></td>
-            <td><%= yn(listing.for_rent) %></td>
-            <td>
+            <td data-label="Price"><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
+            <td data-label="Broker"><%= if listing.broker, do: listing.broker.name %></td>
+            <td data-label="Rent?"><%= yn(listing.for_rent) %></td>
+            <td data-label="Broker OH">
               <%= if listing.next_broker_oh_start_at do %>
                 <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
                 <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </td>
-            <%= if @remarks do %>
-              <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
-                        :rr -> listing.round_robin_remarks
-                        :inspection -> listing.next_broker_oh_note
-                        :broker -> listing.realtor_remarks
-                        _ -> ""
-                      end) %></td>
-            <% end %>
             <td class="text-right">
             <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
               <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
@@ -74,6 +66,16 @@
             <% end %>
             </td>
         </tr>
+        <%= if @remarks do %>
+          <tr class="include-with-previous">
+                <td colspan="<%= if @primaries, do: "10", else: "9" %>" data-label="<%= remarks_label %>"><%= raw HtmlSanitizeEx.html5 (case @remarks do
+                          :rr -> listing.round_robin_remarks
+                          :inspection -> listing.next_broker_oh_note
+                          :broker -> listing.realtor_remarks
+                          _ -> ""
+                        end) %></td>
+          </tr>
+        <% end %>
     <% end %>
         </tbody>
     </table>
