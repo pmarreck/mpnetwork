@@ -84,7 +84,7 @@ table.listing {
 table.listing th, table td {
   border: 0 !important;
   padding: 10px;
-  text-align: center;
+  text-align: left;
 }
 
 table.listing th {
@@ -107,10 +107,10 @@ table.listing th {
     tr {
       margin-bottom: 10px;
       display: block;
-      :nth-child(odd) {
+      td:nth-of-type(odd) {
         background-color: #ddd;
       }
-      :nth-child(even) {
+      td:nth-of-type(even) {
         background-color: inherit;
       }
     }
