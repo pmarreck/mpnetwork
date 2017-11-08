@@ -680,7 +680,7 @@
           <!-- 70 -->
           <div class="form-group<%= if f.errors[:appearance], do: " has-error" %>">
             <%= label f, :appearance, "Describe appearance", class: "control-label" %>
-            <%= text_input f, :appearance, class: "form-control" %>
+            <%= text_input f, :appearance, class: "form-control", placeholder: "e.g., New, Good, Fair, etc." %>
             <%= error_tag f, :appearance %>
           </div>
 
