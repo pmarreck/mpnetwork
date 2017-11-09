@@ -36,5 +36,7 @@ defmodule Mpnetwork.Listing.Attachment do
     |> cast(attrs, [:listing_id, :sha256_hash, :primary, :content_type, :is_image, :original_filename, :width_pixels, :height_pixels, :data])
     |> validate_required([:listing_id, :sha256_hash, :primary, :is_image, :content_type, :original_filename, :data])
     |> validate_primary_only_set_on_images
+    |> validate_length(:content_type, max: 255, count: :codepoints)
+    |> validate_length(:original_filename, max: 255, count: :codepoints)
   end
 end

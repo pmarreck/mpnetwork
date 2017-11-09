@@ -222,8 +222,8 @@ defmodule Mpnetwork.RealtorTest do
   describe "offices" do
     alias Mpnetwork.Realtor.Office
 
-    @valid_attrs %{address: "some address", city: "some city", name: "some name", phone: "some phone", state: "some state", zip: "some zip"}
-    @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
+    @valid_attrs %{address: "some address", city: "some city", name: "some name", phone: "111-222-3333", state: "NY", zip: "11050-1234"}
+    @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "333-222-1111", state: "CT", zip: "11030-4321"}
     @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
 
     test "list_offices/0 returns all offices" do
@@ -241,9 +241,9 @@ defmodule Mpnetwork.RealtorTest do
       assert office.address == "some address"
       assert office.city == "some city"
       assert office.name == "some name"
-      assert office.phone == "some phone"
-      assert office.state == "some state"
-      assert office.zip == "some zip"
+      assert office.phone == "111-222-3333"
+      assert office.state == "NY"
+      assert office.zip == "11050-1234"
     end
 
     test "create_office/1 with invalid data returns error changeset" do
@@ -257,9 +257,9 @@ defmodule Mpnetwork.RealtorTest do
       assert office.address == "some updated address"
       assert office.city == "some updated city"
       assert office.name == "some updated name"
-      assert office.phone == "some updated phone"
-      assert office.state == "some updated state"
-      assert office.zip == "some updated zip"
+      assert office.phone == "333-222-1111"
+      assert office.state == "CT"
+      assert office.zip == "11030-4321"
     end
 
     test "update_office/2 with invalid data returns error changeset" do

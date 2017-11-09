@@ -18,6 +18,8 @@ defmodule Mpnetwork.Realtor.Broadcast do
     broadcast
     |> cast(attrs, [:user_id, :title, :body])
     |> validate_required([:user_id, :title, :body])
+    |> validate_length(:title, max: 255, count: :codepoints)
+    |> validate_length(:body, max: 4096, count: :codepoints)
     |> foreign_key_constraint(:user_id)
   end
 end

@@ -365,6 +365,13 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:driveway, max: 255, count: :codepoints)
     |> validate_length(:listing_agent_phone, max: 16, count: :codepoints)
     |> validate_length(:colisting_agent_phone, max: 16, count: :codepoints)
+    # now for text BLOBs
+    |> validate_length(:description, max: 4096, count: :codepoints)
+    |> validate_length(:realtor_remarks, max: 4096, count: :codepoints)
+    |> validate_length(:next_broker_oh_note, max: 4096, count: :codepoints)
+    |> validate_length(:next_cust_oh_note, max: 4096, count: :codepoints)
+    |> validate_length(:directions, max: 4096, count: :codepoints)
+    |> validate_length(:round_robin_remarks, max: 4096, count: :codepoints)
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:broker_id)
   end

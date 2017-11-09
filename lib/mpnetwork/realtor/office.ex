@@ -23,6 +23,13 @@ defmodule Mpnetwork.Realtor.Office do
     |> cast(attrs, [:name, :address, :city, :state, :zip, :phone, :url])
     |> validate_required([:name])
     |> validate_format(:url, url_regex())
+    |> validate_length(:name, max: 255, count: :codepoints)
+    |> validate_length(:address, max: 255, count: :codepoints)
+    |> validate_length(:city, max: 255, count: :codepoints)
+    |> validate_length(:state, max: 2, count: :codepoints)
+    |> validate_length(:zip, max: 10, count: :codepoints)
+    |> validate_length(:phone, max: 16, count: :codepoints)
+    |> validate_length(:url, max: 255, count: :codepoints)
     |> unique_constraint(:name, name: :offices_name_address_index) # added by migration 20170828180917
   end
 end

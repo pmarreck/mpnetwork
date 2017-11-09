@@ -3,7 +3,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
   alias Mpnetwork.Realtor
 
-  @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
+  @update_attrs %{address: "some updated address", city: "some updated city", name: "some updated name", phone: "111-222-3333", state: "CT", zip: "11030-1234"}
   @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
 
   def valid_user_attrs do
@@ -13,7 +13,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   end
 
   def create_attrs do
-    %{address: "some address", city: "some city", name: "some name #{:rand.uniform(9999999999999)}", phone: "some phone", state: "some state", zip: "some zip"}
+    %{address: "some address", city: "some city", name: "some name #{:rand.uniform(9999999999999)}", phone: "222-333-4444", state: "NY", zip: "11050-4321"}
   end
 
   setup %{conn: conn} do
