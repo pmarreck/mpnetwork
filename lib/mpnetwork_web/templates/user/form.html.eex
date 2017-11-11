@@ -1,6 +1,7 @@
 <%
    broker_edit_rights = Permissions.site_admin?(current_user(@conn))
-   role_edit_rights = (!@changeset.data && Permissions.office_admin_or_site_admin?(current_user(@conn))) || (@changeset.data && Permissions.office_admin_of_office_or_site_admin?(current_user(@conn), @changeset.data.broker))
+   office = current_user(@conn).office_id |> Mpnetwork.Realtor.get_office!
+   role_edit_rights = (!@changeset.data && Permissions.office_admin_or_site_admin?(current_user(@conn))) || (@changeset.data && Permissions.office_admin_of_office_or_site_admin?(current_user(@conn), office))
 %>
 
 <%= form_for @changeset, @action, fn f -> %>
