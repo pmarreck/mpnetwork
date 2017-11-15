@@ -15,7 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :mpnetwork, MpnetworkWeb.Endpoint,
   load_from_system_env: true,
-  http: [port: {:system, "PORT"}],
+  http: [port: {:system, "PORT"}, protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]],
   root: ".",
   server: true,
   url: [scheme: "https", host: "${FQDN}", port: 443],

@@ -58,7 +58,7 @@ defmodule MpnetworkWeb.UserControllerTest do
     end
   end
 
-  describe "update user as admin" do
+  describe "update user as office admin" do
     setup %{conn: conn} do
       user = user_fixture(role_id: 2)
       conn = assign(conn, :current_office, user.broker)
