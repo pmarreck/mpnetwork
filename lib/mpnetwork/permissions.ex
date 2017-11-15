@@ -15,6 +15,10 @@ defmodule Mpnetwork.Permissions do
     office_admin?(user) || site_admin?(user)
   end
 
+  def office_admin_of_office_or_site_admin?(%User{} = user, %Ecto.Association.NotLoaded{} = _) do
+    office_admin_or_site_admin?(user)
+  end
+
   def office_admin_of_office_or_site_admin?(%User{} = user, %Office{} = office) do
     (office_admin?(user) && user.office_id == office.id) || site_admin?(user)
   end

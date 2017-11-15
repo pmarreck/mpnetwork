@@ -19,29 +19,35 @@ defmodule MpnetworkWeb.UserControllerTest do
     end
   end
 
-  # describe "new user" do
-  #   test "renders form", %{conn: conn} do
-  #     conn = get conn, user_path(conn, :new)
-  #     assert html_response(conn, 200) =~ "New User"
-  #   end
-  # end
+  describe "new user" do
+    test "renders form", %{conn: conn} do
+      conn = get conn, user_path(conn, :new)
+      assert html_response(conn, 200) =~ "New User"
+    end
+  end
 
-  # describe "create user" do
-  #   test "redirects to show when data is valid", %{conn: conn} do
-  #     conn = post conn, user_path(conn, :create), user: valid_user_attrs()
+  describe "create user" do
+    test "redirects to show when data is valid", %{conn: original_conn} do
+      conn = original_conn
+      office = conn.assigns.current_office
+      valid_attrs = valid_user_attrs(%{broker: office, office_id: office.id})
+      conn = post conn, user_path(conn, :create), user: valid_attrs
 
-  #     assert %{id: id} = redirected_params(conn)
-  #     assert redirected_to(conn) == user_path(conn, :show, id)
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) == user_path(conn, :show, id)
 
-  #     conn = get conn, user_path(conn, :show, id)
-  #     assert html_response(conn, 200) =~ "Show User"
-  #   end
+      conn = original_conn
 
-  #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post conn, user_path(conn, :create), user: invalid_user_attrs()
-  #     assert html_response(conn, 200) =~ "New User"
-  #   end
-  # end
+      conn = get conn, user_path(conn, :show, id)
+      assert html_response(conn, 200) =~ valid_attrs.name
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      office = conn.assigns.current_office
+      conn = post conn, user_path(conn, :create), user: invalid_user_attrs(%{broker: office, office_id: office.id})
+      assert html_response(conn, 200) =~ "New User"
+    end
+  end
 
   describe "edit user as admin" do
     # setup [:create_user]
