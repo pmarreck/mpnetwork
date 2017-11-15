@@ -15,7 +15,7 @@ end
 # Feel free to add additional backends if you want to send you logs to multiple devices.
 # Deliver logs via HTTP to the Timber API by using the Timber HTTP backend.
 config :logger,
-  backends: [Timber.LoggerBackends.HTTP],
+  backends: [Timber.LoggerBackends.HTTP, :console],
   utc_log: true
 
 config :timber,
