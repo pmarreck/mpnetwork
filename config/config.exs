@@ -21,7 +21,8 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]],
   pubsub: [name: Mpnetwork.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+           adapter: Phoenix.PubSub.PG2],
+  instrumenters: [PryIn.Instrumenter]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -61,6 +62,16 @@ config :mpnetwork, Mpnetwork.Mailer,
   adapter: Swoosh.Adapters.SparkPost,
   api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
   endpoint: "https://api.sparkpost.com/api/v1"
+
+# Configures PryIn.io
+config :pryin,
+  api_key: "nigqe8rp2ub9fqn5f3vi29fib6cmbmgiat3omidaedv4ks0i",
+  otp_app: :mpnetwork, # This is just for tracking your app version. In an umbrella project, use any of your apps here.
+  enabled: false,
+  env: :dev
+
+config :mpnetwork, Mpnetwork.Repo,
+  loggers: [PryIn.EctoLogger, Ecto.LogEntry]
 
 # Import Timber, structured logging
 import_config "timber.exs"

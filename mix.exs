@@ -64,6 +64,7 @@ defmodule Mpnetwork.Mixfile do
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
+      {:pryin, "~> 1.0"},
     ]
   end
 

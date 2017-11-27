@@ -8,11 +8,13 @@ if Mix.env() == :prod do
   config :mpnetwork, MpnetworkWeb.Endpoint,
     instrumenters: [Timber.Integrations.PhoenixInstrumenter]
   # Structure Ecto logs
+  # Note that I manually prefixed PryIn stuff
   config :mpnetwork, Mpnetwork.Repo,
-    loggers: [{Timber.Integrations.EctoLogger, :log, [:info]}]
+    loggers: [PryIn.EctoLogger, Ecto.LogEntry] ++ [{Timber.Integrations.EctoLogger, :log, [:info]}]
+    # Application.get_env(:mpnetwork, Mpnetwork.Repo)[:loggers]
 end
 # Use Timber as the logger backend
-# Feel free to add additional backends if you want to send you logs to multiple devices.
+# Feel free to add additional backends if you want to send your logs to multiple devices.
 # Deliver logs via HTTP to the Timber API by using the Timber HTTP backend.
 config :logger,
   backends: [Timber.LoggerBackends.HTTP, :console],

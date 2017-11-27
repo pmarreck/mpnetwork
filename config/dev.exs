@@ -65,3 +65,8 @@ config :mpnetwork, Mpnetwork.Repo,
   database: "mpnetwork_dev",
   hostname: "localhost",
   pool_size: 10
+
+  # PryIn
+  config :pryin,
+    enabled: true,
+    env: :dev
