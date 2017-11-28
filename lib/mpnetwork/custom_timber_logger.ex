@@ -24,7 +24,7 @@ defmodule Mpnetwork.CustomTimberLogger do
   end
 
   defp transform_log_entry(query) when is_binary(query) do
-    String.slice(query, 0, 4096)
+    String.slice(query, 0, 4000)
   end
 
 end
