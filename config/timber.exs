@@ -10,7 +10,7 @@ if Mix.env() == :prod do
   # Structure Ecto logs
   # Note that I manually prefixed PryIn stuff
   config :mpnetwork, Mpnetwork.Repo,
-    loggers: [PryIn.EctoLogger, Ecto.LogEntry] ++ [{Timber.Integrations.EctoLogger, :log, [:info]}]
+    loggers: [PryIn.EctoLogger] ++ [{Mpnetwork.CustomTimberLogger, :log, [:info]}]
     # Application.get_env(:mpnetwork, Mpnetwork.Repo)[:loggers]
 end
 # Use Timber as the logger backend

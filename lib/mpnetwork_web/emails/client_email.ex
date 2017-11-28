@@ -14,7 +14,7 @@ defmodule Mpnetwork.ClientEmail do
     |> from(from_email())
     |> to({name, email_address})
     |> reply_to(if listing, do: {listing.user.name, listing.user.email}, else: from_email())
-    |> subject("Hey #{first_name(name)}! Check out this listing#{if listing, do: " for " <> listing.address, else: ""}!")
+    |> subject("Property of Interest#{if listing, do: ": " <> listing.address, else: ""}!")
     |> render_body("listing_email.html", %{url: url, name: name, listing: listing})
   end
 
@@ -26,12 +26,12 @@ defmodule Mpnetwork.ClientEmail do
   #   end
   # end
 
-  defp first_name(name) do
-    case String.split(name, " ") do
-      [first_name | _] -> first_name
-      _ -> name
-    end
-  end
+  # defp first_name(name) do
+  #   case String.split(name, " ") do
+  #     [first_name | _] -> first_name
+  #     _ -> name
+  #   end
+  # end
 
   defp from_email do
     case Coherence.Config.email_from do

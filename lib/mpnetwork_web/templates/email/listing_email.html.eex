@@ -2,5 +2,5 @@
   Dear <%= @name %>,
 </div>
 <div>
-  <%= link "I have a listing you might like!", to: @url %>
+  <%= link "Please take a look!", to: @url %>
 </div>
