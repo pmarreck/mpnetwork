@@ -17,10 +17,17 @@ defmodule MpnetworkWeb.UserController do
   # But admins insisted on being able to create users and manage their passwords, so...
 
   def new(conn, _params) do
+    import Ecto.Changeset, only: [change: 2]
     if Permissions.office_admin_or_site_admin?(current_user(conn)) do
-      offices = Realtor.list_offices()
+      office = conn.assigns.current_office
+      offices = if Permissions.office_admin?(current_user(conn)) do
+        [office]
+      else
+        Realtor.list_offices()
+      end
       roles = filtered_roles(current_user(conn))
-      changeset = Realtor.change_user(%User{})
+      # default the office to the office of the logged-in user, on new users
+      changeset = Realtor.change_user(%User{}) |> change(office_id: office.id)
       render(conn, "new.html", offices: offices, roles: roles, changeset: changeset)
     else
       send_resp(conn, 405, "Not allowed")

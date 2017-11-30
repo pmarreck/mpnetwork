@@ -1,7 +1,5 @@
 <%
-   broker_edit_rights = Permissions.site_admin?(current_user(@conn))
-   office = current_user(@conn).office_id |> Mpnetwork.Realtor.get_office!
-   role_edit_rights = (!@changeset.data && Permissions.office_admin_or_site_admin?(current_user(@conn))) || (@changeset.data && Permissions.office_admin_of_office_or_site_admin?(current_user(@conn), office))
+   role_edit_rights = (!@changeset.data && Permissions.office_admin_or_site_admin?(current_user(@conn))) || (@changeset.data && Permissions.office_admin_of_office_or_site_admin?(current_user(@conn), @current_office))
 %>
 
 <%= form_for @changeset, @action, fn f -> %>
@@ -59,11 +57,7 @@
 
   <div class="form-group<%= if f.errors[:office_id], do: " has-error" %>" title="note: can only be changed by admins">
     <%= label f, :office_id, "Broker:", class: "control-label" %>
-    <%= if broker_edit_rights do %>
-      <%= select f, :office_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
-    <% else %>
-      <%= select f, :office_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), style: "width:500px", title: "note: can only be changed by site admins", disabled: "disabled" %>
-    <% end %>
+    <%= select f, :office_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
     <%= error_tag f, :office_id %>
   </div>
 
