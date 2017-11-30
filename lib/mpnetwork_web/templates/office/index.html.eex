@@ -10,8 +10,9 @@
       <th>Zip</th>
       <th>Phone</th>
       <th>URL</th>
-
-      <th></th>
+      <%= if @show_controls do %>
+        <th></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -23,13 +24,16 @@
       <td><%= office.state %></td>
       <td><%= office.zip %></td>
       <td><%= office.phone %></td>
-      <td><%= office.url %></td>
-
-      <td class="text-right">
-        <span><%= link "Show", to: office_path(@conn, :show, office), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: office_path(@conn, :edit, office), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: office_path(@conn, :delete, office), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
+      <td><%= office.url && link office.url, to: office.url %></td>
+      <%= if @show_controls do %>
+        <td class="text-right">
+          <span><%= link "Show", to: office_path(@conn, :show, office), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Edit", to: office_path(@conn, :edit, office), class: "btn btn-default btn-xs" %></span>
+          <%= if Permissions.site_admin?(@conn.assigns.current_user) do %>
+            <span><%= link "Delete", to: office_path(@conn, :delete, office), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+          <% end %>
+        </td>
+      <% end %>
     </tr>
 <% end %>
   </tbody>
