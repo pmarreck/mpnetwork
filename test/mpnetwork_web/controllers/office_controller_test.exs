@@ -17,7 +17,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   end
 
   setup %{conn: conn} do
-    user = user_fixture()
+    user = user_fixture(%{role_id: 1})
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end
 

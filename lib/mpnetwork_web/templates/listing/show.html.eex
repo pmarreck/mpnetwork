@@ -296,13 +296,13 @@
             <!-- 39 -->
             <div class="col-xs-6 visible_on">
               <strong>Listing visible on:</strong>
-              <%= @listing.visible_on %>
+              <%= utc_date_to_local_date(@listing.visible_on) %>
             </div>
 
             <!-- 40 -->
             <div class="col-xs-6 expires_on">
               <strong>Listing expires on:</strong>
-              <%= @listing.expires_on %>
+              <%= utc_date_to_local_date(@listing.expires_on) %>
             </div>
           </div>
         </div>

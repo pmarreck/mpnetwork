@@ -107,9 +107,16 @@
                 <div class="report-field label-visible"><span class="report-label ">Baths Full:</span><span class="report-value"><%= @listing.num_baths %></span></div>
                 <div class="report-field label-visible"><span class="report-label ">Baths Half:</span><span class="report-value"><%= @listing.num_half_baths %></span></div>
                 <div class="group orientation-horizontal ">
-                  <div class="group orientation-vertical  last-child" style="width: 150px;">
-                    <div class="report-field label-visible"><span class="report-label ">Basement:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
-                    <div class="report-field label-visible"><span class="report-label ">Finished Bsmt:</span><span class="report-value"><%= yn @listing.finished_basement %></span></div>
+                  <div class="group orientation-vertical  last-child">
+                    <div class="group orientation-horizontal">
+                      <div class="group orientation-vertical" style="width: 110px">
+                        <div class="report-field label-visible"><span class="report-label ">Basement:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
+                      </div>
+                      <div class="group orientation-vertical last-child" style="width: 80px">
+                        <div class="report-field label-visible"><span class="report-label ">Finished:</span><span class="report-value"><%= yn @listing.finished_basement %></span></div>
+                      </div>
+                    </div>
+                    <div class="report-field label-visible"><span class="report-label ">Bsmt Desc:</span><span class="report-value"><%= @listing.basement_desc %></span></div>
                     <div class="report-field label-visible"><span class="report-label ">Lot Size:</span><span class="report-value"><%= @listing.lot_size %></span></div>
                   </div>
                 </div>
@@ -288,7 +295,7 @@
       </div>
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 223px;">
-          <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= @listing.visible_on %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.visible_on) %></span></div>
         </div>
         <div class="group orientation-vertical " style="width: 200px;">
           <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value"><%= @listing.original_price_usd |> dollars %></span></div>

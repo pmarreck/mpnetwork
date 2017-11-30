@@ -15,7 +15,7 @@
 //"JavaScript Next"-style
 
 import "phoenix"
-import "phoenix_html"
+// import "phoenix_html"
 
 import $ from "jquery"
 
@@ -42,12 +42,13 @@ import "admin-lte"
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
   config: {
-    dateformat: 'yyyy-mm-dd',
-    datetimeformat: 'YYYY-MM-DD h:mm A'
+    datepicker_dateformat: 'm/d/yyyy',
+    moment_dateformat: 'M/D/YYYY',
+    datetimeformat: 'M/D/YYYY h:mm A'
   }
 }
 
-function ConvertFromUTCToLocal(utc_dt){
+function ConvertFromUTCToLocalDatetime(utc_dt){
   switch(utc_dt) {
     case "":
       return "";
@@ -60,7 +61,20 @@ function ConvertFromUTCToLocal(utc_dt){
   }
 }
 
-function ConvertFromLocalToUTC(local_dt){
+function ConvertFromUTCToLocalDate(utc_d){
+  switch(utc_d) {
+    case "":
+      return "";
+      break;
+    default:
+      var local_d = moment.utc(utc_d).format(mpnetwork.config.moment_dateformat);
+      // alert("converting from utc " + utc_d + " to local " + local_d);
+      return local_d;
+      break;
+  }
+}
+
+function ConvertFromLocalToUTCDatetime(local_dt){
   switch(local_dt) {
     case "":
       return "";
@@ -75,30 +89,54 @@ function ConvertFromLocalToUTC(local_dt){
   }
 }
 
+function ConvertFromLocalToUTCDate(local_d){
+  switch(local_d) {
+    case "":
+      return "";
+      break;
+    default:
+      // alert("about to try to convert this date from local to utc:" + local_d);
+      var utc_d = moment(local_d).toISOString(); //moment(local_d).local().format();
+      // var utc_d = moment.utc(moment.local(local_d)).toISOString();
+      // alert("converting local " + local_d + " to UTC " + utc_d);
+      return utc_d;
+      // return local_d;
+      break;
+  }
+}
+
 $(function() {
   // trigger multiselect with search autocomplete
   $(".fancy").select2({
     placeholder: "Select an option",
     allowClear: true,
   });
-  // trigger datepicker inputs
-  $.fn.datepicker.defaults.format = mpnetwork.config.dateformat;
-  $.fn.datepicker.defaults.assumeNearbyYear = true;
-  $.fn.datepicker.defaults.todayHighlight = true;
-  $('div.date input.form-control').datepicker();
   // convert UTC datetime values to local TZ after page load for pages with these elements
   $('div.datetime input.form-control').each(function(_i, dt){
-    $(dt).val(ConvertFromUTCToLocal(dt.value));
+    $(dt).val(ConvertFromUTCToLocalDatetime(dt.value));
+  });
+  // convert UTC date values to localized dates after page load for pages with these elements
+  $('div.date input.form-control').each(function(_i, d){
+    $(d).val(ConvertFromUTCToLocalDate(d.value));
   });
   // set up post hook to convert local TZ datetimes back to UTC just before form post
   $('form.contains-datetimes').submit(function(){
     var datetimes = $(this).find('div.datetime input.form-control');
     datetimes.each(function(_i, dt){
-      $(dt).val(ConvertFromLocalToUTC(dt.value));
+      $(dt).val(ConvertFromLocalToUTCDatetime(dt.value));
+    });
+    var dates = $(this).find('div.date input.form-control');
+    dates.each(function(_i, d){
+      $(d).val(ConvertFromLocalToUTCDate(d.value));
     });
     return true;
   });
-  // trigger daterangepicker inputs
+  // config and trigger datepicker inputs
+  $.fn.datepicker.defaults.format = mpnetwork.config.datepicker_dateformat;
+  $.fn.datepicker.defaults.assumeNearbyYear = true;
+  $.fn.datepicker.defaults.todayHighlight = true;
+  $('div.date input.form-control').datepicker();
+  // config and trigger daterangepicker inputs
   $('div.datetime input.form-control').daterangepicker({
     singleDatePicker: true,
     autoApply: true,

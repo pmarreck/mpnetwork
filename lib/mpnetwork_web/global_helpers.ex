@@ -83,6 +83,14 @@ defmodule MpnetworkWeb.GlobalHelpers do
     |> Timex.Timezone.convert(tz)
     |> Timex.format!(format, :strftime)
   end
+  def datetime_to_standard_humanized(%Date{} = date, format, _tz) do
+    date
+    |> Timex.format!(format, :strftime)
+  end
+
+  def utc_date_to_local_date(date, format \\ "%-m/%-d/%Y", tz \\ "EDT") do
+    datetime_to_standard_humanized(date, format, tz)
+  end
 
   # convert falsey values to "N", anything else to "Y"
   def yn(bool), do: if bool, do: "Y", else: "N"
