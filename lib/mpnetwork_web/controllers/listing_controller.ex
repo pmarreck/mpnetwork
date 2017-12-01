@@ -21,17 +21,21 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def index(conn, _params) do
-    listings = Realtor.list_latest_listings(nil, 30)
+    listings = Realtor.list_latest_listings_excluding_new(nil, 15)
     primaries = Listing.primary_images_for_listings(listings, AttachmentMetadata)
-    draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
-    draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
+    newest_listings = Realtor.list_most_recently_created_listings(nil, 15)
+    newest_primaries = Listing.primary_images_for_listings(newest_listings, AttachmentMetadata)
+    # draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
+    # draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
     upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(nil, 30)
     upcoming_broker_oh_primaries = Listing.primary_images_for_listings(upcoming_broker_oh_listings, AttachmentMetadata)
     render(conn, "index.html",
       listings: listings,
       primaries: primaries,
-      draft_listings: draft_listings,
-      draft_primaries: draft_primaries,
+      newest_listings: newest_listings,
+      newest_primaries: newest_primaries,
+      # draft_listings: draft_listings,
+      # draft_primaries: draft_primaries,
       upcoming_broker_oh_listings: upcoming_broker_oh_listings,
       upcoming_broker_oh_primaries: upcoming_broker_oh_primaries
     )

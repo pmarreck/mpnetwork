@@ -15,7 +15,7 @@
 //"JavaScript Next"-style
 
 import "phoenix"
-// import "phoenix_html"
+import "phoenix_html"
 
 import $ from "jquery"
 

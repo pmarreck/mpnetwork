@@ -13,6 +13,7 @@ defmodule Mpnetwork.Mixfile do
      deps: deps(),
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: [coveralls: :test],
+     dialyzer: [plt_add_deps: :transitive],
     ]
   end
 
@@ -65,6 +66,7 @@ defmodule Mpnetwork.Mixfile do
       {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:pryin, "~> 1.0"},
+      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
     ]
   end
 

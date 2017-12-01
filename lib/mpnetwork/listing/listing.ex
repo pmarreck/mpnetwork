@@ -39,7 +39,7 @@ defmodule Mpnetwork.Listing do
     Repo.all(
       from attachment in AttachmentMetadata,
       where: attachment.listing_id == ^listing_id,
-      order_by: [desc: attachment.is_image, desc: attachment.primary]
+      order_by: [desc: attachment.is_image, desc: attachment.primary, asc: attachment.inserted_at]
     )
   end
 
@@ -47,7 +47,7 @@ defmodule Mpnetwork.Listing do
     Repo.all(
       from attachment in Attachment,
       where: attachment.listing_id == ^listing_id,
-      order_by: [desc: attachment.is_image, desc: attachment.primary]
+      order_by: [desc: attachment.is_image, desc: attachment.primary, asc: attachment.inserted_at]
     )
   end
 

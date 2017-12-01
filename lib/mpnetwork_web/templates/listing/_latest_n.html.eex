@@ -1,4 +1,4 @@
-<div style="padding-top: 30px">
+<div>
 
 <% remarks_label = case @remarks do
     :rr -> "Round Robin "
@@ -30,7 +30,7 @@
         <tr<%= if @remarks do %> class="include-with-next"<% end %>>
             <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
-              <%= if listing.draft && @draft do %> (Your Draft)<% end %>
+              <%= if @draft && listing.draft && listing.user_id == @current_user.id do %> (Your Draft)<% end %>
             </td>
             <%= if @primaries do %>
               <td data-label="Photo">

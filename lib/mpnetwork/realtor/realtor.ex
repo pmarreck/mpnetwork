@@ -198,7 +198,7 @@ defmodule Mpnetwork.Realtor do
 
   ## Examples
 
-      iex> list_listings()
+      iex> list_latest_listings(current_user, 5)
       [%Listing{}, ...]
 
   """
@@ -207,20 +207,32 @@ defmodule Mpnetwork.Realtor do
   end
 
   @doc """
-  Returns the latest listings by this user
+  Returns the latest non-draft listings, including this user's draft listings
 
   ## Examples
 
-      iex> list_listings()
+      iex> list_latest_listings()
       [%Listing{}, ...]
 
   """
-  def list_latest_listings(current_user, limit) do
+  def list_latest_listings(%User{} = current_user, limit) do
     Repo.all(from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
   end
 
-  def list_latest_draft_listings(current_user) when current_user != nil do
-    Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 30, preload: [:broker, :user])
+  def list_latest_draft_listings(%User{} = current_user) do
+    Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 20, preload: [:broker, :user])
+  end
+
+  def list_latest_draft_listings(%Office{} = current_office) do
+    Repo.all(from l in Listing, where: l.broker_id == ^current_office.id and l.draft == true, order_by: [desc: l.updated_at], limit: 20, preload: [:broker, :user])
+  end
+
+  def list_latest_listings_excluding_new(nil, limit \\ 15) do
+    Repo.all(from l in Listing, where: (l.draft == false) and (l.inserted_at != l.updated_at), order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
+  end
+
+  def list_most_recently_created_listings(nil, limit \\ 15) do
+    Repo.all(from l in Listing, where: (l.draft == false), order_by: [desc: l.inserted_at], limit: ^limit, preload: [:broker, :user])
   end
 
   @doc """
