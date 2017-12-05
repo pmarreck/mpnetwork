@@ -270,11 +270,20 @@
         <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
       </div>
       <div class="group orientation-horizontal ">
-        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date/Time:</span>
+        <%
+           two = @listing.first_cust_oh_start_at && @listing.second_cust_oh_start_at
+           s = if two, do: "s", else: ""
+        %>
+        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date<%= s %>/Time<%= s %>:</span>
           <span class="report-value">
-            <%= if @listing.next_cust_oh_start_at do %>
-              <%= @listing.next_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <span class="nowrap"><%= (@listing.next_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.next_cust_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+            <%= if @listing.first_cust_oh_start_at do %>
+              <%= @listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+              <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+            <% end %>
+            <%= if two, do: ", " %>
+            <%= if @listing.second_cust_oh_start_at do %>
+              <%= @listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+              <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
             <% end %>
           </span>
         </div>

@@ -248,13 +248,13 @@ defmodule Mpnetwork.Realtor do
   def list_next_broker_oh_listings(nil, number, after_datetime) do
     now = after_datetime || NaiveDateTime.utc_now
     now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am inspections still show up on sheet at 1pm (but not later)
-    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.next_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
+    Repo.all(from l in Listing, where: l.first_broker_oh_start_at > ^now and l.draft == false, or_where: l.second_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_broker_oh_start_at, asc: l.second_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
   end
-  def list_next_broker_oh_listings(current_user, number, after_datetime) do
-    now = after_datetime || NaiveDateTime.utc_now
-    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am inspections still show up on sheet at 1pm (but not later)
-    Repo.all(from l in Listing, where: l.next_broker_oh_start_at > ^now and l.draft == false or l.user_id == ^current_user.id, order_by: [asc: l.next_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
-  end
+  # def list_next_broker_oh_listings(current_user, number, after_datetime) do
+  #   now = after_datetime || NaiveDateTime.utc_now
+  #   now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am inspections still show up on sheet at 1pm (but not later)
+  #   Repo.all(from l in Listing, where: l.first_broker_oh_start_at > ^now and l.draft == false, or_where: l.second_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_broker_oh_start_at, asc: l.second_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
+  # end
 
   defp default_search_scope(current_user) do
     from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50

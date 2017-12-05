@@ -1139,14 +1139,20 @@
 
           <div class="row form-group">
             <!-- 187 -->
-            <div class="col-md-6 next_broker_oh_start_at">
-              <strong style="display:block">Next broker open-house starts on/at:</strong>
-              <%= datetime_to_standard_humanized(@listing.next_broker_oh_start_at) %>
+            <div class="col-md-6 first_broker_oh_start_at">
+              <strong style="display:block">First broker open-house:</strong>
+              <%= if @listing.first_broker_oh_start_at do %>
+                <%= @listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_broker_oh_start_at |> NaiveDateTime.add(@listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </div>
             <!-- 188 -->
-            <div class="col-md-6 next_broker_oh_end_at">
-              <strong style="display:block">Next broker open-house ends on/at:</strong>
-              <%= datetime_to_standard_humanized(@listing.next_broker_oh_end_at) %>
+            <div class="col-md-6 second_broker_oh_start_at">
+              <strong style="display:block">Second broker open-house:</strong>
+              <%= if @listing.second_broker_oh_start_at do %>
+                <%= @listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_broker_oh_start_at |> NaiveDateTime.add(@listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </div>
           </div>
 
@@ -1160,14 +1166,20 @@
 
           <div class="row form-group">
             <!-- 190 -->
-            <div class="col-md-6 next_cust_oh_start_at">
-              <strong style="display:block">Next customer open-house starts on/at:</strong>
-              <%= datetime_to_standard_humanized(@listing.next_cust_oh_start_at) %>
+            <div class="col-md-6 first_cust_oh_start_at">
+              <strong style="display:block">First customer open-house:</strong>
+              <%= if @listing.first_cust_oh_start_at do %>
+                <%= @listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </div>
             <!-- 191 -->
-            <div class="col-md-6 next_cust_oh_end_at">
-              <strong style="display:block">Next customer open-house ends on/at:</strong>
-              <%= datetime_to_standard_humanized(@listing.next_cust_oh_end_at) %>
+            <div class="col-md-6 second_cust_oh_start_at">
+              <strong style="display:block">Second customer open-house:</strong>
+              <%= if @listing.second_cust_oh_start_at do %>
+                <%= @listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </div>
           </div>
 

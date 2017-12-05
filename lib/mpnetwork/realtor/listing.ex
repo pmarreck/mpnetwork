@@ -192,11 +192,15 @@ defmodule Mpnetwork.Realtor.Listing do
     field :reo, :boolean
     field :short_sale, :boolean
     field :ext_urls, {:array, :string}
-    field :next_broker_oh_start_at, :naive_datetime
-    field :next_broker_oh_end_at, :naive_datetime
+    field :first_broker_oh_start_at, :naive_datetime
+    field :first_broker_oh_mins, :integer
+    field :second_broker_oh_start_at, :naive_datetime
+    field :second_broker_oh_mins, :integer
     field :next_broker_oh_note, :string #actually :text
-    field :next_cust_oh_start_at, :naive_datetime
-    field :next_cust_oh_end_at, :naive_datetime
+    field :first_cust_oh_start_at, :naive_datetime
+    field :first_cust_oh_mins, :integer
+    field :second_cust_oh_start_at, :naive_datetime
+    field :second_cust_oh_mins, :integer
     field :next_cust_oh_note, :string #actually :text
     field :selling_agent_name, :string
     # field :search_vector, :tsvector # this won't work. wish I could assert on this!
@@ -207,19 +211,10 @@ defmodule Mpnetwork.Realtor.Listing do
   end
 
   @datetime_order_constraint_violation_message "Start datetime needs to be earlier than end datetime"
-  @datetime_sameday_constraint_violation_message "End day must be same as start day for one-day events"
   defp validate_db_datetime_constraints(changeset) do
     changeset
-    |> check_constraint(:next_broker_oh_start_at, name: "broker_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
-    |> check_constraint(:next_broker_oh_end_at, name: "broker_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
-    |> check_constraint(:next_cust_oh_start_at, name: "cust_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
-    |> check_constraint(:next_cust_oh_end_at, name: "cust_oh_start_earlier_than_end", message: @datetime_order_constraint_violation_message)
     |> check_constraint(:visible_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
     |> check_constraint(:expires_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
-    |> check_constraint(:next_broker_oh_start_at, name: "broker_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
-    |> check_constraint(:next_broker_oh_end_at, name: "broker_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
-    |> check_constraint(:next_cust_oh_start_at, name: "cust_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
-    |> check_constraint(:next_cust_oh_end_at, name: "cust_oh_datetimes_same_day", message: @datetime_sameday_constraint_violation_message)
    end
 
   defp validate_consecutive_datetimes(changeset, {field_first, field_last}) do
@@ -232,20 +227,6 @@ defmodule Mpnetwork.Realtor.Listing do
         :lt  -> changeset
         _    -> add_error(changeset, field_first, @datetime_order_constraint_violation_message)
                 |> add_error(field_last, @datetime_order_constraint_violation_message)
-      end
-    else
-      changeset
-    end
-  end
-
-  defp validate_happens_on_same_day(changeset, {field_first, field_last}) do
-    earlier = get_field(changeset, field_first)
-    hsd = get_field(changeset, field_last) # hsd = "hopefully same day"
-    if earlier && hsd do
-      sameday = {earlier.year, earlier.month, earlier.day} == {hsd.year, hsd.month, hsd.day}
-      case sameday do
-        true -> changeset
-        _    -> add_error(changeset, field_last, @datetime_sameday_constraint_violation_message)
       end
     else
       changeset
@@ -265,6 +246,15 @@ defmodule Mpnetwork.Realtor.Listing do
       end
     end)
   end
+
+  defp validate_required_duration_when_datetime_val_present(changeset, {_dt_fieldname, nil, _dur_fieldname, nil}), do: changeset
+  defp validate_required_duration_when_datetime_val_present(changeset, {dt_fieldname, nil, _dur_fieldname, _dur_val}) do
+    add_error(changeset, dt_fieldname, "Date/time required if duration is set")
+  end
+  defp validate_required_duration_when_datetime_val_present(changeset, {_dt_fieldname, _dt_val, dur_fieldname, nil}) do
+    add_error(changeset, dur_fieldname, "Duration required if date/time is set")
+  end
+  defp validate_required_duration_when_datetime_val_present(changeset, _), do: changeset
 
   @doc """
     Relaxed requireds for listing attributes in "draft" status.
@@ -327,11 +317,7 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
     |> validate_urls(get_field(listing, :ext_urls))
     |> validate_db_datetime_constraints()
-    |> validate_consecutive_datetimes({:next_broker_oh_start_at, :next_broker_oh_end_at})
-    |> validate_consecutive_datetimes({:next_cust_oh_start_at, :next_cust_oh_end_at})
     |> validate_consecutive_datetimes({:visible_on, :expires_on})
-    |> validate_happens_on_same_day({:next_broker_oh_start_at, :next_broker_oh_end_at})
-    |> validate_happens_on_same_day({:next_cust_oh_start_at, :next_cust_oh_end_at})
     |> validate_length(:address, max: 255, count: :codepoints)
     |> validate_length(:city, max: 255, count: :codepoints)
     |> validate_length(:state, max: 2, count: :codepoints)
@@ -372,6 +358,10 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:next_cust_oh_note, max: 4096, count: :codepoints)
     |> validate_length(:directions, max: 4096, count: :codepoints)
     |> validate_length(:round_robin_remarks, max: 4096, count: :codepoints)
+    |> validate_required_duration_when_datetime_val_present({:first_broker_oh_start_at, get_field(listing, :first_broker_oh_start_at), :first_broker_oh_mins, get_field(listing, :first_broker_oh_mins)})
+    |> validate_required_duration_when_datetime_val_present({:second_broker_oh_start_at, get_field(listing, :second_broker_oh_start_at), :second_broker_oh_mins, get_field(listing, :second_broker_oh_mins)})
+    |> validate_required_duration_when_datetime_val_present({:first_cust_oh_start_at, get_field(listing, :first_cust_oh_start_at), :first_cust_oh_mins, get_field(listing, :first_cust_oh_mins)})
+    |> validate_required_duration_when_datetime_val_present({:second_cust_oh_start_at, get_field(listing, :second_cust_oh_start_at), :second_cust_oh_mins, get_field(listing, :second_cust_oh_mins)})
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:broker_id)
   end
@@ -566,11 +556,15 @@ defmodule Mpnetwork.Realtor.Listing do
       :reo,
       :short_sale,
       :ext_urls,
-      :next_broker_oh_start_at,
-      :next_broker_oh_end_at,
+      :first_broker_oh_start_at,
+      :first_broker_oh_mins,
+      :second_broker_oh_start_at,
+      :second_broker_oh_mins,
       :next_broker_oh_note,
-      :next_cust_oh_start_at,
-      :next_cust_oh_end_at,
+      :first_cust_oh_start_at,
+      :first_cust_oh_mins,
+      :second_cust_oh_start_at,
+      :second_cust_oh_mins,
       :next_cust_oh_note,
       :selling_agent_name
     ])

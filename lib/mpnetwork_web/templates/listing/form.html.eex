@@ -1688,6 +1688,8 @@
       </div>
     </div>
 
+<% duration_dropdown_vals = prepend_blank_select_opt(for(o <- 1..16, do: {"#{(o * 30)/60.0} hour#{if o==2, do: "", else: "s"}", (o*30)})) %>
+
     <div class="col-md-6">
       <a name="openhouse"></a>
       <div class="box box-warning">
@@ -1696,35 +1698,50 @@
         </div>
         <div class="box-body">
           <div><i>Note: All of the following times are in your current physically-local timezone</i></div>
-
           <div class="row form-group">
             <!-- 187 -->
-            <div class="col-md-6<%= if f.errors[:next_broker_oh_start_at], do: " has-error" %>">
-              <%= label f, :next_broker_oh_start_at, "Next broker open-house starts on/at:", class: "control-label" %>
+            <div class="col-md-6<%= if f.errors[:first_broker_oh_start_at], do: " has-error" %>">
+              <%= label f, :first_broker_oh_start_at, "First broker open-house starts on/at:", class: "control-label" %>
               <div class="input-group datetime">
-                <label class="input-group-addon" for="next_broker_oh_start_at">
+                <label class="input-group-addon" for="first_broker_oh_start_at">
                   <span class="fa fa-calendar"></span>
                 </label>
-                <%= text_input f, :next_broker_oh_start_at, class: "form-control", id: "next_broker_oh_start_at" %>
-                <label class="input-group-addon" for="next_broker_oh_start_at">
+                <%= text_input f, :first_broker_oh_start_at, class: "form-control", id: "first_broker_oh_start_at" %>
+                <label class="input-group-addon" for="first_broker_oh_start_at">
                   <span class="fa fa-clock-o"></span>
                 </label>
               </div>
-              <%= error_tag f, :next_broker_oh_start_at %>
+              <%= error_tag f, :first_broker_oh_start_at %>
             </div>
+            <div class="col-md-6<%= if f.errors[:first_broker_oh_mins], do: " has-error" %>">
+              <%= label f, :first_broker_oh_mins, "Duration:", class: "control-label" %>
+              <div class="input-group">
+                <%= select f, :first_broker_oh_mins, duration_dropdown_vals %>
+              </div>
+              <%= error_tag f, :first_broker_oh_mins %>
+            </div>
+          </div>
+          <div class="row form-group">
             <!-- 188 -->
-            <div class="col-md-6<%= if f.errors[:next_broker_oh_end_at], do: " has-error" %>">
-              <%= label f, :next_broker_oh_end_at, "Next broker open-house ends on/at:", class: "control-label" %>
+            <div class="col-md-6<%= if f.errors[:second_broker_oh_start_at], do: " has-error" %>">
+              <%= label f, :second_broker_oh_start_at, "Second broker open-house starts on/at:", class: "control-label" %>
               <div class="input-group datetime">
-                <label class="input-group-addon" for="next_broker_oh_end_at">
+                <label class="input-group-addon" for="second_broker_oh_start_at">
                   <span class="fa fa-calendar"></span>
                 </label>
-                <%= text_input f, :next_broker_oh_end_at, class: "form-control", id: "next_broker_oh_end_at" %>
-                <label class="input-group-addon" for="next_broker_oh_end_at">
+                <%= text_input f, :second_broker_oh_start_at, class: "form-control", id: "second_broker_oh_start_at" %>
+                <label class="input-group-addon" for="second_broker_oh_start_at">
                   <span class="fa fa-clock-o"></span>
                 </label>
               </div>
-              <%= error_tag f, :next_broker_oh_end_at %>
+              <%= error_tag f, :second_broker_oh_start_at %>
+            </div>
+            <div class="col-md-6<%= if f.errors[:second_broker_oh_mins], do: " has-error" %>">
+              <%= label f, :second_broker_oh_mins, "Duration:", class: "control-label" %>
+              <div class="input-group">
+                <%= select f, :second_broker_oh_mins, duration_dropdown_vals %>
+              </div>
+              <%= error_tag f, :second_broker_oh_mins %>
             </div>
           </div>
 
@@ -1737,32 +1754,48 @@
 
           <div class="row form-group">
             <!-- 190 -->
-            <div class="col-md-6<%= if f.errors[:next_cust_oh_start_at], do: " has-error" %>">
-              <%= label f, :next_cust_oh_start_at, "Next customer open-house starts on/at:", class: "control-label" %>
+            <div class="col-md-6<%= if f.errors[:first_cust_oh_start_at], do: " has-error" %>">
+              <%= label f, :first_cust_oh_start_at, "First customer open-house starts on/at:", class: "control-label" %>
               <div class="input-group datetime">
-                <label class="input-group-addon" for="next_cust_oh_start_at">
+                <label class="input-group-addon" for="first_cust_oh_start_at">
                   <span class="fa fa-calendar"></span>
                 </label>
-                <%= text_input f, :next_cust_oh_start_at, class: "form-control", id: "next_cust_oh_start_at" %>
-                <label class="input-group-addon" for="next_cust_oh_start_at">
+                <%= text_input f, :first_cust_oh_start_at, class: "form-control", id: "first_cust_oh_start_at" %>
+                <label class="input-group-addon" for="first_cust_oh_start_at">
                   <span class="fa fa-clock-o"></span>
                 </label>
               </div>
-              <%= error_tag f, :next_cust_oh_start_at %>
+              <%= error_tag f, :first_cust_oh_start_at %>
             </div>
+            <div class="col-md-6<%= if f.errors[:first_cust_oh_mins], do: " has-error" %>">
+              <%= label f, :first_cust_oh_mins, "Duration:", class: "control-label" %>
+              <div class="input-group">
+                <%= select f, :first_cust_oh_mins, duration_dropdown_vals %>
+              </div>
+              <%= error_tag f, :first_cust_oh_mins %>
+            </div>
+          </div>
+          <div class = "row form-group">
             <!-- 191 -->
-            <div class="col-md-6<%= if f.errors[:next_cust_oh_end_at], do: " has-error" %>">
-              <%= label f, :next_cust_oh_end_at, "Next customer open-house ends on/at:", class: "control-label" %>
+            <div class="col-md-6<%= if f.errors[:second_cust_oh_start_at], do: " has-error" %>">
+              <%= label f, :second_cust_oh_start_at, "Second customer open-house starts on/at:", class: "control-label" %>
               <div class="input-group datetime">
-                <label class="input-group-addon" for="next_cust_oh_end_at">
+                <label class="input-group-addon" for="second_cust_oh_start_at">
                   <span class="fa fa-calendar"></span>
                 </label>
-                <%= text_input f, :next_cust_oh_end_at, class: "form-control", id: "next_cust_oh_end_at" %>
-                <label class="input-group-addon" for="next_cust_oh_end_at">
+                <%= text_input f, :second_cust_oh_start_at, class: "form-control", id: "second_cust_oh_start_at" %>
+                <label class="input-group-addon" for="second_cust_oh_start_at">
                   <span class="fa fa-clock-o"></span>
                 </label>
               </div>
-              <%= error_tag f, :next_cust_oh_end_at %>
+              <%= error_tag f, :second_cust_oh_start_at %>
+            </div>
+            <div class="col-md-6<%= if f.errors[:second_cust_oh_mins], do: " has-error" %>">
+              <%= label f, :second_cust_oh_mins, "Duration:", class: "control-label" %>
+              <div class="input-group">
+                <%= select f, :second_cust_oh_mins, duration_dropdown_vals %>
+              </div>
+              <%= error_tag f, :second_cust_oh_mins %>
             </div>
           </div>
 

@@ -31,8 +31,15 @@
             </td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td>
-              <%= listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <span class="nowrap"><%= (listing.next_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.next_broker_oh_end_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <%= if listing.first_broker_oh_start_at do %>
+                <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+                <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
+              <%= if listing.first_broker_oh_start_at && listing.second_broker_oh_start_at, do: ", " %>
+              <%= if listing.second_broker_oh_start_at do %>
+                <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+                <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
             </td>
             <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
                       :rr -> listing.round_robin_remarks
