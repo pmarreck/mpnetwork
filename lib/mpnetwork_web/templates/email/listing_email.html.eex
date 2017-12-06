@@ -1,6 +1,3 @@
 <div>
-  Dear <%= @name %>,
-</div>
-<div>
-  <%= link "Please take a look!", to: @url %>
+  <%= raw @body %>
 </div>

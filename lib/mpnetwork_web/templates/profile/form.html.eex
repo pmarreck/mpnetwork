@@ -2,7 +2,7 @@
    role_edit_rights = (!@changeset.data && Permissions.office_admin_or_site_admin?(current_user(@conn))) || (@changeset.data && Permissions.office_admin_of_office_or_site_admin?(current_user(@conn), @changeset.data.broker))
 %>
 
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [class: "contains-richtexteditor"], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -49,16 +49,17 @@
     <%= error_tag f, :url %>
   </div>
 
-  <div class="form-group">
-    <%= label f, :email_sig, "Email Signature", class: "control-label" %>
-    <%= textarea f, :email_sig, class: "form-control" %>
-    <%= error_tag f, :email_sig %>
-  </div>
-
   <div class="form-group<%= if f.errors[:office_id], do: " has-error" %>" title="note: can only be changed by admins">
     <%= label f, :office_id, "Broker:", class: "control-label" %>
     <%= select f, :office_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
     <%= error_tag f, :office_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :email_sig, "Default Email Signature", class: "control-label" %>
+    <div id="rte_container"></div>
+    <%= hidden_input f, :email_sig, class: "form-control rte-target" %>
+    <%= error_tag f, :email_sig %>
   </div>
 
   <%= if role_edit_rights do %>

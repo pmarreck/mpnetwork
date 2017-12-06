@@ -24,7 +24,7 @@
 
   <li>
     <strong>Email signature:</strong>
-    <%= @user.email_sig %>
+    <%= raw @user.email_sig %>
   </li>
 
   <li>

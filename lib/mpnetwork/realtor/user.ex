@@ -54,7 +54,7 @@ defmodule Mpnetwork.User do
     |> validate_length(:office_phone, max: 16, count: :codepoints)
     |> validate_length(:cell_phone, max: 16, count: :codepoints)
     |> validate_length(:url, max: 255, count: :codepoints)
-    |> validate_length(:email_sig, max: 255, count: :codepoints)
+    |> validate_length(:email_sig, max: 16384, count: :codepoints)
     |> unique_constraint(:email)
     |> foreign_key_constraint(:office_id)
     |> check_constraint(:listings, name: "attachments_listing_id_fkey", message: "still has listings and/or listing attachments assigned to them")

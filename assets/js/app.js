@@ -39,6 +39,8 @@ import "select2"
 
 import "admin-lte"
 
+import Quill from "quill"
+
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
   config: {
@@ -167,6 +169,46 @@ $(function() {
   $("#photo-carousel").carousel({
     swipe: 30 // percent-per-second, default is 50. Pass false to disable swipe
   });
+
+  // rich text editor config
+  // var FontAttributor = Quill.import('attributors/style/font');
+  // Quill.register(FontAttributor, true);
+  // FontAttributor.whitelist = [
+  //   'helvetica', 'sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'
+  // ];
+  if($('#rte_container').length) {
+    var SizeStyle = Quill.import('attributors/style/size');
+    SizeStyle.whitelist = ['10px', '18px', '24px'];
+    Quill.register(SizeStyle, true);
+    var editor = new Quill('#rte_container', {
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline'],
+          [{'font': []}, {'color': []}, 'link'],
+          // Took out indenting since it was class-based and thus incompatible with html email
+          // (customizing to style-based is a pain, see below)
+          // and nobody would probably use it. Left in as an example for posterity.
+          // [{ 'indent': '-1'}, { 'indent': '+1' }],
+          // For the size menu, note that (extensive and specific) menu item styling still has to be done on every item here;
+          // in css, search for "RICH TEXT EDITOR STYLES"
+          [{ 'size': ['10px', false, '18px', '24px'] }],
+          ['image'],
+          ['clean']
+        ]
+      },
+      placeholder: 'Email signature...',
+      theme: 'snow'  // or 'bubble'
+    });
+  };
+  // for config inspection:
+  // console.log(Quill.imports);
+  // set up post hook to copy contenteditable div content to hidden form element before form post
+  $('form.contains-richtexteditor').submit(function(){
+    $('.rte-target').val($('#rte_container div.ql-editor').html());
+    return true;
+  })
+  // copy html form val data to contenteditable container on page load if exists
+  $('#rte_container div.ql-editor').html($('.rte-target').val());
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

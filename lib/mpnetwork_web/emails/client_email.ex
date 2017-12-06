@@ -2,20 +2,27 @@ Code.ensure_loaded Phoenix.Swoosh
 
 defmodule Mpnetwork.ClientEmail do
   @moduledoc false
-  use Phoenix.Swoosh, view: Mpnetwork.EmailView
+  use Phoenix.Swoosh, view: Mpnetwork.EmailView, layout: {MpnetworkWeb.LayoutView, :email}
   import Swoosh.Email
   alias Swoosh.Email
   require Logger
 
   # defp site_name, do: Config.site_name(inspect Config.module)
 
-  def send_client(email_address, name, listing, url) do
+  def send_client(email_address, name, subject, body, current_user, listing, url) do
+    body = interpolate_placeholder_values(body, %{name: name, url: url})
     %Email{}
-    |> from(from_email())
+    |> from({current_user.name, current_user.email})
     |> to({name, email_address})
-    |> reply_to(if listing, do: {listing.user.name, listing.user.email}, else: from_email())
-    |> subject("Property of Interest#{if listing, do: ": " <> listing.address, else: ""}!")
-    |> render_body("listing_email.html", %{url: url, name: name, listing: listing})
+    |> reply_to(if listing, do: {current_user.name, current_user.email}, else: from_email())
+    |> subject(subject)
+    |> render_body("listing_email.html", %{body: body})
+  end
+
+  defp interpolate_placeholder_values(body, %{name: name, url: url}) do
+    body = Regex.replace(~r/@name_placeholder/, body, name)
+    body = Regex.replace(~r/@listing_link_placeholder/, body, url)
+    body
   end
 
   # defp add_reply_to(mail) do

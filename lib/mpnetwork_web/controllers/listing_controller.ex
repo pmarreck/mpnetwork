@@ -201,8 +201,9 @@ defmodule MpnetworkWeb.ListingController do
     # end
   end
 
-  def send_email(conn, %{"id" => id, "email" => %{"email_address" => email_address, "type" => type, "name" => name}} = _params) when type in ~w[broker client customer] do
+  def send_email(conn, %{"id" => id, "email" => %{"email_address" => email_address, "type" => type, "name" => name, "subject" => subject, "body" => body}} = _params) when type in ~w[broker client customer] do
     listing = Realtor.get_listing!(id) |> Repo.preload(:user)
+    current_user = conn.assigns.current_user
     id = listing.id
     url = case type do
       "broker" -> public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
@@ -210,7 +211,7 @@ defmodule MpnetworkWeb.ListingController do
       "customer" -> public_customer_full_url(conn, :customer_full, public_customer_full_code(listing))
       _ -> raise "unknown public listing type: #{type}"
     end
-    {:ok, results} = ClientEmail.send_client(email_address, name, listing, url)
+    {:ok, results} = ClientEmail.send_client(email_address, name, subject, body, current_user, listing, url)
     |> Mailer.deliver
     Logger.info "Sent listing id #{id} of type #{type} to #{email_address}, result: #{inspect results}"
     conn

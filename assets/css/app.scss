@@ -5,6 +5,10 @@
 @import 'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min';
 @import 'node_modules/bootstrap-daterangepicker/daterangepicker.scss';
 
+@import 'node_modules/quill/dist/quill.core';
+@import 'node_modules/quill/dist/quill.snow';
+// @import 'node_modules/quill/dist/quill.bubble';
+
 // .fancy {
 //   width: 100%
 // }
@@ -53,6 +57,56 @@ main.main {
 .nowrap {
   white-space: nowrap;
 }
+
+// I don't like space around p tags
+li p {
+  margin: 0;
+  padding: 0;
+}
+
+//// RICH TEXT EDITOR STYLES
+
+#rte_container {
+  background-color: white;
+  height: 160px;
+}
+
+#rte_container.email-body-edit {
+  height: 400px;
+}
+
+.ql-toolbar {
+  background-color: white;
+}
+
+// Rich text editor toolbar menu item custom styling
+.ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
+  content: 'Small';
+  font-size: 10px !important;
+}
+.ql-picker-label[data-value="10px"]::before {
+  content: 'Small' !important;
+}
+.ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
+  content: 'Large';
+  font-size: 18px !important;
+}
+.ql-picker-label[data-value="18px"]::before {
+  content: 'Large' !important;
+}
+.ql-picker.ql-size .ql-picker-item[data-value="24px"]::before {
+  content: 'XL';
+  font-size: 24px !important;
+}
+.ql-picker-label[data-value="24px"]::before {
+  content: 'XL' !important;
+}
+
+// link editor was centering on text which caused it to get cut off on left if link was at front of line
+.ql-tooltip {
+  left: 0 !important;
+}
+
 
 //// LISTING TABLE STYLES
 
