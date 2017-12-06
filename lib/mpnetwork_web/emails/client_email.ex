@@ -12,7 +12,7 @@ defmodule Mpnetwork.ClientEmail do
   def send_client(email_address, name, subject, body, current_user, listing, url) do
     body = interpolate_placeholder_values(body, %{name: name, url: url})
     %Email{}
-    |> from({current_user.name, current_user.email})
+    |> from(from_email())
     |> to({name, email_address})
     |> reply_to(if listing, do: {current_user.name, current_user.email}, else: from_email())
     |> subject(subject)
