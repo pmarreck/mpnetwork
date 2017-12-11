@@ -172,7 +172,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field :seller_agency_comp, :integer
     field :buyer_agency_comp, :integer
     field :broker_agency_comp, :integer
-    field :listing_broker_comp_rental, :integer
+    field :listing_broker_comp_rental, :string
     field :buyer_exclusions, :boolean
     field :negotiate_direct, :boolean
     field :offers_presentable, :boolean
@@ -203,6 +203,11 @@ defmodule Mpnetwork.Realtor.Listing do
     field :second_cust_oh_mins, :integer
     field :next_cust_oh_note, :string #actually :text
     field :selling_agent_name, :string
+    field :selling_agent_phone, :string
+    field :selling_broker_name, :string
+    field :addl_listing_agent_name, :string
+    field :addl_listing_agent_phone, :string
+    field :addl_listing_broker_name, :string
     # field :search_vector, :tsvector # this won't work. wish I could assert on this!
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many :attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all
@@ -351,6 +356,8 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:driveway, max: 255, count: :codepoints)
     |> validate_length(:listing_agent_phone, max: 16, count: :codepoints)
     |> validate_length(:colisting_agent_phone, max: 16, count: :codepoints)
+    |> validate_length(:addl_listing_agent_phone, max: 16, count: :codepoints)
+    |> validate_length(:selling_agent_phone, max: 16, count: :codepoints)
     # now for text BLOBs
     |> validate_length(:description, max: 4096, count: :codepoints)
     |> validate_length(:realtor_remarks, max: 4096, count: :codepoints)
@@ -358,6 +365,10 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:next_cust_oh_note, max: 4096, count: :codepoints)
     |> validate_length(:directions, max: 4096, count: :codepoints)
     |> validate_length(:round_robin_remarks, max: 4096, count: :codepoints)
+    |> validate_length(:listing_broker_comp_rental, max: 4096, count: :codepoints)
+    |> validate_length(:selling_broker_name, max: 400, count: :codepoints)
+    |> validate_length(:addl_listing_agent_name, max: 400, count: :codepoints)
+    |> validate_length(:addl_listing_broker_name, max: 400, count: :codepoints)
     |> validate_required_duration_when_datetime_val_present({:first_broker_oh_start_at, get_field(listing, :first_broker_oh_start_at), :first_broker_oh_mins, get_field(listing, :first_broker_oh_mins)})
     |> validate_required_duration_when_datetime_val_present({:second_broker_oh_start_at, get_field(listing, :second_broker_oh_start_at), :second_broker_oh_mins, get_field(listing, :second_broker_oh_mins)})
     |> validate_required_duration_when_datetime_val_present({:first_cust_oh_start_at, get_field(listing, :first_cust_oh_start_at), :first_cust_oh_mins, get_field(listing, :first_cust_oh_mins)})
@@ -566,7 +577,12 @@ defmodule Mpnetwork.Realtor.Listing do
       :second_cust_oh_start_at,
       :second_cust_oh_mins,
       :next_cust_oh_note,
-      :selling_agent_name
+      :selling_agent_name,
+      :selling_agent_phone,
+      :selling_broker_name,
+      :addl_listing_agent_name,
+      :addl_listing_agent_phone,
+      :addl_listing_broker_name,
     ])
   end
 

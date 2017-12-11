@@ -952,11 +952,38 @@
             <%= @listing.colisting_agent_phone %>
           </div>
 
-          <!-- ??? Forgotten! -->
-          <div class="selling_agent_name">
-            <strong>Selling agent:</strong>
-            <%= @listing.selling_agent_name %>
+          <div class="addl_listing_agent_name">
+            <strong>Add'l listing agent:</strong>
+            <%= @listing.addl_listing_agent_name %>
           </div>
+
+          <div class="addl_listing_agent_phone">
+            <strong>Add'l listing agent phone:</strong>
+            <%= @listing.addl_listing_agent_phone %>
+          </div>
+
+          <div class="addl_listing_broker_name">
+            <strong>Add'l listing broker:</strong>
+            <%= @listing.addl_listing_broker_name %>
+          </div>
+
+          <!-- ??? Forgotten! -->
+          <%= if @listing.listing_status_type == :CL do %>
+            <div class="selling_agent_name">
+              <strong>Selling agent:</strong>
+              <%= @listing.selling_agent_name %>
+            </div>
+
+            <div class="selling_agent_phone">
+              <strong>Selling agent phone:</strong>
+              <%= @listing.selling_agent_phone %>
+            </div>
+
+            <div class="selling_broker_name">
+              <strong>Selling broker:</strong>
+              <%= @listing.selling_broker_name %>
+            </div>
+          <% end %>
 
           <div class="row form-group">
             <!-- 165 -->
@@ -981,7 +1008,7 @@
           <!-- 168 -->
           <div class="listing_broker_comp_rental">
             <strong>Listing broker comp. rental:</strong>
-            <%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}%" %>
+            <%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}" %>
           </div>
 
           <div class="row form-group">

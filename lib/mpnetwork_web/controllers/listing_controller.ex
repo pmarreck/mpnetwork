@@ -60,7 +60,7 @@ defmodule MpnetworkWeb.ListingController do
 
   def create(conn, %{"listing" => listing_params}) do
     # inject current_user.id and current_office.id (as broker_id)
-    listing_params = Enum.into(%{"user_id" => current_user(conn).id, "broker_id" => conn.assigns.current_office.id}, listing_params)
+    listing_params = Enum.into(%{"broker_id" => conn.assigns.current_office.id}, listing_params)
     listing_params = filter_empty_ext_urls(listing_params)
     case Realtor.create_listing(listing_params) do
       {:ok, listing} ->

@@ -116,7 +116,6 @@
                         <div class="report-field label-visible"><span class="report-label ">Finished:</span><span class="report-value"><%= yn @listing.finished_basement %></span></div>
                       </div>
                     </div>
-                    <div class="report-field label-visible" style="width: 220px"><span class="report-label ">Bsmt Desc:</span><span class="report-value"><%= @listing.basement_desc %></span></div>
                     <div class="report-field label-visible"><span class="report-label ">Lot Size:</span><span class="report-value"><%= @listing.lot_size %></span></div>
                   </div>
                 </div>
@@ -231,6 +230,7 @@
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 500px;">
           <div class="report-field label-visible"><span class="report-label ">Bsmt/Subfl:</span><span class="report-value"><%= yn @listing.basement %><%= if @listing.basement_type, do: ", " <> Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Bsmt Desc:</span><span class="report-value"><%= @listing.basement_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">1st Floor:</span><span class="report-value"><%= @listing.first_fl_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">2nd Floor:</span><span class="report-value"><%= @listing.second_fl_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">3rd Floor:</span><span class="report-value"><%= @listing.third_fl_desc %></span></div>

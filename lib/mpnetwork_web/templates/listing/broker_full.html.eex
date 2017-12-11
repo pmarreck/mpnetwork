@@ -116,7 +116,6 @@
                         <div class="report-field label-visible"><span class="report-label ">Finished:</span><span class="report-value"><%= yn @listing.finished_basement %></span></div>
                       </div>
                     </div>
-                    <div class="report-field label-visible" style="width: 220px"><span class="report-label ">Bsmt Desc:</span><span class="report-value"><%= @listing.basement_desc %></span></div>
                     <div class="report-field label-visible"><span class="report-label ">Lot Size:</span><span class="report-value"><%= @listing.lot_size %></span></div>
                   </div>
                 </div>
@@ -239,6 +238,7 @@
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 500px;">
           <div class="report-field label-visible"><span class="report-label ">Bsmt/Subfl:</span><span class="report-value"><%= yn @listing.basement %><%= if @listing.basement_type, do: ", " <> Mpnetwork.EnumMaps.map_basement_type_int_to_ext(@listing.basement_type) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Bsmt Desc:</span><span class="report-value"><%= @listing.basement_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">1st Floor:</span><span class="report-value"><%= @listing.first_fl_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">2nd Floor:</span><span class="report-value"><%= @listing.second_fl_desc %></span></div>
           <div class="report-field label-visible"><span class="report-label ">3rd Floor:</span><span class="report-value"><%= @listing.third_fl_desc %></span></div>
@@ -383,30 +383,40 @@
             </div>
           </div>
           <div class="group orientation-horizontal  behavior">
-            <div class="group orientation-vertical " style="width: 335px;">
+            <div class="group orientation-vertical " style="width: 307px;">
               <div class="group orientation-horizontal  last-child">
                 <div class="report-field label-visible"><span class="report-label ">List Agent:</span><span class="report-value"><%= @agent && @agent.name %></span></div>
               </div>
             </div>
-            <div class="group orientation-vertical  last-child" style="width: 105px;">
-              <div class="report-field label-hidden"><span class="report-label hidden">[lagt_ph]:</span><span class="report-value"><%= @agent.office_phone %></span></div>
+            <div class="group orientation-vertical  last-child" style="width: 133px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[lagt_ph]:</span><span class="report-value"><%= @agent.cell_phone && "(cell) #{@agent.cell_phone}" %></span></div>
             </div>
           </div>
           <%= if @co_agent do %>
             <div class="group orientation-horizontal  behavior">
               <div class="group orientation-vertical " style="width: 335px;">
                 <div class="group orientation-horizontal  last-child">
-                  <div class="report-field label-visible"><span class="report-label ">Co-List Agent:</span><span class="report-value"><%= @co_agent.name %></span></div>
+                  <div class="report-field label-visible"><span class="report-label ">Co-List Agt:</span><span class="report-value"><%= @co_agent.name %></span></div>
                 </div>
               </div>
               <div class="group orientation-vertical  last-child" style="width: 105px;">
-                <div class="report-field label-hidden"><span class="report-label hidden">[co_lagt_ph]:</span><span class="report-value"><%= @co_agent.office_phone %></span></div>
+                <div class="report-field label-hidden"><span class="report-label hidden">[co_lagt_ph]:</span><span class="report-value"><%= @listing.colisting_agent_phone %></span></div>
               </div>
             </div>
           <% end %>
-          <div class="group orientation-horizontal last-child">
-            <div class="report-field label-visible"><span class="report-label ">Selling Agent:</span><span class="report-value"><%= @listing.selling_agent_name %></span></div>
-          </div>
+          <%= if @listing.listing_status_type == :CL do %>
+            <div class="group orientation-horizontal last-child">
+              <div class="group orientation-vertical" style="width: 335px;">
+                <div class="group orientation-horizontal last-child">
+                  <div class="report-field label-visible"><span class="report-label ">Selling Agent:</span><span class="report-value"><%= @listing.selling_agent_name %></span></div>
+                </div>
+              </div>
+              <div class="group orientation-vertical last-child" style="width: 105px;">
+                <div class="report-field label-hidden"><span class="report-label hidden">[sl_agt_ph]:</span><span class="report-value"><%= @listing.selling_agent_phone %></span></div>
+              </div>
+              <div class="report-field label-visible"><span class="report-label ">Selling Broker:</span><span class="report-value"><%= @listing.selling_broker_name %></span></div>
+            </div>
+          <% end %>
         </div>
         <div class="group orientation-vertical  last-child">
           <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>

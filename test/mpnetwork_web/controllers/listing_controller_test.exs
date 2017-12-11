@@ -45,9 +45,9 @@ defmodule MpnetworkWeb.ListingControllerTest do
     assert html_response(conn, 200) =~ "Attachments can be added after saving the listing"
   end
 
-  test "creates listing and redirects to show when data is valid", %{conn: original_conn} do
+  test "creates listing and redirects to show when data is valid", %{conn: original_conn, user: user} do
     conn = original_conn
-    conn = post conn, listing_path(conn, :create), listing: @create_attrs
+    conn = post conn, listing_path(conn, :create), listing: Enum.into(%{user_id: user.id, user: user}, @create_attrs)
     assert %{id: id} = redirected_params(conn)
     assert redirected_to(conn) == listing_path(conn, :show, id)
     conn = original_conn

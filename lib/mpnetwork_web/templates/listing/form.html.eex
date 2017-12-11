@@ -1457,11 +1457,51 @@
             <%= error_tag f, :colisting_agent_phone %>
           </div>
 
+          <div class="form-group<%= if f.errors[:addl_listing_agent_name], do: " has-error" %>">
+            <%= label f, :addl_listing_agent_name, "Add'l listing agent", class: "control-label" %>
+            <%= text_input f, :addl_listing_agent_name, class: "form-control" %>
+            <%= error_tag f, :addl_listing_agent_name %>
+          </div>
+
+          <div class="form-group<%= if f.errors[:addl_listing_agent_phone], do: " has-error" %>">
+            <%= label f, :addl_listing_agent_phone, "Add'l listing agent phone", class: "control-label" %>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <%= telephone_input f, :addl_listing_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+            </div>
+            <%= error_tag f, :addl_listing_agent_phone %>
+          </div>
+
+          <div class="form-group<%= if f.errors[:addl_listing_broker_name], do: " has-error" %>">
+            <%= label f, :addl_listing_broker_name, "Add'l listing broker", class: "control-label" %>
+            <%= text_input f, :addl_listing_broker_name, class: "form-control" %>
+            <%= error_tag f, :addl_listing_broker_name %>
+          </div>
+
           <!-- Forgotten! -->
           <div class="form-group<%= if f.errors[:selling_agent_name], do: " has-error" %>">
             <%= label f, :selling_agent_name, class: "control-label" %>
             <%= text_input f, :selling_agent_name, class: "form-control" %>
             <%= error_tag f, :selling_agent_name %>
+          </div>
+
+          <div class="form-group<%= if f.errors[:selling_agent_phone], do: " has-error" %>">
+            <%= label f, :selling_agent_phone, "Selling agent phone", class: "control-label" %>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <%= telephone_input f, :selling_agent_phone, class: "form-control ", "data-mask": "", "data-inputmask": "'mask': '(999) 999-9999'", pattern: "[0-9\-\(\) ]{7,16}", title: "7 to 16 digits, parentheses, hyphens or spaces" %>
+            </div>
+            <%= error_tag f, :selling_agent_phone %>
+          </div>
+
+          <div class="form-group<%= if f.errors[:selling_broker_name], do: " has-error" %>">
+            <%= label f, :selling_broker_name, class: "control-label" %>
+            <%= text_input f, :selling_broker_name, class: "form-control" %>
+            <%= error_tag f, :selling_broker_name %>
           </div>
 
           <div class="row form-group">
