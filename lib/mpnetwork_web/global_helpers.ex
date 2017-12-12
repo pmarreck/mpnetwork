@@ -19,6 +19,10 @@ defmodule MpnetworkWeb.GlobalHelpers do
     "https://www.gravatar.com/avatar/#{hash_email}"
   end
 
+  def replace_crlf_with_html_br(str) do
+    Regex.replace(~r/(?:\r\n|\r|\n)/, str, "<br />\n")
+  end
+
   ### DATETIME-RELATED ###
   def month_to_short_name(nil), do: ""
   def month_to_short_name(month_num) do

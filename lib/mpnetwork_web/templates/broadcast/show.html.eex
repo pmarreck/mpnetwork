@@ -13,7 +13,7 @@
   </div>
   <div class="col-md-10"
     <p><strong><%= raw HtmlSanitizeEx.html5 @broadcast.title %></strong></p>
-    <p><%= raw HtmlSanitizeEx.html5 @broadcast.body %></p>
+    <p><%= raw(replace_crlf_with_html_br(HtmlSanitizeEx.html5 @broadcast.body)) %></p>
   </div>
 </div>
 

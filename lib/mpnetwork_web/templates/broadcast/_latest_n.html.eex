@@ -16,8 +16,7 @@
             <%= if @current_user.id == broadcast.user_id || @current_user.role_id < 3 do %>
               <div class="col-md-9">
                 <p><strong><%= raw HtmlSanitizeEx.html5 broadcast.title %></strong></p>
-                <p><%= raw HtmlSanitizeEx.html5 broadcast.body %>
-                </p>
+                <p><%= raw(replace_crlf_with_html_br(HtmlSanitizeEx.html5 broadcast.body)) %></p>
               </div>
               <div class="col-md-1">
                 <div class="text-right">
