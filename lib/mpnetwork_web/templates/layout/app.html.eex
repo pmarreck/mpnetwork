@@ -114,6 +114,7 @@
               <ul class="treeview-menu">
                 <li><%= link "Round Robin Report", to: listing_path(@conn, :index) %></li>
                 <li><%= link "Inspection Sheet", to: upcoming_inspections_path(@conn, :inspection_sheet) %></li>
+                <li><%= link "My Office's Listings", to: listing_path(@conn, :index, q: "my office") %></li>
                 <li><%= link "Add New Listing", to: listing_path(@conn, :new) %></li>
               </ul>
             </li>

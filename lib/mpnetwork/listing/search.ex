@@ -12,7 +12,12 @@ defmodule Mpnetwork.Search do
     By address fragment: <pre class="search_example">55 plandome</pre>
     By price range (searches both rental price and list price): <pre class="search_example">$500,000-1000000</pre>
     Listings owned by you: <pre class="search_example">my</pre><pre class="search_example">mine</pre>
-    (You can also use this in conjunction with other filters like:)<pre class="search_example">my port washington</pre><pre class="search_example">my 500,000-1,000,000</pre>
+    Listings owned by your office: <pre class="search_example">my office</pre>
+    (You can also use these in conjunction with other filters like:)
+    <pre class="search_example">my port washington</pre>
+    <pre class="search_example">my 500,000-1,000,000</pre>
+    <pre class="search_example">my office UC</pre>
+    <pre class="search_example">my office expired</pre>
     By listing status:<pre class="search_example">NEW</pre><pre class="search_example">new</pre> (or: FS, EXT, UC, CL, PC, WR, TOM) (or try:)<pre class="search_example">NEW or FS</pre>
     By expired: (anything that is Closed or has an expiration date in the past; can be used with other filters like "my expired")<pre class="search_example">expired</pre>
     An exact phrase (include double quotes in this case!): <pre class="search_example">"manhasset high"</pre>

@@ -6,7 +6,7 @@ defmodule Mpnetwork.Realtor do
   import Ecto.Query, warn: false
 
   alias Mpnetwork.Realtor.{Broadcast, Listing, Office}
-  alias Mpnetwork.{Repo, User}
+  alias Mpnetwork.{Repo, User, Permissions}
 
   @doc """
   Creates a user.
@@ -257,7 +257,16 @@ defmodule Mpnetwork.Realtor do
   # end
 
   defp default_search_scope(current_user) do
-    from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
+    if Permissions.office_admin_or_site_admin?(current_user) do
+      if Permissions.office_admin?(current_user) do
+        current_office = get_office!(current_user.office_id)
+        from l in Listing, where: l.draft == false or l.broker_id == ^current_office.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
+      else # site admin
+        from l in Listing, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 100
+      end
+    else # regular realtor
+      from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
+    end
   end
 
   @doc """
@@ -267,6 +276,7 @@ defmodule Mpnetwork.Realtor do
   def query_listings(query, current_user) do
     {query, default_search_scope(current_user)}
     |> try_id() # should return {"unconsumed_query", new_scope}
+    |> try_my_office(current_user)
     |> try_mine(current_user)
     |> try_pricerange()
     |> search_all_fields_using_postgres_fulltext_search()
@@ -292,6 +302,16 @@ defmodule Mpnetwork.Realtor do
   end
   defp _try_int_result(_) do
     nil
+  end
+
+  @my_office_regex ~r/ ?\bmy office\b ?/i
+  defp try_my_office({query, scope}, current_user) do
+    if Regex.match?(@my_office_regex, query) do
+      current_office = get_office!(current_user.office_id)
+      {Regex.replace(@my_office_regex, query, ""), scope |> where([l], l.broker_id == ^current_office.id)}
+    else
+      {query, scope}
+    end
   end
 
   @mine_regex ~r/ ?\b(?:my|mine)\b ?/i
