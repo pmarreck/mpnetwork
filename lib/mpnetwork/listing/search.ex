@@ -13,9 +13,12 @@ defmodule Mpnetwork.Search do
     By price range (searches both rental price and list price): <pre class="search_example">$500,000-1000000</pre>
     Listings owned by you: <pre class="search_example">my</pre><pre class="search_example">mine</pre>
     Listings owned by your office: <pre class="search_example">my office</pre>
-    (You can also use these in conjunction with other filters like:)
+    Manhasset school district: <pre class="search_example">SD6</pre>
+    Port Washington school district: <pre class="search_example">SD4</pre>
+    (You can also combine all of these with other filters like:)
     <pre class="search_example">my port washington</pre>
     <pre class="search_example">my 500,000-1,000,000</pre>
+    <pre class="search_example">SD6 500,000-1,000,000 waterfront</pre>
     <pre class="search_example">my office UC</pre>
     <pre class="search_example">my office expired</pre>
     By listing status:<pre class="search_example">NEW</pre><pre class="search_example">new</pre> (or: FS, EXT, UC, CL, PC, WR, TOM) (or try:)<pre class="search_example">NEW or FS</pre>
