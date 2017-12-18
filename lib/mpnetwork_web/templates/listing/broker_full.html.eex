@@ -361,19 +361,9 @@
       <div class="report-literal report-field report-line ">
         <hr>
       </div>
-      <div class="group orientation-horizontal ">
-        <div class="group orientation-vertical " style="width: 150px;">
-          <div class="report-field label-visible"><span class="report-label ">Occupancy:</span><span class="report-value"><%= @listing.occupancy %></span></div>
-        </div>
-        <div class="group orientation-vertical " style="width: 290px;">
-          <div class="report-field label-visible"><span class="report-label ">Owner:</span><span class="report-value"><%= @listing.owner_name %></span></div>
-        </div>
-        <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label ">Offers presentable:</span><span class="report-value"><%= yn @listing.offers_presentable %></span></div>
-        </div>
-      </div>
       <div class="group orientation-horizontal  last-child">
         <div class="group orientation-vertical " style="width: 440px;">
+          <div class="report-field label-visible"><span class="report-label ">Occupancy:</span><span class="report-value"><%= @listing.occupancy %></span></div>
           <div class="group orientation-horizontal  behavior">
             <div class="group orientation-vertical " style="width: 335px;">
               <div class="group orientation-horizontal  last-child">
@@ -421,16 +411,23 @@
           <% end %>
         </div>
         <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Status/Show#:</span><span class="report-value"><%= @listing.status_showing_phone %></span></div>
-          <div class="group orientation-horizontal  last-child">
-            <div class="group orientation-vertical " style="width: 100px;">
-              <div class="report-field label-visible"><span class="report-label ">Lockbox:</span><span class="report-value"><%= yn(@listing.lockbox) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Owner:</span><span class="report-value"><%= @listing.owner_name %></span></div>
+          <%= if @listing.listing_status_type == :CL do %>
+            <div class="report-field label-visible"><span class="report-label ">Purchaser:</span><span class="report-value"><%= @listing.purchaser %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Moved From:</span><span class="report-value"><%= @listing.moved_from %></span></div>
+          <% else %>
+            <div class="report-field label-visible"><span class="report-label ">Offers presentable:</span><span class="report-value"><%= yn @listing.offers_presentable %></span></div>
+            <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Status/Show#:</span><span class="report-value"><%= @listing.status_showing_phone %></span></div>
+            <div class="group orientation-horizontal  last-child">
+              <div class="group orientation-vertical " style="width: 100px;">
+                <div class="report-field label-visible"><span class="report-label ">Lockbox:</span><span class="report-value"><%= yn(@listing.lockbox) %></span></div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="report-field label-visible"><span class="report-label ">Neg Dir:</span><span class="report-value"><%= yn(@listing.negotiate_direct) %></span></div>
+              </div>
             </div>
-            <div class="group orientation-vertical  last-child">
-              <div class="report-field label-visible"><span class="report-label ">Neg Dir:</span><span class="report-value"><%= yn(@listing.negotiate_direct) %></span></div>
-            </div>
-          </div>
+          <% end %>
         </div>
       </div>
     </div>
