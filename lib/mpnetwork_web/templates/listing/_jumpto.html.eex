@@ -1,15 +1,15 @@
 <p>
   Jump to section:
   <%= if @existing do %>
-    <%= link "Attachments", to: "#attachments" %>, 
+    <%= link "Attachments", to: "#attachments" %>,
   <% end %>
-  <%= link "Basics", to: "#basics" %>, 
-  <%= link "Location", to: "#location" %>, 
-  <%= link "Price/Dates", to: "#price-dates" %>, 
-  <%= link "Characteristics", to: "#characteristics" %>, 
-  <%= link "Exterior/Appliances/Utilities", to: "#exterior" %>, 
-  <%= link "Green Features", to: "#green" %>, 
-  <%= link "Owner/Broker", to: "#owner" %>, 
-  <%= link "Remarks/Misc", to: "#misc" %>, 
+  <%= link "Basics", to: "#basics" %>,
+  <%= link "Location", to: "#location" %>,
+  <%= link "Price/Dates/Closing", to: "#price-dates" %>,
+  <%= link "Characteristics", to: "#characteristics" %>,
+  <%= link "Exterior/Appliances/Utilities", to: "#exterior" %>,
+  <%= link "Green Features", to: "#green" %>,
+  <%= link "Owner/Broker", to: "#owner" %>,
+  <%= link "Remarks/Misc", to: "#misc" %>,
   <%= link "Open House", to: "#openhouse" %>
 </p>

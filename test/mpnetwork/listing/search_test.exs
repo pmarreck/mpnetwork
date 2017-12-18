@@ -46,7 +46,7 @@ defmodule Mpnetwork.SearchTest do
     test "listing query listings with listing status type only" do
       listing = listing_fixture()
       user = listing.user
-      assert {:ok, listing} = Realtor.update_listing(listing, %{listing_status_type: "UC"})
+      assert {:ok, listing} = Realtor.update_listing(listing, %{listing_status_type: "UC", uc_on: Date.utc_today})
       assert [listing] == Realtor.query_listings("UC", user)
     end
 
@@ -134,7 +134,7 @@ defmodule Mpnetwork.SearchTest do
     test "listing expired search" do
       expired_listing = listing_fixture(visible_on: ~D[2017-04-17], expires_on: ~D[2017-05-17])
       user = expired_listing.user
-      closed_listing = listing_fixture(listing_status_type: "CL")
+      closed_listing = listing_fixture(listing_status_type: "CL", closed_on: ~D[2017-05-15], closing_price_usd: 1000000)
       _nonmatching_listing = listing_fixture(listing_status_type: "NEW", visible_on: Timex.shift(Timex.today, days: -30), expires_on: Timex.today)
       assert [closed_listing, expired_listing] == Realtor.query_listings("expired", user)
     end

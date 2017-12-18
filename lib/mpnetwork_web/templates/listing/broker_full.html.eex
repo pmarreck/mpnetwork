@@ -335,15 +335,17 @@
         <div class="group orientation-vertical " style="width: 223px;">
           <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.visible_on) %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Exp Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.expires_on) %></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale UC:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">Short Sale Cancel:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM Start Date:</span><span class="report-value"></span></div>
-          <div class="report-field label-visible behavior behavior-hidden"><span class="report-label ">TOM End Date:</span><span class="report-value"></span></div>
+          <div class="report-field label-visible"><span class="report-label ">UC Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.uc_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Prop Title Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.prop_closing_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Title Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.closed_on) %></span></div>
+          <% default_to_today = @listing.closed_on || Date.utc_today %>
+          <div class="report-field label-visible"><span class="report-label ">DOM:</span><span class="report-value"><%= if @listing.visible_on && default_to_today, do: Date.diff(default_to_today, @listing.visible_on) %></span></div>
         </div>
         <div class="group orientation-vertical " style="width: 200px;">
           <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value"><%= @listing.original_price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Prior LP:</span><span class="report-value"><%= @listing.prior_price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">List Price:</span><span class="report-value"><%= @listing.price_usd |> dollars %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Sold Price:</span><span class="report-value"><%= @listing.closing_price_usd |> dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Owner Financing:</span><span class="report-value"><%= yn @listing.owner_financing %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Broker/Agent Owned:</span><span class="report-value"><%= yn @listing.broker_agent_owned %></span></div>
         </div>

@@ -208,6 +208,12 @@ defmodule Mpnetwork.Realtor.Listing do
     field :addl_listing_agent_name, :string
     field :addl_listing_agent_phone, :string
     field :addl_listing_broker_name, :string
+    field :uc_on, :date
+    field :prop_closing_on, :date
+    field :closed_on, :date
+    field :closing_price_usd, :integer
+    field :purchaser, :string
+    field :moved_from, :string
     # field :search_vector, :tsvector # this won't work. wish I could assert on this!
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many :attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all
@@ -261,6 +267,18 @@ defmodule Mpnetwork.Realtor.Listing do
   end
   defp validate_required_duration_when_datetime_val_present(changeset, _), do: changeset
 
+  defp validate_required_field_when_another_field_has_value(changeset, {_original_field, _original_view_name, nil = _original_value, _required_field, _required_view_name, nil = _required_value}), do: changeset
+  defp validate_required_field_when_another_field_has_value(changeset, {_original_field, original_view_name, :UC = original_value, :uc_on = required_field, required_view_name, nil = _required_value}) do
+    add_error(changeset, required_field, "#{required_view_name} must have a value if #{original_view_name} is set to #{original_value}")
+  end
+  defp validate_required_field_when_another_field_has_value(changeset, {_original_field, original_view_name, :CL = original_value, :closed_on = required_field, required_view_name, nil = _required_value}) do
+    add_error(changeset, required_field, "#{required_view_name} must have a value if #{original_view_name} is set to #{original_value}")
+  end
+  defp validate_required_field_when_another_field_has_value(changeset, {_original_field, original_view_name, :CL = original_value, :closing_price_usd = required_field, required_view_name, nil = _required_value}) do
+    add_error(changeset, required_field, "#{required_view_name} must have a value if #{original_view_name} is set to #{original_value}")
+  end
+  defp validate_required_field_when_another_field_has_value(changeset, _), do: changeset
+
   @doc """
     Relaxed requireds for listing attributes in "draft" status.
     That was easy...
@@ -287,6 +305,7 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:prior_price_usd, greater_than_or_equal_to: 0)
     |> validate_number(:original_price_usd, greater_than_or_equal_to: 0)
     |> validate_inclusion(:price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
+    |> validate_inclusion(:closing_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647. (If you need to bump this limit, speak to the site developer. Also, nice job!)")
     |> validate_inclusion(:prior_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
     |> validate_inclusion(:original_price_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
     |> validate_inclusion(:prop_tax_usd, 0..2147483647, message: "Prices must currently be between $0 and $2,147,483,647.")
@@ -354,6 +373,8 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:third_fl_desc, max: 255, count: :codepoints)
     |> validate_length(:lot_size, max: 255, count: :codepoints)
     |> validate_length(:driveway, max: 255, count: :codepoints)
+    |> validate_length(:purchaser, max: 255, count: :codepoints)
+    |> validate_length(:moved_from, max: 255, count: :codepoints)
     |> validate_length(:listing_agent_phone, max: 16, count: :codepoints)
     |> validate_length(:colisting_agent_phone, max: 16, count: :codepoints)
     |> validate_length(:addl_listing_agent_phone, max: 16, count: :codepoints)
@@ -373,6 +394,9 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_required_duration_when_datetime_val_present({:second_broker_oh_start_at, get_field(listing, :second_broker_oh_start_at), :second_broker_oh_mins, get_field(listing, :second_broker_oh_mins)})
     |> validate_required_duration_when_datetime_val_present({:first_cust_oh_start_at, get_field(listing, :first_cust_oh_start_at), :first_cust_oh_mins, get_field(listing, :first_cust_oh_mins)})
     |> validate_required_duration_when_datetime_val_present({:second_cust_oh_start_at, get_field(listing, :second_cust_oh_start_at), :second_cust_oh_mins, get_field(listing, :second_cust_oh_mins)})
+    |> validate_required_field_when_another_field_has_value({:listing_status_type, "Listing Status", get_field(listing, :listing_status_type), :uc_on, "Under Contract Date", get_field(listing, :uc_on)})
+    |> validate_required_field_when_another_field_has_value({:listing_status_type, "Listing Status", get_field(listing, :listing_status_type), :closed_on, "Closing/Title Transfer Date", get_field(listing, :closed_on)})
+    |> validate_required_field_when_another_field_has_value({:listing_status_type, "Listing Status", get_field(listing, :listing_status_type), :closing_price_usd, "Closing Price", get_field(listing, :closing_price_usd)})
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:broker_id)
   end
@@ -583,6 +607,12 @@ defmodule Mpnetwork.Realtor.Listing do
       :addl_listing_agent_name,
       :addl_listing_agent_phone,
       :addl_listing_broker_name,
+      :uc_on,
+      :prop_closing_on,
+      :closed_on,
+      :closing_price_usd,
+      :purchaser,
+      :moved_from,
     ])
   end
 
