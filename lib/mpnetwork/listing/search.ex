@@ -26,7 +26,14 @@ defmodule Mpnetwork.Search do
     An exact phrase (include double quotes in this case!): <pre class="search_example">"manhasset high"</pre>
     A range on certain attributes: <pre class="search_example">3-5 bedroom or 2-4 garage</pre>
     Or specific values of those attributes: <pre class="search_example">6 room 3 bedroom colonial</pre>
-    (Available attributes you can search for a range on are: room(s), bed/bedroom(s), bath/bathroom(s), fireplace(s), skylight(s), garage(s), family/families, story/stories)<br />
+    (Available attributes you can search for a range on are: room(s), bed/bedroom(s), bath/bathroom(s), fireplace(s), skylight(s), garage(s), family/families, story/stories)<br /><br />
+    You can now also search on date ranges of listing start date, under contract date, and closing date. Examples follow (all case-insensitive):
+    <pre class="search_example">FS: 12/1/2017-12/31/2017</pre>
+    <pre class="search_example">for sale:12/1/2017 - 12/31/2017</pre>
+    <pre class="search_example">UC: 12/1/2017-12/31/2017</pre>
+    <pre class="search_example">under contract: 12/1/2017-12/31/2017</pre>
+    <pre class="search_example">CL: 12/1/2017-12/31/2017</pre>
+    <pre class="search_example">Closed: 12/1/2017-12/31/2017</pre>
     Or by almost any other attributes: <pre class="search_example">expired tudor waterfront (solar OR windmill) 500000-1000000</pre>
     You can search by multiple attributes (it filters on all of them), so <pre class="search_example">rent waterfront</pre> will find rentals on the waterfront (rent AND waterfront).<br />
     You can also use and, or, not (or the equivalent symbols &, |, !) and parentheses: <pre class="search_example">waterfront or colonial</pre>

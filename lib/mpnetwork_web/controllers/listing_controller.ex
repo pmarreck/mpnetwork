@@ -12,11 +12,12 @@ defmodule MpnetworkWeb.ListingController do
   plug :put_layout, "public_listing.html" when action in [:client_full, :broker_full, :customer_full]
 
   def index(conn, %{"q" => query} = _params) do
-    listings = Realtor.query_listings(query, current_user(conn))
+    {listings, errors} = Realtor.query_listings(query, current_user(conn))
     primaries = Listing.primary_images_for_listings(listings)
     render(conn, "search_results.html",
       listings: listings,
-      primaries: primaries
+      primaries: primaries,
+      errors: errors
     )
   end
 

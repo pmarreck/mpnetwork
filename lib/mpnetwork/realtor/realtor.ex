@@ -274,22 +274,23 @@ defmodule Mpnetwork.Realtor do
   """
   def query_listings("", current_user), do: Repo.all(default_search_scope(current_user))
   def query_listings(query, current_user) do
-    {query, default_search_scope(current_user)}
-    |> try_id() # should return {"unconsumed_query", new_scope}
-    |> try_my_office(current_user)
-    |> try_mine(current_user)
-    |> try_pricerange()
-    |> search_all_fields_using_postgres_fulltext_search()
-# |> IO.inspect(limit: :infinity)
-    |> Repo.all
+    {_consumed_query, final_scope, errors} = {query, default_search_scope(current_user), []}
+      |> try_id() # should return {"unconsumed_query", new_scope, any_errors} ... down the line
+      |> try_my_office(current_user)
+      |> try_mine(current_user)
+      |> try_pricerange()
+      |> try_daterange()
+      |> search_all_fields_using_postgres_fulltext_search()
+    listings = Repo.all(final_scope)
+    {listings, errors}
   end
 
-  defp try_id({query, scope}) do
+  defp try_id({query, scope, errors}) do
     id = _try_integer(query)
     if id do
-      {"", scope |> where([l], l.id == ^id)}
+      {"", scope |> where([l], l.id == ^id), errors}
     else
-      {query, scope}
+      {query, scope, errors}
     end
   end
 
@@ -304,37 +305,100 @@ defmodule Mpnetwork.Realtor do
     nil
   end
 
+  defp convert_binary_date_parts_to_date_struct(year, month, day) when is_binary(year) and is_binary(month) and is_binary(day) do
+    case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
+      {:ok, date} -> date
+      {:error, _} -> nil
+    end
+  end
+
   @my_office_regex ~r/ ?\bmy office\b ?/i
-  defp try_my_office({query, scope}, current_user) do
+  defp try_my_office({query, scope, errors}, current_user) do
     if Regex.match?(@my_office_regex, query) do
       current_office = get_office!(current_user.office_id)
-      {Regex.replace(@my_office_regex, query, ""), scope |> where([l], l.broker_id == ^current_office.id)}
+      {Regex.replace(@my_office_regex, query, ""), scope |> where([l], l.broker_id == ^current_office.id), errors}
     else
-      {query, scope}
+      {query, scope, errors}
     end
   end
 
   @mine_regex ~r/ ?\b(?:my|mine)\b ?/i
-  defp try_mine({query, scope}, current_user) do
+  defp try_mine({query, scope, errors}, current_user) do
     if Regex.match?(@mine_regex, query) do
-      {Regex.replace(@mine_regex, query, ""), scope |> where([l], l.user_id == ^current_user.id)}
+      {Regex.replace(@mine_regex, query, ""), scope |> where([l], l.user_id == ^current_user.id), errors}
     else
-      {query, scope}
+      {query, scope, errors}
     end
   end
 
   @pricerange_regex ~r/\$?([0-9,]{3,}) ?\- ?\$?([0-9,]{3,})/
-  defp try_pricerange({query, scope}) do
+  defp try_pricerange({query, scope, errors}) do
     pr = case Regex.run(@pricerange_regex, query) do
       [_, start, finish] -> {_filter_nonnumeric(start), _filter_nonnumeric(finish)}
       _ -> nil
     end
     if pr do
       {start, finish} = pr
-      {Regex.replace(@pricerange_regex, query, ""), scope |> where([l], (l.price_usd >= ^start and l.price_usd <= ^finish) or (l.rental_price_usd >= ^start and l.rental_price_usd <= ^finish))}
+      {Regex.replace(@pricerange_regex, query, ""), scope |> where([l], (l.price_usd >= ^start and l.price_usd <= ^finish) or (l.rental_price_usd >= ^start and l.rental_price_usd <= ^finish)), errors}
     else
-      {query, scope}
+      {query, scope, errors}
     end
+  end
+
+  # search on "for sale" date (listing date)
+  @daterange_fs_regex ~r/(?:fs|for sale): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
+  # search on "under contract" date
+  @daterange_uc_regex ~r/(?:uc|under contract): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
+  # search on "closed" date
+  @daterange_cl_regex ~r/(?:cl|closed): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
+
+  defp _process_daterangesearch({query, scope, errors}, :FS, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    cond do
+      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.visible_on >= ^valid_startday and l.visible_on <= ^valid_finishday)), errors}
+      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
+      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Listing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+    end
+  end
+
+  defp _process_daterangesearch({query, scope, errors}, :UC, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    cond do
+      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.uc_on >= ^valid_startday and l.uc_on <= ^valid_finishday)), errors}
+      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Under Contract date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
+      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Under Contract date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Under Contract date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+    end
+  end
+
+  defp _process_daterangesearch({query, scope, errors}, :CL, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    cond do
+      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.closed_on >= ^valid_startday and l.closed_on <= ^valid_finishday)), errors}
+      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Closing Date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
+      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Closing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Closing Date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+    end
+  end
+
+  defp try_daterange({query, scope, errors}) do
+    {query, scope, errors} = case Regex.run(@daterange_fs_regex, query) do
+      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :FS, @daterange_fs_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
+      _ -> {query, scope, errors}
+    end
+    {query, scope, errors} = case Regex.run(@daterange_uc_regex, query) do
+      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :UC, @daterange_uc_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
+      _ -> {query, scope, errors}
+    end
+    {query, scope, errors} = case Regex.run(@daterange_cl_regex, query) do
+      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :CL, @daterange_cl_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
+      _ -> {query, scope, errors}
+    end
+    {query, scope, errors}
   end
 
   defp _filter_nonnumeric(num) when is_binary(num) do
@@ -481,8 +545,8 @@ defmodule Mpnetwork.Realtor do
     true
   end
 
-  defp search_all_fields_using_postgres_fulltext_search({q, scope}) do
-    if String.trim(q) != "" do
+  defp search_all_fields_using_postgres_fulltext_search({q, scope, errors}) do
+    scope = if String.trim(q) != "" do
       q = normalize_query(q)
       scope
       |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
@@ -490,6 +554,7 @@ defmodule Mpnetwork.Realtor do
     else
       scope
     end
+    {"", scope, errors}
   end
 
   # defp _search_all_fields(q) do

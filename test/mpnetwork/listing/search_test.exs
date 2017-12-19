@@ -40,27 +40,27 @@ defmodule Mpnetwork.SearchTest do
 
     test "listing query listings with id only" do
       listing = listing_fixture()
-      assert [listing] == Realtor.query_listings("#{listing.id}", listing.user)
+      assert {[listing],[]} == Realtor.query_listings("#{listing.id}", listing.user)
     end
 
     test "listing query listings with listing status type only" do
       listing = listing_fixture()
       user = listing.user
       assert {:ok, listing} = Realtor.update_listing(listing, %{listing_status_type: "UC", uc_on: Date.utc_today})
-      assert [listing] == Realtor.query_listings("UC", user)
+      assert {[listing],[]} == Realtor.query_listings("UC", user)
     end
 
     test "listing query listings with my or mine only" do
       listing = listing_fixture()
-      assert [listing] == Realtor.query_listings("my", listing.user)
-      assert [listing] == Realtor.query_listings("mine", listing.user)
+      assert {[listing],[]} == Realtor.query_listings("my", listing.user)
+      assert {[listing],[]} == Realtor.query_listings("mine", listing.user)
     end
 
     test "listing query listings with price range only" do
       listing = listing_fixture()
       user = listing.user
       assert {:ok, listing} = Realtor.update_listing(listing, %{price_usd: 200})
-      assert [listing] == Realtor.query_listings("150-$250", user)
+      assert {[listing],[]} == Realtor.query_listings("150-$250", user)
     end
 
     test "listing fulltext search" do
@@ -70,12 +70,12 @@ defmodule Mpnetwork.SearchTest do
       listing2 = listing_fixture(user: user2, user_id: user2.id)
       assert {:ok, listing} = Realtor.update_listing(listing, %{draft: false, for_sale: true, description: "This is stupendous!"})
       assert {:ok, listing2} = Realtor.update_listing(listing2, %{draft: false, for_sale: true, description: "inconceivable"})
-      assert [listing] == Realtor.query_listings("stupendous", user)
-      assert [listing] == Realtor.query_listings("realtortest", user) # by user's name
-      assert [listing] == Realtor.query_listings("stupendous realtortest", user)
-      assert [listing] == Realtor.query_listings("stupendous sale", user) # boolean attribute
-      assert [] == Realtor.query_listings("stupendous not realtortest", user)
-      assert [listing2, listing] == Realtor.query_listings("stupendous | inconceivable", user2)
+      assert {[listing],[]} == Realtor.query_listings("stupendous", user)
+      assert {[listing],[]} == Realtor.query_listings("realtortest", user) # by user's name
+      assert {[listing],[]} == Realtor.query_listings("stupendous realtortest", user)
+      assert {[listing],[]} == Realtor.query_listings("stupendous sale", user) # boolean attribute
+      assert {[],[]} == Realtor.query_listings("stupendous not realtortest", user)
+      assert {[listing2, listing],[]} == Realtor.query_listings("stupendous | inconceivable", user2)
     end
 
     # room, bedroom, bathroom, fireplace, skylight, garage, family, story
@@ -85,50 +85,50 @@ defmodule Mpnetwork.SearchTest do
       bigger_listing = listing_fixture(num_bedrooms: 12)
       user = listing.user
       # tests adding of the relevant fulltext-searchable attribute
-      assert [listing] == Realtor.query_listings("5bed", user)
-      assert [listing] == Realtor.query_listings("5bed|6bed", user)
-      assert [listing] == Realtor.query_listings("5 bed", user)
-      assert [listing] == Realtor.query_listings("5 beds", user)
-      assert [listing] == Realtor.query_listings("5 bedroom", user)
-      assert [listing] == Realtor.query_listings("5 bedrooms", user)
-      assert [listing] == Realtor.query_listings("5-6 beds", user)
-      assert [listing] == Realtor.query_listings("4-5 beds", user)
-      assert [] == Realtor.query_listings("3-4 beds", user)
-      assert [] == Realtor.query_listings("6-8 bedroom", user)
-      assert [] == Realtor.query_listings("3-4 beds or 6-8 bedroom", user)
-      assert [listing] == Realtor.query_listings("4-5 beds & 5-7 beds", user)
-      assert [bigger_listing] == Realtor.query_listings("9-13 bedroom", user)
+      assert {[listing],[]} == Realtor.query_listings("5bed", user)
+      assert {[listing],[]} == Realtor.query_listings("5bed|6bed", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bed", user)
+      assert {[listing],[]} == Realtor.query_listings("5 beds", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bedroom", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bedrooms", user)
+      assert {[listing],[]} == Realtor.query_listings("5-6 beds", user)
+      assert {[listing],[]} == Realtor.query_listings("4-5 beds", user)
+      assert {[],[]} == Realtor.query_listings("3-4 beds", user)
+      assert {[],[]} == Realtor.query_listings("6-8 bedroom", user)
+      assert {[],[]} == Realtor.query_listings("3-4 beds or 6-8 bedroom", user)
+      assert {[listing],[]} == Realtor.query_listings("4-5 beds & 5-7 beds", user)
+      assert {[bigger_listing],[]} == Realtor.query_listings("9-13 bedroom", user)
     end
 
     test "listing room search" do
       listing = listing_fixture(num_rooms: 5, num_bedrooms: 3)
       _nonmatching_listing = listing_fixture(num_rooms: 10, num_bedrooms: 10)
       user = listing.user
-      assert [listing] == Realtor.query_listings("5roo", user)
-      assert [listing] == Realtor.query_listings("5 rooms", user)
-      assert [] == Realtor.query_listings("6-8 room", user)
-      assert [listing] == Realtor.query_listings("3-5 rooms", user)
-      assert [listing] == Realtor.query_listings("3-5 rooms 3-4 bed", user)
-      assert [] == Realtor.query_listings("3-5 rooms 1-2 bedroom", user)
-      assert [listing] == Realtor.query_listings("3-5 room or 1-2 beds", user)
+      assert {[listing],[]} == Realtor.query_listings("5roo", user)
+      assert {[listing],[]} == Realtor.query_listings("5 rooms", user)
+      assert {[],[]} == Realtor.query_listings("6-8 room", user)
+      assert {[listing],[]} == Realtor.query_listings("3-5 rooms", user)
+      assert {[listing],[]} == Realtor.query_listings("3-5 rooms 3-4 bed", user)
+      assert {[],[]} == Realtor.query_listings("3-5 rooms 1-2 bedroom", user)
+      assert {[listing],[]} == Realtor.query_listings("3-5 room or 1-2 beds", user)
     end
 
     test "listing bathroom search" do
       listing = listing_fixture(num_baths: 5, num_bedrooms: 6)
       _nonmatching_listing = listing_fixture(num_baths: 10, num_bedrooms: 10)
       user = listing.user
-      assert [listing] == Realtor.query_listings("5bat", user)
-      assert [listing] == Realtor.query_listings("5 bath", user)
-      assert [listing] == Realtor.query_listings("5 bathroom", user)
-      assert [listing] == Realtor.query_listings("5 bathrooms", user)
+      assert {[listing],[]} == Realtor.query_listings("5bat", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bath", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bathroom", user)
+      assert {[listing],[]} == Realtor.query_listings("5 bathrooms", user)
     end
 
     test "listing fireplace search" do
       listing = listing_fixture(num_fireplaces: 2, num_bedrooms: 4)
       _nonmatching_listing = listing_fixture(num_fireplaces: 10, num_bedrooms: 10)
       user = listing.user
-      assert [listing] == Realtor.query_listings("2 fireplaces", user)
-      assert [listing] == Realtor.query_listings("1-4 fireplace", user)
+      assert {[listing],[]} == Realtor.query_listings("2 fireplaces", user)
+      assert {[listing],[]} == Realtor.query_listings("1-4 fireplace", user)
     end
 
     test "listing expired search" do
@@ -136,15 +136,22 @@ defmodule Mpnetwork.SearchTest do
       user = expired_listing.user
       closed_listing = listing_fixture(listing_status_type: "CL", closed_on: ~D[2017-05-15], closing_price_usd: 1000000)
       _nonmatching_listing = listing_fixture(listing_status_type: "NEW", visible_on: Timex.shift(Timex.today, days: -30), expires_on: Timex.today)
-      assert [closed_listing, expired_listing] == Realtor.query_listings("expired", user)
+      assert {[closed_listing, expired_listing],[]} == Realtor.query_listings("expired", user)
     end
 
     test "my/mine in conjunction with other search filter" do
       listing = listing_fixture(address: "ALL THINGS BELONG TO ME")
       user = listing.user
       _nonmatching_listing = listing_fixture()
-      assert [listing] == Realtor.query_listings("my all things belong to me", user)
-      assert [listing] == Realtor.query_listings("all things belong to mine", user)
+      assert {[listing],[]} == Realtor.query_listings("my all things belong to me", user)
+      assert {[listing],[]} == Realtor.query_listings("all things belong to mine", user)
+    end
+
+    test "date range search on contract (UC) day" do
+      listing = listing_fixture(%{listing_status_type: "UC", uc_on: ~D[2017-12-01]})
+      user = listing.user
+      assert {[listing],[]} == Realtor.query_listings("uc: 11/1/2017-12/1/2017", user)
+      assert {[listing],["Invalid start day in Under Contract date search range: 11/33/2017"]} == Realtor.query_listings("uc: 11/33/2017-12/1/2017", user)
     end
 
   end
