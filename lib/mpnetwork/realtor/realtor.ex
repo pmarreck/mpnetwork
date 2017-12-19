@@ -272,7 +272,7 @@ defmodule Mpnetwork.Realtor do
   @doc """
   Queries listings.
   """
-  def query_listings("", current_user), do: Repo.all(default_search_scope(current_user))
+  def query_listings("", current_user), do: {Repo.all(default_search_scope(current_user)), []}
   def query_listings(query, current_user) do
     {_consumed_query, final_scope, errors} = {query, default_search_scope(current_user), []}
       |> try_id() # should return {"unconsumed_query", new_scope, any_errors} ... down the line

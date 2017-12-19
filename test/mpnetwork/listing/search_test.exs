@@ -154,6 +154,12 @@ defmodule Mpnetwork.SearchTest do
       assert {[listing],["Invalid start day in Under Contract date search range: 11/33/2017"]} == Realtor.query_listings("uc: 11/33/2017-12/1/2017", user)
     end
 
+    test "blank search" do
+      listing = listing_fixture()
+      user = listing.user
+      assert {[listing],[]} == Realtor.query_listings("", user)
+    end
+
   end
 
 end
