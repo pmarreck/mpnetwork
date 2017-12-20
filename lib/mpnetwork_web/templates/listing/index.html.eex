@@ -2,15 +2,15 @@
 
 <h4>Upcoming broker open houses/inspections</h4>
 
-<%= render("_latest_n.html", remarks: :inspection, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :inspection, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false) %>
 
-<h4>The 15 newest listings</h4>
+<h4>Listings added in the past week</h4>
 
-<%= render("_latest_n.html", remarks: :rr, draft: false, conn: @conn, listings: @newest_listings, primaries: @newest_primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :rr, draft: false, conn: @conn, listings: @newest_listings, primaries: @newest_primaries, current_user: @current_user, include_inserted_at: true, include_modified_at: false) %>
 
 <h4>Latest 15 recently-edited listings</h4>
 
-<%= render("_latest_n.html", remarks: :rr, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user) %>
+<%= render("_latest_n.html", remarks: :rr, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: true) %>
 
 <br/>
 <span><%= link "New Listing", to: listing_path(@conn, :new), class: "btn btn-default btn-xl" %></span>

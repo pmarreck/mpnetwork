@@ -11,6 +11,12 @@
     <table class="table listing">
         <thead>
         <tr>
+            <%= if @include_inserted_at do %>
+              <th>Added</th>
+            <% end %>
+            <%= if @include_modified_at do %>
+              <th>Updated</th>
+            <% end %>
             <th>Address/Town</th>
             <%= if @primaries do %>
               <th>Photo</th>
@@ -28,6 +34,12 @@
         <tbody>
     <%= for listing <- @listings do %>
         <tr<%= if @remarks do %> class="include-with-next"<% end %>>
+            <%= if @include_inserted_at do %>
+              <td data-label="Added"><%= listing.inserted_at |> relative_humanized_time_with_hours_and_minutes %> ago</td>
+            <% end %>
+            <%= if @include_modified_at do %>
+              <td data-label="Updated"><%= listing.updated_at |> relative_humanized_time_with_hours_and_minutes %> ago</td>
+            <% end %>
             <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if @draft && listing.draft && listing.user_id == @current_user.id do %> (Your Draft)<% end %>

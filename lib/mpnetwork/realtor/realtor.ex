@@ -231,8 +231,9 @@ defmodule Mpnetwork.Realtor do
     Repo.all(from l in Listing, where: (l.draft == false) and (l.inserted_at != l.updated_at), order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
   end
 
-  def list_most_recently_created_listings(nil, limit \\ 15) do
-    Repo.all(from l in Listing, where: (l.draft == false), order_by: [desc: l.inserted_at], limit: ^limit, preload: [:broker, :user])
+  def list_most_recently_created_listings(nil, limit \\ 30) do
+    day_to_filter_after = Timex.shift(NaiveDateTime.utc_now, days: -7)
+    Repo.all(from l in Listing, where: (l.draft == false) and l.inserted_at >= ^day_to_filter_after, order_by: [desc: l.inserted_at], limit: ^limit, preload: [:broker, :user])
   end
 
   @doc """
