@@ -28,17 +28,19 @@
             <th>Agency</th>
             <th>Rental</th>
             <th class="nowrap">Next Broker OH</th>
-            <th></th>
+            <%= if !Permissions.read_only?(@current_user) do %>
+              <th></th>
+            <% end %>
         </tr>
         </thead>
         <tbody>
     <%= for listing <- @listings do %>
         <tr<%= if @remarks do %> class="include-with-next"<% end %>>
             <%= if @include_inserted_at do %>
-              <td data-label="Added"><%= listing.inserted_at |> relative_humanized_time_with_hours_and_minutes %> ago</td>
+              <td data-label="Added"><%= listing.inserted_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
             <%= if @include_modified_at do %>
-              <td data-label="Updated"><%= listing.updated_at |> relative_humanized_time_with_hours_and_minutes %> ago</td>
+              <td data-label="Updated"><%= listing.updated_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
             <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
@@ -76,12 +78,14 @@
                 <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </td>
-            <td class="text-right">
-            <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
-              <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
-              <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+            <%= if !Permissions.read_only?(@current_user) do %>
+              <td class="text-right">
+                <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
+                  <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
+                  <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+                <% end %>
+              </td>
             <% end %>
-            </td>
         </tr>
         <%= if @remarks do %>
           <tr class="include-with-previous">

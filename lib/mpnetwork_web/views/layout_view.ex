@@ -2,6 +2,7 @@ defmodule MpnetworkWeb.LayoutView do
   use MpnetworkWeb, :view
 
   alias MpnetworkWeb.{BroadcastView, ListingView, AttachmentView, PageView}
+  alias Mpnetwork.Permissions
   @app_name "MPWNetwork"
 
   def page_title(conn) do

@@ -1,7 +1,7 @@
 defmodule Mpnetwork.Permissions do
 
   alias Mpnetwork.User
-  alias Mpnetwork.Realtor.{Listing, Office}
+  alias Mpnetwork.Realtor.{Listing, Office, Broadcast}
 
   def site_admin?(%User{} = user) do
     user.role_id < 2
@@ -31,12 +31,25 @@ defmodule Mpnetwork.Permissions do
     (owner || admin_of_same_office || site_admin?(user))
   end
 
+  def owner_or_admin_of_same_office_or_site_admin?(%User{} = user, %Broadcast{} = resource) do
+    oid = resource.user_id
+    office_id_of_resource = resource.user.office_id
+    owner = user.id == oid
+    resource_belongs_to_users_office = office_id_of_resource == user.office_id
+    admin_of_same_office = resource_belongs_to_users_office && office_admin?(user)
+    (owner || admin_of_same_office || site_admin?(user))
+  end
+
   def owner_or_admin_of_same_office_or_site_admin?(%User{} = user, %User{} = resource) do
     oid = resource.id
     owner = user.id == oid
     resource_belongs_to_users_office = resource.office_id == user.office_id
     admin_of_same_office = resource_belongs_to_users_office && office_admin?(user)
     (owner || admin_of_same_office || site_admin?(user))
+  end
+
+  def read_only?(%User{} = user) do
+    user.role_id > 3
   end
 
 end

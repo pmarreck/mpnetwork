@@ -21,11 +21,10 @@ defmodule MpnetworkWeb.ListingController do
     )
   end
 
+  # Round Robin landing view
   def index(conn, _params) do
-    listings = Realtor.list_latest_listings_excluding_new(nil, 15)
+    listings = Realtor.list_latest_listings_excluding_new(nil, 20)
     primaries = Listing.primary_images_for_listings(listings, AttachmentMetadata)
-    newest_listings = Realtor.list_most_recently_created_listings(nil, 15)
-    newest_primaries = Listing.primary_images_for_listings(newest_listings, AttachmentMetadata)
     # draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
     # draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
     upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(nil, 30)
@@ -33,10 +32,6 @@ defmodule MpnetworkWeb.ListingController do
     render(conn, "index.html",
       listings: listings,
       primaries: primaries,
-      newest_listings: newest_listings,
-      newest_primaries: newest_primaries,
-      # draft_listings: draft_listings,
-      # draft_primaries: draft_primaries,
       upcoming_broker_oh_listings: upcoming_broker_oh_listings,
       upcoming_broker_oh_primaries: upcoming_broker_oh_primaries
     )
@@ -48,32 +43,40 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def new(conn, _params) do
-    changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{
-      user_id: current_user(conn).id,
-      broker_id: conn.assigns.current_office && conn.assigns.current_office.id
-    })
-    render(conn, "new.html",
-      changeset: changeset,
-      offices: offices(),
-      users: users(conn.assigns.current_office, conn.assigns.current_user)
-    )
+    if !Permissions.read_only?(current_user(conn)) do
+      changeset = Realtor.change_listing(%Mpnetwork.Realtor.Listing{
+        user_id: current_user(conn).id,
+        broker_id: conn.assigns.current_office && conn.assigns.current_office.id
+      })
+      render(conn, "new.html",
+        changeset: changeset,
+        offices: offices(),
+        users: users(conn.assigns.current_office, conn.assigns.current_user)
+      )
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   def create(conn, %{"listing" => listing_params}) do
-    # inject current_user.id and current_office.id (as broker_id)
-    listing_params = Enum.into(%{"broker_id" => conn.assigns.current_office.id}, listing_params)
-    listing_params = filter_empty_ext_urls(listing_params)
-    case Realtor.create_listing(listing_params) do
-      {:ok, listing} ->
-        conn
-        |> put_flash(:info, "Listing created successfully.")
-        |> redirect(to: listing_path(conn, :show, listing))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html",
-          changeset: changeset,
-          offices: offices(),
-          users: users(conn.assigns.current_office, conn.assigns.current_user)
-        )
+    if !Permissions.read_only?(current_user(conn)) do
+      # inject current_user.id and current_office.id (as broker_id)
+      listing_params = Enum.into(%{"broker_id" => conn.assigns.current_office.id}, listing_params)
+      listing_params = filter_empty_ext_urls(listing_params)
+      case Realtor.create_listing(listing_params) do
+        {:ok, listing} ->
+          conn
+          |> put_flash(:info, "Listing created successfully.")
+          |> redirect(to: listing_path(conn, :show, listing))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html",
+            changeset: changeset,
+            offices: offices(),
+            users: users(conn.assigns.current_office, conn.assigns.current_user)
+          )
+      end
+    else
+      send_resp(conn, 405, "Not allowed")
     end
   end
 
@@ -93,18 +96,22 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def edit(conn, %{"id" => id}) do
-    listing = Realtor.get_listing!(id)
-    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
-      attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
-      changeset = Realtor.change_listing(listing)
-      render(conn, "edit.html",
-        listing: listing,
-        attachments: attachments,
-        changeset: changeset,
-        broker: listing.broker,
-        offices: offices(),
-        users: users(conn.assigns.current_office, conn.assigns.current_user)
-      )
+    if !Permissions.read_only?(current_user(conn)) do
+      listing = Realtor.get_listing!(id)
+      if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
+        attachments = Listing.list_attachments(listing.id, AttachmentMetadata)
+        changeset = Realtor.change_listing(listing)
+        render(conn, "edit.html",
+          listing: listing,
+          attachments: attachments,
+          changeset: changeset,
+          broker: listing.broker,
+          offices: offices(),
+          users: users(conn.assigns.current_office, conn.assigns.current_user)
+        )
+      else
+        send_resp(conn, 405, "Not allowed")
+      end
     else
       send_resp(conn, 405, "Not allowed")
     end
@@ -127,23 +134,27 @@ defmodule MpnetworkWeb.ListingController do
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
 # IO.inspect listing_params, limit: :infinity
-    listing = Realtor.get_listing!(id)
-    listing_params = filter_empty_ext_urls(listing_params)
-    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
-      case Realtor.update_listing(listing, listing_params) do
-        {:ok, listing} ->
-          conn
-          |> put_flash(:info, "Listing updated successfully.")
-          |> redirect(to: listing_path(conn, :show, listing))
-        {:error, %Ecto.Changeset{} = changeset} ->
-          attachments = Listing.list_attachments(id, AttachmentMetadata)
-          render(conn, "edit.html",
-            listing: listing,
-            attachments: attachments,
-            changeset: changeset,
-            offices: offices(),
-            users: users(conn.assigns.current_office, conn.assigns.current_user)
-          )
+    if !Permissions.read_only?(current_user(conn)) do
+      listing = Realtor.get_listing!(id)
+      listing_params = filter_empty_ext_urls(listing_params)
+      if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
+        case Realtor.update_listing(listing, listing_params) do
+          {:ok, listing} ->
+            conn
+            |> put_flash(:info, "Listing updated successfully.")
+            |> redirect(to: listing_path(conn, :show, listing))
+          {:error, %Ecto.Changeset{} = changeset} ->
+            attachments = Listing.list_attachments(id, AttachmentMetadata)
+            render(conn, "edit.html",
+              listing: listing,
+              attachments: attachments,
+              changeset: changeset,
+              offices: offices(),
+              users: users(conn.assigns.current_office, conn.assigns.current_user)
+            )
+        end
+      else
+        send_resp(conn, 405, "Not allowed")
       end
     else
       send_resp(conn, 405, "Not allowed")
@@ -151,13 +162,17 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   def delete(conn, %{"id" => id}) do
-    listing = Realtor.get_listing!(id)
-    if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
-      {:ok, _listing} = Realtor.delete_listing(listing)
+    if !Permissions.read_only?(current_user(conn)) do
+      listing = Realtor.get_listing!(id)
+      if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), listing) do
+        {:ok, _listing} = Realtor.delete_listing(listing)
 
-      conn
-      |> put_flash(:info, "Listing deleted successfully.")
-      |> redirect(to: listing_path(conn, :index))
+        conn
+        |> put_flash(:info, "Listing deleted successfully.")
+        |> redirect(to: listing_path(conn, :index))
+      else
+        send_resp(conn, 405, "Not allowed")
+      end
     else
       send_resp(conn, 405, "Not allowed")
     end

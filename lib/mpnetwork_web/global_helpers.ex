@@ -62,15 +62,17 @@ defmodule MpnetworkWeb.GlobalHelpers do
   end
 
   # this is hairy but gets the job done
-  def relative_humanized_time_with_hours_and_minutes(%NaiveDateTime{} = naive_datetime) do
-    DateTime.utc_now()
-    |> Timex.diff(naive_datetime, :duration)
-    |> Timex.Duration.to_minutes()
-    |> Float.floor()
-    |> Timex.Duration.from_minutes()
-    |> Timex.format_duration(:humanized)
-    # Regex.replace(~r/(?:ays?|ours?|inutes?)/, fmt, "")
-  end
+  # ...aaaaand commented out since they changed the requirements sigh
+  # Left in since it was nice and took a little work.
+  # def relative_humanized_time_with_hours_and_minutes(%NaiveDateTime{} = naive_datetime) do
+  #   DateTime.utc_now()
+  #   |> Timex.diff(naive_datetime, :duration)
+  #   |> Timex.Duration.to_minutes()
+  #   |> Float.floor()
+  #   |> Timex.Duration.from_minutes()
+  #   |> Timex.format_duration(:humanized)
+  #   # Regex.replace(~r/(?:ays?|ours?|inutes?)/, fmt, "")
+  # end
 
   defp convert_ecto_datetime_to_utc_datetime(%Ecto.DateTime{} = edt) do
     edt

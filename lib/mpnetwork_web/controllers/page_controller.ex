@@ -3,21 +3,30 @@ defmodule MpnetworkWeb.PageController do
 
   alias Mpnetwork.{Realtor, Listing, Permissions}
 
+  # Primary landing page view
   def index(conn, _params) do
     u = conn.assigns.current_user
     broadcasts = Realtor.list_latest_broadcasts(4) |> Enum.reverse
-    listings = Realtor.list_latest_listings(nil, 20)
-    draft_listings = if Permissions.office_admin_or_site_admin?(u) do
-      Realtor.list_latest_draft_listings(conn.assigns.current_office)
+    newest_listings = Realtor.list_most_recently_created_listings(nil, 15)
+    draft_listings = if !Permissions.read_only?(u) do
+      if Permissions.office_admin_or_site_admin?(u) do
+        Realtor.list_latest_draft_listings(conn.assigns.current_office)
+      else
+        Realtor.list_latest_draft_listings(u)
+      end
     else
-      Realtor.list_latest_draft_listings(u)
+      nil
     end
-    primary_images = Listing.primary_images_for_listings(listings)
-    draft_primaries = Listing.primary_images_for_listings(draft_listings)
+    newest_primaries = Listing.primary_images_for_listings(newest_listings)
+    draft_primaries = if draft_listings do
+      Listing.primary_images_for_listings(draft_listings)
+    else
+      nil
+    end
     render(conn, "index.html",
       broadcasts: broadcasts,
-      listings: listings,
-      primaries: primary_images,
+      newest_listings: newest_listings,
+      newest_primaries: newest_primaries,
       draft_listings: draft_listings,
       draft_primaries: draft_primaries
     )
