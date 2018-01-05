@@ -116,6 +116,14 @@ defmodule MpnetworkWeb.GlobalHelpers do
   def dollars(val) when is_number(val), do: Number.Currency.number_to_currency(val, precision: 0)
   def dollars(_), do: ""
 
+  # convert basis points to percent and fraction
+  @frac_portion_to_frac %{0 => "", 25 => "¼", 50 => "½", 75 => "¾"}
+  def basis_points_to_fractional_percent(points) when is_integer(points) do
+    frac_portion = rem(points, 100)
+    whole_portion = div(points, 100)
+    "#{if whole_portion == 0, do: "", else: whole_portion}#{@frac_portion_to_frac[frac_portion]}%"
+  end
+
   @content_type_to_icon_class_map %{
     # PDF
     "application/pdf" => "fa fa-fw fa-file-pdf-o",

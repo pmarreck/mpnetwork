@@ -1031,19 +1031,19 @@
             <!-- 165 -->
             <div class="col-xs-4 seller_agency_comp">
               <strong>Seller agency comp:</strong>
-              <%= @listing.seller_agency_comp && "#{@listing.seller_agency_comp}%" %>
+              <%= @listing.seller_agency_comp && basis_points_to_fractional_percent(@listing.seller_agency_comp) %>
             </div>
 
             <!-- 166 -->
             <div class="col-xs-4 buyer_agency_comp">
               <strong>Buyer agency comp:</strong>
-              <%= @listing.buyer_agency_comp && "#{@listing.buyer_agency_comp}%" %>
+              <%= @listing.buyer_agency_comp && basis_points_to_fractional_percent(@listing.buyer_agency_comp) %>
             </div>
 
             <!-- 167 -->
             <div class="col-xs-4 broker_agency_comp">
               <strong>Broker agency comp:</strong>
-              <%= @listing.broker_agency_comp && "#{@listing.broker_agency_comp}%" %>
+              <%= @listing.broker_agency_comp && basis_points_to_fractional_percent(@listing.broker_agency_comp) %>
             </div>
           </div>
 

@@ -350,9 +350,9 @@
           <div class="report-field label-visible"><span class="report-label ">Broker/Agent Owned:</span><span class="report-value"><%= yn @listing.broker_agent_owned %></span></div>
         </div>
         <div class="group orientation-vertical  last-child">
-          <div class="report-field label-visible"><span class="report-label ">Seller Agency Comp:</span><span class="report-value"><%= @listing.seller_agency_comp && "#{@listing.seller_agency_comp}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Buyer Agency Comp:</span><span class="report-value"><%= @listing.buyer_agency_comp && "#{@listing.buyer_agency_comp}%" %></span></div>
-          <div class="report-field label-visible"><span class="report-label ">Broker Agency Comp:</span><span class="report-value"><%= @listing.broker_agency_comp && "#{@listing.broker_agency_comp}%" %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Seller Agency Comp:</span><span class="report-value"><%= @listing.seller_agency_comp && basis_points_to_fractional_percent(@listing.seller_agency_comp) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Buyer Agency Comp:</span><span class="report-value"><%= @listing.buyer_agency_comp && basis_points_to_fractional_percent(@listing.buyer_agency_comp) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Broker Agency Comp:</span><span class="report-value"><%= @listing.broker_agency_comp && basis_points_to_fractional_percent(@listing.broker_agency_comp) %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Listing Broker Comp (For Rental):</span><span class="report-value"><%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}%" %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Buyer Exclusions:</span><span class="report-value"><%= yn @listing.buyer_exclusions %></span></div>
           <div class="report-literal report-field "><i>Offers of compensation are for MPW network participants only.</i></div>

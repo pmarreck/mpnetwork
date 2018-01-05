@@ -1647,15 +1647,14 @@
             <%= error_tag f, :selling_broker_name %>
           </div>
 
+<% comp_dropdown_vals = for(o <- 0..7, {f,i} <- [{"",0},{"¼",25},{"½",50},{"¾",75}], do: {"#{if o==0, do: "", else: o}" <> f, (o*100) + i}) %>
+
           <div class="row form-group">
             <!-- 165 -->
             <div class="col-xs-4<%= if f.errors[:seller_agency_comp], do: " has-error" %>">
               <%= label f, :seller_agency_comp, class: "control-label" %>
               <div class="input-group">
-                <%= number_input f, :seller_agency_comp, class: "form-control" %>
-                <div class="input-group-addon">
-                  &#37;
-                </div>
+                <%= select f, :seller_agency_comp, comp_dropdown_vals %>&nbsp;%
               </div>
               <%= error_tag f, :seller_agency_comp %>
             </div>
@@ -1664,10 +1663,7 @@
             <div class="col-xs-4<%= if f.errors[:buyer_agency_comp], do: " has-error" %>">
               <%= label f, :buyer_agency_comp, class: "control-label" %>
               <div class="input-group">
-                <%= number_input f, :buyer_agency_comp, class: "form-control" %>
-                <div class="input-group-addon">
-                  &#37;
-                </div>
+                <%= select f, :buyer_agency_comp, comp_dropdown_vals %>&nbsp;%
               </div>
               <%= error_tag f, :buyer_agency_comp %>
             </div>
@@ -1676,10 +1672,7 @@
             <div class="col-xs-4<%= if f.errors[:broker_agency_comp], do: " has-error" %>">
               <%= label f, :broker_agency_comp, class: "control-label" %>
               <div class="input-group">
-                <%= number_input f, :broker_agency_comp, class: "form-control" %>
-                <div class="input-group-addon">
-                  &#37;
-                </div>
+                <%= select f, :broker_agency_comp, comp_dropdown_vals %>&nbsp;%
               </div>
               <%= error_tag f, :broker_agency_comp %>
             </div>
