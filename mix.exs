@@ -4,7 +4,7 @@ defmodule Mpnetwork.Mixfile do
   def project do
     [app: :mpnetwork,
      version: String.trim(File.read!("VERSION")),
-     elixir: "~> 1.5.1",
+     elixir: "~> 1.6",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -46,7 +46,8 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.1.2"},
-      {:coherence, "~> 0.5"},
+      # The Coherence guy has been slow about tagging this 0.5.1, so using git SHA for now
+      {:coherence, git: "https://github.com/smpallen99/coherence.git", ref: "1f58ba5"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.1"},
       {:number, "~> 0.5"},

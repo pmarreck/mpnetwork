@@ -34,6 +34,7 @@
         </tr>
         </thead>
         <tbody>
+    <% colspan = 9 + (if @primaries, do: 1, else: 0) + (if !Permissions.read_only?(@current_user), do: 1, else: 0) %>
     <%= for listing <- @listings do %>
         <tr<%= if @remarks do %> class="include-with-next"<% end %>>
             <%= if @include_inserted_at do %>
@@ -89,7 +90,7 @@
         </tr>
         <%= if @remarks do %>
           <tr class="include-with-previous">
-                <td colspan="<%= if @primaries, do: "10", else: "9" %>" data-label="<%= remarks_label %>"><%= raw HtmlSanitizeEx.html5 (case @remarks do
+                <td colspan="<%= colspan %>" data-label="<%= remarks_label %>"><%= raw HtmlSanitizeEx.html5 (case @remarks do
                           :rr -> listing.round_robin_remarks
                           :inspection -> listing.next_broker_oh_note
                           :broker -> listing.realtor_remarks

@@ -31,10 +31,10 @@ defmodule MpnetworkWeb.Coherence do
       import Plug.Conn
       import MpnetworkWeb.Router.Helpers
       import MpnetworkWeb.Gettext
-      import Coherence.ControllerHelpers
+      import Coherence.Controller
 
       alias Coherence.Config
-      alias Coherence.ControllerHelpers, as: Helpers
+      alias Coherence.Controller
 
       require Redirects
     end

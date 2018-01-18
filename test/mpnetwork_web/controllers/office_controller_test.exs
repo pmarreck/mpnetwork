@@ -7,7 +7,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   @invalid_attrs %{address: nil, city: nil, name: nil, phone: nil, state: nil, zip: nil}
 
   def valid_user_attrs do
-    t = Ecto.DateTime.utc
+    t = NaiveDateTime.utc_now
     o = fixture(:office)
     %{office_id: o.id, email: "test@example#{:rand.uniform(9999999999999)}.com", username: "testuser#{:rand.uniform(9999999999999)}", password: "unit test all the things!", password_confirmation: "unit test all the things!", role_id: 2, last_sign_in_at: t, current_sign_in_at: t}
   end

@@ -10,7 +10,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
   end
 
   def valid_user_attrs(attrs \\ %{}) do
-    t = Ecto.DateTime.utc
+    t = NaiveDateTime.utc_now
     email = "test#{random_uniquifying_string()}@example.com"
     attrs |> Enum.into(%{
       name: "Realtortest User",

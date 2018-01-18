@@ -118,6 +118,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   # convert basis points to percent and fraction
   @frac_portion_to_frac %{0 => "", 25 => "¼", 50 => "½", 75 => "¾"}
+  def basis_points_to_fractional_percent(0), do: ""
   def basis_points_to_fractional_percent(points) when is_integer(points) do
     frac_portion = rem(points, 100)
     whole_portion = div(points, 100)
