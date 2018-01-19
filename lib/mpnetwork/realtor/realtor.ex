@@ -236,6 +236,12 @@ defmodule Mpnetwork.Realtor do
     Repo.all(from l in Listing, where: (l.draft == false) and l.inserted_at >= ^day_to_filter_after, order_by: [desc: l.inserted_at], limit: ^limit, preload: [:broker, :user])
   end
 
+  def list_most_recently_visible_listings(nil, limit \\ 30) do
+    today = Date.utc_today
+    day_to_filter_after = NaiveDateTime.to_date(Timex.shift(NaiveDateTime.utc_now, days: -7))
+    Repo.all(from l in Listing, where: (l.draft == false) and l.visible_on >= ^day_to_filter_after and l.visible_on <= ^today, order_by: [desc: l.visible_on], limit: ^limit, preload: [:broker, :user])
+  end
+
   @doc """
   Returns the next N listings with upcoming broker open houses.
 

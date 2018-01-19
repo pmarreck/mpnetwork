@@ -7,7 +7,7 @@ defmodule MpnetworkWeb.PageController do
   def index(conn, _params) do
     u = conn.assigns.current_user
     broadcasts = Realtor.list_latest_broadcasts(4) |> Enum.reverse
-    newest_listings = Realtor.list_most_recently_created_listings(nil, 15)
+    newest_listings = Realtor.list_most_recently_visible_listings(nil, 15)
     draft_listings = if !Permissions.read_only?(u) do
       if Permissions.office_admin_or_site_admin?(u) do
         Realtor.list_latest_draft_listings(conn.assigns.current_office)

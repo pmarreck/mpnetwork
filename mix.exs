@@ -44,7 +44,7 @@ defmodule Mpnetwork.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.1", only: :dev},
-      {:gettext, "~> 0.11"},
+      {:gettext, "~> 0.13"},
       {:cowboy, "~> 1.1.2"},
       # The Coherence guy has been slow about tagging this 0.5.1, so using git SHA for now
       {:coherence, git: "https://github.com/smpallen99/coherence.git", ref: "1f58ba5"},
