@@ -3,7 +3,7 @@ script:
 - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
 - mix test && git push staging HEAD:master && git push production HEAD:master
 language: elixir
-elixir: 1.6
+elixir: 1.6.0
 otp_release: 20.1
 services:
 - postgresql
