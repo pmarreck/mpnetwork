@@ -16,9 +16,9 @@ defmodule Mpnetwork.EnumMaps do
   def map_class_type_ext_to_int(k) when is_binary(k), do: @class_types_ext_to_int_map[k]
 
   # Listing Status Types
-  @listing_status_types_ext ["New", "For Sale", "Extended", "Under Contract", "Closed (Sold)", "Price Change", "Withdrawn", "Temporarily Off Market"]
+  @listing_status_types_ext ["New", "For Sale", "Extended", "Under Contract", "Closed (Sold)", "Price Change", "Withdrawn", "Temporarily Off Market", "Expired"]
   @listing_status_types_ext_alpha_only Enum.map(@listing_status_types_ext, fn w -> Regex.replace(~r/[^a-zA-Z ]+/, w, "") end)
-  @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM]a
+  @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM EXP]a
   @listing_status_types_int_bin Enum.map(@listing_status_types_int, fn atom -> Atom.to_string(atom) end)
   def listing_status_types_int, do: @listing_status_types_int
   def listing_status_types_int_bin, do: @listing_status_types_int_bin
