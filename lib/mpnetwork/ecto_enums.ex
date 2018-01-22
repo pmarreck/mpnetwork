@@ -192,6 +192,7 @@ defmodule Mpnetwork.EnumMaps do
   def green_cert_types_int, do: @green_cert_types_int
   @green_cert_type_opts Enum.zip([" " | @green_cert_types_ext], [nil | @green_cert_types_int])
   def green_cert_type_select_opts, do: @green_cert_type_opts
+  def green_cert_types, do: Enum.zip(@green_cert_types_int, @green_cert_types_ext)
 
   @green_cert_types_int_to_ext_map Enum.zip(@green_cert_types_int, @green_cert_types_ext) |> Map.new
   @green_cert_types_ext_to_int_map Enum.zip(@green_cert_types_ext, @green_cert_types_int) |> Map.new
