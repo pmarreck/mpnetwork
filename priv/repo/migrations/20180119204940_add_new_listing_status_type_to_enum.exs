@@ -3,6 +3,14 @@ defmodule Mpnetwork.Repo.Migrations.AddNewListingStatusTypeToEnum do
   @disable_ddl_transaction true # altering types cannot be done in a transaction
 
   def up do
+    # for idempotency...
+    execute """
+      DELETE FROM pg_enum
+      WHERE enumlabel = 'EXP'
+      AND enumtypid = (
+        SELECT oid FROM pg_type WHERE typname = 'listing_status_type'
+      )
+    """
     execute """
       ALTER TYPE listing_status_type ADD VALUE 'EXP';
     """
