@@ -162,7 +162,7 @@ defmodule Mpnetwork.Repo.Migrations.AddNewListingStatusTypeToEnum do
 
   # Drop a single enum value at a time, citing what value to convert any row using that value to.
   def drop_enum_value_and_modify_column(enum_type_name, enum_type_values, enum_type_deleted_value, value_to_change_removed_values_to, table_name, column_name)
-  when is_list(enum_type_values) and is_binary(enum_type_name) and is_binary(enum_type_deleted_value) and is_binary(table_name) and is_binary(column_name) do
+    when is_list(enum_type_values) and is_binary(enum_type_name) and is_binary(enum_type_deleted_value) and is_binary(table_name) and is_binary(column_name) do
     [
       "DROP TRIGGER IF EXISTS listing_search_update ON listings;",
       "DROP TYPE IF EXISTS #{enum_type_name}_temp;",

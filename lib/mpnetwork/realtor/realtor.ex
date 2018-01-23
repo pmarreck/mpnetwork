@@ -242,6 +242,23 @@ defmodule Mpnetwork.Realtor do
     Repo.all(from l in Listing, where: (l.draft == false) and l.visible_on >= ^day_to_filter_after and l.visible_on <= ^today, order_by: [desc: l.visible_on], limit: ^limit, preload: [:broker, :user])
   end
 
+  # Updates listings with expires_on in the local timezone past to be listing_status_type "EXP"
+  # but only if it was any of the following listing_status_type's to begin with:
+  # "NEW", "FS", "EXT", "PC", "TOM"
+  def update_expired_listings(delay \\ 1000) do
+    :timer.sleep(delay) # Just to make sure it's definitely after midnight if this job runs at exactly midnight EST
+    local_date_now = Timex.now("America/New_York") |> Timex.to_date
+    from(
+      l in Listing,
+      where: l.expires_on < ^local_date_now,
+      where: l.listing_status_type in ~w[NEW FS EXT PC TOM],
+      update: [set: [listing_status_type: "EXP"]]
+    )
+    |> Repo.update_all([])
+    # NOTE: Does NOT update updated_at (which is good in this case)
+    # but DOES update the search index via trigger (which is also good in this case)
+  end
+
   @doc """
   Returns the next N listings with upcoming broker open houses.
 

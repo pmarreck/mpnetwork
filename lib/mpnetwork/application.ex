@@ -4,7 +4,7 @@ defmodule Mpnetwork.Application do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec
+    import Supervisor.Spec, warn: false
 
     # Define workers and child supervisors to be supervised
     children = [
@@ -21,6 +21,7 @@ defmodule Mpnetwork.Application do
           reclaim: 0.1
         }]
       ]),
+      worker(Mpnetwork.Scheduler, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

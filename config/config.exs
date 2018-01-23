@@ -24,6 +24,15 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
            adapter: Phoenix.PubSub.PG2],
   instrumenters: [PryIn.Instrumenter]
 
+# Configures the job scheduler via Quantum
+config :mpnetwork, Mpnetwork.Scheduler,
+  overlap: false,
+  timezone: "America/New_York", # :utc ?
+  jobs: [
+    # Runs every midnight:
+    {"@daily", {Mpnetwork.Jobs, :set_expired_listings_to_exp_status, []}}
+  ]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

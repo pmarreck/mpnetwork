@@ -68,6 +68,7 @@ defmodule Mpnetwork.Mixfile do
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:pryin, "~> 1.0"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:quantum, ">= 2.2.1"},
     ]
   end
 

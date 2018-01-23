@@ -217,6 +217,14 @@ defmodule Mpnetwork.RealtorTest do
       assert %Ecto.Changeset{} = Realtor.change_listing(listing)
     end
 
+    test "update_expired_listings/0 sets listing with expires_on in the past to EXP status" do
+      listing = listing_fixture()
+      assert listing.listing_status_type == :FS
+      Realtor.update_expired_listings(0)
+      listing = Realtor.get_listing!(listing.id)
+      assert listing.listing_status_type == :EXP
+    end
+
   end
 
   describe "offices" do
