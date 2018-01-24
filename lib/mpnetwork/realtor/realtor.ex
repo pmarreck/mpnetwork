@@ -429,7 +429,7 @@ defmodule Mpnetwork.Realtor do
   # If you search on a capitalized listing status, replace with specifically-indexed listing status word "lst_<listing_status>"
   @listing_status_type_regex ~r/\b(NEW|FS|EXT|UC|CL|PC|WR|TOM|EXP)\b/
   defp try_listing_status_type({query, scope, errors}) do
-    query = Regex.replace(@listing_status_type_regex, query, "lst_\\1")
+    query = Regex.replace(@listing_status_type_regex, query, "lst/\\1")
     {query, scope, errors}
   end
 

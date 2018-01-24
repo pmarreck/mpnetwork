@@ -28,7 +28,7 @@ defmodule Mpnetwork.EnumMaps do
   # perhaps instead attribute "New" if listing is under a month old?
   def listing_status_types, do: Enum.zip(@listing_status_types_int, @listing_status_types_ext)
   # fulltext search should key off the code, not the full english text IMHO
-  def listing_status_types_for_priority_search, do: Enum.zip(@listing_status_types_int, Enum.map(@listing_status_types_int, fn w -> "#{w} lst_#{w}" end))
+  def listing_status_types_for_priority_search, do: Enum.zip(@listing_status_types_int, Enum.map(@listing_status_types_int, fn w -> "#{w} lst/#{w}" end))
   def listing_status_types_for_search, do: Enum.zip(@listing_status_types_int, @listing_status_types_ext_alpha_only)
 
 
