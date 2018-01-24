@@ -386,12 +386,6 @@ defmodule Mpnetwork.Repo.Migrations.ModifyListingSearchForExpiredListings do
     end)
   end
 
-  # adds "expired" as an indexed word on any listing with listing_status_type of CL or with expired_on date in the past
-  # note that this is not an automatically-acquired search attribute; the listing has to be updated to reflect this
-  defp assemble_expired_search_vector(existing_fields) do
-    existing_fields ++ ["setweight(to_tsvector('english', (case when new.listing_status_type='CL' then 'expired' when new.listing_status_type='EXP' then 'expired' when new.expires_on < (clock_timestamp() at time zone 'utc')::date then 'expired' else '' end)), 'A')"]
-  end
-
   # for enums, special-casing listing status type to rank use of the internal representation higher
   # (so searching on "FS" or "NEW" will rank for-sale or new listing statuses higher in search results)
   defp assemble_higher_ranked_enum_search_vector(existing_fields, enum_fields) do
@@ -431,7 +425,6 @@ defmodule Mpnetwork.Repo.Migrations.ModifyListingSearchForExpiredListings do
     |> assemble_enum_search_vector(@enum_text_searchable_fields)
     |> assemble_higher_ranked_enum_search_vector(@higher_ranked_enum_searchable_fields)
     |> assemble_ordinal_search_vector(@ordinal_number_searchable_fields)
-    |> assemble_expired_search_vector()
     |> Enum.join(" || ")
     |> String.replace_suffix("", ";")
   end

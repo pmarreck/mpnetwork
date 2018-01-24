@@ -304,6 +304,7 @@ defmodule Mpnetwork.Realtor do
       |> try_mine(current_user)
       |> try_pricerange()
       |> try_daterange()
+      |> try_listing_status_type()
       |> search_all_fields_using_postgres_fulltext_search()
     listings = Repo.all(final_scope)
     {listings, errors}
@@ -422,6 +423,13 @@ defmodule Mpnetwork.Realtor do
       [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :CL, @daterange_cl_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
       _ -> {query, scope, errors}
     end
+    {query, scope, errors}
+  end
+
+  # If you search on a capitalized listing status, replace with specifically-indexed listing status word "lst_<listing_status>"
+  @listing_status_type_regex ~r/\b(NEW|FS|EXT|UC|CL|PC|WR|TOM|EXP)\b/
+  defp try_listing_status_type({query, scope, errors}) do
+    query = Regex.replace(@listing_status_type_regex, query, "lst_\\1")
     {query, scope, errors}
   end
 

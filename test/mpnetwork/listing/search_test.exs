@@ -132,11 +132,11 @@ defmodule Mpnetwork.SearchTest do
     end
 
     test "listing expired search" do
-      expired_listing = listing_fixture(visible_on: ~D[2017-04-17], expires_on: ~D[2017-05-17])
+      expired_listing = listing_fixture(visible_on: ~D[2017-04-17], expires_on: ~D[2017-05-17], listing_status_type: "EXP")
       user = expired_listing.user
-      closed_listing = listing_fixture(listing_status_type: "CL", closed_on: ~D[2017-05-15], closing_price_usd: 1000000)
+      _closed_listing = listing_fixture(listing_status_type: "CL", closed_on: ~D[2017-05-15], closing_price_usd: 1000000)
       _nonmatching_listing = listing_fixture(listing_status_type: "NEW", visible_on: Timex.shift(Timex.today, days: -30), expires_on: Timex.today)
-      assert {[closed_listing, expired_listing],[]} == Realtor.query_listings("expired", user)
+      assert {[expired_listing],[]} == Realtor.query_listings("expired", user)
     end
 
     test "my/mine in conjunction with other search filter" do
