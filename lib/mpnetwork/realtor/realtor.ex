@@ -296,7 +296,9 @@ defmodule Mpnetwork.Realtor do
   @doc """
   Queries listings.
   """
-  def query_listings("", current_user), do: {Repo.all(default_search_scope(current_user)), []}
+  def query_listings("", current_user) do
+    {Repo.all(default_search_scope(current_user) |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC]))), []}
+  end
   def query_listings(query, current_user) do
     {_consumed_query, final_scope, errors} = {query, default_search_scope(current_user), []}
       |> try_id() # should return {"unconsumed_query", new_scope, any_errors} ... down the line
@@ -440,20 +442,30 @@ defmodule Mpnetwork.Realtor do
     {query, scope, errors}
   end
 
-  # If you search on a capitalized ACTIVE or INACTIVE, replace with specific list of statuses to search, for ease
-  @active_regex ~r/\bACTIVE\b/
-  @inactive_regex ~r/\bINACTIVE\b/
-  defp try_active_inactive({query, scope, errors}) do
-    query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
-    query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
-    {query, scope, errors}
-  end
-
   # If you search on a capitalized listing status, replace with specifically-indexed listing status word "lst_<listing_status>"
   @listing_status_type_regex ~r/\b(NEW|FS|EXT|UC|CL|PC|WR|TOM|EXP)\b/
   defp try_listing_status_type({query, scope, errors}) do
     query = Regex.replace(@listing_status_type_regex, query, "lst/\\1")
     {query, scope, errors}
+  end
+
+  # Default to active listing statuses unless the word "inactive" or "unavailable" is used, for ease
+  # OR if a specific listing status type is used at all, do not add the default active scope
+  @active_regex ~r/\b(?:active|available)\b/i
+  @inactive_regex ~r/\b(?:inactive|unavailable)\b/i
+  @all_regex ~r/\ball\b/i
+  @expired_regex ~r/\bexpired\b/i
+  defp try_active_inactive({query, scope, errors}) do
+    if Regex.match?(@all_regex, query) or Regex.match?(@listing_status_type_regex, query) or Regex.match?(@expired_regex, query) do
+      # just pass it through
+      {Regex.replace(@all_regex, query, ""), scope, errors}
+    else
+      if Regex.match?(@inactive_regex, query) do
+        {Regex.replace(@inactive_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[CL WR TOM EXP])), errors}
+      else
+        {Regex.replace(@active_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC])), errors}
+      end
+    end
   end
 
   defp _filter_nonnumeric(num) when is_binary(num) do
@@ -540,6 +552,7 @@ defmodule Mpnetwork.Realtor do
           to_string(num) <> abbrev
         end
       }, # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
+      {~r/\s*\,\s*/, "|"}, # normalizes "W,X,Y , Z" to "W|X|Y|Z"
       {~r/\s+and\s+/i, "&"}, # normalizes "X and Y" or "X AND Y" to "X&Y"
       {~r/\s+or\s+/i, "|"}, # normalizes "X or Y" or "X OR Y" to "X|Y"
       {~r/\s*&not\b/i, "&!"}, # normalizes  " &not" to "&!"

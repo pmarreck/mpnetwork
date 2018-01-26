@@ -147,11 +147,13 @@ defmodule Mpnetwork.SearchTest do
       assert {[listing],[]} == Realtor.query_listings("all things belong to mine", user)
     end
 
-    test "date range search on contract (UC) day" do
+    test "date range search on under-contract (UC) day" do
       listing = listing_fixture(%{listing_status_type: "UC", uc_on: ~D[2017-12-01]})
       user = listing.user
-      assert {[listing],[]} == Realtor.query_listings("uc: 11/1/2017-12/1/2017", user)
-      assert {[listing],["Invalid start day in Under Contract date search range: 11/33/2017"]} == Realtor.query_listings("uc: 11/33/2017-12/1/2017", user)
+      # Note that you have to specify "UC" in front here because the default search scope is active listings only,
+      # and adding any listing status turns that off.
+      assert {[listing],[]} == Realtor.query_listings("UC uc: 11/1/2017-12/1/2017", user)
+      assert {[listing],["Invalid start day in Under Contract date search range: 11/33/2017"]} == Realtor.query_listings("UC uc: 11/33/2017-12/1/2017", user)
     end
 
     test "blank search" do
