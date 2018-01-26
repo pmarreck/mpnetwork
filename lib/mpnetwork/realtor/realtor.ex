@@ -304,6 +304,7 @@ defmodule Mpnetwork.Realtor do
       |> try_mine(current_user)
       |> try_pricerange()
       |> try_daterange()
+      |> try_active_inactive()
       |> try_listing_status_type()
       |> search_all_fields_using_postgres_fulltext_search()
     listings = Repo.all(final_scope)
@@ -311,11 +312,15 @@ defmodule Mpnetwork.Realtor do
   end
 
   defp try_id({query, scope, errors}) do
-    id = _try_integer(query)
-    if id do
-      {"", scope |> where([l], l.id == ^id), errors}
-    else
+    if _try_zipcode({query, scope, errors}) do
       {query, scope, errors}
+    else
+      id = _try_integer(query)
+      if id do
+        {"", scope |> where([l], l.id == ^id), errors}
+      else
+        {query, scope, errors}
+      end
     end
   end
 
@@ -329,6 +334,15 @@ defmodule Mpnetwork.Realtor do
   defp _try_int_result(_) do
     nil
   end
+
+  # just matching on Long Island zipcodes for now
+  # one day these may collide with searching by ID#
+  # hashtag ProblemsIdLikeToHave
+  @zipcode_regex ~r/\b11[0-9]{3}\b/
+  defp _try_zipcode({query, _scope, _errors}) do
+    Regex.match?(@zipcode_regex, query)
+  end
+
 
   defp convert_binary_date_parts_to_date_struct(year, month, day) when is_binary(year) and is_binary(month) and is_binary(day) do
     case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
@@ -423,6 +437,15 @@ defmodule Mpnetwork.Realtor do
       [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :CL, @daterange_cl_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
       _ -> {query, scope, errors}
     end
+    {query, scope, errors}
+  end
+
+  # If you search on a capitalized ACTIVE or INACTIVE, replace with specific list of statuses to search, for ease
+  @active_regex ~r/\bACTIVE\b/
+  @inactive_regex ~r/\bINACTIVE\b/
+  defp try_active_inactive({query, scope, errors}) do
+    query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
+    query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
     {query, scope, errors}
   end
 
