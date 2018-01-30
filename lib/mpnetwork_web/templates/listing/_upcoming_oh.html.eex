@@ -8,11 +8,12 @@
             <th>Owner</th>
             <th>Address/Town</th>
             <th>List Price</th>
-            <th>Inspection Date/Time</th>
+            <th><%= if @remarks == :customer, do: "Open House", else: "Inspection" %> Date/Time</th>
             <th><%= case @remarks do
                       :rr -> "Round Robin "
                       :inspection -> "Inspection "
                       :broker -> "Realtor "
+                      :customer -> "Customer OH "
                       _ -> ""
                     end %>Remarks</th>
           </tr>
@@ -31,20 +32,33 @@
             </td>
             <td><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td>
-              <%= if listing.first_broker_oh_start_at do %>
-                <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-                <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
-              <% end %>
-              <%= if listing.first_broker_oh_start_at && listing.second_broker_oh_start_at, do: ", " %>
-              <%= if listing.second_broker_oh_start_at do %>
-                <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-                <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <%= if @which_type == :cust do %>
+                <%= if listing.first_cust_oh_start_at do %>
+                  <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
+                <%= if listing.first_cust_oh_start_at && listing.second_cust_oh_start_at, do: "; " %>
+                <%= if listing.second_cust_oh_start_at do %>
+                  <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
+              <% else %>
+                <%= if listing.first_broker_oh_start_at do %>
+                  <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
+                <%= if listing.first_broker_oh_start_at && listing.second_broker_oh_start_at, do: "; " %>
+                <%= if listing.second_broker_oh_start_at do %>
+                  <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
               <% end %>
             </td>
             <td><%= raw HtmlSanitizeEx.html5 (case @remarks do
                       :rr -> listing.round_robin_remarks
                       :inspection -> listing.next_broker_oh_note
                       :broker -> listing.realtor_remarks
+                      :customer -> listing.next_cust_oh_note
                       _ -> ""
                     end) %></td>
         </tr>

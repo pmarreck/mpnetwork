@@ -280,6 +280,13 @@ defmodule Mpnetwork.Realtor do
   #   Repo.all(from l in Listing, where: l.first_broker_oh_start_at > ^now and l.draft == false, or_where: l.second_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_broker_oh_start_at, asc: l.second_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
   # end
 
+  def list_next_cust_oh_listings(_, _, _after_datetime \\ nil)
+  def list_next_cust_oh_listings(nil, number, after_datetime) do
+    now = after_datetime || NaiveDateTime.utc_now
+    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am open houses still show up on sheet at 1pm (but not later)
+    Repo.all(from l in Listing, where: l.first_cust_oh_start_at > ^now and l.draft == false, or_where: l.second_cust_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_cust_oh_start_at, asc: l.second_cust_oh_start_at], limit: ^number, preload: [:broker, :user])
+  end
+
   defp default_search_scope(current_user) do
     if Permissions.office_admin_or_site_admin?(current_user) do
       if Permissions.office_admin?(current_user) do

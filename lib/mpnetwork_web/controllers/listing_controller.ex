@@ -29,17 +29,22 @@ defmodule MpnetworkWeb.ListingController do
     # draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
     upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(nil, 30)
     upcoming_broker_oh_primaries = Listing.primary_images_for_listings(upcoming_broker_oh_listings, AttachmentMetadata)
+    upcoming_cust_oh_listings = Realtor.list_next_cust_oh_listings(nil, 30)
+    upcoming_cust_oh_primaries = Listing.primary_images_for_listings(upcoming_cust_oh_listings, AttachmentMetadata)
     render(conn, "index.html",
       listings: listings,
       primaries: primaries,
       upcoming_broker_oh_listings: upcoming_broker_oh_listings,
-      upcoming_broker_oh_primaries: upcoming_broker_oh_primaries
+      upcoming_broker_oh_primaries: upcoming_broker_oh_primaries,
+      upcoming_cust_oh_listings: upcoming_cust_oh_listings,
+      upcoming_cust_oh_primaries: upcoming_cust_oh_primaries,
     )
   end
 
   def inspection_sheet(conn, _params) do
     upcoming_broker_oh_listings = Realtor.list_next_broker_oh_listings(nil, 30)
-    render(conn, "inspection_sheet.html", upcoming_broker_oh_listings: upcoming_broker_oh_listings)
+    upcoming_cust_oh_listings = Realtor.list_next_cust_oh_listings(nil, 30)
+    render(conn, "inspection_sheet.html", upcoming_broker_oh_listings: upcoming_broker_oh_listings, upcoming_cust_oh_listings: upcoming_cust_oh_listings)
   end
 
   def new(conn, _params) do

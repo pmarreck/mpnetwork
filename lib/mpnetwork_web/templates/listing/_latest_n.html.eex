@@ -28,7 +28,7 @@
             <th>List Price</th>
             <th>Agency</th>
             <th>Rental</th>
-            <th class="nowrap">Next Broker OH</th>
+            <th class="nowrap">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
             <%= if !Permissions.read_only?(@current_user) do %>
               <th></th>
             <% end %>
@@ -70,17 +70,29 @@
             <td data-label="Price"><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td data-label="Broker"><%= if listing.broker, do: listing.broker.name %></td>
             <td data-label="Rent?"><%= yn(listing.for_rent) %></td>
-            <td data-label="Broker OH">
-              <%= if listing.first_broker_oh_start_at do %>
-                <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-                <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
-              <% end %>
-              <%= if listing.first_broker_oh_start_at && listing.second_broker_oh_start_at, do: ", " %>
-              <%= if listing.second_broker_oh_start_at do %>
-                <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-                <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
-              <% end %>
-            </td>
+            <%= if @remarks == :customer do %>
+              <td data-label="Customer OH">
+                <%= if listing.first_cust_oh_start_at do %>
+                  <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
+                <% end %>
+                <%= if listing.second_cust_oh_start_at do %>
+                  <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
+              </td>
+            <% else %>
+              <td data-label="Broker OH">
+                <%= if listing.first_broker_oh_start_at do %>
+                  <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>
+                <% end %>
+                <%= if listing.second_broker_oh_start_at do %>
+                  <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <% end %>
+              </td>
+            <% end %>
             <%= if !Permissions.read_only?(@current_user) do %>
               <td class="text-right">
                 <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
@@ -96,6 +108,7 @@
                           :rr -> listing.round_robin_remarks
                           :inspection -> listing.next_broker_oh_note
                           :broker -> listing.realtor_remarks
+                          :customer -> listing.next_cust_oh_note
                           _ -> ""
                         end) %></td>
           </tr>

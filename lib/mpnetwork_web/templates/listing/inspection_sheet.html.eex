@@ -1,3 +1,9 @@
-<h3>Upcoming broker open houses/inspections</h3>
+<h3>Upcoming broker inspections</h3>
 
-<%= render("_upcoming_oh.html", draft: false, remarks: :inspection, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: nil, current_user: @current_user) %>
+<%= render("_upcoming_oh.html", draft: false, remarks: :inspection, conn: @conn, listings: @upcoming_broker_oh_listings, which_type: :broker, primaries: nil, current_user: @current_user) %>
+
+<br /><hr class="section-with-S" /><br />
+
+<h3>Upcoming customer open houses</h3>
+
+<%= render("_upcoming_oh.html", draft: false, remarks: :customer, conn: @conn, listings: @upcoming_cust_oh_listings, which_type: :cust, primaries: nil, current_user: @current_user) %>
