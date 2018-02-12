@@ -4,7 +4,7 @@
 <p><%= link "Preview the link (customer-full format)", to: public_customer_full_path(@conn, :customer_full, public_customer_full_code(@listing)), target: "_blank" %></p>
 <p><%= link "Preview the link (client-full format)", to: public_client_full_path(@conn, :client_full, public_client_full_code(@listing)), target: "_blank" %></p>
 <p><%= link "Preview the link (broker-full format)", to: public_broker_full_path(@conn, :broker_full, public_broker_full_code(@listing)), target: "_blank" %></p>
-<%= form_for @conn, email_listing_path(@conn, :send_email, @listing.id), [as: :email], fn f  -> %>
+<%= form_for @conn, email_listing_path(@conn, :send_email, @listing.id), [as: :email, class: "contains-richtexteditor"], fn f -> %>
   <div class="form-group">
     <%= label f, "Name of user to email this listing to:", class: "control-label" %>
     <%= text_input f, :name, class: "form-control", required: "" %>
@@ -15,6 +15,12 @@
     <%= label f, "Email of user to email this listing to:", class: "control-label" %>
     <%= text_input f, :email_address, class: "form-control", required: "" %>
     <%= error_tag f, :email_address %>
+  </div>
+
+  <div class="form-group">
+    <%= checkbox f, :cc_self %>
+    <%= label f, :cc_self, "Also send a copy of this email to myself", class: "control-label" %>
+    <%= error_tag f, :cc_self %>
   </div>
 
   <div class="form-group">

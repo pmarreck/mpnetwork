@@ -9,14 +9,20 @@ defmodule Mpnetwork.ClientEmail do
 
   # defp site_name, do: Config.site_name(inspect Config.module)
 
-  def send_client(email_address, name, subject, body, current_user, listing, url) do
-    body = interpolate_placeholder_values(body, %{name: name, url: url})
-    %Email{}
+  def send_client(email_address, name, subject, html_body, current_user, listing, url, cc_self) do
+    html_body = interpolate_placeholder_values(html_body, %{name: name, url: url})
+    email = %Email{}
     |> from(from_email())
     |> to({name, email_address})
     |> reply_to(if listing, do: {current_user.name, current_user.email}, else: from_email())
     |> subject(subject)
-    |> render_body("listing_email.html", %{body: body})
+    |> html_body(html_body)
+    email = if cc_self do
+      email |> bcc({current_user.name, current_user.email})
+    else
+      email
+    end
+    email |> render_body("listing_email.html", %{html_body: html_body})
   end
 
   defp interpolate_placeholder_values(body, %{name: name, url: url}) do

@@ -449,7 +449,7 @@ defmodule Mpnetwork.Realtor do
     {query, scope, errors}
   end
 
-  # If you search on a capitalized listing status, replace with specifically-indexed listing status word "lst_<listing_status>"
+  # If you search on a capitalized listing status, replace with specifically-indexed listing status word "lst/<listing_status>"
   @listing_status_type_regex ~r/\b(NEW|FS|EXT|UC|CL|PC|WR|TOM|EXP)\b/
   defp try_listing_status_type({query, scope, errors}) do
     query = Regex.replace(@listing_status_type_regex, query, "lst/\\1")
@@ -559,6 +559,7 @@ defmodule Mpnetwork.Realtor do
           to_string(num) <> abbrev
         end
       }, # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
+      {~r/\.\,\s/, ". "}, # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes comma which was screwing up the below)
       {~r/\s*\,\s*/, "|"}, # normalizes "W,X,Y , Z" to "W|X|Y|Z"
       {~r/\s+and\s+/i, "&"}, # normalizes "X and Y" or "X AND Y" to "X&Y"
       {~r/\s+or\s+/i, "|"}, # normalizes "X or Y" or "X OR Y" to "X|Y"
@@ -576,6 +577,9 @@ defmodule Mpnetwork.Realtor do
     Enum.reduce(normalization_transformations(), String.trim(q), fn({regex, repl}, acc) -> Regex.replace(regex, acc, repl) end)
   end
 
+  # This is actual test code which is called from the test suite.
+  # Put here for convenience to quickly test changes to the normalization_transformations() function above.
+  # First element of tuple is the expected result, second element is the input.
   def test_normalize_query() do
     test_cases = [
       {"30&bedroom", "30 bedroom"}, # This should not be processed as an ordinal, 29 is limit
@@ -615,6 +619,8 @@ defmodule Mpnetwork.Realtor do
       {"a<->b|c<->d", "\"a b\" |\"c d\""},
       {"a<2>b"," a  <2> b"},
       {"!b","not b"},
+      {"W|X|Y|Z", "W, X,Y , Z"},
+      {"123&Story&Ave.&Manhasset", "123 Story Ave., Manhasset"},
     ]
     for {expected, input} <- test_cases, do: ^expected = normalize_query(input)
     true
