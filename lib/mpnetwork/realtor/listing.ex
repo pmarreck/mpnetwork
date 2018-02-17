@@ -42,7 +42,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field :tax_rate_code_area, :integer
     field :prop_tax_usd, :integer
     field :vill_tax_usd, :integer
-    field :visible_on, :date
+    field :live_at, :naive_datetime
     field :star_deduc_usd, :integer
     field :expires_on, :date
     field :listing_status_type, ListingStatusTypeEnum
@@ -224,7 +224,7 @@ defmodule Mpnetwork.Realtor.Listing do
   @datetime_order_constraint_violation_message "Start datetime needs to be earlier than end datetime"
   defp validate_db_datetime_constraints(changeset) do
     changeset
-    |> check_constraint(:visible_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
+    |> check_constraint(:live_at, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
     |> check_constraint(:expires_on, name: "listing_date_earlier_than_expiry_date", message: @datetime_order_constraint_violation_message)
    end
 
@@ -232,12 +232,11 @@ defmodule Mpnetwork.Realtor.Listing do
     earlier = get_field(changeset, field_first)
     hopefully_later = get_field(changeset, field_last)
     if earlier && hopefully_later do
-      # I wanted to account for all possible datetime structs, they all have the "compare" function, so...
-      specific_datetime_module = earlier.__struct__
-      case specific_datetime_module.compare(earlier, hopefully_later) do
-        :lt  -> changeset
-        _    -> add_error(changeset, field_first, @datetime_order_constraint_violation_message)
-                |> add_error(field_last, @datetime_order_constraint_violation_message)
+      case Timex.compare(earlier, hopefully_later) do
+        -1               -> changeset
+        {:error, reason} -> add_error(changeset, field_first, reason) |> add_error(field_last, reason)
+        _                -> add_error(changeset, field_first, @datetime_order_constraint_violation_message)
+                            |> add_error(field_last, @datetime_order_constraint_violation_message)
       end
     else
       changeset
@@ -290,10 +289,19 @@ defmodule Mpnetwork.Realtor.Listing do
     |> constraints
   end
 
+  # If a (possibly newly) non-draft listing comes through with a NEW or FS listing_status_type
+  # but no live_at datetime set... Set it to now.
+  def changeset(%Listing{} = listing, %{"draft" => "false", "listing_status_type" => "NEW", "live_at" => ""} = attrs) do
+    changeset(listing, %{attrs | "live_at" => Timex.to_naive_datetime(Timex.now)})
+  end
+  def changeset(%Listing{} = listing, %{"draft" => "false", "listing_status_type" => "FS", "live_at" => ""} = attrs) do
+    changeset(listing, %{attrs | "live_at" => Timex.to_naive_datetime(Timex.now)})
+  end
+
   def changeset(%Listing{} = listing, attrs) do
     listing
     |> casts(attrs)
-    |> validate_required([:listing_status_type, :user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :schools, :prop_tax_usd, :vill_tax_usd, :section_num, :block_num, :lot_num, :visible_on, :expires_on])
+    |> validate_required([:listing_status_type, :user_id, :broker_id, :draft, :for_sale, :for_rent, :address, :city, :state, :zip, :price_usd, :num_bedrooms, :num_baths, :num_half_baths, :schools, :prop_tax_usd, :vill_tax_usd, :section_num, :block_num, :lot_num, :expires_on])
     |> constraints
   end
 
@@ -341,7 +349,7 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_number(:ac_num_zones, greater_than_or_equal_to: 0)
     |> validate_urls(get_field(listing, :ext_urls))
     |> validate_db_datetime_constraints()
-    |> validate_consecutive_datetimes({:visible_on, :expires_on})
+    |> validate_consecutive_datetimes({:live_at, :expires_on})
     |> validate_length(:address, max: 255, count: :codepoints)
     |> validate_length(:city, max: 255, count: :codepoints)
     |> validate_length(:state, max: 2, count: :codepoints)
@@ -441,7 +449,7 @@ defmodule Mpnetwork.Realtor.Listing do
       :tax_rate_code_area,
       :prop_tax_usd,
       :vill_tax_usd,
-      :visible_on,
+      :live_at,
       :star_deduc_usd,
       :expires_on,
       :listing_status_type,

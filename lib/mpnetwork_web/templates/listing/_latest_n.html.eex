@@ -38,7 +38,7 @@
     <% colspan = 9 + (if @include_inserted_at, do: 1, else: 0) + (if @include_modified_at, do: 1, else: 0) + (if @primaries, do: 1, else: 0) + (if !Permissions.read_only?(@current_user), do: 1, else: 0) %>
     <%= for listing <- @listings do %>
         <tr<%= if @remarks do %> class="include-with-next"<% end %>>
-            <td data-label="Went Live"><%= listing.visible_on |> utc_date_to_local_date("%-m/%-d/%Y") %></td>
+            <td data-label="Went Live"><%= listing.live_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <%= if @include_inserted_at do %>
               <td data-label="Added"><%= listing.inserted_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>

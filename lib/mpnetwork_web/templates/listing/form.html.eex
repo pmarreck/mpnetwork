@@ -462,22 +462,26 @@
 
           <div class="form-group row">
             <!-- 39 -->
-            <div class="col-xs-6<%= if f.errors[:visible_on], do: " has-error" %>">
-              <%= label f, :visible_on, "Listing date", class: "control-label" %>
+            <div class="col-xs-6<%= if f.errors[:live_at], do: " has-error" %>">
+              <%= label f, :live_at, "Listing go-live date/time", class: "control-label" %>
               <%
-                {{year, month, day}, _} = if f.data.visible_on do
+                {{year, month, day}, _} = if f.data.live_at do
                   Timex.to_erl(Timex.now("EDT"))
                 else
                   {{1, 1, 1}, 1}
                 end
               %>
-              <div class="input-group date">
-                <label class="input-group-addon" for="visible_on">
+              <div class="input-group datetime">
+                <label class="input-group-addon" for="live_at">
                   <span class="fa fa-calendar"></span>
                 </label>
-                <%= text_input f, :visible_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "visible_on" %>
+                <%= text_input f, :live_at, default: "#{year}-#{month}-#{day}", class: "form-control", id: "live_at", readonly: true %>
+                <label class="input-group-addon" for="live_at">
+                  <span class="fa fa-clock-o"></span>
+                </label>
               </div>
-              <%= error_tag f, :visible_on %>
+              <i>Note: This is automatically set when the listing actually goes live (off draft) to a NEW or FS status</i>
+              <%= error_tag f, :live_at %>
             </div>
 
             <!-- 40 -->

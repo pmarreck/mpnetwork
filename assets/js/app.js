@@ -137,9 +137,9 @@ $(function() {
   $.fn.datepicker.defaults.format = mpnetwork.config.datepicker_dateformat;
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
-  $('div.date input.form-control').datepicker();
+  $('div.date input.form-control').not('[readonly]').datepicker();
   // config and trigger daterangepicker inputs
-  $('div.datetime input.form-control').daterangepicker({
+  $('div.datetime input.form-control').not('[readonly]').daterangepicker({
     singleDatePicker: true,
     autoApply: true,
     autoUpdateInput: false, // see note below

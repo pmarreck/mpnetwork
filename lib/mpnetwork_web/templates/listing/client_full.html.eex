@@ -305,7 +305,7 @@
       </div>
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 223px;">
-          <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.visible_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= utc_date_to_local_date(@listing.live_at) %></span></div>
         </div>
         <div class="group orientation-vertical " style="width: 200px;">
           <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value"><%= @listing.original_price_usd |> dollars %></span></div>

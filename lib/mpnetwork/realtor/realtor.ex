@@ -237,9 +237,9 @@ defmodule Mpnetwork.Realtor do
   end
 
   def list_most_recently_visible_listings(nil, limit \\ 30) do
-    today = Date.utc_today
-    day_to_filter_after = NaiveDateTime.to_date(Timex.shift(NaiveDateTime.utc_now, days: -7))
-    Repo.all(from l in Listing, where: (l.draft == false) and l.visible_on >= ^day_to_filter_after and l.visible_on <= ^today, order_by: [desc: l.visible_on], limit: ^limit, preload: [:broker, :user])
+    today = DateTime.utc_now
+    day_to_filter_after = Timex.shift(today, days: -7)
+    Repo.all(from l in Listing, where: (l.draft == false) and l.live_at >= ^day_to_filter_after and l.live_at <= ^today, order_by: [desc: l.live_at], limit: ^limit, preload: [:broker, :user])
   end
 
   # Updates listings with expires_on in the local timezone past to be listing_status_type "EXP"
@@ -404,7 +404,7 @@ defmodule Mpnetwork.Realtor do
     valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
     valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
     cond do
-      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.visible_on >= ^valid_startday and l.visible_on <= ^valid_finishday)), errors}
+      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.live_at >= ^valid_startday and l.live_at <= ^valid_finishday)), errors}
       !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
       valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Listing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
       true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
