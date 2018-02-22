@@ -21,6 +21,10 @@ defmodule MpnetworkWeb.ListingController do
     )
   end
 
+  def search_help(conn, _params) do
+    render(conn, "search_help.html")
+  end
+
   # Round Robin landing view
   def index(conn, _params) do
     listings = Realtor.list_latest_listings_excluding_new(nil, 20)

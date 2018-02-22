@@ -7,8 +7,4 @@
     <% end) %>
   </div>
 <% end %>
-<%= render("_latest_n.html", remarks: false, draft: false, conn: @conn, listings: @listings, primaries: @primaries, include_inserted_at: false, include_modified_at: false, current_user: @current_user) %>
-
-<%=
-raw Mpnetwork.Search.examples
-%>
+<%= render("_latest_n.html", search: true, remarks: false, draft: false, conn: @conn, listings: @listings, primaries: @primaries, include_inserted_at: false, include_modified_at: false, current_user: @current_user) %>

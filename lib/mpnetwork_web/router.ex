@@ -83,6 +83,7 @@ defmodule MpnetworkWeb.Router do
     resources "/attachments", AttachmentController
     resources "/profiles", ProfileController, as: :profile, only: [:edit, :update, :show]
     get "/search", ListingController, :search, as: :search
+    get "/search_help", ListingController, :search_help, as: :search_help
     # solves bug with multiple login attempts trying to redirect back to /sessions after success due to referer changing
     get "/sessions", PageController, :bare_session_redirect
   end

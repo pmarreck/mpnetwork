@@ -8,27 +8,27 @@
    end <> "Remarks"
 %>
   <%= if @listings && @listings != [] do %>
-    <table class="table listing">
+    <table class="table listing"<%= if @search do %> data-toggle="table"<% end %>>
         <thead>
         <tr>
-            <th>Went Live</th>
+            <th data-sortable="true" data-field="live" data-sorter="USDatetimeSorter">Went Live</th>
             <%= if @include_inserted_at do %>
-              <th>Added</th>
+              <th data-sortable="true" data-field="added">Added</th>
             <% end %>
             <%= if @include_modified_at do %>
-              <th>Updated</th>
+              <th data-sortable="true" data-field="updated">Updated</th>
             <% end %>
-            <th>Address/Town</th>
+            <th data-sortable="true" data-field="address">Address/Town</th>
             <%= if @primaries do %>
-              <th>Photo</th>
+              <th data-sortable="true" data-field="photo">Photo</th>
             <% end %>
-            <th>Owner</th>
-            <th>Style</th>
-            <th>Status</th>
-            <th>List Price</th>
-            <th>Agency</th>
-            <th>Rental</th>
-            <th class="nowrap">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
+            <th data-sortable="true" data-field="owner">Owner</th>
+            <th data-sortable="true" data-field="style">Style</th>
+            <th data-sortable="true" data-field="status">Status</th>
+            <th data-sortable="true" data-field="price" data-sorter="PriceSorter">List Price</th>
+            <th data-sortable="true" data-field="agency">Agency</th>
+            <th data-sortable="true" data-field="rental">Rental</th>
+            <th class="nowrap" data-sortable="true" data-field="oh">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
             <%= if !Permissions.read_only?(@current_user) do %>
               <th></th>
             <% end %>
@@ -71,7 +71,7 @@
             <td data-label="Broker"><%= if listing.broker, do: listing.broker.name %></td>
             <td data-label="Rent?"><%= yn(listing.for_rent) %></td>
             <%= if @remarks == :customer do %>
-              <td data-label="Customer OH">
+              <td data-label="Customer OH" data-sorter="OpenHouseSorter">
                 <%= if listing.first_cust_oh_start_at do %>
                   <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
                   <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
@@ -82,7 +82,7 @@
                 <% end %>
               </td>
             <% else %>
-              <td data-label="Broker OH">
+              <td data-label="Broker OH" data-sorter="OpenHouseSorter">
                 <%= if listing.first_broker_oh_start_at do %>
                   <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
                   <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>

@@ -122,6 +122,16 @@
                 <% end %>
               </ul>
             </li>
+            <li class="treeview">
+              <a href="#"><i class="fa fa-link"></i> <span>Documentation</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><%= link "Example Search Requests", to: search_help_path(@conn, :search_help) %></li>
+              </ul>
+            </li>
             <%= if @current_user.role_id < 3 do %>
               <li class="treeview">
                 <a href="#"><i class="fa fa-link"></i> <span>Admin</span>

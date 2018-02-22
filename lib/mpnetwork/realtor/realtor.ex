@@ -463,15 +463,14 @@ defmodule Mpnetwork.Realtor do
   @all_regex ~r/\ball\b/i
   @expired_regex ~r/\bexpired\b/i
   defp try_active_inactive({query, scope, errors}) do
+    query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
+    query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
     if Regex.match?(@all_regex, query) or Regex.match?(@listing_status_type_regex, query) or Regex.match?(@expired_regex, query) do
       # just pass it through
       {Regex.replace(@all_regex, query, ""), scope, errors}
     else
-      if Regex.match?(@inactive_regex, query) do
-        {Regex.replace(@inactive_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[CL WR TOM EXP])), errors}
-      else
-        {Regex.replace(@active_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC])), errors}
-      end
+      # default to active scope
+      {Regex.replace(@active_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC])), errors}
     end
   end
 

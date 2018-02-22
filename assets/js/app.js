@@ -25,6 +25,8 @@ import "bootstrap"
 
 import moment from "moment"
 
+window.moment = moment; // for testing moment functions in console
+
 import moment_timezone from "moment-timezone"
 
 import "bootstrap-datepicker"
@@ -41,12 +43,15 @@ import "admin-lte"
 
 import Quill from "quill"
 
+import "bootstrap-table"
+
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
   config: {
     datepicker_dateformat: 'm/d/yyyy',
     moment_dateformat: 'M/D/YYYY',
-    datetimeformat: 'M/D/YYYY h:mm A'
+    datetimeformat: 'M/D/YYYY h:mm A',
+    friendly_datetimeformat: 'ddd MMM D @ h:mm A'
   }
 }
 
@@ -76,13 +81,30 @@ function ConvertFromUTCToLocalDate(utc_d){
   }
 }
 
+function ConvertFromFriendlyToUTCDatetime(local_dt){
+  switch(local_dt) {
+    case "":
+      return "";
+      break;
+    default:
+      var only_first = local_dt.split(/; ?/)[0]
+      var parsed_dt = moment(only_first, mpnetwork.config.friendly_datetimeformat)
+      var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
+      return utc_dt;
+      break;
+  }
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.ConvertFromFriendlyToUTCDatetime = ConvertFromFriendlyToUTCDatetime;
+
 function ConvertFromLocalToUTCDatetime(local_dt){
   switch(local_dt) {
     case "":
       return "";
       break;
     default:
-      var utc_dt = moment(local_dt).add(-moment(local_dt).utcOffset(), 'm').local().format();
+      var parsed_dt = moment(local_dt, mpnetwork.config.datetimeformat)
+      var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
       // var utc_dt = moment.utc(moment.local(local_dt)).toISOString();
       // alert("converting local " + local_dt + " to UTC " + utc_dt);
       return utc_dt;
@@ -90,6 +112,8 @@ function ConvertFromLocalToUTCDatetime(local_dt){
       break;
   }
 }
+// "export" this so it can be accessed from bootstrap-table config and console
+window.ConvertFromLocalToUTCDatetime = ConvertFromLocalToUTCDatetime;
 
 function ConvertFromLocalToUTCDate(local_d){
   switch(local_d) {
@@ -98,7 +122,7 @@ function ConvertFromLocalToUTCDate(local_d){
       break;
     default:
       // alert("about to try to convert this date from local to utc:" + local_d);
-      var utc_d = moment(local_d).toISOString(); //moment(local_d).local().format();
+      var utc_d = moment(local_d, "M/D/Y").toISOString(); //moment(local_d).local().format();
       // var utc_d = moment.utc(moment.local(local_d)).toISOString();
       // alert("converting local " + local_d + " to UTC " + utc_d);
       return utc_d;
@@ -106,7 +130,43 @@ function ConvertFromLocalToUTCDate(local_d){
       break;
   }
 }
+// "export" this so it can be accessed from bootstrap-table config and console
+window.ConvertFromLocalToUTCDate = ConvertFromLocalToUTCDate;
 
+function USDatetimeSorter(a, b){
+  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  a = ConvertFromLocalToUTCDatetime(a);
+  b = ConvertFromLocalToUTCDatetime(b);
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.USDatetimeSorter = USDatetimeSorter;
+
+function PriceSorter(a, b){
+  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  a = parseInt(a.replace(/[\$\,\.]/g, ""));
+  b = parseInt(b.replace(/[\$\,\.]/g, ""));
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.PriceSorter = PriceSorter;
+
+function OpenHouseSorter(a, b){
+  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  a = ConvertFromFriendlyToUTCDatetime(a);
+  b = ConvertFromFriendlyToUTCDatetime(b);
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.OpenHouseSorter = OpenHouseSorter;
+
+// ondocumentloaded functionality
 $(function() {
   // trigger multiselect with search autocomplete
   $(".fancy").select2({
