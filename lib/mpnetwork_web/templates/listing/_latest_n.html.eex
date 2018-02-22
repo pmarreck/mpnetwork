@@ -45,7 +45,7 @@
             <%= if @include_modified_at do %>
               <td data-label="Updated"><%= listing.updated_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
-            <td data-label="Address">
+            <td data-label="Address" data-sorter="AddressWithLinksSorter">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if @draft && listing.draft && listing.user_id == @current_user.id do %> (Your Draft)<% end %>
             </td>

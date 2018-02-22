@@ -155,16 +155,31 @@ function PriceSorter(a, b){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.PriceSorter = PriceSorter;
 
+function StripTags(str){
+  return str.replace(/(<([^>]+)>)/ig,"");
+}
+
 function OpenHouseSorter(a, b){
   if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
-  a = ConvertFromFriendlyToUTCDatetime(a);
-  b = ConvertFromFriendlyToUTCDatetime(b);
+  a = ConvertFromFriendlyToUTCDatetime(StripTags(a).trim());
+  b = ConvertFromFriendlyToUTCDatetime(StripTags(b).trim());
   if (a > b) return 1;
   if (a < b) return -1;
   return 0;
 }
 // "export" this so it can be accessed from bootstrap-table config and console
 window.OpenHouseSorter = OpenHouseSorter;
+
+function AddressWithLinksSorter(a, b){
+  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  a = StripTags(a).trim();
+  b = StripTags(b).trim();
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.AddressWithLinksSorter = AddressWithLinksSorter;
 
 // ondocumentloaded functionality
 $(function() {
