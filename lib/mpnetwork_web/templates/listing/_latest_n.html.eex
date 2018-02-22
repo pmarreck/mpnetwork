@@ -19,7 +19,7 @@
             <%= if @include_modified_at do %>
               <th data-sortable="true" data-field="updated">Updated</th>
             <% end %>
-            <th data-sortable="true" data-field="address">Address/Town</th>
+            <th data-sortable="true" data-field="address" data-sorter="AddressWithLinksSorter">Address/Town</th>
             <%= if @primaries do %>
               <th data-sortable="true" data-field="photo">Photo</th>
             <% end %>
@@ -29,7 +29,7 @@
             <th data-sortable="true" data-field="price" data-sorter="PriceSorter">List Price</th>
             <th data-sortable="true" data-field="agency">Agency</th>
             <th data-sortable="true" data-field="rental">Rental</th>
-            <th class="nowrap" data-sortable="true" data-field="oh">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
+            <th class="nowrap" data-sortable="true" data-field="oh" data-sorter="OpenHouseSorter">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
             <%= if !Permissions.read_only?(@current_user) do %>
               <th></th>
             <% end %>
@@ -46,7 +46,7 @@
             <%= if @include_modified_at do %>
               <td data-label="Updated"><%= listing.updated_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
-            <td data-label="Address" data-sorter="AddressWithLinksSorter">
+            <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if @draft && listing.draft && listing.user_id == @current_user.id do %> (Your Draft)<% end %>
             </td>
@@ -72,7 +72,7 @@
             <td data-label="Broker"><%= if listing.broker, do: listing.broker.name %></td>
             <td data-label="Rent?"><%= yn(listing.for_rent) %></td>
             <%= if @remarks == :customer do %>
-              <td data-label="Customer OH" data-sorter="OpenHouseSorter">
+              <td data-label="Customer OH">
                 <%= if listing.first_cust_oh_start_at do %>
                   <%= if Timex.compare(listing.first_cust_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
                     <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
@@ -87,7 +87,7 @@
                 <% end %>
               </td>
             <% else %>
-              <td data-label="Broker OH" data-sorter="OpenHouseSorter">
+              <td data-label="Broker OH">
                 <%= if listing.first_broker_oh_start_at do %>
                   <%= if Timex.compare(listing.first_broker_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
                     <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @

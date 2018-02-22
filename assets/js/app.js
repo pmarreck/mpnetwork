@@ -137,8 +137,15 @@ function ConvertFromLocalToUTCDate(local_d){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromLocalToUTCDate = ConvertFromLocalToUTCDate;
 
+function IsNonblankString(maybe_str){
+  return ((typeof maybe_str === 'string' || maybe_str instanceof String) && (maybe_str.trim() !== ""));
+}
+// "export" this so it can be accessed from bootstrap-table config and console
+window.IsNonblankString = IsNonblankString;
+
 function USDatetimeSorter(a, b){
-  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  if(!IsNonblankString(a)) return -1;
+  if(!IsNonblankString(b)) return 1;
   a = ConvertFromLocalToUTCDatetime(a);
   b = ConvertFromLocalToUTCDatetime(b);
   if (a > b) return 1;
@@ -149,7 +156,8 @@ function USDatetimeSorter(a, b){
 window.USDatetimeSorter = USDatetimeSorter;
 
 function PriceSorter(a, b){
-  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  if(!IsNonblankString(a)) return -1;
+  if(!IsNonblankString(b)) return 1;
   a = parseInt(a.replace(/[\$\,\.]/g, ""));
   b = parseInt(b.replace(/[\$\,\.]/g, ""));
   if (a > b) return 1;
@@ -166,7 +174,8 @@ function StripTags(str){
 window.StripTags = StripTags;
 
 function OpenHouseSorter(a, b){
-  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
+  if(!IsNonblankString(a)) return -1;
+  if(!IsNonblankString(b)) return 1;
   a = ConvertFromFriendlyToUTCDatetime(StripTags(a));
   b = ConvertFromFriendlyToUTCDatetime(StripTags(b));
   if (a > b) return 1;
@@ -177,9 +186,10 @@ function OpenHouseSorter(a, b){
 window.OpenHouseSorter = OpenHouseSorter;
 
 function AddressWithLinksSorter(a, b){
-  if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
-  a = StripTags(a).trim();
-  b = StripTags(b).trim();
+  if(!IsNonblankString(a)) return -1;
+  if(!IsNonblankString(b)) return 1;
+  a = StripTags(a);
+  b = StripTags(b);
   if (a > b) return 1;
   if (a < b) return -1;
   return 0;
