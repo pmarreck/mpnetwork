@@ -8,6 +8,7 @@
    end <> "Remarks"
 %>
   <%= if @listings && @listings != [] do %>
+    <% datetime_to_show_open_houses_after = Timex.shift(NaiveDateTime.utc_now, hours: -4) %>
     <table class="table listing"<%= if @search do %> data-toggle="table"<% end %>>
         <thead>
         <tr>
@@ -73,23 +74,31 @@
             <%= if @remarks == :customer do %>
               <td data-label="Customer OH" data-sorter="OpenHouseSorter">
                 <%= if listing.first_cust_oh_start_at do %>
-                  <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
+                  <%= if Timex.compare(listing.first_cust_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
+                    <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
+                    <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
+                  <% end %>
                 <% end %>
                 <%= if listing.second_cust_oh_start_at do %>
-                  <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= if Timex.compare(listing.second_cust_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
+                    <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
+                    <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <% end %>
                 <% end %>
               </td>
             <% else %>
               <td data-label="Broker OH" data-sorter="OpenHouseSorter">
                 <%= if listing.first_broker_oh_start_at do %>
-                  <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>
+                  <%= if Timex.compare(listing.first_broker_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
+                    <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
+                    <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>
+                  <% end %>
                 <% end %>
                 <%= if listing.second_broker_oh_start_at do %>
-                  <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= if Timex.compare(listing.second_broker_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
+                    <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
+                    <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <% end %>
                 <% end %>
               </td>
             <% end %>

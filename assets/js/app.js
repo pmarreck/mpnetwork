@@ -51,7 +51,7 @@ var mpnetwork = {
     datepicker_dateformat: 'm/d/yyyy',
     moment_dateformat: 'M/D/YYYY',
     datetimeformat: 'M/D/YYYY h:mm A',
-    friendly_datetimeformat: 'ddd MMM D @ h:mm A'
+    friendly_datetimeformat: 'ddd MMM D YYYY @ h:mm A'
   }
 }
 
@@ -67,6 +67,8 @@ function ConvertFromUTCToLocalDatetime(utc_dt){
       break;
   }
 }
+// "export" this so it can be accessed from bootstrap-table config and console
+window.ConvertFromUTCToLocalDatetime = ConvertFromUTCToLocalDatetime;
 
 function ConvertFromUTCToLocalDate(utc_d){
   switch(utc_d) {
@@ -80,6 +82,8 @@ function ConvertFromUTCToLocalDate(utc_d){
       break;
   }
 }
+// "export" this so it can be accessed from bootstrap-table config and console
+window.ConvertFromUTCToLocalDate = ConvertFromUTCToLocalDate;
 
 function ConvertFromFriendlyToUTCDatetime(local_dt){
   switch(local_dt) {
@@ -156,13 +160,15 @@ function PriceSorter(a, b){
 window.PriceSorter = PriceSorter;
 
 function StripTags(str){
-  return str.replace(/(<([^>]+)>)/ig,"");
+  return str.replace(/(<([^>]+)>)/ig,"").replace(/\s+/g," ").trim();
 }
+// "export" this so it can be accessed from bootstrap-table config and console
+window.StripTags = StripTags;
 
 function OpenHouseSorter(a, b){
   if (!((typeof a === 'string' || a instanceof String) && (typeof b === 'string' || b instanceof String))) return 0;
-  a = ConvertFromFriendlyToUTCDatetime(StripTags(a).trim());
-  b = ConvertFromFriendlyToUTCDatetime(StripTags(b).trim());
+  a = ConvertFromFriendlyToUTCDatetime(StripTags(a));
+  b = ConvertFromFriendlyToUTCDatetime(StripTags(b));
   if (a > b) return 1;
   if (a < b) return -1;
   return 0;
