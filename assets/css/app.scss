@@ -150,6 +150,10 @@ table.listing th {
   letter-spacing: 1px;
 }
 
+table.listing th.sortby {
+  display: none;
+}
+
 @media screen and (max-width: 780px) {
 
   table.listing {
@@ -193,6 +197,24 @@ table.listing th {
     float: left;
     text-transform: uppercase;
     font-weight: bold;
+  }
+
+  table.listing th {
+    display: inline-block;
+    position: relative;
+    top: -22px;
+    // width: auto;
+  }
+
+  table.listing th.sortby {
+    display: inline-block;
+    text-transform: none;
+    font-weight: normal;
+  }
+
+  .fixed-table-container thead th .th-inner {
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 }
 

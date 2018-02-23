@@ -12,6 +12,7 @@
     <table class="table listing"<%= if @search do %> data-toggle="table"<% end %>>
         <thead>
         <tr>
+            <th class="sortby">Sort By:</th>
             <th data-sortable="true" data-field="live" data-sorter="USDatetimeSorter">Went Live</th>
             <%= if @include_inserted_at do %>
               <th data-sortable="true" data-field="added">Added</th>
