@@ -8,11 +8,11 @@
    end <> "Remarks"
 %>
   <%= if @listings && @listings != [] do %>
+    <% colspan = 9 + (if @remarks, do: 1, else: 0) + (if @include_inserted_at, do: 1, else: 0) + (if @include_modified_at, do: 1, else: 0) + (if @primaries, do: 1, else: 0) + (if !Permissions.read_only?(@current_user), do: 1, else: 0) %>
     <% datetime_to_show_open_houses_after = Timex.shift(NaiveDateTime.utc_now, hours: -4) %>
-    <table class="table listing"<%= if @search do %> data-toggle="table"<% end %>>
+    <table class="listing<%= if @search, do: raw " searchresult\" data-toggle=\"table" %>">
         <thead>
         <tr>
-            <th class="sortby">Sort By:</th>
             <th data-sortable="true" data-field="live" data-sorter="USDatetimeSorter">Went Live</th>
             <%= if @include_inserted_at do %>
               <th data-sortable="true" data-field="added">Added</th>
@@ -31,15 +31,17 @@
             <th data-sortable="true" data-field="agency">Agency</th>
             <th data-sortable="true" data-field="rental">Rental</th>
             <th class="nowrap" data-sortable="true" data-field="oh" data-sorter="OpenHouseSorter">Next <%= if @remarks == :customer, do: "Customer", else: "Broker" %> OH</th>
+            <%= if @remarks do %>
+              <th><%= remarks_label %></th>
+            <% end %>
             <%= if !Permissions.read_only?(@current_user) do %>
-              <th></th>
+              <th> </th>
             <% end %>
         </tr>
         </thead>
         <tbody>
-    <% colspan = 9 + (if @include_inserted_at, do: 1, else: 0) + (if @include_modified_at, do: 1, else: 0) + (if @primaries, do: 1, else: 0) + (if !Permissions.read_only?(@current_user), do: 1, else: 0) %>
     <%= for listing <- @listings do %>
-        <tr<%= if @remarks do %> class="include-with-next"<% end %>>
+        <tr>
             <td data-label="Went Live"><%= listing.live_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <%= if @include_inserted_at do %>
               <td data-label="Added"><%= listing.inserted_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
@@ -103,6 +105,18 @@
                 <% end %>
               </td>
             <% end %>
+            <%= if @remarks do %>
+              <td class="remarks" colspan="<%= colspan %>" data-label="<%= remarks_label %>">
+                <div><%= raw HtmlSanitizeEx.html5 (case @remarks do
+                :rr -> listing.round_robin_remarks
+                :inspection -> listing.next_broker_oh_note
+                :broker -> listing.realtor_remarks
+                :customer -> listing.next_cust_oh_note
+                _ -> ""
+              end) %>
+                </div>
+              </td>
+            <% end %>
             <%= if !Permissions.read_only?(@current_user) do %>
               <td class="text-right">
                 <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
@@ -111,18 +125,7 @@
                 <% end %>
               </td>
             <% end %>
-        </tr>
-        <%= if @remarks do %>
-          <tr class="include-with-previous">
-                <td colspan="<%= colspan %>" data-label="<%= remarks_label %>"><%= raw HtmlSanitizeEx.html5 (case @remarks do
-                          :rr -> listing.round_robin_remarks
-                          :inspection -> listing.next_broker_oh_note
-                          :broker -> listing.realtor_remarks
-                          :customer -> listing.next_cust_oh_note
-                          _ -> ""
-                        end) %></td>
           </tr>
-        <% end %>
     <% end %>
         </tbody>
     </table>

@@ -1,0 +1,8 @@
+--require babel-register
+--recursive
+--colors
+--reporter nyan
+--require jsdom-global/register
+--require test/setup
+--check-leaks
+--async-only
