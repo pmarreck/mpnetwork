@@ -3,25 +3,29 @@ matrix:
     - language: elixir
       elixir: 1.6.1
       otp_release: 20.1
-      script:
-        - mix test
       services:
         - postgresql
       before_script:
         - PGPASSWORD=postgres psql -c 'create database mpnetwork_test;' -U postgres
+        - mix deps.get
+      script:
+        - mix test
+      cache:
+        directories:
+          - "deps"
     - language: node_js
       node_js: 9.5.0
       env:
         global:
-          - NODE_ENV=test
+          NODE_ENV: test
+      before_script:
+        - cd assets; mkdir -p node_modules; npm install
+        # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
       script:
         - cd assets; npm test
-      before_install:
-        - cd assets; mkdir node_modules; npm install
-        # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
       cache:
         directories:
-          - "node_modules"
+          - "assets/node_modules"
 after_success:
   - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
   - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
