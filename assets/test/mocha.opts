@@ -1,7 +1,7 @@
 --require babel-register
 --recursive
 --colors
---reporter nyan
+--reporter dot
 --require jsdom-global/register
 --require test/setup
 --check-leaks

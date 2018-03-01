@@ -51,7 +51,7 @@ var mpnetwork = {
     datepicker_dateformat: 'm/d/yyyy',
     moment_dateformat: 'M/D/YYYY',
     datetimeformat: 'M/D/YYYY h:mm A',
-    friendly_datetimeformat: 'ddd MMM D YYYY @ h:mm A'
+    friendly_datetimeformat: 'ddd MMM D YYYY @ h:mmA'
   }
 }
 
@@ -126,7 +126,7 @@ function ConvertFromLocalToUTCDate(local_d){
       break;
     default:
       // alert("about to try to convert this date from local to utc:" + local_d);
-      var utc_d = moment(local_d, "M/D/Y").toISOString(); //moment(local_d).local().format();
+      var utc_d = moment(local_d, mpnetwork.config.moment_dateformat).toISOString(); //moment(local_d).local().format();
       // var utc_d = moment.utc(moment.local(local_d)).toISOString();
       // alert("converting local " + local_d + " to UTC " + utc_d);
       return utc_d;
@@ -197,7 +197,7 @@ function AddressWithLinksSorter(a, b){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.AddressWithLinksSorter = AddressWithLinksSorter;
 
-// ondocumentloaded functionality
+// ondocumentload functionality
 $(function() {
   // trigger multiselect with search autocomplete
   $(".fancy").select2({

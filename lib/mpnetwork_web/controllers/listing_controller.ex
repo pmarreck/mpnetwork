@@ -11,6 +11,10 @@ defmodule MpnetworkWeb.ListingController do
 
   plug :put_layout, "public_listing.html" when action in [:client_full, :broker_full, :customer_full]
 
+  def search_help(conn, _params) do
+    render(conn, "search_help.html")
+  end
+
   def index(conn, %{"q" => query} = _params) do
     {listings, errors} = Realtor.query_listings(query, current_user(conn))
     primaries = Listing.primary_images_for_listings(listings)
@@ -19,10 +23,6 @@ defmodule MpnetworkWeb.ListingController do
       primaries: primaries,
       errors: errors
     )
-  end
-
-  def search_help(conn, _params) do
-    render(conn, "search_help.html")
   end
 
   # Round Robin landing view

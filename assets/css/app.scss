@@ -110,6 +110,16 @@ li p {
   left: 0 !important;
 }
 
+// body overflow issues; this is an override of some other earlier CSS
+// note to self... maybe try adding an id if it's not actually overriding
+.wrapper {
+  overflow: inherit;
+  overflow-x: inherit;
+  overflow-y: inherit;
+}
+// .wrapper .main {
+//   overflow-x: inherit;
+// }
 
 //// LISTING TABLE STYLES
 
@@ -124,7 +134,7 @@ table.listing {
   padding: 0;
   border-collapse: collapse;
   border-spacing: 0;
-  overflow-x: scroll;
+  overflow-x: inherit;
   tr {
     border: 1px solid #aaa;
     padding: 5px;
@@ -155,18 +165,23 @@ table.listing {
     // max-width: 100%;
     transition: all 1s ease;
   }
+  th {
+    position: sticky;
+    top: 0;
+    border: 0;
+    padding: 10px;
+    text-align: left;
+    text-transform: uppercase;
+    // font-size: 14px;
+    // font-weight: bold;
+    letter-spacing: 0px;
+  }
 }
 
-table.listing th, table td {
+table td {
   border: 0;
   padding: 10px;
   text-align: left;
-}
-
-table.listing th {
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 1px;
 }
 
 @media screen and (max-width: 780px) {
