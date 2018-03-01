@@ -17,7 +17,7 @@ matrix:
       script:
         - cd assets; npm test
       before_install:
-        - npm i -g mocha; npm i -g babel-register; npm i -g jsdom; npm i -g jsdom-global;
+        - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
 after_success:
   - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
   - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
