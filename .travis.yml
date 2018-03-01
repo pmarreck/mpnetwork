@@ -17,7 +17,7 @@ matrix:
       node_js: 9.5.0
       env:
         global:
-          NODE_ENV: test
+          - NODE_ENV=test
       before_script:
         - cd assets; mkdir -p node_modules; npm install
         # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
