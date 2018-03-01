@@ -36,21 +36,21 @@ describe('ConvertFromUTCToLocalDate', function() {
 });
 describe('ConvertFromFriendlyToUTCDatetime', function() {
   it('should return correct datetime from default friendly format', function(done) {
-    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM"), "2018-02-28T20:00:00-05:00");
+    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM"), "2018-02-28T20:00:00Z");
     done();
   });
   it('should return earliest datetime from friendly format with hyphenated time range', function(done) {
-    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM-5:00PM"), "2018-02-28T20:00:00-05:00");
+    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM-5:00PM"), "2018-02-28T20:00:00Z");
     done();
   });
   it('should return earliest datetime from friendly format with hyphenated time range and multiple datetime ranges', function(done) {
-    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM-5:00PM; Sat Mar 3 2018 @ 1:00PM-4:00PM"), "2018-02-28T20:00:00-05:00");
+    assert.equal(window.ConvertFromFriendlyToUTCDatetime("Wed Feb 28 2018 @ 3:00PM-5:00PM; Sat Mar 3 2018 @ 1:00PM-4:00PM"), "2018-02-28T20:00:00Z");
     done();
   });
 });
 describe('ConvertFromLocalToUTCDatetime', function() {
   it('should convert local datetime to UTC ISO datetime even across midnight AND non-leap year', function(done) {
-    assert.equal(window.ConvertFromLocalToUTCDatetime("2/28/2018 9:00 PM"), "2018-03-01T02:00:00-05:00");
+    assert.equal(window.ConvertFromLocalToUTCDatetime("2/28/2018 9:00 PM"), "2018-03-01T02:00:00Z");
     done();
   })
 });

@@ -48,6 +48,7 @@ import "bootstrap-table"
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
   config: {
+    tz: 'America/New_York', // moment.tz.guess() will break remote test suite
     datepicker_dateformat: 'm/d/yyyy',
     moment_dateformat: 'M/D/YYYY',
     datetimeformat: 'M/D/YYYY h:mm A',
@@ -61,7 +62,7 @@ function ConvertFromUTCToLocalDatetime(utc_dt){
       return "";
       break;
     default:
-      var local_dt = moment.utc(utc_dt).tz(moment.tz.guess()).format(mpnetwork.config.datetimeformat);
+      var local_dt = moment.utc(utc_dt).tz(mpnetwork.config.tz).format(mpnetwork.config.datetimeformat);
       // alert("converting from utc " + utc_dt + " to local " + local_dt);
       return local_dt;
       break;
@@ -93,7 +94,8 @@ function ConvertFromFriendlyToUTCDatetime(local_dt){
     default:
       var only_first = local_dt.split(/; ?/)[0]
       var parsed_dt = moment(only_first, mpnetwork.config.friendly_datetimeformat)
-      var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
+      // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
+      var utc_dt = parsed_dt.tz(mpnetwork.config.tz).utc().format();
       return utc_dt;
       break;
   }
@@ -108,7 +110,8 @@ function ConvertFromLocalToUTCDatetime(local_dt){
       break;
     default:
       var parsed_dt = moment(local_dt, mpnetwork.config.datetimeformat)
-      var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
+      // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
+      var utc_dt = parsed_dt.tz(mpnetwork.config.tz).utc().format();
       // var utc_dt = moment.utc(moment.local(local_dt)).toISOString();
       // alert("converting local " + local_dt + " to UTC " + utc_dt);
       return utc_dt;
