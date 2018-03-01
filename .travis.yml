@@ -11,9 +11,11 @@ matrix:
           - PGPASSWORD=postgres psql -c 'create database mpnetwork_test;' -U postgres
     - language: node_js
       node_js: 9.5.0
-      env: NODE_ENV=feature/travis
+      env:
+        global:
+          - NODE_ENV=feature/travis
       script:
-        - mix test_js
+        - cd assets; npm test
       before_install:
         - npm i -g mocha; npm i -g babel-register; npm i -g jsdom; npm i -g jsdom-global;
 after_success:
