@@ -10,7 +10,7 @@ services:
 before_script:
 - PGPASSWORD=postgres psql -c 'create database mpnetwork_test;' -U postgres
 before_install:
-- npm i -g mocha; npm i -g babel-register; npm i -g jsdom-global;
+- npm i -g mocha; npm i -g babel-register; npm i -g jsdom; npm i -g jsdom-global;
 notifications:
   slack:
     secure: UUvQqrWRO1cP3QTcQuf4GvR8yjFK94zlslNrxL9SGCJQj2bWMHU/fiyugpxxsLFJEfz9/le9kaBKiksfffhDnjvjhW0cheIsV+65HsdkJszSb0XO3twNjihFXWPInts+vOQTVwYz9y1ruI027rhk3Oc+Q0zQEzSQcAJGNARvliXi3YW/wGZJrCe0CFNxSN0fG5VFOfWznAYXg123L2dqIPB+QTIpxW6ZVqD78+cP2SgPk8P79aposzA/lal/Njuc+/JzJLwYP0T+YYU4LwZ4ia/8aYIcTrVhu4bfl2DITuGzPG6syXXrsHEvz//DuF9yPqEjadsl6jYoceZNR0LwQ4UTLoAtkTX12j7G4GkkA1ap0IWS1oA7absh1FJVGPd6efIdugpcIZJO71tPSiu4PsOP+wUH3meLJxPGvPdWi0PIPhfdPcAcMtukl2b8P8NaTeI+zBkWDdWA5pFO8oDo7SAWBxnViAWg+QAO81XyumKZ7Vfm2M7t/JpkyPgfbQy1kmY5xqZeBkiMuGVE1NBbMRBgrHwwRuPf5V17oCktmMJ9aQ2y3ZzLCUX/lPMsrawK9rZ+1RFApcCRPTihXkkg1i6W3mnDhkN9370UUg5hwJpRhYRGYajOEIVsK/1hqWYAEh09/2QxNod6EPE6nJRFyDp2v5rVWEvwWl+lcbJweM0=
