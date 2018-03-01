@@ -13,11 +13,15 @@ matrix:
       node_js: 9.5.0
       env:
         global:
-          - NODE_ENV=feature/travis
+          - NODE_ENV=test
       script:
         - cd assets; npm test
       before_install:
-        - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
+        - cd assets; mkdir node_modules; npm install
+        # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
+      cache:
+        directories:
+          - "node_modules"
 after_success:
   - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
   - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
