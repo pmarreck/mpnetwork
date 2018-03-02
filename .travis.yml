@@ -22,7 +22,7 @@ matrix:
         - cd assets; mkdir -p node_modules; npm install
         # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
       script:
-        - cd assets; npm test
+        - npm test
       cache:
         directories:
           - "assets/node_modules"
