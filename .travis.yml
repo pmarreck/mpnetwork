@@ -26,10 +26,14 @@ matrix:
       cache:
         directories:
           - "assets/node_modules"
-  after_success:
-    - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
-    - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
-    - git push staging HEAD:master && git push production HEAD:master
+jobs:
+  include:
+    - stage: deploy
+      before_script: skip
+      script: skip
+      - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
+      - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
+      - git push staging HEAD:master && git push production HEAD:master
 git:
   depth: 3
   submodules: false
