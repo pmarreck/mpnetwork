@@ -48,21 +48,22 @@ import "bootstrap-table"
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
   config: {
-    tz: 'America/New_York', // moment.tz.guess() will break remote test suite
+    tz: moment.tz.guess(), //'America/New_York'
     datepicker_dateformat: 'm/d/yyyy',
-    moment_dateformat: 'M/D/YYYY',
-    datetimeformat: 'M/D/YYYY h:mm A',
+    moment_local_dateformat: 'M/D/YYYY',
+    local_datetimeformat: 'M/D/YYYY h:mm A',
+    utc_dateformat: 'YYYY-MM-DD',
     friendly_datetimeformat: 'ddd MMM D YYYY @ h:mmA'
   }
 }
 
-function ConvertFromUTCToLocalDatetime(utc_dt){
+function ConvertFromUTCToLocalDatetime(utc_dt, tz = mpnetwork.config.tz){
   switch(utc_dt) {
     case "":
       return "";
       break;
     default:
-      var local_dt = moment.utc(utc_dt).tz(mpnetwork.config.tz).format(mpnetwork.config.datetimeformat);
+      var local_dt = moment.utc(utc_dt).tz(tz).format(mpnetwork.config.local_datetimeformat);
       // alert("converting from utc " + utc_dt + " to local " + local_dt);
       return local_dt;
       break;
@@ -77,7 +78,7 @@ function ConvertFromUTCToLocalDate(utc_d){
       return "";
       break;
     default:
-      var local_d = moment.utc(utc_d).format(mpnetwork.config.moment_dateformat);
+      var local_d = moment.utc(utc_d).format(mpnetwork.config.moment_local_dateformat);
       // alert("converting from utc " + utc_d + " to local " + local_d);
       return local_d;
       break;
@@ -86,7 +87,7 @@ function ConvertFromUTCToLocalDate(utc_d){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromUTCToLocalDate = ConvertFromUTCToLocalDate;
 
-function ConvertFromFriendlyToUTCDatetime(local_dt){
+function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
   switch(local_dt) {
     case "":
       return "";
@@ -95,7 +96,7 @@ function ConvertFromFriendlyToUTCDatetime(local_dt){
       var only_first = local_dt.split(/; ?/)[0]
       var parsed_dt = moment(only_first, mpnetwork.config.friendly_datetimeformat)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
-      var utc_dt = parsed_dt.tz(mpnetwork.config.tz).utc().format();
+      var utc_dt = parsed_dt.tz(tz).utc().format();
       return utc_dt;
       break;
   }
@@ -103,15 +104,15 @@ function ConvertFromFriendlyToUTCDatetime(local_dt){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromFriendlyToUTCDatetime = ConvertFromFriendlyToUTCDatetime;
 
-function ConvertFromLocalToUTCDatetime(local_dt){
+function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
   switch(local_dt) {
     case "":
       return "";
       break;
     default:
-      var parsed_dt = moment(local_dt, mpnetwork.config.datetimeformat)
+      var parsed_dt = moment(local_dt, mpnetwork.config.local_datetimeformat)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
-      var utc_dt = parsed_dt.tz(mpnetwork.config.tz).utc().format();
+      var utc_dt = parsed_dt.tz(tz).utc().format();
       // var utc_dt = moment.utc(moment.local(local_dt)).toISOString();
       // alert("converting local " + local_dt + " to UTC " + utc_dt);
       return utc_dt;
@@ -129,7 +130,7 @@ function ConvertFromLocalToUTCDate(local_d){
       break;
     default:
       // alert("about to try to convert this date from local to utc:" + local_d);
-      var utc_d = moment(local_d, mpnetwork.config.moment_dateformat).toISOString(); //moment(local_d).local().format();
+      var utc_d = moment(local_d, mpnetwork.config.moment_local_dateformat).format(mpnetwork.config.utc_dateformat); //moment(local_d).local().format();
       // var utc_d = moment.utc(moment.local(local_d)).toISOString();
       // alert("converting local " + local_d + " to UTC " + utc_d);
       return utc_d;
@@ -241,14 +242,14 @@ $(function() {
     timePicker24Hour: false,
     timePickerIncrement: 15,
     locale: {
-      format: mpnetwork.config.datetimeformat
+      format: mpnetwork.config.local_datetimeformat
     }
   });
   // Silly workaround to preserve initially-blank values, per http://www.daterangepicker.com/#config
   // and its "Input Initially Empty" "hack"
   // This also requires "autoUpdateInput" config to be false, above.
   $('div.datetime input.form-control').on('apply.daterangepicker', function(ev, picker) {
-    $(this).val(picker.startDate.format(mpnetwork.config.datetimeformat));
+    $(this).val(picker.startDate.format(mpnetwork.config.local_datetimeformat));
   });
   // trigger phone input masks
   $(":input").inputmask();
