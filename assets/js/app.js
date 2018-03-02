@@ -94,9 +94,9 @@ function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
       break;
     default:
       var only_first = local_dt.split(/; ?/)[0]
-      var parsed_dt = moment(only_first, mpnetwork.config.friendly_datetimeformat)
+      var parsed_dt = moment.tz(only_first, mpnetwork.config.friendly_datetimeformat, tz)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
-      var utc_dt = parsed_dt.tz(tz).utc().format();
+      var utc_dt = parsed_dt.utc().format();
       return utc_dt;
       break;
   }
@@ -110,9 +110,9 @@ function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
       return "";
       break;
     default:
-      var parsed_dt = moment(local_dt, mpnetwork.config.local_datetimeformat)
+      var parsed_dt = moment.tz(local_dt, mpnetwork.config.local_datetimeformat, tz)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
-      var utc_dt = parsed_dt.tz(tz).utc().format();
+      var utc_dt = parsed_dt.utc().format();
       // var utc_dt = moment.utc(moment.local(local_dt)).toISOString();
       // alert("converting local " + local_dt + " to UTC " + utc_dt);
       return utc_dt;
