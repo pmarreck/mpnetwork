@@ -1,9 +1,10 @@
 stages:
   - test
   - deploy
-matrix:
+jobs:
   include:
-    - language: elixir
+    - stage: test
+      language: elixir
       elixir: 1.6.1
       otp_release: 20.1
       services:
@@ -16,7 +17,8 @@ matrix:
       cache:
         directories:
           - "deps"
-    - language: node_js
+    - stage: test
+      language: node_js
       node_js: 9.5.0
       env:
         global:
@@ -29,8 +31,6 @@ matrix:
       cache:
         directories:
           - "assets/node_modules"
-jobs:
-  include:
     - stage: deploy
       before_script: skip
       install: skip
