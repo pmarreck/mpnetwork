@@ -72,6 +72,15 @@ defmodule Mpnetwork.Mixfile do
     ]
   end
 
+  defp package do
+    [
+      files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+      licenses: ["EUPL-1.2"],
+      maintainers: ["Peter Marreck"],
+      links: %{"GitHub" => "https://github.com/pmarreck/mpnetwork"}
+    ]
+  end
+
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to create, migrate and run the seeds file at once:
   #
