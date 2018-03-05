@@ -257,6 +257,13 @@ defmodule Mpnetwork.SearchTest do
                Realtor.query_listings("UC uc: 11/33/2017-12/1/2017", user)
     end
 
+    test "search on both id # as well as same # in address" do
+      listing = listing_fixture()
+      user = listing.user
+      listing2 = listing_fixture(address: "#{listing.id} Testy Lane", user: user, user_id: user.id)
+      assert {[listing2, listing], []} == Realtor.query_listings("#{listing.id}", user)
+    end
+
     test "blank search" do
       listing = listing_fixture()
       user = listing.user

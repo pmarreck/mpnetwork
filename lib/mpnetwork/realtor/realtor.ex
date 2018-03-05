@@ -441,7 +441,7 @@ defmodule Mpnetwork.Realtor do
       id = _try_integer(query)
 
       if id do
-        {"", scope |> where([l], l.id == ^id), errors}
+        {"", scope |> or_where([l], l.id == ^id), errors}
       else
         {query, scope, errors}
       end
