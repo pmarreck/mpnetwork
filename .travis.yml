@@ -5,7 +5,7 @@ jobs:
   include:
     - stage: test
       language: elixir
-      elixir: 1.6.1
+      elixir: 1.6.2
       otp_release: 20.1
       services:
         - postgresql
@@ -25,19 +25,25 @@ jobs:
           - NODE_ENV=test
       before_script:
         - cd assets; mkdir -p node_modules; npm install
-        # - npm i -g mocha babel-register babel-preset-env jsdom jsdom-global
       script:
         - npm test
       cache:
         directories:
           - "assets/node_modules"
     - stage: deploy
+      language: elixir
+      elixir: 1.6.2
+      otp_release: 20.1
       before_script: skip
       install: skip
       script:
         - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
         - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
         - git push staging HEAD:master && git push production HEAD:master
+      cache:
+        directories:
+          - "assets/node_modules"
+          - "deps"
 git:
   depth: 3
   submodules: false
