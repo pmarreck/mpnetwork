@@ -37,10 +37,12 @@ defmodule Mpnetwork.Realtor do
   """
   def list_users do
     Repo.all(
-      from u in User,
-      join: o in assoc(u, :broker),
-      preload: [broker: o],
-      order_by: [asc: o.name, asc: o.city, asc: u.name]
+      from(
+        u in User,
+        join: o in assoc(u, :broker),
+        preload: [broker: o],
+        order_by: [asc: o.name, asc: o.city, asc: u.name]
+      )
     )
   end
 
@@ -54,11 +56,13 @@ defmodule Mpnetwork.Realtor do
 
   def list_users(office) do
     Repo.all(
-      from u in User,
-      join: o in assoc(u, :broker),
-      preload: [broker: o],
-      where: u.office_id == ^office.id,
-      order_by: [asc: u.name]
+      from(
+        u in User,
+        join: o in assoc(u, :broker),
+        preload: [broker: o],
+        where: u.office_id == ^office.id,
+        order_by: [asc: u.name]
+      )
     )
   end
 
@@ -72,7 +76,8 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_broadcasts do
-    Repo.all(Broadcast) #|> Repo.preload(:user)
+    # |> Repo.preload(:user)
+    Repo.all(Broadcast)
   end
 
   @doc """
@@ -85,7 +90,8 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_broadcasts(count \\ 5) do
-    Repo.all(from b in Broadcast, order_by: [desc: b.inserted_at], limit: ^count) |> Repo.preload(:user)
+    Repo.all(from(b in Broadcast, order_by: [desc: b.inserted_at], limit: ^count))
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -103,7 +109,8 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_broadcast!(id) do
-    Repo.get!(Broadcast, id) #|> Repo.preload(:user)
+    # |> Repo.preload(:user)
+    Repo.get!(Broadcast, id)
   end
 
   def get_broadcast_with_user!(id) do
@@ -190,7 +197,6 @@ defmodule Mpnetwork.Realtor do
     list_latest_listings(realtor, limit)
   end
 
-
   def list_latest_listings(who, limit \\ 5)
 
   @doc """
@@ -203,7 +209,15 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(nil, limit) do
-    Repo.all(from l in Listing, where: l.draft == false, order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.draft == false,
+        order_by: [desc: l.updated_at],
+        limit: ^limit,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   @doc """
@@ -216,38 +230,90 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_latest_listings(%User{} = current_user, limit) do
-    Repo.all(from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.draft == false or l.user_id == ^current_user.id,
+        order_by: [desc: l.updated_at],
+        limit: ^limit,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   def list_latest_draft_listings(%User{} = current_user) do
-    Repo.all(from l in Listing, where: l.user_id == ^current_user.id and l.draft == true, order_by: [desc: l.updated_at], limit: 20, preload: [:broker, :user])
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.user_id == ^current_user.id and l.draft == true,
+        order_by: [desc: l.updated_at],
+        limit: 20,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   def list_latest_draft_listings(%Office{} = current_office) do
-    Repo.all(from l in Listing, where: l.broker_id == ^current_office.id and l.draft == true, order_by: [desc: l.updated_at], limit: 20, preload: [:broker, :user])
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.broker_id == ^current_office.id and l.draft == true,
+        order_by: [desc: l.updated_at],
+        limit: 20,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   def list_latest_listings_excluding_new(nil, limit \\ 15) do
-    Repo.all(from l in Listing, where: (l.draft == false) and (l.inserted_at != l.updated_at), order_by: [desc: l.updated_at], limit: ^limit, preload: [:broker, :user])
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.draft == false and l.inserted_at != l.updated_at,
+        order_by: [desc: l.updated_at],
+        limit: ^limit,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   def list_most_recently_created_listings(nil, limit \\ 30) do
-    day_to_filter_after = Timex.shift(NaiveDateTime.utc_now, days: -7)
-    Repo.all(from l in Listing, where: (l.draft == false) and l.inserted_at >= ^day_to_filter_after, order_by: [desc: l.inserted_at], limit: ^limit, preload: [:broker, :user])
+    day_to_filter_after = Timex.shift(NaiveDateTime.utc_now(), days: -7)
+
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.draft == false and l.inserted_at >= ^day_to_filter_after,
+        order_by: [desc: l.inserted_at],
+        limit: ^limit,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   def list_most_recently_visible_listings(nil, limit \\ 30) do
-    today = DateTime.utc_now
+    today = DateTime.utc_now()
     day_to_filter_after = Timex.shift(today, days: -7)
-    Repo.all(from l in Listing, where: (l.draft == false) and l.live_at >= ^day_to_filter_after and l.live_at <= ^today, order_by: [desc: l.live_at], limit: ^limit, preload: [:broker, :user])
+
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.draft == false and l.live_at >= ^day_to_filter_after and l.live_at <= ^today,
+        order_by: [desc: l.live_at],
+        limit: ^limit,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   # Updates listings with expires_on in the local timezone past to be listing_status_type "EXP"
   # but only if it was any of the following listing_status_type's to begin with:
   # "NEW", "FS", "EXT", "PC", "TOM"
   def update_expired_listings(delay \\ 1000) do
-    :timer.sleep(delay) # Just to make sure it's definitely after midnight if this job runs at exactly midnight EST
-    local_date_now = Timex.now("America/New_York") |> Timex.to_date
+    # Just to make sure it's definitely after midnight if this job runs at exactly midnight EST
+    :timer.sleep(delay)
+    local_date_now = Timex.now("America/New_York") |> Timex.to_date()
+
     from(
       l in Listing,
       where: l.expires_on < ^local_date_now,
@@ -255,6 +321,7 @@ defmodule Mpnetwork.Realtor do
       update: [set: [listing_status_type: "EXP"]]
     )
     |> Repo.update_all([])
+
     # NOTE: Does NOT update updated_at (which is good in this case)
     # but DOES update the search index via trigger (which is also good in this case)
   end
@@ -269,11 +336,24 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_next_broker_oh_listings(_, _, _after_datetime \\ nil)
+
   def list_next_broker_oh_listings(nil, number, after_datetime) do
-    now = after_datetime || NaiveDateTime.utc_now
-    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am inspections still show up on sheet at 1pm (but not later)
-    Repo.all(from l in Listing, where: l.first_broker_oh_start_at > ^now and l.draft == false, or_where: l.second_broker_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_broker_oh_start_at, asc: l.second_broker_oh_start_at], limit: ^number, preload: [:broker, :user])
+    now = after_datetime || NaiveDateTime.utc_now()
+    # so 9am inspections still show up on sheet at 1pm (but not later)
+    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime()
+
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.first_broker_oh_start_at > ^now and l.draft == false,
+        or_where: l.second_broker_oh_start_at > ^now and l.draft == false,
+        order_by: [asc: l.first_broker_oh_start_at, asc: l.second_broker_oh_start_at],
+        limit: ^number,
+        preload: [:broker, :user]
+      )
+    )
   end
+
   # def list_next_broker_oh_listings(current_user, number, after_datetime) do
   #   now = after_datetime || NaiveDateTime.utc_now
   #   now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am inspections still show up on sheet at 1pm (but not later)
@@ -281,22 +361,49 @@ defmodule Mpnetwork.Realtor do
   # end
 
   def list_next_cust_oh_listings(_, _, _after_datetime \\ nil)
+
   def list_next_cust_oh_listings(nil, number, after_datetime) do
-    now = after_datetime || NaiveDateTime.utc_now
-    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime # so 9am open houses still show up on sheet at 1pm (but not later)
-    Repo.all(from l in Listing, where: l.first_cust_oh_start_at > ^now and l.draft == false, or_where: l.second_cust_oh_start_at > ^now and l.draft == false, order_by: [asc: l.first_cust_oh_start_at, asc: l.second_cust_oh_start_at], limit: ^number, preload: [:broker, :user])
+    now = after_datetime || NaiveDateTime.utc_now()
+    # so 9am open houses still show up on sheet at 1pm (but not later)
+    now = now |> Timex.shift(hours: -4) |> Timex.to_naive_datetime()
+
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.first_cust_oh_start_at > ^now and l.draft == false,
+        or_where: l.second_cust_oh_start_at > ^now and l.draft == false,
+        order_by: [asc: l.first_cust_oh_start_at, asc: l.second_cust_oh_start_at],
+        limit: ^number,
+        preload: [:broker, :user]
+      )
+    )
   end
 
   defp default_search_scope(current_user) do
+    # regular realtor
     if Permissions.office_admin_or_site_admin?(current_user) do
+      # site admin
       if Permissions.office_admin?(current_user) do
         current_office = get_office!(current_user.office_id)
-        from l in Listing, where: l.draft == false or l.broker_id == ^current_office.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
-      else # site admin
-        from l in Listing, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 100
+
+        from(
+          l in Listing,
+          where: l.draft == false or l.broker_id == ^current_office.id,
+          order_by: [desc: l.updated_at],
+          preload: [:broker, :user],
+          limit: 50
+        )
+      else
+        from(l in Listing, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 100)
       end
-    else # regular realtor
-      from l in Listing, where: l.draft == false or l.user_id == ^current_user.id, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 50
+    else
+      from(
+        l in Listing,
+        where: l.draft == false or l.user_id == ^current_user.id,
+        order_by: [desc: l.updated_at],
+        preload: [:broker, :user],
+        limit: 50
+      )
     end
   end
 
@@ -304,11 +411,17 @@ defmodule Mpnetwork.Realtor do
   Queries listings.
   """
   def query_listings("", current_user) do
-    {Repo.all(default_search_scope(current_user) |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC]))), []}
+    {Repo.all(
+       default_search_scope(current_user)
+       |> where([l], l.listing_status_type in ~w[NEW FS EXT PC])
+     ), []}
   end
+
   def query_listings(query, current_user) do
-    {_consumed_query, final_scope, errors} = {query, default_search_scope(current_user), []}
-      |> try_id() # should return {"unconsumed_query", new_scope, any_errors} ... down the line
+    # should return {"unconsumed_query", new_scope, any_errors} ... down the line
+    {_consumed_query, final_scope, errors} =
+      {query, default_search_scope(current_user), []}
+      |> try_id()
       |> try_my_office(current_user)
       |> try_mine(current_user)
       |> try_pricerange()
@@ -316,6 +429,7 @@ defmodule Mpnetwork.Realtor do
       |> try_active_inactive()
       |> try_listing_status_type()
       |> search_all_fields_using_postgres_fulltext_search()
+
     listings = Repo.all(final_scope)
     {listings, errors}
   end
@@ -325,6 +439,7 @@ defmodule Mpnetwork.Realtor do
       {query, scope, errors}
     else
       id = _try_integer(query)
+
       if id do
         {"", scope |> where([l], l.id == ^id), errors}
       else
@@ -334,12 +449,15 @@ defmodule Mpnetwork.Realtor do
   end
 
   defp _try_integer(num) when is_integer(num), do: num
+
   defp _try_integer(maybe_num) when is_binary(maybe_num) do
     _try_int_result(Integer.parse(maybe_num))
   end
+
   defp _try_int_result({num, ""}) do
     num
   end
+
   defp _try_int_result(_) do
     nil
   end
@@ -352,8 +470,8 @@ defmodule Mpnetwork.Realtor do
     Regex.match?(@zipcode_regex, query)
   end
 
-
-  defp convert_binary_date_parts_to_date_struct(year, month, day) when is_binary(year) and is_binary(month) and is_binary(day) do
+  defp convert_binary_date_parts_to_date_struct(year, month, day)
+       when is_binary(year) and is_binary(month) and is_binary(day) do
     case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
       {:ok, date} -> date
       {:error, _} -> nil
@@ -364,7 +482,9 @@ defmodule Mpnetwork.Realtor do
   defp try_my_office({query, scope, errors}, current_user) do
     if Regex.match?(@my_office_regex, query) do
       current_office = get_office!(current_user.office_id)
-      {Regex.replace(@my_office_regex, query, ""), scope |> where([l], l.broker_id == ^current_office.id), errors}
+
+      {Regex.replace(@my_office_regex, query, ""),
+       scope |> where([l], l.broker_id == ^current_office.id), errors}
     else
       {query, scope, errors}
     end
@@ -373,7 +493,8 @@ defmodule Mpnetwork.Realtor do
   @mine_regex ~r/ ?\b(?:my|mine)\b ?/i
   defp try_mine({query, scope, errors}, current_user) do
     if Regex.match?(@mine_regex, query) do
-      {Regex.replace(@mine_regex, query, ""), scope |> where([l], l.user_id == ^current_user.id), errors}
+      {Regex.replace(@mine_regex, query, ""), scope |> where([l], l.user_id == ^current_user.id),
+       errors}
     else
       {query, scope, errors}
     end
@@ -381,13 +502,22 @@ defmodule Mpnetwork.Realtor do
 
   @pricerange_regex ~r/\$?([0-9,]{3,}) ?\- ?\$?([0-9,]{3,})/
   defp try_pricerange({query, scope, errors}) do
-    pr = case Regex.run(@pricerange_regex, query) do
-      [_, start, finish] -> {_filter_nonnumeric(start), _filter_nonnumeric(finish)}
-      _ -> nil
-    end
+    pr =
+      case Regex.run(@pricerange_regex, query) do
+        [_, start, finish] -> {_filter_nonnumeric(start), _filter_nonnumeric(finish)}
+        _ -> nil
+      end
+
     if pr do
       {start, finish} = pr
-      {Regex.replace(@pricerange_regex, query, ""), scope |> where([l], (l.price_usd >= ^start and l.price_usd <= ^finish) or (l.rental_price_usd >= ^start and l.rental_price_usd <= ^finish)), errors}
+
+      {Regex.replace(@pricerange_regex, query, ""),
+       scope
+       |> where(
+         [l],
+         (l.price_usd >= ^start and l.price_usd <= ^finish) or
+           (l.rental_price_usd >= ^start and l.rental_price_usd <= ^finish)
+       ), errors}
     else
       {query, scope, errors}
     end
@@ -400,52 +530,178 @@ defmodule Mpnetwork.Realtor do
   # search on "closed" date
   @daterange_cl_regex ~r/(?:cl|closed): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
 
-  defp _process_daterangesearch({query, scope, errors}, :FS, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+  defp _process_daterangesearch(
+         {query, scope, errors},
+         :FS,
+         regex,
+         {start_yr, start_mon, start_day},
+         {finish_yr, finish_mon, finish_day}
+       ) do
     valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
     valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+
     cond do
-      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.live_at >= ^valid_startday and l.live_at <= ^valid_finishday)), errors}
-      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
-      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Listing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
-      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""),
+         scope |> where([l], l.live_at >= ^valid_startday and l.live_at <= ^valid_finishday),
+         errors}
+
+      !valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid start day in Listing Date search range: #{start_mon}/#{start_day}/#{start_yr}"
+           | errors
+         ]}
+
+      valid_startday && !valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid end day in Listing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
+
+      true ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Dates are both invalid in Listing Date search range: #{start_mon}/#{start_day}/#{
+             start_yr
+           }-#{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
     end
   end
 
-  defp _process_daterangesearch({query, scope, errors}, :UC, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+  defp _process_daterangesearch(
+         {query, scope, errors},
+         :UC,
+         regex,
+         {start_yr, start_mon, start_day},
+         {finish_yr, finish_mon, finish_day}
+       ) do
     valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
     valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+
     cond do
-      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.uc_on >= ^valid_startday and l.uc_on <= ^valid_finishday)), errors}
-      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Under Contract date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
-      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Under Contract date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
-      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Under Contract date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""),
+         scope |> where([l], l.uc_on >= ^valid_startday and l.uc_on <= ^valid_finishday), errors}
+
+      !valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid start day in Under Contract date search range: #{start_mon}/#{start_day}/#{
+             start_yr
+           }"
+           | errors
+         ]}
+
+      valid_startday && !valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid end day in Under Contract date search range: #{finish_mon}/#{finish_day}/#{
+             finish_yr
+           }"
+           | errors
+         ]}
+
+      true ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Dates are both invalid in Under Contract date search range: #{start_mon}/#{start_day}/#{
+             start_yr
+           }-#{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
     end
   end
 
-  defp _process_daterangesearch({query, scope, errors}, :CL, regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day}) do
+  defp _process_daterangesearch(
+         {query, scope, errors},
+         :CL,
+         regex,
+         {start_yr, start_mon, start_day},
+         {finish_yr, finish_mon, finish_day}
+       ) do
     valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
     valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+
     cond do
-      valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope |> where([l], (l.closed_on >= ^valid_startday and l.closed_on <= ^valid_finishday)), errors}
-      !valid_startday && valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid start day in Closing Date search range: #{start_mon}/#{start_day}/#{start_yr}" | errors]}
-      valid_startday && !valid_finishday -> {Regex.replace(regex, query, ""), scope, ["Invalid end day in Closing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
-      true -> {Regex.replace(regex, query, ""), scope, ["Dates are both invalid in Closing Date search range: #{start_mon}/#{start_day}/#{start_yr}-#{finish_mon}/#{finish_day}/#{finish_yr}" | errors]}
+      valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""),
+         scope |> where([l], l.closed_on >= ^valid_startday and l.closed_on <= ^valid_finishday),
+         errors}
+
+      !valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid start day in Closing Date search range: #{start_mon}/#{start_day}/#{start_yr}"
+           | errors
+         ]}
+
+      valid_startday && !valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid end day in Closing Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
+
+      true ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Dates are both invalid in Closing Date search range: #{start_mon}/#{start_day}/#{
+             start_yr
+           }-#{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
     end
   end
 
   defp try_daterange({query, scope, errors}) do
-    {query, scope, errors} = case Regex.run(@daterange_fs_regex, query) do
-      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :FS, @daterange_fs_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
-      _ -> {query, scope, errors}
-    end
-    {query, scope, errors} = case Regex.run(@daterange_uc_regex, query) do
-      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :UC, @daterange_uc_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
-      _ -> {query, scope, errors}
-    end
-    {query, scope, errors} = case Regex.run(@daterange_cl_regex, query) do
-      [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] -> _process_daterangesearch({query, scope, errors}, :CL, @daterange_cl_regex, {start_yr, start_mon, start_day}, {finish_yr, finish_mon, finish_day})
-      _ -> {query, scope, errors}
-    end
+    {query, scope, errors} =
+      case Regex.run(@daterange_fs_regex, query) do
+        [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] ->
+          _process_daterangesearch(
+            {query, scope, errors},
+            :FS,
+            @daterange_fs_regex,
+            {start_yr, start_mon, start_day},
+            {finish_yr, finish_mon, finish_day}
+          )
+
+        _ ->
+          {query, scope, errors}
+      end
+
+    {query, scope, errors} =
+      case Regex.run(@daterange_uc_regex, query) do
+        [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] ->
+          _process_daterangesearch(
+            {query, scope, errors},
+            :UC,
+            @daterange_uc_regex,
+            {start_yr, start_mon, start_day},
+            {finish_yr, finish_mon, finish_day}
+          )
+
+        _ ->
+          {query, scope, errors}
+      end
+
+    {query, scope, errors} =
+      case Regex.run(@daterange_cl_regex, query) do
+        [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] ->
+          _process_daterangesearch(
+            {query, scope, errors},
+            :CL,
+            @daterange_cl_regex,
+            {start_yr, start_mon, start_day},
+            {finish_yr, finish_mon, finish_day}
+          )
+
+        _ ->
+          {query, scope, errors}
+      end
+
     {query, scope, errors}
   end
 
@@ -465,12 +721,15 @@ defmodule Mpnetwork.Realtor do
   defp try_active_inactive({query, scope, errors}) do
     query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
     query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
-    if Regex.match?(@all_regex, query) or Regex.match?(@listing_status_type_regex, query) or Regex.match?(@expired_regex, query) do
+
+    if Regex.match?(@all_regex, query) or Regex.match?(@listing_status_type_regex, query) or
+         Regex.match?(@expired_regex, query) do
       # just pass it through
       {Regex.replace(@all_regex, query, ""), scope, errors}
     else
       # default to active scope
-      {Regex.replace(@active_regex, query, ""), scope |> where([l], (l.listing_status_type in ~w[NEW FS EXT PC])), errors}
+      {Regex.replace(@active_regex, query, ""),
+       scope |> where([l], l.listing_status_type in ~w[NEW FS EXT PC]), errors}
     end
   end
 
@@ -484,96 +743,160 @@ defmodule Mpnetwork.Realtor do
   # Upper range limit of these being processed correctly is 29
   defp normalization_transformations() do
     [
-      {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"}, # normalizes <-> and <number>
-      {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end}, # normalizes quoted strings from "exact order" to exact<->order
+      # normalizes <-> and <number>
+      {~r/\s*\<([0-9]+|-)\>\s*/, "<\\1>"},
+      # normalizes quoted strings from "exact order" to exact<->order
+      {~r/"\s*([^"]+?)\s*"/, fn _, phrase -> Regex.replace(~r/ +/, phrase, "<->") end},
       # ranges
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (room)s?/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y room" or "X-Y rooms" to "(Xroo|X+1roo|...|Yroo)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y room" or "X-Y rooms" to "(Xroo|X+1roo|...|Yroo)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (?:(bed|bath))(?:room)?s?/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y bedrooms" or "X-Y beds" or "X-Y bed" to "(Xbed|X+1bed|...|Ybed) (and same for bathrooms)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y bedrooms" or "X-Y beds" or "X-Y bed" to "(Xbed|X+1bed|...|Ybed) (and same for bathrooms)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (fireplace)s?/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y fireplace" or "X-Y fireplaces" to "(Xfir|X+1fir|...|Yfir)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y fireplace" or "X-Y fireplaces" to "(Xfir|X+1fir|...|Yfir)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (skylight)s?/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y skylight" or "X-Y skylights" to "(Xsky|X+1sky|...|Ysky)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y skylight" or "X-Y skylights" to "(Xsky|X+1sky|...|Ysky)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (garage)s?/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y garage" or "X-Y garages" to "(Xgar|X+1gar|...|Ygar)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y garage" or "X-Y garages" to "(Xgar|X+1gar|...|Ygar)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (familys?|families)/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y family" or "X-Y familys" (people misspell!) or "X-Y families" to "(Xfam|X+1fam|...|Yfam)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y family" or "X-Y familys" (people misspell!) or "X-Y families" to "(Xfam|X+1fam|...|Yfam)"
       {~r/\b([12]?[0-9]) ?\- ?\b([12]?[0-9]) (storys?|stories)/,
-        fn(_whole, start, finish, <<abbrev::bytes-3, _::binary>>) ->
-          "(" <> Enum.map_join(String.to_integer(start)..String.to_integer(finish), "|", &(to_string(&1) <> abbrev)) <> ")"
-        end
-      }, # normalizes "X-Y story" or "X-Y storys" (people misspell!) or "X-Y stories" to "(Xsto|X+1sto|...|Ysto)"
+       fn _whole, start, finish, <<abbrev::bytes-3, _::binary>> ->
+         "(" <>
+           Enum.map_join(
+             String.to_integer(start)..String.to_integer(finish),
+             "|",
+             &(to_string(&1) <> abbrev)
+           ) <> ")"
+       end},
+
+      # normalizes "X-Y story" or "X-Y storys" (people misspell!) or "X-Y stories" to "(Xsto|X+1sto|...|Ysto)"
       # singles
       {~r/\b([12]?[0-9]) (room)s?/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X room" or "X rooms" to "Xroo"
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X room" or "X rooms" to "Xroo"
       {~r/\b([12]?[0-9]) (?:(bed|bath))(?:room)?s?/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X bedrooms" or "X beds" or "X bed" to "Xbed" (and same for bathrooms, Xbat)
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X bedrooms" or "X beds" or "X bed" to "Xbed" (and same for bathrooms, Xbat)
       {~r/\b([12]?[0-9]) (fireplace)s?/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X fireplace" or "X fireplaces" to "Xfir"
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X fireplace" or "X fireplaces" to "Xfir"
       {~r/\b([12]?[0-9]) (skylight)s?/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X skylight" or "X skylights" to "Xsky"
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X skylight" or "X skylights" to "Xsky"
       {~r/\b([12]?[0-9]) (garage)s?/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X garage" or "X garages" to "Xgar"
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X garage" or "X garages" to "Xgar"
       {~r/\b([12]?[0-9])(?: |\-)(familys?|families)/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X family" or "X familys" (people misspell!) or "X families" to "Xfam"
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X family" or "X familys" (people misspell!) or "X families" to "Xfam"
       {~r/\b([12]?[0-9]) (storys?|stories)/,
-        fn(_whole, num, <<abbrev::bytes-3, _::binary>>) ->
-          to_string(num) <> abbrev
-        end
-      }, # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
-      {~r/\.\,\s/, ". "}, # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes comma which was screwing up the below)
-      {~r/\s*\,\s*/, "|"}, # normalizes "W,X,Y , Z" to "W|X|Y|Z"
-      {~r/\s+and\s+/i, "&"}, # normalizes "X and Y" or "X AND Y" to "X&Y"
-      {~r/\s+or\s+/i, "|"}, # normalizes "X or Y" or "X OR Y" to "X|Y"
-      {~r/\s*&not\b/i, "&!"}, # normalizes  " &not" to "&!"
-      {~r/\s*\|not\b/i, "|!"}, # normalizes " |not" to "|!"
-      {~r/\bnot\s+/i, "!"}, # normalizes a word boundary "not" plus 1 or more spaces to just "!"
-      {~r/\s*&\s*/, "&"}, # removes spaces around any &
-      {~r/\s*\|\s*/, "|"}, # removes spaces around any |
-      {~r/!\s+/, "!"}, # removes spaces after any !
-      {~r/\s+/, "&"}, # finally, changes any remaining spaces to & (and's the rest) since spaces are not allowed
+       fn _whole, num, <<abbrev::bytes-3, _::binary>> ->
+         to_string(num) <> abbrev
+       end},
+
+      # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
+      # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes comma which was screwing up the below)
+      {~r/\.\,\s/, ". "},
+      # normalizes "W,X,Y , Z" to "W|X|Y|Z"
+      {~r/\s*\,\s*/, "|"},
+      # normalizes "X and Y" or "X AND Y" to "X&Y"
+      {~r/\s+and\s+/i, "&"},
+      # normalizes "X or Y" or "X OR Y" to "X|Y"
+      {~r/\s+or\s+/i, "|"},
+      # normalizes  " &not" to "&!"
+      {~r/\s*&not\b/i, "&!"},
+      # normalizes " |not" to "|!"
+      {~r/\s*\|not\b/i, "|!"},
+      # normalizes a word boundary "not" plus 1 or more spaces to just "!"
+      {~r/\bnot\s+/i, "!"},
+      # removes spaces around any &
+      {~r/\s*&\s*/, "&"},
+      # removes spaces around any |
+      {~r/\s*\|\s*/, "|"},
+      # removes spaces after any !
+      {~r/!\s+/, "!"},
+      # finally, changes any remaining spaces to & (and's the rest) since spaces are not allowed
+      {~r/\s+/, "&"}
     ]
   end
 
   defp normalize_query(q) do
-    Enum.reduce(normalization_transformations(), String.trim(q), fn({regex, repl}, acc) -> Regex.replace(regex, acc, repl) end)
+    Enum.reduce(normalization_transformations(), String.trim(q), fn {regex, repl}, acc ->
+      Regex.replace(regex, acc, repl)
+    end)
   end
 
   # This is actual test code which is called from the test suite.
@@ -581,7 +904,8 @@ defmodule Mpnetwork.Realtor do
   # First element of tuple is the expected result, second element is the input.
   def test_normalize_query() do
     test_cases = [
-      {"30&bedroom", "30 bedroom"}, # This should not be processed as an ordinal, 29 is limit
+      # This should not be processed as an ordinal, 29 is limit
+      {"30&bedroom", "30 bedroom"},
       {"(2roo|3roo)", "2-3 rooms"},
       {"2roo", "2 rooms"},
       {"(2bed|3bed|4bed)", "2-4 bedrooms"},
@@ -607,33 +931,37 @@ defmodule Mpnetwork.Realtor do
       {"(2sto|3sto)", "2-3 stories"},
       {"(2sto|3sto)", "2-3 storys"},
       {"(3bed|4bed|5bed)&cape&den", "3-5 beds cape den"},
-      {"a|b"," a or b"},
-      {"a&b"," a  b "},
-      {"a&!b","a not b"},
-      {"a&!b","a and not b"},
-      {"a|!b","a or !b"},
-      {"a&!b","a ! b"},
-      {"a<->b|c","\"a b\" or c"},
+      {"a|b", " a or b"},
+      {"a&b", " a  b "},
+      {"a&!b", "a not b"},
+      {"a&!b", "a and not b"},
+      {"a|!b", "a or !b"},
+      {"a&!b", "a ! b"},
+      {"a<->b|c", "\"a b\" or c"},
       {"yabba<->dabba<->do&barney", " \" yabba  dabba do  \"  barney "},
       {"a<->b|c<->d", "\"a b\" |\"c d\""},
-      {"a<2>b"," a  <2> b"},
-      {"!b","not b"},
+      {"a<2>b", " a  <2> b"},
+      {"!b", "not b"},
       {"W|X|Y|Z", "W, X,Y , Z"},
-      {"123&Story&Ave.&Manhasset", "123 Story Ave., Manhasset"},
+      {"123&Story&Ave.&Manhasset", "123 Story Ave., Manhasset"}
     ]
+
     for {expected, input} <- test_cases, do: ^expected = normalize_query(input)
     true
   end
 
   defp search_all_fields_using_postgres_fulltext_search({q, scope, errors}) do
-    scope = if String.trim(q) != "" do
-      q = normalize_query(q)
-      scope
-      |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
-      |> order_by([l], [asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q)])
-    else
-      scope
-    end
+    scope =
+      if String.trim(q) != "" do
+        q = normalize_query(q)
+
+        scope
+        |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
+        |> order_by([l], asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q))
+      else
+        scope
+      end
+
     {"", scope, errors}
   end
 
@@ -688,7 +1016,8 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_listings(ids) when is_list(ids) do
-    Repo.all(from l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]) |> Repo.preload([:broker, :user])
+    Repo.all(from(l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]))
+    |> Repo.preload([:broker, :user])
   end
 
   @doc """
@@ -761,9 +1090,11 @@ defmodule Mpnetwork.Realtor do
   """
   def all_office_names do
     Repo.all(
-      from office in Office,
-      select: {office.id, office.name},
-      order_by: [asc: office.name]
+      from(
+        office in Office,
+        select: {office.id, office.name},
+        order_by: [asc: office.name]
+      )
     )
   end
 
@@ -777,10 +1108,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def list_offices do
-    Repo.all(
-      from office in Office,
-      order_by: [asc: office.name]
-    )
+    Repo.all(from(office in Office, order_by: [asc: office.name]))
   end
 
   @doc """

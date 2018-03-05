@@ -37,17 +37,29 @@ defmodule Mpnetwork.Listing do
 
   def list_attachments(listing_id, AttachmentMetadata) do
     Repo.all(
-      from attachment in AttachmentMetadata,
-      where: attachment.listing_id == ^listing_id,
-      order_by: [desc: attachment.is_image, desc: attachment.primary, asc: attachment.inserted_at]
+      from(
+        attachment in AttachmentMetadata,
+        where: attachment.listing_id == ^listing_id,
+        order_by: [
+          desc: attachment.is_image,
+          desc: attachment.primary,
+          asc: attachment.inserted_at
+        ]
+      )
     )
   end
 
   def list_attachments(listing_id, Attachment) do
     Repo.all(
-      from attachment in Attachment,
-      where: attachment.listing_id == ^listing_id,
-      order_by: [desc: attachment.is_image, desc: attachment.primary, asc: attachment.inserted_at]
+      from(
+        attachment in Attachment,
+        where: attachment.listing_id == ^listing_id,
+        order_by: [
+          desc: attachment.is_image,
+          desc: attachment.primary,
+          asc: attachment.inserted_at
+        ]
+      )
     )
   end
 
@@ -61,22 +73,28 @@ defmodule Mpnetwork.Listing do
 
   """
   def find_primary_image(listing_id, attachment_schema \\ Attachment)
+
   def find_primary_image(listing_id, Attachment) do
     Repo.one(
-      from attachment in Attachment,
-      where: attachment.listing_id == ^listing_id,
-      where: attachment.is_image == true,
-      order_by: [desc: attachment.primary],
-      limit: 1
+      from(
+        attachment in Attachment,
+        where: attachment.listing_id == ^listing_id,
+        where: attachment.is_image == true,
+        order_by: [desc: attachment.primary],
+        limit: 1
+      )
     )
   end
+
   def find_primary_image(listing_id, AttachmentMetadata) do
     Repo.one(
-      from attachment in AttachmentMetadata,
-      where: attachment.listing_id == ^listing_id,
-      where: attachment.is_image == true,
-      order_by: [desc: attachment.primary],
-      limit: 1
+      from(
+        attachment in AttachmentMetadata,
+        where: attachment.listing_id == ^listing_id,
+        where: attachment.is_image == true,
+        order_by: [desc: attachment.primary],
+        limit: 1
+      )
     )
   end
 
@@ -91,11 +109,10 @@ defmodule Mpnetwork.Listing do
 
   """
   def primary_images_for_listings(listings, attachment_schema \\ Attachment) do
-    Enum.reduce(listings, %{}, fn(listing, map) ->
+    Enum.reduce(listings, %{}, fn listing, map ->
       %{listing.id => find_primary_image(listing.id, attachment_schema)}
       |> Enum.into(map)
-      end
-    )
+    end)
   end
 
   @doc """
@@ -116,10 +133,12 @@ defmodule Mpnetwork.Listing do
     # first we will get the original attachment from the DB, filtering on images-only
     # Repo.get!(Attachment, id)
     Repo.one!(
-      from attachment in Attachment,
-      where: attachment.id == ^id,
-      where: attachment.is_image == true,
-      limit: 1
+      from(
+        attachment in Attachment,
+        where: attachment.id == ^id,
+        where: attachment.is_image == true,
+        limit: 1
+      )
     )
     |> do_get_attachment(width, height)
   end
@@ -127,10 +146,12 @@ defmodule Mpnetwork.Listing do
   def get_attachment!({id, width, height}) when is_binary(id) do
     # first we will get the original attachment from the DB BY SHA256, filtering on images-only
     Repo.one!(
-      from attachment in Attachment,
-      where: attachment.sha256_hash == ^id,
-      where: attachment.is_image == true,
-      limit: 1
+      from(
+        attachment in Attachment,
+        where: attachment.sha256_hash == ^id,
+        where: attachment.is_image == true,
+        limit: 1
+      )
     )
     |> do_get_attachment(width, height)
   end
@@ -138,8 +159,9 @@ defmodule Mpnetwork.Listing do
   defp do_get_attachment(attachment, width, height) do
     import Mogrify
     # then we will write its binary data to a local tempfile
-    {:ok, path} = Temp.create
-    File.write!(path, attachment.data) # should close file automatically
+    {:ok, path} = Temp.create()
+    # should close file automatically
+    File.write!(path, attachment.data)
     # then we will resize it
     image = open(path) |> resize("#{width}x#{height}>") |> save
     # then we will reread the new file's binary data
@@ -147,7 +169,9 @@ defmodule Mpnetwork.Listing do
     # then we will parse the new file's actual dimensions
     {binary_data_content_type, width_pixels, height_pixels} =
       Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
+
     # then we will return this (which currently gets stored in the app cache)
+    # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
     attachment
     |> Attachment.changeset(%{
       width_pixels: width_pixels,
@@ -158,7 +182,7 @@ defmodule Mpnetwork.Listing do
       inserted_at: Timex.now("EDT"),
       updated_at: Timex.now("EDT")
     })
-    |> Ecto.Changeset.apply_changes # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
+    |> Ecto.Changeset.apply_changes()
   end
 
   @doc """
@@ -176,8 +200,12 @@ defmodule Mpnetwork.Listing do
 
   """
   def get_attachment!(id, attachment_schema \\ Attachment)
-  def get_attachment!(id, attachment_schema) when is_integer(id), do: Repo.get!(attachment_schema, id)
-  def get_attachment!(id, attachment_schema) when is_binary(id), do: Repo.get_by!(attachment_schema, sha256_hash: id)
+
+  def get_attachment!(id, attachment_schema) when is_integer(id),
+    do: Repo.get!(attachment_schema, id)
+
+  def get_attachment!(id, attachment_schema) when is_binary(id),
+    do: Repo.get_by!(attachment_schema, sha256_hash: id)
 
   @doc """
   Creates a attachment.
@@ -257,7 +285,10 @@ defmodule Mpnetwork.Listing do
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_broker_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+  def public_broker_full_code(
+        listing,
+        expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()
+      ) do
     do_listing_code(listing, :broker, expiration_days_since_unix_epoch)
   end
 
@@ -270,7 +301,10 @@ defmodule Mpnetwork.Listing do
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_client_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+  def public_client_full_code(
+        listing,
+        expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()
+      ) do
     do_listing_code(listing, :client, expiration_days_since_unix_epoch)
   end
 
@@ -283,13 +317,16 @@ defmodule Mpnetwork.Listing do
       "f3o427dr2kpe2bdxzoswbaivcpqt4g7xuqd3xey2dnv7lm4yylhq"
 
   """
-  def public_customer_full_code(listing, expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()) do
+  def public_customer_full_code(
+        listing,
+        expiration_days_since_unix_epoch \\ two_weeks_from_now_in_unix_epoch_days()
+      ) do
     do_listing_code(listing, :customer, expiration_days_since_unix_epoch)
   end
 
   defp do_listing_code(listing, recipient_type, expiration_days_since_unix_epoch) do
     {listing.id, expiration_days_since_unix_epoch, recipient_type}
-    |> Crypto.encrypt
+    |> Crypto.encrypt()
   end
 
   def from_listing_code(ciphertext, recip) do
@@ -302,7 +339,7 @@ defmodule Mpnetwork.Listing do
   end
 
   def in_unix_epoch_days(time \\ Timex.today()) do
-    Timex.to_unix(time) / (60 * 60 * 24) |> trunc
+    (Timex.to_unix(time) / (60 * 60 * 24)) |> trunc
   end
 
   defp two_weeks_from_now_in_unix_epoch_days do
@@ -312,5 +349,4 @@ defmodule Mpnetwork.Listing do
   defp timex_datetime_from_unix_epoch_days(days) do
     Timex.from_unix(days * 24 * 60 * 60)
   end
-
 end

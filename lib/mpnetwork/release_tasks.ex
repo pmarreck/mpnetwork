@@ -1,7 +1,6 @@
 # copied and modified from 
 # https://github.com/bitwalker/distillery/blob/master/docs/Running%20Migrations.md
 defmodule Mpnetwork.ReleaseTasks do
-
   @start_apps [
     :crypto,
     :ssl,
@@ -16,17 +15,17 @@ defmodule Mpnetwork.ReleaseTasks do
   def seed do
     me = myapp()
 
-    IO.puts "Loading #{me}.."
+    IO.puts("Loading #{me}..")
     # Load the code for myapp, but don't start it
     :ok = Application.load(me)
 
-    IO.puts "Starting dependencies.."
+    IO.puts("Starting dependencies..")
     # Start apps necessary for executing migrations
     Enum.each(@start_apps, &Application.ensure_all_started/1)
 
     # Start the Repo(s) for myapp
-    IO.puts "Starting repos.."
-    Enum.each(repos(), &(&1.start_link(pool_size: 1)))
+    IO.puts("Starting repos..")
+    Enum.each(repos(), & &1.start_link(pool_size: 1))
 
     # Run migrations
     migrate()
@@ -35,7 +34,7 @@ defmodule Mpnetwork.ReleaseTasks do
     # Enum.each(repos(), &run_seeds_for/1)
 
     # Signal shutdown
-    IO.puts "Success!"
+    IO.puts("Success!")
     :init.stop()
   end
 
@@ -45,15 +44,16 @@ defmodule Mpnetwork.ReleaseTasks do
 
   defp run_migrations_for(repo) do
     app = Keyword.get(repo.config, :otp_app)
-    IO.puts "Running migrations for #{app}"
+    IO.puts("Running migrations for #{app}")
     Ecto.Migrator.run(repo, migrations_path(repo), :up, all: true)
   end
 
   def run_seeds_for(repo) do
     # Run the seed script if it exists
     seed_script = seeds_path(repo)
+
     if File.exists?(seed_script) do
-      IO.puts "Running seed script.."
+      IO.puts("Running seed script..")
       Code.eval_file(seed_script)
     end
   end
@@ -64,7 +64,7 @@ defmodule Mpnetwork.ReleaseTasks do
 
   def priv_path_for(repo, filename) do
     app = Keyword.get(repo.config, :otp_app)
-    repo_underscore = repo |> Module.split |> List.last |> Macro.underscore
+    repo_underscore = repo |> Module.split() |> List.last() |> Macro.underscore()
     Path.join([priv_dir(app), repo_underscore, filename])
   end
 end

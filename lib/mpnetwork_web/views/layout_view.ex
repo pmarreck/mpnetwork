@@ -17,5 +17,4 @@ defmodule MpnetworkWeb.LayoutView do
   def get_page_title(AttachmentView, _, _), do: "#{@app_name} - Attachments"
   def get_page_title(BroadcastView, _, _), do: "#{@app_name} - Broadcasts"
   def get_page_title(_, _, _), do: @app_name
-
 end

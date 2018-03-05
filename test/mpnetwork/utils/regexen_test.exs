@@ -1,5 +1,4 @@
 defmodule Mpnetwork.Utils.RegexenTest do
-
   use ExUnit.Case, async: true
 
   import Mpnetwork.Utils.Regexen
@@ -109,17 +108,17 @@ defmodule Mpnetwork.Utils.RegexenTest do
     # "http://3628126748",
     "http://.www.foo.bar/",
     "http://www.foo.bar./",
-    "http://.www.foo.bar./",
+    "http://.www.foo.bar./"
     # "http://10.1.1.1",
   ]
 
   test "positives" do
     @positive_test_cases
-    |> Enum.each(&(assert &1 =~ url_regex()))
+    |> Enum.each(&assert &1 =~ url_regex())
   end
 
   test "negatives" do
     @negative_test_cases
-    |> Enum.each(&(refute &1 =~ url_regex()))
+    |> Enum.each(&refute &1 =~ url_regex())
   end
 end

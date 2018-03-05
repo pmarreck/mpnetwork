@@ -2,18 +2,19 @@ defmodule Mpnetwork.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mpnetwork,
-     version: String.trim(File.read!("VERSION")),
-     elixir: "~> 1.6",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps(),
-     test_coverage: [tool: ExCoveralls],
-     preferred_cli_env: [coveralls: :test],
-     dialyzer: [plt_add_deps: :transitive],
+    [
+      app: :mpnetwork,
+      version: String.trim(File.read!("VERSION")),
+      elixir: "~> 1.6",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test],
+      dialyzer: [plt_add_deps: :transitive]
     ]
   end
 
@@ -24,13 +25,13 @@ defmodule Mpnetwork.Mixfile do
     [
       # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:coherence, :logger, :runtime_tools],
+      extra_applications: [:coherence, :logger, :runtime_tools]
     ]
   end
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -53,14 +54,17 @@ defmodule Mpnetwork.Mixfile do
       {:number, "~> 0.5"},
       {:timber, "~> 2.6"},
       {:ex_image_info, "~> 0.1.1"},
-      {:eliver, "~> 2.0"}, # provides `mix eliver.bump` for hot prod upgrades
+      # provides `mix eliver.bump` for hot prod upgrades
+      {:eliver, "~> 2.0"},
       {:cachex, "~> 2.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:swoosh, "~> 0.10"},
       {:phoenix_swoosh, "~> 0.2"},
-      {:mogrify, "~> 0.5.4"}, # want to replace with another solution asap lol. https://imagetragick.com/
-      {:briefly, "~> 0.3"}, # for easily working with tempfiles
+      # want to replace with another solution asap lol. https://imagetragick.com/
+      {:mogrify, "~> 0.5.4"},
+      # for easily working with tempfiles
+      {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.4", override: true},
       {:ecto, "~> 2.2.6", override: true},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
@@ -68,7 +72,7 @@ defmodule Mpnetwork.Mixfile do
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:pryin, "~> 1.0"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
-      {:quantum, ">= 2.2.1"},
+      {:quantum, ">= 2.2.1"}
     ]
   end
 
@@ -88,8 +92,10 @@ defmodule Mpnetwork.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-     "ecto.reset": ["ecto.drop", "ecto.setup"],
-     "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+    [
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
   end
 end

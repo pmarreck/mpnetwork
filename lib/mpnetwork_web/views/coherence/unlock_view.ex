@@ -6,6 +6,7 @@ defmodule MpnetworkWeb.Coherence.UnlockView do
       info: info
     }
   end
+
   def render("unlock.json", %{user: user}) do
     %{
       user: %{
@@ -21,6 +22,7 @@ defmodule MpnetworkWeb.Coherence.UnlockView do
       error: error
     }
   end
+
   def render("error.json", %{changeset: changeset}) do
     changeset =
       cond do

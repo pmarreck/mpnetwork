@@ -6,7 +6,13 @@ defmodule MpnetworkWeb.OfficeController do
 
   def index(conn, _params) do
     offices = Realtor.list_offices()
-    render(conn, "index.html", offices: offices, show_controls: Permissions.office_admin_or_site_admin?(current_user(conn)))
+
+    render(
+      conn,
+      "index.html",
+      offices: offices,
+      show_controls: Permissions.office_admin_or_site_admin?(current_user(conn))
+    )
   end
 
   def new(conn, _params) do
@@ -21,6 +27,7 @@ defmodule MpnetworkWeb.OfficeController do
           conn
           |> put_flash(:info, "Office created successfully.")
           |> redirect(to: office_path(conn, :show, office))
+
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
       end
@@ -53,6 +60,7 @@ defmodule MpnetworkWeb.OfficeController do
           conn
           |> put_flash(:info, "Office updated successfully.")
           |> redirect(to: office_path(conn, :show, office))
+
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", office: office, changeset: changeset)
       end

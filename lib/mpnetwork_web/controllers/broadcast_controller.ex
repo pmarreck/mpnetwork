@@ -22,12 +22,15 @@ defmodule MpnetworkWeb.BroadcastController do
   def create(conn, %{"broadcast" => broadcast_params}) do
     # inject current_user.id
     if !Permissions.read_only?(current_user(conn)) do
-      broadcast_params_with_current_user_id = Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+      broadcast_params_with_current_user_id =
+        Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+
       case Realtor.create_broadcast(broadcast_params_with_current_user_id) do
         {:ok, broadcast} ->
           conn
           |> put_flash(:info, "Broadcast created successfully.")
           |> redirect(to: broadcast_path(conn, :show, broadcast))
+
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
       end
@@ -44,6 +47,7 @@ defmodule MpnetworkWeb.BroadcastController do
   def edit(conn, %{"id" => id}) do
     if !Permissions.read_only?(current_user(conn)) do
       broadcast = Realtor.get_broadcast!(id)
+
       if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
         changeset = Realtor.change_broadcast(broadcast)
         render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
@@ -59,13 +63,16 @@ defmodule MpnetworkWeb.BroadcastController do
     if !Permissions.read_only?(current_user(conn)) do
       broadcast = Realtor.get_broadcast!(id)
       # inject current_user.id
-      broadcast_params_with_current_user_id = Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+      broadcast_params_with_current_user_id =
+        Enum.into(%{"user_id" => current_user(conn).id}, broadcast_params)
+
       if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
         case Realtor.update_broadcast(broadcast, broadcast_params_with_current_user_id) do
           {:ok, broadcast} ->
             conn
             |> put_flash(:info, "Broadcast updated successfully.")
             |> redirect(to: broadcast_path(conn, :show, broadcast))
+
           {:error, %Ecto.Changeset{} = changeset} ->
             render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
         end
@@ -80,6 +87,7 @@ defmodule MpnetworkWeb.BroadcastController do
   def delete(conn, %{"id" => id}) do
     if !Permissions.read_only?(current_user(conn)) do
       broadcast = Realtor.get_broadcast!(id)
+
       if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
         {:ok, _broadcast} = Realtor.delete_broadcast(broadcast)
 

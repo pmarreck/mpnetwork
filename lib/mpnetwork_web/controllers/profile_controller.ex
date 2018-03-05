@@ -11,6 +11,7 @@ defmodule MpnetworkWeb.ProfileController do
 
   def edit(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
+
     if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(conn), user) do
       offices = Realtor.list_offices()
       roles = filtered_roles(current_user(conn))
@@ -30,8 +31,16 @@ defmodule MpnetworkWeb.ProfileController do
           conn
           |> put_flash(:info, "Profile updated successfully.")
           |> redirect(to: profile_path(conn, :show, user))
+
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "edit.html", user: user, offices: Realtor.list_offices(), roles: filtered_roles(current_user(conn)), changeset: changeset)
+          render(
+            conn,
+            "edit.html",
+            user: user,
+            offices: Realtor.list_offices(),
+            roles: filtered_roles(current_user(conn)),
+            changeset: changeset
+          )
       end
     else
       send_resp(conn, 405, "Not allowed")
@@ -40,8 +49,8 @@ defmodule MpnetworkWeb.ProfileController do
 
   defp filtered_roles(current_user) do
     import MpnetworkWeb.GlobalHelpers, only: [roles_with_index: 0]
+
     roles_with_index()
     |> Enum.filter(fn {_role, role_id} -> role_id >= current_user.role_id end)
   end
-
 end

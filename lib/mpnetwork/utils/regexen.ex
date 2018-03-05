@@ -1,5 +1,4 @@
 defmodule Mpnetwork.Utils.Regexen do
-
   # taken from http://www.regular-expressions.info/email.html
   # Added A-Z to char classes to avoid having to use /i switch
   @email_regex ~r/
@@ -188,5 +187,4 @@ defmodule Mpnetwork.Utils.Regexen do
 
   def uri_regex, do: @uri_regex
   def url_regex, do: @uri_regex
-
 end

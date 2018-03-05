@@ -3,12 +3,11 @@ defmodule Mpnetwork.Realtor.Broadcast do
   import Ecto.Changeset
   alias Mpnetwork.Realtor.Broadcast
 
-
   schema "broadcasts" do
-    field :title, :string
-    field :body, :string
+    field(:title, :string)
+    field(:body, :string)
 
-    belongs_to :user, Mpnetwork.User
+    belongs_to(:user, Mpnetwork.User)
 
     timestamps()
   end

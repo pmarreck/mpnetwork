@@ -1,5 +1,4 @@
 defmodule MpnetworkWeb.GlobalHelpers do
-
   use Phoenix.HTML
 
   @roles {"Root", "Site Admin", "Office Admin", "Realtor", "Read-only"}
@@ -15,7 +14,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
   end
 
   def gravatar_url(email) do
-    hash_email = :crypto.hash(:md5, email) |> Base.encode16 |> String.downcase
+    hash_email = :crypto.hash(:md5, email) |> Base.encode16() |> String.downcase()
     "https://www.gravatar.com/avatar/#{hash_email}"
   end
 
@@ -25,17 +24,22 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   ### DATETIME-RELATED ###
   def month_to_short_name(nil), do: ""
+
   def month_to_short_name(month_num) do
-    elem({"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}, month_num - 1)
+    elem(
+      {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"},
+      month_num - 1
+    )
   end
 
   def short_month_and_year(nil), do: ""
+
   def short_month_and_year(ecto_datetime) do
     month_to_short_name(ecto_datetime.month) <> " " <> Integer.to_string(ecto_datetime.year)
   end
 
   def last_logged_in_relative_humanized(user) do
-    #TODO: Fix when native elixir datetime support is enhanced.
+    # TODO: Fix when native elixir datetime support is enhanced.
     # This solution is complicated due to no timezone info in NaiveDateTime
     # and the assumption that it is UTC.
     # Depends on the Timex library to work.
@@ -76,8 +80,8 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   defp convert_ecto_datetime_to_utc_datetime(%Ecto.DateTime{} = edt) do
     edt
-    |> Ecto.DateTime.to_erl
-    |> NaiveDateTime.from_erl!
+    |> Ecto.DateTime.to_erl()
+    |> NaiveDateTime.from_erl!()
     |> DateTime.from_naive!("Etc/UTC")
   end
 
@@ -88,18 +92,21 @@ defmodule MpnetworkWeb.GlobalHelpers do
   def datetime_to_standard_humanized(_, format \\ "%a, %b %e, %Y %l:%M %p", tz \\ "EDT")
   def datetime_to_standard_humanized(nil, _, _), do: ""
   def datetime_to_standard_humanized("", _, _), do: ""
+
   def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, format, tz) do
     datetime
-    |> Ecto.DateTime.to_erl
-    |> NaiveDateTime.from_erl!
+    |> Ecto.DateTime.to_erl()
+    |> NaiveDateTime.from_erl!()
     |> datetime_to_standard_humanized(format, tz)
   end
+
   def datetime_to_standard_humanized(%NaiveDateTime{} = naive_datetime, format, tz) do
     naive_datetime
     |> DateTime.from_naive!("Etc/UTC")
     |> Timex.Timezone.convert(tz)
     |> Timex.format!(format, :strftime)
   end
+
   def datetime_to_standard_humanized(%Date{} = date, format, _tz) do
     date
     |> Timex.format!(format, :strftime)
@@ -110,7 +117,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
   end
 
   # convert falsey values to "N", anything else to "Y"
-  def yn(bool), do: if bool, do: "Y", else: "N"
+  def yn(bool), do: if(bool, do: "Y", else: "N")
 
   # convert an integer number of dollars to dollar format
   def dollars(val) when is_number(val), do: Number.Currency.number_to_currency(val, precision: 0)
@@ -119,6 +126,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
   # convert basis points to percent and fraction
   @frac_portion_to_frac %{0 => "", 25 => "¼", 50 => "½", 75 => "¾"}
   def basis_points_to_fractional_percent(0), do: ""
+
   def basis_points_to_fractional_percent(points) when is_integer(points) do
     frac_portion = rem(points, 100)
     whole_portion = div(points, 100)
@@ -129,9 +137,11 @@ defmodule MpnetworkWeb.GlobalHelpers do
     # PDF
     "application/pdf" => "fa fa-fw fa-file-pdf-o",
     # MS Office formats
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "fa fa-fw fa-file-word-o",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" =>
+      "fa fa-fw fa-file-word-o",
     "application/msword" => "fa fa-fw fa-file-word-o",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "fa fa-fw fa-file-excel-o",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" =>
+      "fa fa-fw fa-file-excel-o",
     "application/vnd.ms-excel" => "fa fa-fw fa-file-excel-o",
     # Compression formats
     "application/zip" => "fa fa-fw fa-file-zip-o",
@@ -153,13 +163,13 @@ defmodule MpnetworkWeb.GlobalHelpers do
     # Image formats
     "image/svg+xml" => "fa fa-fw fa-file-image-o",
     "image/jpeg" => "fa fa-fw fa-file-image-o",
-    "image/gif"  => "fa fa-fw fa-file-image-o",
-    "image/png"  => "fa fa-fw fa-file-image-o",
-    "image/bmp"  => "fa fa-fw fa-file-image-o",
-    "image/psd"  => "fa fa-fw fa-file-image-o",
+    "image/gif" => "fa fa-fw fa-file-image-o",
+    "image/png" => "fa fa-fw fa-file-image-o",
+    "image/bmp" => "fa fa-fw fa-file-image-o",
+    "image/psd" => "fa fa-fw fa-file-image-o",
     "image/tiff" => "fa fa-fw fa-file-image-o",
     "image/webp" => "fa fa-fw fa-file-image-o",
-    "image/flif" => "fa fa-fw fa-file-image-o",
+    "image/flif" => "fa fa-fw fa-file-image-o"
   }
 
   def html_icon_class_by_content_type(content_type) do
@@ -173,14 +183,22 @@ defmodule MpnetworkWeb.GlobalHelpers do
   # datalist element
   def datalist_input(f, name, %{list_name: list_name, data: list} = attrs) do
     struct_name = if f, do: "#{f.name}[#{name}]", else: "#{name}"
-    val = if f do
-      source = Map.get(f, :source)
-      if source do
-        changes = Map.get(source, :changes)
-        if changes do
-          changed_val = Map.get(changes, to_atom(name))
-          if changed_val do
-            changed_val
+
+    val =
+      if f do
+        source = Map.get(f, :source)
+
+        if source do
+          changes = Map.get(source, :changes)
+
+          if changes do
+            changed_val = Map.get(changes, to_atom(name))
+
+            if changed_val do
+              changed_val
+            else
+              Map.get(f.data, name)
+            end
           else
             Map.get(f.data, name)
           end
@@ -188,22 +206,23 @@ defmodule MpnetworkWeb.GlobalHelpers do
           Map.get(f.data, name)
         end
       else
-        Map.get(f.data, name)
+        nil
       end
-    else
-      nil
-    end
-    attrs = attrs
-    |> Map.put(:type, "text")
-    |> Map.put(:list, list_name)
-    |> Map.put(:name, struct_name)
-    |> Map.delete(:data)
-    |> Map.delete(:list_name)
+
+    attrs =
+      attrs
+      |> Map.put(:type, "text")
+      |> Map.put(:list, list_name)
+      |> Map.put(:name, struct_name)
+      |> Map.delete(:data)
+      |> Map.delete(:list_name)
+
     attrs = if val, do: Map.put(attrs, :value, val), else: attrs
-    attrs_html = Enum.map_join(attrs, " ", fn({x,y}) -> ~s(#{x}="#{y}") end)
-    opts_html = Enum.map_join(list, "\n", fn(x) -> ~s(<option value="#{x}">) end)
-    raw ~s(<input #{attrs_html} />\n<datalist id="#{list_name}">\n#{opts_html}\n</datalist>)
+    attrs_html = Enum.map_join(attrs, " ", fn {x, y} -> ~s(#{x}="#{y}") end)
+    opts_html = Enum.map_join(list, "\n", fn x -> ~s(<option value="#{x}">) end)
+    raw(~s(<input #{attrs_html} />\n<datalist id="#{list_name}">\n#{opts_html}\n</datalist>))
   end
+
   def datalist_input(name, %{} = attrs) do
     datalist_input(nil, name, attrs)
   end
@@ -212,8 +231,8 @@ defmodule MpnetworkWeb.GlobalHelpers do
   def prepend_blank_select_opt([]) do
     [@blank_select_opt]
   end
-  def prepend_blank_select_opt([_|_] = one_or_more) do
+
+  def prepend_blank_select_opt([_ | _] = one_or_more) do
     [@blank_select_opt | one_or_more]
   end
-
 end
