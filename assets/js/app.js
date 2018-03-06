@@ -17,11 +17,7 @@
 import "phoenix"
 import "phoenix_html"
 
-import $ from "jquery"
-
 import "bootstrap"
-
-// import "select2"
 
 import moment from "moment"
 
@@ -37,13 +33,13 @@ import "bootstrap-carousel-swipe"
 
 import "admin-lte/plugins/input-mask/jquery.inputmask"
 
-import "select2"
-
 import "admin-lte"
 
 import Quill from "quill"
 
 import "bootstrap-table"
+
+require("select2")($); // had to do it this way otherwise it was not binding to jQuery objects
 
 // global app config stuff (move to separate files/envs at some point?)
 var mpnetwork = {
@@ -202,7 +198,7 @@ function AddressWithLinksSorter(a, b){
 window.AddressWithLinksSorter = AddressWithLinksSorter;
 
 // ondocumentload functionality
-$(function() {
+$.when($.ready).then(function() {
   // trigger multiselect with search autocomplete
   $(".fancy").select2({
     placeholder: "Select an option",

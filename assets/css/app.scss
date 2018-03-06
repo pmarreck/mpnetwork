@@ -26,6 +26,12 @@
   padding: 2px 2px
 }
 
+// hack to override a width of a certain admin-lte pane in a certain context (minified menu dropdowns)
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+  width: 210px;
+}
+
 // yes, I added a way to blink text, for broadcasts. Let the hate flow through you...
 .blink {
   animation: blink-animation 1s steps(5, start) infinite;
