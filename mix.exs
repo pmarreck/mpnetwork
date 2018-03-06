@@ -50,7 +50,7 @@ defmodule Mpnetwork.Mixfile do
       # The Coherence guy has been slow about tagging this 0.5.1, so using git SHA for now
       {:coherence, git: "https://github.com/smpallen99/coherence.git", ref: "1f58ba5"},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.2.1"},
       {:number, "~> 0.5"},
       {:timber, "~> 2.6"},
       {:ex_image_info, "~> 0.1.1"},
@@ -70,13 +70,13 @@ defmodule Mpnetwork.Mixfile do
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
-      {:pryin, "~> 1.0"},
+      {:pryin, "~> 1.5"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
-      {:quantum, ">= 2.2.1"}
+      {:quantum, ">= 2.2.5"}
     ]
   end
 
-  defp package do
+  def package do
     [
       files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
       licenses: ["EUPL-1.2"],
