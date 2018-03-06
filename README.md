@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/pmarreck/mpnetwork.svg?token=5w4eGQZqV0RpCnnYw7tjXw&branch=master)](https://travis-ci.org/pmarreck/mpnetwork/)
+[![Build Status](https://api.travis-ci.org/pmarreck/mpnetwork.svg?branch=master)](https://travis-ci.org/pmarreck/mpnetwork/)
 
 ## MPNetwork
 
