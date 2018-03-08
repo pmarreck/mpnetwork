@@ -199,19 +199,30 @@ window.AddressWithLinksSorter = AddressWithLinksSorter;
 
 // ondocumentload functionality
 $.when($.ready).then(function() {
+  // trim spaces before form submission (such as logins)
+  $(".strip-before-submission").each(function(_i, formfield){
+    var form = $(formfield.form);
+    form.submit(function(f){
+      formfield.value = formfield.value.trim();
+    })
+  });
+
   // trigger multiselect with search autocomplete
   $(".fancy").select2({
     placeholder: "Select an option",
     allowClear: true,
   });
+
   // convert UTC datetime values to local TZ after page load for pages with these elements
   $('div.datetime input.form-control').each(function(_i, dt){
     $(dt).val(ConvertFromUTCToLocalDatetime(dt.value));
   });
+
   // convert UTC date values to localized dates after page load for pages with these elements
   $('div.date input.form-control').each(function(_i, d){
     $(d).val(ConvertFromUTCToLocalDate(d.value));
   });
+
   // set up post hook to convert local TZ datetimes back to UTC just before form post
   $('form.contains-datetimes').submit(function(){
     var datetimes = $(this).find('div.datetime input.form-control');
@@ -224,11 +235,13 @@ $.when($.ready).then(function() {
     });
     return true;
   });
+
   // config and trigger datepicker inputs
   $.fn.datepicker.defaults.format = mpnetwork.config.datepicker_dateformat;
   $.fn.datepicker.defaults.assumeNearbyYear = true;
   $.fn.datepicker.defaults.todayHighlight = true;
   $('div.date input.form-control').not('[readonly]').datepicker();
+
   // config and trigger daterangepicker inputs
   $('div.datetime input.form-control').not('[readonly]').daterangepicker({
     singleDatePicker: true,
@@ -241,12 +254,14 @@ $.when($.ready).then(function() {
       format: mpnetwork.config.local_datetimeformat
     }
   });
+
   // Silly workaround to preserve initially-blank values, per http://www.daterangepicker.com/#config
   // and its "Input Initially Empty" "hack"
   // This also requires "autoUpdateInput" config to be false, above.
   $('div.datetime input.form-control').on('apply.daterangepicker', function(ev, picker) {
     $(this).val(picker.startDate.format(mpnetwork.config.local_datetimeformat));
   });
+
   // trigger phone input masks
   $(":input").inputmask();
 

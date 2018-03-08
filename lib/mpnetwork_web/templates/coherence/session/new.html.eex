@@ -6,7 +6,7 @@
   <% login_field = Coherence.Config.login_field %>
   <div class="form-group">
     <%= required_label f, login_field, class: "control-label" %>
-    <%= text_input f, login_field, class: "form-control", required: "" %>
+    <%= text_input f, login_field, class: "form-control strip-before-submission", required: "" %>
     <%= error_tag f, login_field %>
   </div>
 
