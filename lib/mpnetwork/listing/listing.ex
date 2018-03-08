@@ -157,32 +157,39 @@ defmodule Mpnetwork.Listing do
   end
 
   defp do_get_attachment(attachment, width, height) do
-    import Mogrify
-    # then we will write its binary data to a local tempfile
-    {:ok, path} = Temp.create()
-    # should close file automatically
-    File.write!(path, attachment.data)
-    # then we will resize it
-    image = open(path) |> resize("#{width}x#{height}>") |> save
-    # then we will reread the new file's binary data
-    new_image_data = File.read!(image.path)
-    # then we will parse the new file's actual dimensions
-    {binary_data_content_type, width_pixels, height_pixels} =
-      Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
+    # We need to rate-limit mogrify to avoid server memory spikes
+    case ExRated.inspect_bucket(:mogrify_rate_limiter, Application.get_env(:ex_rated, :bucket_time), Application.get_env(:ex_rated, :bucket_limit)) do
+      {_count, count_remaining, _ms_to_next_bucket, _created_at, _updated_at} when count_remaining > 0 ->
+        import Mogrify
+        # then we will write its binary data to a local tempfile
+        {:ok, path} = Temp.create()
+        # should close file automatically
+        File.write!(path, attachment.data)
+        # then we will resize it
+        image = open(path) |> resize("#{width}x#{height}>") |> save
+        # then we will reread the new file's binary data
+        new_image_data = File.read!(image.path)
+        # then we will parse the new file's actual dimensions
+        {binary_data_content_type, width_pixels, height_pixels} =
+          Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
 
-    # then we will return this (which currently gets stored in the app cache)
-    # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
-    attachment
-    |> Attachment.changeset(%{
-      width_pixels: width_pixels,
-      height_pixels: height_pixels,
-      content_type: binary_data_content_type,
-      sha256_hash: :crypto.hash(:sha256, new_image_data),
-      data: new_image_data,
-      inserted_at: Timex.now("EDT"),
-      updated_at: Timex.now("EDT")
-    })
-    |> Ecto.Changeset.apply_changes()
+        # then we will return this (which currently gets stored in the app cache)
+        # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
+        attachment
+        |> Attachment.changeset(%{
+          width_pixels: width_pixels,
+          height_pixels: height_pixels,
+          content_type: binary_data_content_type,
+          sha256_hash: :crypto.hash(:sha256, new_image_data),
+          data: new_image_data,
+          inserted_at: Timex.now("EDT"),
+          updated_at: Timex.now("EDT")
+        })
+        |> Ecto.Changeset.apply_changes()
+      {_count, 0, ms_to_next_bucket, _created_at, _updated_at} ->
+        Process.sleep(ms_to_next_bucket + :rand.uniform(trunc(Application.get_env(:ex_rated, :bucket_time)/10)))
+        do_get_attachment(attachment, width, height)
+    end
   end
 
   @doc """

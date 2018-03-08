@@ -26,7 +26,7 @@ defmodule Mpnetwork.Mixfile do
     [
       # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:coherence, :logger, :runtime_tools]
+      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated]
     ]
   end
 
@@ -73,7 +73,8 @@ defmodule Mpnetwork.Mixfile do
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:pryin, "~> 1.5"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
-      {:quantum, ">= 2.2.5"}
+      {:quantum, ">= 2.2.5"},
+      {:ex_rated, "~> 1.3"}
     ]
   end
 
