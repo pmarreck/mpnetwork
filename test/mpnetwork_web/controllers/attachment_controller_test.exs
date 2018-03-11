@@ -3,7 +3,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   import Ecto.Query, warn: false
 
-  use MpnetworkWeb.ConnCase, async: true
+  use MpnetworkWeb.ConnCase, async: false
 
   alias Mpnetwork.{Listing, Realtor, Upload, Repo}
   alias Listing.Attachment
@@ -97,6 +97,13 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   @invalid_post_attrs Enum.into(%{data: nil}, @post_create_attrs)
 
   setup %{conn: conn} do
+    Ecto.Adapters.SQL.Sandbox.checkout(Mpnetwork.Repo)
+    Ecto.Adapters.SQL.Sandbox.mode(Mpnetwork.Repo, {:shared, self()})
+
+    on_exit(fn ->
+      Ecto.Adapters.SQL.Sandbox.mode(Mpnetwork.Repo, :manual)
+    end)
+
     office = office_fixture()
     user = user_fixture(%{office: office, office_id: office.id})
     conn = assign(conn, :current_office, office)

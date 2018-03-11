@@ -57,7 +57,7 @@ defmodule Mpnetwork.Mixfile do
       {:ex_image_info, "~> 0.1.1"},
       # provides `mix eliver.bump` for hot prod upgrades
       {:eliver, "~> 2.0"},
-      {:cachex, "~> 2.1"},
+      {:cachex, "~> 3.0"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:swoosh, "~> 0.10"},

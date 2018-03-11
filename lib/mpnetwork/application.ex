@@ -4,6 +4,7 @@ defmodule Mpnetwork.Application do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
+    import Cachex.Spec
     import Supervisor.Spec, warn: false
 
     # Define workers and child supervisors to be supervised
@@ -17,12 +18,12 @@ defmodule Mpnetwork.Application do
       worker(Cachex, [
         Application.get_env(:mpnetwork, :cache_name),
         [
-          limit: %Cachex.Limit{
+          limit: limit(
             # bumped after implementation of app-cached thumbnails of arbitrary size
-            limit: 5000,
+            size: 5000,
             policy: Cachex.Policy.LRW,
             reclaim: 0.1
-          }
+          )
         ]
       ]),
       worker(Mpnetwork.Scheduler, [])

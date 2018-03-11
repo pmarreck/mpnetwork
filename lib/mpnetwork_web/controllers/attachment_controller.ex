@@ -34,7 +34,7 @@ defmodule MpnetworkWeb.AttachmentController do
       end
 
     attachment =
-      case Cachex.get(Config.get(:cache_name), key, fallback: &Listing.get_attachment!/1) do
+      case Cachex.fetch(Config.get(:cache_name), key, &Listing.get_attachment!/1) do
         {:ok, val} ->
           Logger.info(
             "Retrieved attachment from app cache key #{inspect(key)}: id:#{val.id} '#{
@@ -44,7 +44,7 @@ defmodule MpnetworkWeb.AttachmentController do
 
           val
 
-        {:loaded, val} ->
+        {:commit, val} ->
           Logger.info(
             "Retrieved attachment from DB, caching with key #{inspect(key)}: id:#{val.id} '#{
               val.original_filename
@@ -52,6 +52,9 @@ defmodule MpnetworkWeb.AttachmentController do
           )
 
           val
+
+        {:error, val} ->
+          raise RuntimeError, message: val
 
         {_, val} ->
           val
@@ -73,13 +76,17 @@ defmodule MpnetworkWeb.AttachmentController do
   #   attachment
   # end
 
+  defp cachex_query_keys() do
+    Cachex.Query.create(true, :key)
+  end
+
   defp purge_all_cached_dimensions(%Attachment{} = attachment) do
     id = attachment.id
     sha256_hash = attachment.sha256_hash
 
     keys_to_delete =
       Config.get(:cache_name)
-      |> Cachex.stream!(of: :key)
+      |> Cachex.stream!(cachex_query_keys())
       |> Enum.filter(fn key ->
         case key do
           {^id, _, _} -> true
