@@ -317,28 +317,44 @@ defmodule MpnetworkWeb.ListingController do
           raise "unknown public listing type: #{type}"
       end
 
-    {:ok, results} =
-      ClientEmail.send_client(
-        email_address,
-        name,
-        subject,
-        body,
-        current_user,
-        listing,
-        url,
-        cc_self
-      )
-      |> Mailer.deliver()
-
-    Logger.info(
-      "Sent listing id #{id} of type #{type} to #{email_address}#{
-        if cc_self, do: " (cc'ing self)", else: ""
-      }, result: #{inspect(results)}"
+    sent_email = ClientEmail.send_client(
+      email_address,
+      name,
+      subject,
+      body,
+      current_user,
+      listing,
+      url,
+      cc_self
     )
+    {success, results} = case Mailer.deliver(sent_email) do
+      {:ok, results}     -> {true, results}
+      {:error, :timeout} -> {false, :timeout}
+      {:error, reason}   -> {false, reason}
+      unknown            -> {false, unknown}
+    end
 
-    conn
-    |> put_flash(:info, "Listing emailed to #{type} at #{email_address} successfully.")
-    |> redirect(to: listing_path(conn, :show, id))
+    case {success, results} do
+      {true, results} -> Logger.info(
+                          "Sent listing id #{id} of type #{type} to #{email_address}#{
+                            if cc_self, do: " (cc'ing self)", else: ""
+                          }, result: #{inspect(results)}"
+                        )
+      {false, :timeout} -> Logger.info(
+                            "TIMED OUT emailing listing id #{id} of type #{type} to #{email_address}"
+                        )
+      {false, reason} -> Logger.info(
+                            "Error emailing listing id #{id}, reason given: #{inspect(reason)}"
+                        )
+    end
+
+    conn = case {success, results} do
+      {true, _} -> conn |> put_flash(:info, "Listing emailed to #{type} at #{email_address} successfully.")
+      {false, :timeout} -> conn |> put_flash(:error, "ERROR: Trying to email this listing to #{type} at #{email_address} timed out for some reason. Please try again.")
+      {false, reason} -> conn |> put_flash(:error, "ERROR: Problem encountered emailing to #{email_address}. Reason given: #{inspect(reason)}")
+    end
+
+    redirect(conn, to: listing_path(conn, :show, id))
   end
 
   defp offices do
