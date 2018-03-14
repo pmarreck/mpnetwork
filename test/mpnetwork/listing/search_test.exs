@@ -260,7 +260,10 @@ defmodule Mpnetwork.SearchTest do
     test "search on both id # as well as same # in address" do
       listing = listing_fixture()
       user = listing.user
-      listing2 = listing_fixture(address: "#{listing.id} Testy Lane", user: user, user_id: user.id)
+
+      listing2 =
+        listing_fixture(address: "#{listing.id} Testy Lane", user: user, user_id: user.id)
+
       assert {[listing2, listing], []} == Realtor.query_listings("#{listing.id}", user)
     end
 

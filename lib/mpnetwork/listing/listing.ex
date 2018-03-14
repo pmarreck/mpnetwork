@@ -158,8 +158,13 @@ defmodule Mpnetwork.Listing do
 
   defp do_get_attachment(attachment, width, height) do
     # We need to rate-limit mogrify to avoid server memory spikes
-    case ExRated.inspect_bucket(:mogrify_rate_limiter, Application.get_env(:ex_rated, :bucket_time), Application.get_env(:ex_rated, :bucket_limit)) do
-      {_count, count_remaining, _ms_to_next_bucket, _created_at, _updated_at} when count_remaining > 0 ->
+    case ExRated.inspect_bucket(
+           :mogrify_rate_limiter,
+           Application.get_env(:ex_rated, :bucket_time),
+           Application.get_env(:ex_rated, :bucket_limit)
+         ) do
+      {_count, count_remaining, _ms_to_next_bucket, _created_at, _updated_at}
+      when count_remaining > 0 ->
         import Mogrify
         # then we will write its binary data to a local tempfile
         {:ok, path} = Temp.create()
@@ -186,8 +191,13 @@ defmodule Mpnetwork.Listing do
           updated_at: Timex.now("EDT")
         })
         |> Ecto.Changeset.apply_changes()
+
       {_count, 0, ms_to_next_bucket, _created_at, _updated_at} ->
-        Process.sleep(ms_to_next_bucket + :rand.uniform(trunc(Application.get_env(:ex_rated, :bucket_time)/10)))
+        Process.sleep(
+          ms_to_next_bucket +
+            :rand.uniform(trunc(Application.get_env(:ex_rated, :bucket_time) / 10))
+        )
+
         do_get_attachment(attachment, width, height)
     end
   end

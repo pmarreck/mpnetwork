@@ -11,8 +11,14 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../assets", __DIR__)]]
+  watchers: [
+    node: [
+      "node_modules/brunch/bin/brunch",
+      "watch",
+      "--stdin",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -47,11 +53,9 @@ config :logger, :console, format: "[$level] $message\n"
 
 # Configure the mailer to deliver to a local server for development
 # which can be seen at /mailbox (per the route set up)
-config :mpnetwork, Mpnetwork.Mailer,
-  adapter: Swoosh.Adapters.Local
+config :mpnetwork, Mpnetwork.Mailer, adapter: Swoosh.Adapters.Local
 
-config :coherence, MpnetworkWeb.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Local
+config :coherence, MpnetworkWeb.Coherence.Mailer, adapter: Swoosh.Adapters.Local
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -66,7 +70,7 @@ config :mpnetwork, Mpnetwork.Repo,
   hostname: "localhost",
   pool_size: 10
 
-  # PryIn
-  config :pryin,
-    enabled: true,
-    env: :dev
+# PryIn
+config :pryin,
+  enabled: true,
+  env: :dev

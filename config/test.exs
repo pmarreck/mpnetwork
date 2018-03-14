@@ -1,8 +1,7 @@
 use Mix.Config
 
 # General application configuration
-config :mpnetwork,
-  cache_name: :test_attachment_cache
+config :mpnetwork, cache_name: :test_attachment_cache
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
@@ -23,8 +22,6 @@ config :mpnetwork, Mpnetwork.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Mailer stub for Swoosh
-config :mpnetwork, Mpnetwork.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :mpnetwork, Mpnetwork.Mailer, adapter: Swoosh.Adapters.Test
 
-config :coherence, MpnetworkWeb.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :coherence, MpnetworkWeb.Coherence.Mailer, adapter: Swoosh.Adapters.Test

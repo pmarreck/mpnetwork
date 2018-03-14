@@ -15,7 +15,10 @@ use Mix.Config
 # which you typically run after static files are built.
 config :mpnetwork, MpnetworkWeb.Endpoint,
   load_from_system_env: true,
-  http: [port: {:system, "PORT"}, protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]],
+  http: [
+    port: {:system, "PORT"},
+    protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]
+  ],
   root: ".",
   server: true,
   url: [scheme: "https", host: "${FQDN}", port: 443],
@@ -76,7 +79,8 @@ config :logger, level: :info
 # Note that {:system, "DATABASE_URL"} is deprecated so the db url is now set in the init callback in Mpnetwork.Repo
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  pool_size: 25, # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
+  # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
+  pool_size: 25,
   ssl: true
 
 # Guardian
