@@ -7,6 +7,21 @@ defmodule MpnetworkWeb.AttachmentController do
 
   require Logger
 
+  # I wrote this function because String.to_integer puked sometimes
+  # with certain spurious inputs and caused 500 errors.
+  # Should probably be moved to a lib at some point.
+  @filter_nondecimal ~r/[^0-9]+/
+  defp unerring_string_to_int(bin) when is_binary(bin) do
+    bin = Regex.replace(@filter_nondecimal, bin, "")
+    case bin do
+      "" -> nil
+      val -> String.to_integer(val)
+    end
+  end
+  defp unerring_string_to_int(n) when is_float(n), do: round(n)
+  defp unerring_string_to_int(n) when is_integer(n), do: n
+  defp unerring_string_to_int(_), do: nil
+
   # match numeric id of length 1-10
   @is_probably_int_pk ~r/^[0-9]{1,10}$/
   # attachments can be gotten by either primary key OR base64-encoded sha256 hash
@@ -24,8 +39,8 @@ defmodule MpnetworkWeb.AttachmentController do
 
   defp get_cached(id, width, height, touch \\ true) do
     id = convert_to_right_identifier(id)
-    width = if is_binary(width), do: String.to_integer(width), else: width
-    height = if is_binary(height), do: String.to_integer(height), else: height
+    width = unerring_string_to_int(width)
+    height = unerring_string_to_int(height)
 
     key =
       case {id, width, height} do
