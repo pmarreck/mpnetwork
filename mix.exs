@@ -74,7 +74,8 @@ defmodule Mpnetwork.Mixfile do
       {:pryin, "~> 1.5"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:quantum, ">= 2.2.5"},
-      {:ex_rated, "~> 1.3"}
+      {:ex_rated, "~> 1.3"},
+      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false}
     ]
   end
 
