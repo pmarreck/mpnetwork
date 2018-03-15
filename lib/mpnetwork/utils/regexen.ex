@@ -1,12 +1,16 @@
 defmodule Mpnetwork.Utils.Regexen do
   # taken from http://www.regular-expressions.info/email.html
   # Added A-Z to char classes to avoid having to use /i switch
-  @email_regex_source Regex.replace(~r/\s+/, """
-    (?=[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@)
-    [A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*
-    @ (?:(?=[A-Za-z0-9-]{1,63}\\.)[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+
-    (?=[A-Za-z0-9-]{1,63})[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?
-  """, "")
+  @email_regex_source Regex.replace(
+                        ~r/\s+/,
+                        """
+                          (?=[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@)
+                          [A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*
+                          @ (?:(?=[A-Za-z0-9-]{1,63}\\.)[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+
+                          (?=[A-Za-z0-9-]{1,63})[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?
+                        """,
+                        ""
+                      )
   def email_regex, do: Regex.compile!("\\A" <> @email_regex_source <> "\\z")
 
   # This tries to parse an email address and name from an RFC 5322-formatted "to" header.
@@ -16,13 +20,16 @@ defmodule Mpnetwork.Utils.Regexen do
     \\s*
     (?:
       (?:
-        (?:"(?<name>[^"]+)")\\s*<(?<email>#{@email_regex_source})>
+        (?:"(?<name>[^"]+)"|(?<bare_name>[A-Za-z'-]+(?:\\s[A-Za-z'-]+)*))\\s*<(?<email>#{
+    @email_regex_source
+  })>
       )
     |
       (?<only_email>#{@email_regex_source})
-    )(?:,\\s+|,|\\s+|\\b)?
+    )(?=(?:,|;)\\s+|(?:,|;)|\\s+|\\b)?
   """
-  def email_parsing_regex, do: Regex.compile!(Regex.replace(~r/\s+/, @email_parsing_regex_source, ""))
+  def email_parsing_regex,
+    do: Regex.compile!(Regex.replace(~r/\s+/, @email_parsing_regex_source, ""))
 
   # taken from... a bunch of sources and rfc's.
   @uri_regex ~r/^

@@ -98,7 +98,7 @@
 
           <!-- 10 -->
           <div class="district">
-            <strong>District:</strong>
+            <strong>District (Sec/Area):</strong>
             <%= @listing.district %>
           </div>
 

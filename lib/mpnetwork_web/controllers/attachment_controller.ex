@@ -13,11 +13,13 @@ defmodule MpnetworkWeb.AttachmentController do
   @filter_nondecimal ~r/[^0-9]+/
   defp unerring_string_to_int(bin) when is_binary(bin) do
     bin = Regex.replace(@filter_nondecimal, bin, "")
+
     case bin do
       "" -> nil
       val -> String.to_integer(val)
     end
   end
+
   defp unerring_string_to_int(n) when is_float(n), do: round(n)
   defp unerring_string_to_int(n) when is_integer(n), do: n
   defp unerring_string_to_int(_), do: nil

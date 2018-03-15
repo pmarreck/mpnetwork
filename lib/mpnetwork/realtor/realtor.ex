@@ -421,7 +421,6 @@ defmodule Mpnetwork.Realtor do
     # should return {"unconsumed_query", new_scope, any_errors} ... down the line
     {_consumed_query, final_scope, errors} =
       {query, default_search_scope(current_user), []}
-      |> try_id()
       |> try_my_office(current_user)
       |> try_mine(current_user)
       |> try_pricerange()
@@ -429,22 +428,19 @@ defmodule Mpnetwork.Realtor do
       |> try_active_inactive()
       |> try_listing_status_type()
       |> search_all_fields_using_postgres_fulltext_search()
+      |> try_id()
 
+    # IO.inspect(Ecto.Adapters.SQL.to_sql(:all, Repo, final_scope), limit: :infinity, printable_limit: :infinity)
     listings = Repo.all(final_scope)
     {listings, errors}
   end
 
   defp try_id({query, scope, errors}) do
-    if _try_zipcode({query, scope, errors}) do
-      {query, scope, errors}
-    else
+    if Regex.match?(~r/^[0-9]+$/, query) do
       id = _try_integer(query)
-
-      if id do
-        {"", scope |> or_where([l], l.id == ^id), errors}
-      else
-        {query, scope, errors}
-      end
+      {query, scope |> or_where([l], l.id == ^id), errors}
+    else
+      {query, scope, errors}
     end
   end
 
@@ -465,10 +461,11 @@ defmodule Mpnetwork.Realtor do
   # just matching on Long Island zipcodes for now
   # one day these may collide with searching by ID#
   # hashtag ProblemsIdLikeToHave
-  @zipcode_regex ~r/\b11[0-9]{3}\b/
-  defp _try_zipcode({query, _scope, _errors}) do
-    Regex.match?(@zipcode_regex, query)
-  end
+  # Abandoned this because it broke tests as soon as id's started with 11nnn >..<
+  # @zipcode_regex ~r/\b11[0-9]{3}\b/
+  # defp _try_zipcode({query, _scope, _errors}) do
+  #   Regex.match?(@zipcode_regex, query)
+  # end
 
   defp convert_binary_date_parts_to_date_struct(year, month, day)
        when is_binary(year) and is_binary(month) and is_binary(day) do
@@ -951,10 +948,11 @@ defmodule Mpnetwork.Realtor do
   end
 
   defp search_all_fields_using_postgres_fulltext_search({q, scope, errors}) do
-    scope =
-      if String.trim(q) != "" do
-        q = normalize_query(q)
+    something_left = if String.trim(q) != "", do: true, else: false
+    q = if something_left, do: normalize_query(q), else: q
 
+    scope =
+      if something_left do
         scope
         |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
         |> order_by([l], asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q))
@@ -962,7 +960,7 @@ defmodule Mpnetwork.Realtor do
         scope
       end
 
-    {"", scope, errors}
+    {q, scope, errors}
   end
 
   # defp _search_all_fields(q) do

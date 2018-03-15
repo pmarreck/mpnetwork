@@ -12,7 +12,7 @@ defmodule Mpnetwork.Utils.RegexenTest do
   #   http://उदाहरण.परीक्षा
   # ]
 
-  @positive_test_cases ~w[
+  @positive_url_test_cases ~w[
     https://www.mpwrealestateboard.network
     http://foo.com
     http://foo.com/
@@ -71,7 +71,7 @@ defmodule Mpnetwork.Utils.RegexenTest do
   ]
 
   # I disagreed that some of these should fail, so I commented them out... But can follow up again some other time.
-  @negative_test_cases [
+  @negative_url_test_cases [
     "http://",
     "http://.",
     "http://..",
@@ -112,13 +112,77 @@ defmodule Mpnetwork.Utils.RegexenTest do
     # "http://10.1.1.1",
   ]
 
-  test "positives" do
-    @positive_test_cases
+  @positive_email_list_test_cases [
+    {
+      "some@email.com",
+      [["some@email.com", "", "", "", "some@email.com"]]
+    },
+    {"\"Some Name\" <some@email.com>",
+     [["\"Some Name\" <some@email.com>", "Some Name", "", "some@email.com"]]},
+    {"Some Name <some@email.com>",
+     [["Some Name <some@email.com>", "", "Some Name", "some@email.com"]]},
+    {"Peter Marreck-Levy <peter@marreck.com>, John O'Russo <john@russo.com>",
+     [
+       ["Peter Marreck-Levy <peter@marreck.com>", "", "Peter Marreck-Levy", "peter@marreck.com"],
+       [" John O'Russo <john@russo.com>", "", "John O'Russo", "john@russo.com"]
+     ]},
+    {"some1@somewhere.com; someoneelse@somewhereelse.com",
+     [
+       ["some1@somewhere.com", "", "", "", "some1@somewhere.com"],
+       [" someoneelse@somewhereelse.com", "", "", "", "someoneelse@somewhereelse.com"]
+     ]},
+    {"some1@somewhere.com someoneelse@somewhereelse.com",
+     [
+       ["some1@somewhere.com", "", "", "", "some1@somewhere.com"],
+       [" someoneelse@somewhereelse.com", "", "", "", "someoneelse@somewhereelse.com"]
+     ]},
+    # only the bare email will be gotten here
+    {"some name some@email.com", [[" some@email.com", "", "", "", "some@email.com"]]},
+    # only the latter will be picked up here
+    {"Peter Marreck, John Russo <john@russo.com>",
+     [[" John Russo <john@russo.com>", "", "John Russo", "john@russo.com"]]},
+    {"\"Peter Marreck\";John Russo <john@russo.com>",
+     [["John Russo <john@russo.com>", "", "John Russo", "john@russo.com"]]},
+    {"John Quincy Adams <john.quincy@adams.com>, \"John Russo\" <john@russo.com>; peter@marreck.com someone@else.com",
+     [
+       [
+         "John Quincy Adams <john.quincy@adams.com>",
+         "",
+         "John Quincy Adams",
+         "john.quincy@adams.com"
+       ],
+       [" \"John Russo\" <john@russo.com>", "John Russo", "", "john@russo.com"],
+       [" peter@marreck.com", "", "", "", "peter@marreck.com"],
+       [" someone@else.com", "", "", "", "someone@else.com"]
+     ]}
+  ]
+
+  @negative_email_list_test_cases [
+    "some@",
+    "domain.com",
+    "user@gmail",
+    "Peter Marreck, John Russo"
+  ]
+
+  test "positive URLs" do
+    @positive_url_test_cases
     |> Enum.each(&assert &1 =~ url_regex())
   end
 
-  test "negatives" do
-    @negative_test_cases
+  test "negative URLs" do
+    @negative_url_test_cases
     |> Enum.each(&refute &1 =~ url_regex())
+  end
+
+  test "positive email lists" do
+    @positive_email_list_test_cases
+    |> Enum.each(fn {test_case, result} ->
+      assert Regex.scan(email_parsing_regex(), test_case) == result
+    end)
+  end
+
+  test "negative email lists" do
+    @negative_email_list_test_cases
+    |> Enum.each(&refute &1 =~ email_parsing_regex())
   end
 end

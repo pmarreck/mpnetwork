@@ -146,7 +146,7 @@
 
           <!-- 10 -->
           <div class="form-group<%= if f.errors[:district], do: " has-error" %>">
-            <%= label f, :district, "District", class: "control-label" %>
+            <%= label f, :district, "District (Sec/Area)", class: "control-label" %>
             <%= text_input f, :district, class: "form-control" %>
             <%= error_tag f, :district %>
           </div>
