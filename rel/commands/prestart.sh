@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# note: this file currently isn't referenced anywhere (such as from config.exs)
+# because I ended up going with pingdom free tier for now instead of datadog for monitoring
+
 # run migrations
 $RELEASE_ROOT_DIR/bin/mpnetwork command Elixir.Mpnetwork.ReleaseTasks seed
 # install datadog
