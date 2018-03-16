@@ -13,6 +13,7 @@ defmodule MpnetworkWeb.Endpoint do
     from: :mpnetwork,
     gzip: true,
     only: ~w(css fonts images js favicon.ico robots.txt),
+    cache_control_for_etags: "public, max-age=31536000",
     headers: [{"access-control-allow-origin", "*"}]
   )
 
