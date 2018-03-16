@@ -37,7 +37,7 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"B8ZQgmmb&FehGImXOA;tF>AQ<DKkTSt.7eB}[F|[90{PMR9evUweg%tU!!OI[s~s"
-  set pre_start_hook: "rel/commands/migrate.sh"
+  set pre_start_hook: "rel/commands/migrate.sh && rel/commands/datadog_install.sh"
 end
 
 # You may define one or more releases in this file.
