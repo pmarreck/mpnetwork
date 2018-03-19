@@ -19,8 +19,39 @@ defmodule MpnetworkWeb.ListingController do
     render(conn, "search_help.html")
   end
 
-  def index(conn, %{"q" => query} = _params) do
-    {listings, errors} = Realtor.query_listings(query, current_user(conn))
+  # I wrote this function because String.to_integer puked sometimes
+  # with certain spurious inputs and caused 500 errors.
+  # Should probably be moved to a lib at some point.
+  # This function is currently copied from attachment_controller.ex
+  @filter_nondecimal ~r/[^0-9]+/
+  defp unerring_string_to_int(bin) when is_binary(bin) do
+    bin = Regex.replace(@filter_nondecimal, bin, "")
+
+    case bin do
+      "" -> nil
+      val -> String.to_integer(val)
+    end
+  end
+
+  defp unerring_string_to_int(n) when is_float(n), do: round(n)
+  defp unerring_string_to_int(n) when is_integer(n), do: n
+  defp unerring_string_to_int(_), do: nil
+
+  def index(conn, %{"q" => query, "limit" => max} = _params) do
+    max = case max do
+      "" -> 50
+      nil -> 50
+      50 -> 50
+      "50" -> 50
+      100 -> 100
+      "100" -> 100
+      200 -> 200
+      "200" -> 200
+      500 -> 500
+      "500" -> 500
+      n -> unerring_string_to_int(n) || 1000
+    end
+    {total, listings, errors} = Realtor.query_listings(query, max, current_user(conn))
     primaries = Listing.primary_images_for_listings(listings)
 
     render(
@@ -28,7 +59,9 @@ defmodule MpnetworkWeb.ListingController do
       "search_results.html",
       listings: listings,
       primaries: primaries,
-      errors: errors
+      errors: errors,
+      total: total,
+      max: max
     )
   end
 

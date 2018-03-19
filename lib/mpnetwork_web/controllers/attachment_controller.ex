@@ -10,6 +10,7 @@ defmodule MpnetworkWeb.AttachmentController do
   # I wrote this function because String.to_integer puked sometimes
   # with certain spurious inputs and caused 500 errors.
   # Should probably be moved to a lib at some point.
+  # I copied this function to listing_controller.ex as well for now
   @filter_nondecimal ~r/[^0-9]+/
   defp unerring_string_to_int(bin) when is_binary(bin) do
     bin = Regex.replace(@filter_nondecimal, bin, "")

@@ -9,7 +9,14 @@
     <meta name="author" content=""> %>
 
     <title><%= page_title(@conn) %></title>
-    <link rel="stylesheet" href="<%= static_url(@conn, "/css/app.css") |> String.trim_trailing("?vsn=d") %>">
+    <link rel="stylesheet" href="<%=
+      url = static_url(@conn, "/css/app.css")
+      if Mix.env == :prod do
+        url |> String.trim_trailing("?vsn=d")
+      else
+        url
+      end
+    %>">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 <%#     <!-- Theme style -->
@@ -86,6 +93,16 @@
                   <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                   </button>
                 </span>
+            </div>
+            <div class="input-group" style="padding: 5px">
+              <label for="limit" style="color: #b8c7ce">Limit:</label>&nbsp;&nbsp;
+              <select name="limit">
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+                <%= if @current_user.role_id < 3 do %><option value="all">All</option><% end %>
+              </select>
             </div>
           </form>
           <!-- /.search form -->
@@ -263,6 +280,13 @@
       immediately after the control sidebar -->
       <div class="control-sidebar-bg"></div>
     </div> <!-- /container -->
-    <script src="<%= static_url(@conn, "/js/app.js") |> String.trim_trailing("?vsn=d") %>"></script>
+    <script src="<%=
+      url = static_url(@conn, "/js/app.js")
+      if Mix.env == :prod do
+        url |> String.trim_trailing("?vsn=d")
+      else
+        url
+      end
+    %>"></script>
   </body>
 </html>

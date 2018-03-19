@@ -7,4 +7,10 @@
     <% end) %>
   </div>
 <% end %>
+<p>
+  <%= @total %> total results.
+  <%= if @total > @max do %>
+    Only the top <%= @max %>, ordered by most recently edited, are shown. To show more (or more relevant) results, increase the search limit (or just use a more focused search).
+  <% end %>
+</p>
 <%= render("_latest_n.html", search: true, remarks: false, draft: false, conn: @conn, listings: @listings, primaries: @primaries, include_inserted_at: false, include_modified_at: false, current_user: @current_user) %>

@@ -89,8 +89,8 @@ defmodule Mpnetwork.Realtor do
       [%Broadcast{}, ...]
 
   """
-  def list_latest_broadcasts(count \\ 5) do
-    Repo.all(from(b in Broadcast, order_by: [desc: b.inserted_at], limit: ^count))
+  def list_latest_broadcasts(max \\ 5) do
+    Repo.all(from(b in Broadcast, order_by: [desc: b.inserted_at], limit: ^max))
     |> Repo.preload(:user)
   end
 
@@ -390,19 +390,17 @@ defmodule Mpnetwork.Realtor do
           l in Listing,
           where: l.draft == false or l.broker_id == ^current_office.id,
           order_by: [desc: l.updated_at],
-          preload: [:broker, :user],
-          limit: 50
+          preload: [:broker, :user]
         )
       else
-        from(l in Listing, order_by: [desc: l.updated_at], preload: [:broker, :user], limit: 100)
+        from(l in Listing, order_by: [desc: l.updated_at], preload: [:broker, :user])
       end
     else
       from(
         l in Listing,
         where: l.draft == false or l.user_id == ^current_user.id,
         order_by: [desc: l.updated_at],
-        preload: [:broker, :user],
-        limit: 50
+        preload: [:broker, :user]
       )
     end
   end
@@ -410,17 +408,18 @@ defmodule Mpnetwork.Realtor do
   @doc """
   Queries listings.
   """
-  def query_listings("", current_user) do
-    {Repo.all(
-       default_search_scope(current_user)
-       |> where([l], l.listing_status_type in ~w[NEW FS EXT PC])
-     ), []}
+  def query_listings("", max, current_user) do
+    blank_scope = default_search_scope(current_user) |> where([l], l.listing_status_type in ~w[NEW FS EXT PC])
+    limited_scope = blank_scope |> limit([l], ^max)
+    total_count = Repo.aggregate(blank_scope, :count, :id)
+    {total_count, Repo.all(limited_scope), []}
   end
 
-  def query_listings(query, current_user) do
+  def query_listings(query, max, current_user) do
     # should return {"unconsumed_query", new_scope, any_errors} ... down the line
+    blank_scope = default_search_scope(current_user)
     {_consumed_query, final_scope, errors} =
-      {query, default_search_scope(current_user), []}
+      {query, blank_scope, []}
       |> try_my_office(current_user)
       |> try_mine(current_user)
       |> try_pricerange()
@@ -430,9 +429,19 @@ defmodule Mpnetwork.Realtor do
       |> search_all_fields_using_postgres_fulltext_search()
       |> try_id()
 
+    limited_final_scope = final_scope |> limit([l], ^max)
     # IO.inspect(Ecto.Adapters.SQL.to_sql(:all, Repo, final_scope), limit: :infinity, printable_limit: :infinity)
-    listings = Repo.all(final_scope)
-    {listings, errors}
+    total_count = try do
+      Repo.aggregate(final_scope, :count, :id)
+    rescue
+      Postgrex.Error -> 0
+    end
+    {listings, errors} = try do
+      {Repo.all(limited_final_scope), errors}
+    rescue
+      Postgrex.Error -> {[], ["Something was wrong with the search query: #{query}" | errors]}
+    end
+    {total_count, listings, errors}
   end
 
   defp try_id({query, scope, errors}) do

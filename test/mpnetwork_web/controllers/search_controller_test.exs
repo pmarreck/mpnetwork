@@ -75,7 +75,7 @@ defmodule MpnetworkWeb.SearchControllerTest do
     conn =
       conn
       |> assign(:current_user, user)
-      |> get(listing_path(conn, :index, %{q: ""}))
+      |> get(listing_path(conn, :index, %{q: "", limit: 50}))
 
     assert html_response(conn, 200) =~ "No listings"
   end
@@ -87,7 +87,7 @@ defmodule MpnetworkWeb.SearchControllerTest do
     conn =
       conn
       |> assign(:current_user, user)
-      |> get(listing_path(conn, :index, %{q: "FS"}))
+      |> get(listing_path(conn, :index, %{q: "FS", limit: 50}))
 
     assert html_response(conn, 200) =~ "Search Result Address"
   end
