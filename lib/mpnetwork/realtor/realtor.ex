@@ -867,6 +867,30 @@ defmodule Mpnetwork.Realtor do
       # normalizes "X story" or "X storys" (people misspell!) or "X stories" to "Xsto"
       # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes comma which was screwing up the below)
       {~r/\.\,\s/, ". "},
+
+      # normalizes 'dr/drive', 'st/street', 'ln/lane', 'blvd/boulevard', 'ctr/center', 'cir/circle', 'ct/court', 'hts/heights',
+      # 'fwy/freeway', 'hwy/highway', 'jct/junction', 'mnr/manor', 'mt/mount', 'pky/parkway', 'pl/place', 'pt/point',
+      # 'rd/road', 'sq/square', 'sta/station', 'tpke/turnpike' to be considered equivalent
+      {~r/\bdr(?:ive)?\b/i, "(dr|drive)"},
+      {~r/\bst(?:reet)?\b/i, "(st|street)"},
+      {~r/\b(?:ln|lane)\b/i, "(ln|lane)"},
+      {~r/\b(?:blvd|boulevard)\b/i, "(blvd|boulevard)"},
+      {~r/\b(?:ctr|center)\b/i, "(ctr|center)"},
+      {~r/\bcir(?:cle)?\b/i, "(cir|circle)"},
+      {~r/\b(?:ct|court)\b/i, "(ct|court)"},
+      {~r/\b(?:hts|heights)\b/i, "(hts|heights)"},
+      {~r/\b(?:fwy|freeway)\b/i, "(fwy|freeway)"},
+      {~r/\b(?:hwy|highway)\b/i, "(hwy|highway)"},
+      {~r/\b(?:jct|junction)\b/i, "(jct|junction)"},
+      {~r/\b(?:mnr|manor)\b/i, "(mnr|manor)"},
+      {~r/\b(?:mt|mount)\b/i, "(mt|mount)"},
+      {~r/\b(?:pky|parkway)\b/i, "(pky|parkway)"},
+      {~r/\bpl(?:ace)?\b/i, "(pl|place)"},
+      {~r/\b(?:pt|point)\b/i, "(pt|point)"},
+      {~r/\b(?:rd|road)\b/i, "(rd|road)"},
+      {~r/\bsq(?:uare)?\b/i, "(sq|square)"},
+      {~r/\bsta(?:tion)?\b/i, "(sta|station)"},
+      {~r/\b(?:tpke|turnpike)\b/i, "(tpke|turnpike)"},
       # normalizes "W,X,Y , Z" to "W|X|Y|Z"
       {~r/\s*\,\s*/, "|"},
       # normalizes "X and Y" or "X AND Y" to "X&Y"

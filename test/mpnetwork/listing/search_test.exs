@@ -267,6 +267,34 @@ defmodule Mpnetwork.SearchTest do
       assert {[listing2, listing], []} == Realtor.query_listings("#{listing.id}", user)
     end
 
+    # the following should all be considered equivalent:
+    # 'dr/drive', 'st/street', 'ln/lane', 'blvd/boulevard', 'ctr/center', 'cir/circle', 'ct/court', 'hts/heights', 'fwy/freeway', 'hwy/highway', 'jct/junction', 'mnr/manor', 'mt/mount', 'pky/parkway', 'pl/place', 'pt/point', 'rd/road', 'sq/square', 'sta/station', 'tpke/turnpike'
+    test "search on 'dr/drive' considered equivalent to each other" do
+      listing1 = listing_fixture(address: "15 Shady Dr")
+      user = listing1.user
+      listing2 = listing_fixture(address: "25 Shady Drive", user: user, user_id: user.id)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady drive", user)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady dr", user)
+    end
+
+    test "search on 'st/street' considered equivalent to each other (disregarding period)" do
+      listing1 = listing_fixture(address: "15 Shady St.")
+      user = listing1.user
+      listing2 = listing_fixture(address: "25 Shady Street", user: user, user_id: user.id)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady street", user)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady st", user)
+    end
+
+    test "search on 'ln/lane' considered equivalent to each other" do
+      listing1 = listing_fixture(address: "15 Shady Ln")
+      user = listing1.user
+      listing2 = listing_fixture(address: "25 Shady Lane", user: user, user_id: user.id)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady lane", user)
+      assert {[listing2, listing1], []} == Realtor.query_listings("shady ln", user)
+    end
+
+    # ...the other less common ones omitted due to using the exact same replacement method
+
     test "blank search" do
       listing = listing_fixture()
       user = listing.user
