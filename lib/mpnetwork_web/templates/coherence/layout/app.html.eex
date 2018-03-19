@@ -9,14 +9,7 @@
     <meta name="author" content=""> %>
 
     <title>Manhasset - Port Washington Real Estate Network</title>
-    <link rel="stylesheet" href="<%=
-      url = static_url(@conn, "/css/app.css")
-      if Mix.env == :prod do
-        url |> String.trim_trailing("?vsn=d")
-      else
-        url
-      end
-      %>">
+    <link rel="stylesheet" href="<%= static_url(@conn, "/css/app.css") |> String.trim_trailing("?vsn=d") %>">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 <%#     <!-- Theme style -->
