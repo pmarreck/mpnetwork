@@ -126,7 +126,7 @@
               <ul class="treeview-menu">
                 <li><%= link "Round Robin Report", to: listing_path(@conn, :index) %></li>
                 <li><%= link "Inspection/Open House Sheet", to: upcoming_inspections_path(@conn, :inspection_sheet) %></li>
-                <li><%= link "My Office's Listings", to: listing_path(@conn, :index, q: "my office") %></li>
+                <li><%= link "My Office's Listings", to: listing_path(@conn, :index, q: "my office", limit: 50) %></li>
                 <%= if !Permissions.read_only?(@current_user) do %>
                   <li><%= link "Add New Listing", to: listing_path(@conn, :new) %></li>
                 <% end %>
