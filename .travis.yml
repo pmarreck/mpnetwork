@@ -45,7 +45,6 @@ jobs:
           - "assets/node_modules"
           - "deps"
 git:
-  depth: 3
   submodules: false
 notifications:
   slack:
