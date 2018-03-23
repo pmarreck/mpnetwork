@@ -409,7 +409,9 @@ defmodule Mpnetwork.Realtor do
   Queries listings.
   """
   def query_listings("", max, current_user) do
-    blank_scope = default_search_scope(current_user) |> where([l], l.listing_status_type in ~w[NEW FS EXT PC])
+    blank_scope =
+      default_search_scope(current_user) |> where([l], l.listing_status_type in ~w[NEW FS EXT PC])
+
     limited_scope = blank_scope |> limit([l], ^max)
     total_count = Repo.aggregate(blank_scope, :count, :id)
     {total_count, Repo.all(limited_scope), []}
@@ -418,6 +420,7 @@ defmodule Mpnetwork.Realtor do
   def query_listings(query, max, current_user) do
     # should return {"unconsumed_query", new_scope, any_errors} ... down the line
     blank_scope = default_search_scope(current_user)
+
     {_consumed_query, final_scope, errors} =
       {query, blank_scope, []}
       |> try_my_office(current_user)
@@ -430,17 +433,22 @@ defmodule Mpnetwork.Realtor do
       |> try_id()
 
     limited_final_scope = final_scope |> limit([l], ^max)
+
     # IO.inspect(Ecto.Adapters.SQL.to_sql(:all, Repo, final_scope), limit: :infinity, printable_limit: :infinity)
-    total_count = try do
-      Repo.aggregate(final_scope, :count, :id)
-    rescue
-      Postgrex.Error -> 0
-    end
-    {listings, errors} = try do
-      {Repo.all(limited_final_scope), errors}
-    rescue
-      Postgrex.Error -> {[], ["Something was wrong with the search query: #{query}" | errors]}
-    end
+    total_count =
+      try do
+        Repo.aggregate(final_scope, :count, :id)
+      rescue
+        Postgrex.Error -> 0
+      end
+
+    {listings, errors} =
+      try do
+        {Repo.all(limited_final_scope), errors}
+      rescue
+        Postgrex.Error -> {[], ["Something was wrong with the search query: #{query}" | errors]}
+      end
+
     {total_count, listings, errors}
   end
 

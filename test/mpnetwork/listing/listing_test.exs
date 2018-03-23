@@ -157,7 +157,12 @@ defmodule Mpnetwork.ListingTest do
       assert {:ok, %Attachment{} = attachment} =
                Listing.create_attachment(
                  Enum.into(
-                   %{listing_id: listing.id, content_type: c_t, width_pixels: w, height_pixels: h},
+                   %{
+                     listing_id: listing.id,
+                     content_type: c_t,
+                     width_pixels: w,
+                     height_pixels: h
+                   },
                    @attachment_create_attrs
                  )
                )
@@ -184,7 +189,12 @@ defmodule Mpnetwork.ListingTest do
                Listing.update_attachment(
                  attachment,
                  Enum.into(
-                   %{listing_id: listing.id, content_type: c_t, width_pixels: w, height_pixels: h},
+                   %{
+                     listing_id: listing.id,
+                     content_type: c_t,
+                     width_pixels: w,
+                     height_pixels: h
+                   },
                    @attachment_update_attrs
                  )
                )

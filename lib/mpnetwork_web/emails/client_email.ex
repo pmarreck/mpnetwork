@@ -10,7 +10,7 @@ defmodule Mpnetwork.ClientEmail do
   # defp site_name, do: Config.site_name(inspect Config.module)
 
   def send_client(email_address, name, subject, html_body, current_user, listing, url, cc_self) do
-    html_body = interpolate_placeholder_values(html_body, %{name: name, url: url})
+    html_body = interpolate_placeholder_values(html_body, %{name: name, url: url}, "Client")
 
     email =
       %Email{}
@@ -30,7 +30,14 @@ defmodule Mpnetwork.ClientEmail do
     email |> render_body("listing_email.html", %{html_body: html_body})
   end
 
-  defp interpolate_placeholder_values(body, %{name: name, url: url}) do
+  defp interpolate_placeholder_values(body, %{name: name, url: url}, alt_name) do
+    name =
+      case name do
+        "" -> alt_name
+        nil -> alt_name
+        _ -> name
+      end
+
     body = Regex.replace(~r/@name_placeholder/, body, name)
     body = Regex.replace(~r/@listing_link_placeholder/, body, url)
     body

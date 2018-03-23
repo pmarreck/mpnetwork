@@ -6,15 +6,21 @@
 <p><%= link "Preview the link (broker-full format)", to: public_broker_full_path(@conn, :broker_full, public_broker_full_code(@listing)), target: "_blank" %></p>
 <%= form_for @conn, email_listing_path(@conn, :send_email, @listing.id), [as: :email, class: "contains-richtexteditor"], fn f -> %>
   <div class="form-group">
-    <%= label f, "Name of user to email this listing to:", class: "control-label" %>
-    <%= text_input f, :name, class: "form-control", required: "" %>
+    <%= label f, "Name of single user to email this listing to:", class: "control-label" %>
+    <%= text_input f, :name, class: "form-control" %>
     <%= error_tag f, :name %>
   </div>
 
   <div class="form-group">
-    <%= label f, "Email of user to email this listing to:", class: "control-label" %>
-    <%= text_input f, :email_address, class: "form-control", required: "" %>
+    <%= label f, "Email of single user to email this listing to:", class: "control-label" %>
+    <%= text_input f, :email_address, class: "form-control" %>
     <%= error_tag f, :email_address %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "List of multiple names and/or emails to email this listing to:", class: "control-label" %>
+    <%= textarea f, :names_emails, class: "form-control", placeholder: "\"Quoted Firstname Lastname\" <email@address.com>; Quoteless Name <still.need@brackets.around.the.email.com>, bare@email.com, etc.\nMultiple name/address pairs (or \"bare\" email addresses) can be comma, semicolon or just space-separated." %>
+    <%= error_tag f, :names_emails %>
   </div>
 
   <div class="form-group">

@@ -38,19 +38,21 @@ defmodule MpnetworkWeb.ListingController do
   defp unerring_string_to_int(_), do: nil
 
   def index(conn, %{"q" => query, "limit" => max} = _params) do
-    max = case max do
-      "" -> 50
-      nil -> 50
-      50 -> 50
-      "50" -> 50
-      100 -> 100
-      "100" -> 100
-      200 -> 200
-      "200" -> 200
-      500 -> 500
-      "500" -> 500
-      n -> unerring_string_to_int(n) || 1000
-    end
+    max =
+      case max do
+        "" -> 50
+        nil -> 50
+        50 -> 50
+        "50" -> 50
+        100 -> 100
+        "100" -> 100
+        200 -> 200
+        "200" -> 200
+        500 -> 500
+        "500" -> 500
+        n -> unerring_string_to_int(n) || 1000
+      end
+
     {total, listings, errors} = Realtor.query_listings(query, max, current_user(conn))
     primaries = Listing.primary_images_for_listings(listings)
 
@@ -314,6 +316,46 @@ defmodule MpnetworkWeb.ListingController do
     # end
   end
 
+  defp parse_names_emails(names_emails) when is_binary(names_emails) do
+    import Mpnetwork.Utils.Regexen
+    results = Regex.scan(email_parsing_regex(), names_emails)
+
+    results
+    |> Enum.map(fn result ->
+      result =
+        case result do
+          [_full, "", "", "", email] -> {nil, email}
+          [_full, "", "", email] -> {nil, email}
+          [_full, "", bare_name, email] -> {bare_name, email}
+          [_full, quoted_name, "", email] -> {quoted_name, email}
+          [_full, _, _, email] -> {nil, email}
+        end
+
+      {name, email} = result
+      %{name: name, email: email}
+    end)
+  end
+
+  defp unparse_names_emails(names_emails_list) when is_list(names_emails_list) do
+    names_emails_list
+    |> Enum.map(fn %{name: name, email: email} ->
+      case name do
+        nil -> email
+        _ -> "\"#{name}\" <#{email}>"
+      end
+    end)
+    |> Enum.join(", ")
+  end
+
+  def send_email(conn, %{"id" => id, "email" => %{"email_address" => "", "names_emails" => ""}}) do
+    conn
+    |> put_flash(
+      :error,
+      "ERROR: At least one email address is required"
+    )
+    |> redirect(to: email_listing_path(conn, :email_listing, id))
+  end
+
   def send_email(
         conn,
         %{
@@ -322,6 +364,7 @@ defmodule MpnetworkWeb.ListingController do
             "email_address" => email_address,
             "type" => type,
             "name" => name,
+            "names_emails" => names_emails,
             "subject" => subject,
             "body" => body,
             "cc_self" => cc_self
@@ -350,64 +393,94 @@ defmodule MpnetworkWeb.ListingController do
           raise "unknown public listing type: #{type}"
       end
 
-    sent_email =
-      ClientEmail.send_client(
-        email_address,
-        name,
-        subject,
-        body,
-        current_user,
-        listing,
-        url,
-        cc_self
-      )
-
-    {success, results} =
-      case Mailer.deliver(sent_email) do
-        {:ok, results} -> {true, results}
-        {:error, :timeout} -> {false, :timeout}
-        {:error, reason} -> {false, reason}
-        unknown -> {false, unknown}
+    names_emails =
+      if email_address && email_address != "" do
+        "\"#{name}\" <#{email_address}>; " <> names_emails
+      else
+        names_emails
       end
 
-    case {success, results} do
-      {true, results} ->
-        Logger.info(
-          "Sent listing id #{id} of type #{type} to #{email_address}#{
-            if cc_self, do: " (cc'ing self)", else: ""
-          }, result: #{inspect(results)}"
-        )
-
-      {false, :timeout} ->
-        Logger.info("TIMED OUT emailing listing id #{id} of type #{type} to #{email_address}")
-
-      {false, reason} ->
-        Logger.info("Error emailing listing id #{id}, reason given: #{inspect(reason)}")
-    end
-
-    conn =
-      case {success, results} do
-        {true, _} ->
-          conn |> put_flash(:info, "Listing emailed to #{type} at #{email_address} successfully.")
-
-        {false, :timeout} ->
-          conn
-          |> put_flash(
-            :error,
-            "ERROR: Trying to email this listing to #{type} at #{email_address} timed out for some reason. Please try again."
+    parsed_names_emails = parse_names_emails(names_emails)
+    # there were no email addresses detected
+    if parsed_names_emails != [] do
+      sent_emails =
+        parsed_names_emails
+        |> Enum.map(fn %{name: name, email: email_address} ->
+          ClientEmail.send_client(
+            email_address,
+            if(name, do: name, else: ""),
+            subject,
+            body,
+            current_user,
+            listing,
+            url,
+            cc_self
           )
+        end)
 
-        {false, reason} ->
+      success_fail_emails =
+        sent_emails
+        |> Enum.map(fn sent_email ->
+          {success, results} =
+            case Mailer.deliver(sent_email) do
+              {:ok, results} -> {true, results}
+              {:error, :timeout} -> {false, :timeout}
+              {:error, reason} -> {false, reason}
+              unknown -> {false, unknown}
+            end
+
+          case {success, results} do
+            {true, results} ->
+              Logger.info(
+                "Sent listing id #{id} of type #{type} to #{email_address}#{
+                  if cc_self, do: " (cc'ing self)", else: ""
+                }, result: #{inspect(results)}"
+              )
+
+            {false, :timeout} ->
+              Logger.info(
+                "TIMED OUT emailing listing id #{id} of type #{type} to #{email_address}"
+              )
+
+            {false, reason} ->
+              Logger.info("Error emailing listing id #{id}, reason given: #{inspect(reason)}")
+          end
+
+          {success, results}
+        end)
+
+      overall_success = success_fail_emails |> Enum.all?(fn {s, _r} -> s end)
+      fails = success_fail_emails |> Enum.filter(fn {success, _reason} -> !success end)
+
+      fail_reasons =
+        fails |> Enum.map(fn {_failure, reason} -> "#{reason}" end) |> Enum.join("; ")
+
+      case overall_success do
+        true ->
+          conn
+          |> put_flash(
+            :info,
+            "Listing emailed to these recipients successfully: #{
+              unparse_names_emails(parsed_names_emails)
+            }" <> if(cc_self, do: ". You were bcc'd on every email.", else: "")
+          )
+          |> redirect(to: listing_path(conn, :show, id))
+
+        false ->
           conn
           |> put_flash(
             :error,
-            "ERROR: Problem encountered emailing to #{email_address}. Reason given: #{
-              inspect(reason)
+            "ERROR: Trying to email this listing to some of the email addresses failed for some reason. Please try again. Actual error(s): #{
+              fail_reasons
             }"
           )
+          |> redirect(to: email_listing_path(conn, :email_listing, id))
       end
-
-    redirect(conn, to: listing_path(conn, :show, id))
+    else
+      conn
+      |> put_flash(:error, "ERROR: No valid email addresses were detected")
+      |> redirect(to: email_listing_path(conn, :email_listing, id))
+    end
   end
 
   defp offices do

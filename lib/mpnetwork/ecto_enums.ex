@@ -3,7 +3,8 @@ defmodule Mpnetwork.EnumMaps do
   @class_types_ext ~w[Residential Condo Co-op HOA Rental Land Commercial/Industrial]
   @class_types_int @class_types_ext
                    |> Enum.map(
-                     &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                     &(String.downcase(&1)
+                       |> String.replace(~r/[^a-z0-9]/, "_")
                        |> String.to_atom())
                    )
   def class_types_int, do: @class_types_int
@@ -210,7 +211,8 @@ defmodule Mpnetwork.EnumMaps do
   ]
   @style_types_int @style_types_ext
                    |> Enum.map(
-                     &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                     &(String.downcase(&1)
+                       |> String.replace(~r/[^a-z0-9]/, "_")
                        |> String.to_atom())
                    )
   def style_types_int, do: @style_types_int
@@ -232,7 +234,8 @@ defmodule Mpnetwork.EnumMaps do
   @dining_room_types_ext ["Formal", "L-Shaped", "Lr/Dr", "None", "Other"]
   @dining_room_types_int @dining_room_types_ext
                          |> Enum.map(
-                           &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                           &(String.downcase(&1)
+                             |> String.replace(~r/[^a-z0-9]/, "_")
                              |> String.to_atom())
                          )
   def dining_room_types_int, do: @dining_room_types_int
@@ -283,7 +286,8 @@ defmodule Mpnetwork.EnumMaps do
   ]
   @heating_types_int @heating_types_ext
                      |> Enum.map(
-                       &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                       &(String.downcase(&1)
+                         |> String.replace(~r/[^a-z0-9]/, "_")
                          |> String.to_atom())
                      )
   def heating_types_int, do: @heating_types_int
@@ -369,7 +373,8 @@ defmodule Mpnetwork.EnumMaps do
   ]
   @green_cert_types_int @green_cert_types_ext
                         |> Enum.map(
-                          &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                          &(String.downcase(&1)
+                            |> String.replace(~r/[^a-z0-9]/, "_")
                             |> String.to_atom())
                         )
   def green_cert_types_int, do: @green_cert_types_int
@@ -393,7 +398,8 @@ defmodule Mpnetwork.EnumMaps do
   @patio_types_int ~w[brick bluestone concrete ceramic_tile porcelain_tile limestone pavers quartzite slate wood other]a
   @patio_types_ext @patio_types_int
                    |> Enum.map(
-                     &(Atom.to_string(&1) |> String.replace(~r/_/, " ")
+                     &(Atom.to_string(&1)
+                       |> String.replace(~r/_/, " ")
                        |> String.capitalize())
                    )
   def patio_types_int, do: @patio_types_int
@@ -442,7 +448,8 @@ defmodule Mpnetwork.EnumMaps do
   ]
   @pool_types_int @pool_types_ext
                   |> Enum.map(
-                    &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                    &(String.downcase(&1)
+                      |> String.replace(~r/[^a-z0-9]/, "_")
                       |> String.to_atom())
                   )
   def pool_types_int, do: @pool_types_int
@@ -473,7 +480,8 @@ defmodule Mpnetwork.EnumMaps do
   ]
   @deck_types_int @deck_types_ext
                   |> Enum.map(
-                    &(String.downcase(&1) |> String.replace(~r/[^a-z0-9]/, "_")
+                    &(String.downcase(&1)
+                      |> String.replace(~r/[^a-z0-9]/, "_")
                       |> String.to_atom())
                   )
   def deck_types_int, do: @deck_types_int

@@ -296,7 +296,8 @@ defmodule Mpnetwork.SearchTest do
     # ...the other less common ones omitted due to using the exact same replacement method
 
     test "malformed search doesn't blow up in a 500" do
-      assert {0, [], ["Something was wrong with the search query: <>?!&^$@*&%^(pajklwer"]} == Realtor.query_listings("<>?!&^$@*&%^(pajklwer", 50, user_fixture())
+      assert {0, [], ["Something was wrong with the search query: <>?!&^$@*&%^(pajklwer"]} ==
+               Realtor.query_listings("<>?!&^$@*&%^(pajklwer", 50, user_fixture())
     end
 
     test "blank search" do
