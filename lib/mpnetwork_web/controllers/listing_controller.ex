@@ -324,11 +324,15 @@ defmodule MpnetworkWeb.ListingController do
     |> Enum.map(fn result ->
       result =
         case result do
-          [_full, "", "", "", email] -> {nil, email}
+          [_full, "", "", "", "", email] -> {nil, email}
+          [_full, quoted_name, "", "", unquoted_email] -> {quoted_name, unquoted_email}
+          [_full, "", name, "", email] -> {name, email}
           [_full, "", "", email] -> {nil, email}
           [_full, "", bare_name, email] -> {bare_name, email}
           [_full, quoted_name, "", email] -> {quoted_name, email}
           [_full, _, _, email] -> {nil, email}
+          [_full, _, _, _, email] -> {nil, email}
+          [_full, _, _, _, _, email] -> {nil, email}
         end
 
       {name, email} = result
@@ -347,7 +351,7 @@ defmodule MpnetworkWeb.ListingController do
     |> Enum.join(", ")
   end
 
-  def send_email(conn, %{"id" => id, "email" => %{"email_address" => "", "names_emails" => ""}}) do
+  def send_email(conn, %{"id" => id, "email" => %{"names_emails" => ""}}) do
     conn
     |> put_flash(
       :error,
@@ -361,9 +365,7 @@ defmodule MpnetworkWeb.ListingController do
         %{
           "id" => id,
           "email" => %{
-            "email_address" => email_address,
             "type" => type,
-            "name" => name,
             "names_emails" => names_emails,
             "subject" => subject,
             "body" => body,
@@ -393,21 +395,14 @@ defmodule MpnetworkWeb.ListingController do
           raise "unknown public listing type: #{type}"
       end
 
-    names_emails =
-      if email_address && email_address != "" do
-        "\"#{name}\" <#{email_address}>; " <> names_emails
-      else
-        names_emails
-      end
-
     parsed_names_emails = parse_names_emails(names_emails)
-    # there were no email addresses detected
+    # if there were email addresses detected...
     if parsed_names_emails != [] do
       sent_emails =
         parsed_names_emails
-        |> Enum.map(fn %{name: name, email: email_address} ->
+        |> Enum.map(fn %{name: name, email: email} ->
           ClientEmail.send_client(
-            email_address,
+            email,
             if(name, do: name, else: ""),
             subject,
             body,
@@ -421,6 +416,7 @@ defmodule MpnetworkWeb.ListingController do
       success_fail_emails =
         sent_emails
         |> Enum.map(fn sent_email ->
+          {name, email} = List.first(sent_email.to)
           {success, results} =
             case Mailer.deliver(sent_email) do
               {:ok, results} -> {true, results}
@@ -429,31 +425,31 @@ defmodule MpnetworkWeb.ListingController do
               unknown -> {false, unknown}
             end
 
-          case {success, results} do
-            {true, results} ->
+          case {success, results, name, email} do
+            {true, results, ^name, ^email} ->
               Logger.info(
-                "Sent listing id #{id} of type #{type} to #{email_address}#{
+                "Sent listing id #{id} of type #{type} to #{name} at #{email}#{
                   if cc_self, do: " (cc'ing self)", else: ""
                 }, result: #{inspect(results)}"
               )
 
-            {false, :timeout} ->
+            {false, :timeout, ^name, ^email} ->
               Logger.info(
-                "TIMED OUT emailing listing id #{id} of type #{type} to #{email_address}"
+                "TIMED OUT emailing listing id #{id} of type #{type} to #{name} at #{email}"
               )
 
-            {false, reason} ->
-              Logger.info("Error emailing listing id #{id}, reason given: #{inspect(reason)}")
+            {false, reason, ^name, ^email} ->
+              Logger.info("Error emailing listing id #{id} of type #{type} to #{name} at #{email}, reason given: #{inspect(reason)}")
           end
 
-          {success, results}
+          {success, results, name, email}
         end)
 
-      overall_success = success_fail_emails |> Enum.all?(fn {s, _r} -> s end)
-      fails = success_fail_emails |> Enum.filter(fn {success, _reason} -> !success end)
+      overall_success = success_fail_emails |> Enum.all?(fn {s, _r, _n, _e} -> s end)
+      fails = success_fail_emails |> Enum.filter(fn {success, _reason, _n, _e} -> !success end)
 
       fail_reasons =
-        fails |> Enum.map(fn {_failure, reason} -> "#{reason}" end) |> Enum.join("; ")
+        fails |> Enum.map(fn {_failure, reason, _n, _e} -> "#{reason}" end) |> Enum.join("; ")
 
       case overall_success do
         true ->

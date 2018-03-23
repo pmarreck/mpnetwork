@@ -115,35 +115,36 @@ defmodule Mpnetwork.Utils.RegexenTest do
   @positive_email_list_test_cases [
     {
       "some@email.com",
-      [["some@email.com", "", "", "", "some@email.com"]]
+      [["some@email.com", "", "", "", "", "some@email.com"]]
     },
     {"\"Some Name\" <some@email.com>",
      [["\"Some Name\" <some@email.com>", "Some Name", "", "some@email.com"]]},
     {"Some Name <some@email.com>",
      [["Some Name <some@email.com>", "", "Some Name", "some@email.com"]]},
-    {"Peter Marreck-Levy <peter@marreck.com>, John O'Russo <john@russo.com>",
+    {"Peter Marreck-Levy <peter@marreck.com>, John O'Russo <john@russo.com>, \"Peter Marreck\" peter@marreck.com",
      [
        ["Peter Marreck-Levy <peter@marreck.com>", "", "Peter Marreck-Levy", "peter@marreck.com"],
-       [" John O'Russo <john@russo.com>", "", "John O'Russo", "john@russo.com"]
+       [" John O'Russo <john@russo.com>", "", "John O'Russo", "john@russo.com"],
+       [" \"Peter Marreck\" peter@marreck.com", "Peter Marreck", "", "", "peter@marreck.com"]
      ]},
     {"some1@somewhere.com; someoneelse@somewhereelse.com",
      [
-       ["some1@somewhere.com", "", "", "", "some1@somewhere.com"],
-       [" someoneelse@somewhereelse.com", "", "", "", "someoneelse@somewhereelse.com"]
+       ["some1@somewhere.com", "", "", "", "", "some1@somewhere.com"],
+       [" someoneelse@somewhereelse.com", "", "", "", "", "someoneelse@somewhereelse.com"]
      ]},
     {"some1@somewhere.com someoneelse@somewhereelse.com",
      [
-       ["some1@somewhere.com", "", "", "", "some1@somewhere.com"],
-       [" someoneelse@somewhereelse.com", "", "", "", "someoneelse@somewhereelse.com"]
+       ["some1@somewhere.com", "", "", "", "", "some1@somewhere.com"],
+       [" someoneelse@somewhereelse.com", "", "", "", "", "someoneelse@somewhereelse.com"]
      ]},
     # only the bare email will be gotten here
-    {"some name some@email.com", [[" some@email.com", "", "", "", "some@email.com"]]},
+    {"some name some@email.com", [["some name some@email.com", "", "some name", "", "some@email.com"]]},
     # only the latter will be picked up here
     {"Peter Marreck, John Russo <john@russo.com>",
      [[" John Russo <john@russo.com>", "", "John Russo", "john@russo.com"]]},
     {"\"Peter Marreck\";John Russo <john@russo.com>",
      [["John Russo <john@russo.com>", "", "John Russo", "john@russo.com"]]},
-    {"John Quincy Adams <john.quincy@adams.com>, \"John Russo\" <john@russo.com>; peter@marreck.com someone@else.com",
+    {"John Quincy Adams <john.quincy@adams.com>, \"John Russo\" <john@russo.com>; peter@marreck.com Someone Else someone@else.com",
      [
        [
          "John Quincy Adams <john.quincy@adams.com>",
@@ -152,8 +153,8 @@ defmodule Mpnetwork.Utils.RegexenTest do
          "john.quincy@adams.com"
        ],
        [" \"John Russo\" <john@russo.com>", "John Russo", "", "john@russo.com"],
-       [" peter@marreck.com", "", "", "", "peter@marreck.com"],
-       [" someone@else.com", "", "", "", "someone@else.com"]
+       [" peter@marreck.com", "", "", "", "", "peter@marreck.com"],
+       [" Someone Else someone@else.com", "", "Someone Else", "", "someone@else.com"]
      ]}
   ]
 

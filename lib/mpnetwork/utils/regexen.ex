@@ -4,14 +4,13 @@ defmodule Mpnetwork.Utils.Regexen do
   @email_regex_source Regex.replace(
                         ~r/\s+/,
                         """
-                          (?=[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@)
-                          [A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*
-                          @ (?:(?=[A-Za-z0-9-]{1,63}\\.)[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+
-                          (?=[A-Za-z0-9-]{1,63})[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?
+                          \\b[A-Za-z0-9!#$%&'*+/=?^_`{\\|}~-]+(?:[\\.A-Za-z0-9!#$%&'*+/=?^_`{\\|}~-]+)?
+                          @ (?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+
+                          [A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\b
                         """,
                         ""
                       )
-  def email_regex, do: Regex.compile!("\\A" <> @email_regex_source <> "\\z")
+  def email_regex, do: Regex.compile!(@email_regex_source)
 
   # This tries to parse an email address and name from an RFC 5322-formatted "to" header.
   # I invented this.
@@ -20,10 +19,13 @@ defmodule Mpnetwork.Utils.Regexen do
     \\s*
     (?:
       (?:
-        (?:"(?<name>[^"]+)"|(?<bare_name>[A-Za-z'-]+(?:\\s[A-Za-z'-]+)*))\\s*<(?<email>#{
+        (?:"(?<name>[^"]+)"|(?<bare_name>[A-Za-z'-]+(?:\\s[A-Za-z'-]+)*))\\s*(?:<(?<quoted_email>#{
     @email_regex_source
-  })>
+      })>|(?<email>#{
+        @email_regex_source
+      })
       )
+    )
     |
       (?<only_email>#{@email_regex_source})
     )(?=(?:,|;)\\s+|(?:,|;)|\\s+|\\b)?
