@@ -4,6 +4,7 @@
                         action: attachment_path(@conn, :update, @attachment),
                         conn: @conn,
                         listing: @listing,
-                        attachment: @attachment %>
+                        attachment: @attachment,
+                        mode: :individual %>
 <br />
 <span><%= link "Back", to: attachment_path(@conn, :index, listing_id: @attachment.listing_id) %></span>

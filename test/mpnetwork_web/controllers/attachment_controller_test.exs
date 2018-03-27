@@ -136,7 +136,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   test "renders form for new attachments", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
     conn = get(conn, attachment_path(conn, :new, listing_id: listing.id))
-    assert html_response(conn, 200) =~ "New Attachment"
+    assert html_response(conn, 200) =~ "New Attachment(s)"
   end
 
   # holy crap, was this test a pain to write. FYI
@@ -183,7 +183,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
         attachment: Enum.into(%{listing_id: listing.id}, @invalid_post_attrs)
       )
 
-    assert html_response(conn, 200) =~ "New Attachment"
+    assert html_response(conn, 200) =~ "New Attachment(s)"
   end
 
   test "renders form for editing chosen attachment", %{conn: conn} do

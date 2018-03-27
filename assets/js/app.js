@@ -39,6 +39,8 @@ import Quill from "quill"
 
 import "bootstrap-table"
 
+import "dropzone"
+
 require("select2")($); // had to do it this way otherwise it was not binding to jQuery objects
 
 // global app config stuff (move to separate files/envs at some point?)
@@ -196,7 +198,6 @@ function AddressWithLinksSorter(a, b){
 }
 // "export" this so it can be accessed from bootstrap-table config and console
 window.AddressWithLinksSorter = AddressWithLinksSorter;
-
 // ondocumentload functionality
 $.when($.ready).then(function() {
   // trim spaces before form submission (such as logins)
@@ -315,6 +316,7 @@ $.when($.ready).then(function() {
   })
   // copy html form val data to contenteditable container on page load if exists
   $('#rte_container div.ql-editor').html($('.rte-target').val());
+  // $('form.dropzone').dropzone({});
 });
 
 // "CommonJS"-style, see http://jsmodules.io/cjs.html for comparison

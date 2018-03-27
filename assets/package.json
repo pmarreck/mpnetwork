@@ -5,20 +5,21 @@
     "test": "mocha"
   },
   "dependencies": {
-    "admin-lte": "^2.4.2",
+    "admin-lte": "^2.4.3",
     "bootstrap": "~3.3.7",
     "bootstrap-carousel-swipe": "~0.0.6",
     "bootstrap-datepicker": "~1.7.1",
     "bootstrap-daterangepicker": "^2.1.30",
     "bootstrap-sass": ">=3.3.7",
     "bootstrap-table": "~1.11.2",
+    "dropzone": "^5.4.0",
     "jquery": "^3.3.1",
     "moment": "~2.19.3",
     "moment-timezone": "^0.5.14",
-    "npm": "^5.7.1",
+    "npm": "^5.8.0",
     "phoenix": "~1.3.0",
     "phoenix_html": "~2.10.4",
-    "quill": "^1.3.5",
+    "quill": "^1.3.6",
     "sass-brunch": "~2.10.4",
     "select2": "~4.0.5"
   },
@@ -35,7 +36,7 @@
     "jsdom-global-jquery": "~1.0.5",
     "less": "^2.7.3",
     "less-brunch": "^2.10.0",
-    "mocha": "^5.0.2",
+    "mocha": "^5.0.5",
     "refute": "~1.0.2",
     "uglify-js-brunch": "^2.10.0"
   }

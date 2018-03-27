@@ -1,9 +1,10 @@
-<h2>New Attachment for <%= @listing.address %></h2>
+<h2>New Attachment(s) for <%= @listing.address %></h2>
 
 <%= render "form.html", changeset: @changeset,
                         action: attachment_path(@conn, :create),
                         listing: @listing,
                         conn: @conn,
-                        attachment: false %>
+                        attachment: false,
+                        mode: :dropzone %>
 
 <span><%= link "Back", to: attachment_path(@conn, :index, listing_id: @listing.id) %></span>

@@ -3,7 +3,7 @@
 <% edit_rights = Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, @listing) %>
 
 <%= if edit_rights do %>
-  <span><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
+  <span><%= link "New Attachment(s)", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
 <% end %>
 &nbsp;&nbsp;
 <span><%= link "Return to editing listing details", to: listing_path(@conn, :edit, @listing) %></span>

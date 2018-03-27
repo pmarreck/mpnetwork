@@ -1,4 +1,11 @@
-<%= form_for @changeset, @action, [multipart: true], fn f -> %>
+  <p><i>Note that attachments are currently limited to a size of <%= Application.get_env(:mpnetwork, :max_attachment_size)/1000000 %>MB. You can attach files of any type.</i></p>
+  <p><i>(There isn't yet an enforced limit on the number of attachments per listing. Please don't abuse this privilege!)</i></p>
+
+  <%= if @mode == :dropzone do %>
+    <p>Attachments are automatically saved once they are drag-and-dropped into here. You can drag in more than one, or you can click/tap and select multiple images in the file dialog.</p>
+  <% end %>
+
+<%= form_for @changeset, @action, [multipart: true, class: "#{if @mode==:dropzone, do: "dropzone needsclick dz-clickable", else: "individual"}"], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -7,30 +14,31 @@
 
   <%= hidden_input f, :listing_id, value: @listing.id %>
 
-  <div class="form-group<%= if f.errors[:primary], do: " has-error" %>">
-    <%= checkbox f, :primary, class: "checkbox", style: "display:inline" %>&nbsp;<%= label f, :primary, "Designated primary photo? (if image attachment)", class: "control-label" %>
-    <%= error_tag f, :primary %>
-  </div>
+  <%= if @mode == :individual do %>
+    <div class="form-group<%= if f.errors[:primary], do: " has-error" %>">
+      <%= checkbox f, :primary, class: "checkbox", style: "display:inline" %>&nbsp;<%= label f, :primary, "Designated primary photo? (if image attachment)", class: "control-label" %>
+      <%= error_tag f, :primary %>
+    </div>
 
-  <div class="form-group<%= if f.errors[:data], do: " has-error" %>">
-    <%= label f, "File attachment:", class: "control-label" %>
-    <%= if f.data.id do %>
-        <%= if f.data.is_image do %>
-          <img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
-        <% else %>
-          <%= link "Download/view \"#{f.data.original_filename}\"", to: attachment_path(@conn, :show, f.data.id) %>
-        <% end %>
-    <% end %>
-    <%= file_input f, :data, class: "form-control" %>
-    <%= error_tag f, :data %>
-  </div>
+    <div class="form-group<%= if f.errors[:data], do: " has-error" %>">
+      <%= label f, "File attachment:", class: "control-label" %>
+      <%= if f.data.id do %>
+          <%= if f.data.is_image do %>
+            <img style="width:100%;max-width:600px;padding-bottom:5px" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
+          <% else %>
+            <%= link "Download/view \"#{f.data.original_filename}\"", to: attachment_path(@conn, :show, f.data.id) %>
+          <% end %>
+      <% end %>
+      <%= file_input f, :data, class: "form-control" %>
+      <%= error_tag f, :data %>
+    </div>
+  <% end %>
 
-  <p><i>Note that attachments are currently limited to a size of <%= Application.get_env(:mpnetwork, :max_attachment_size)/1000000 %>MB. You can attach files of any type.</i></p>
-  <p><i>(There isn't yet an enforced limit on the number of attachments per listing. Please don't abuse this privilege!)</i></p>
-
-  <div class="form-group">
-    <%= submit "Save", class: "btn btn-primary" %>
-  </div>
+  <%= if @mode == :individual do %>
+    <div class="form-group">
+      <%= submit "Save", class: "btn btn-primary" %>
+    </div>
+  <% end %>
 <% end %>
 <br />
 <%= if @attachment do %>

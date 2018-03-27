@@ -86,6 +86,11 @@ config :mpnetwork, Mpnetwork.Mailer,
   api_key: "391412c2902a3baaa710823b1fdfdbecd35c0373",
   endpoint: "https://api.sparkpost.com/api/v1"
 
+# Configures Mime
+config :mime, :types, %{
+  "application/json" => ["json"]
+}
+
 # Configures PryIn.io
 config :pryin,
   api_key: "nigqe8rp2ub9fqn5f3vi29fib6cmbmgiat3omidaedv4ks0i",

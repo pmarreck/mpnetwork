@@ -187,6 +187,13 @@ defmodule MpnetworkWeb.AttachmentController do
     end
   end
 
+  # def create(conn, %{"file" => plug_upload})
+
+  # if a "file" Plug.Upload comes in via dropzone, shift that to the "data" key on the attachment so everything else "just works"
+  def create(conn, %{"file" => plug_upload, "attachment" => %{"listing_id" => _listing_id} = attachment_params} = _params) do
+    create(conn, %{"attachment" => Map.merge(attachment_params, %{"data" => plug_upload})})
+  end
+
   def create(conn, %{"attachment" => %{"listing_id" => listing_id} = attachment_params} = _params) do
     # only parse attachment data if one is actually posted
     attachment_params =

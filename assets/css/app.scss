@@ -10,6 +10,8 @@
 
 @import 'node_modules/bootstrap-table/dist/bootstrap-table.min';
 
+@import 'node_modules/dropzone/dist/dropzone';
+
 // @import 'node_modules/quill/dist/quill.bubble';
 
 // .fancy {
@@ -263,6 +265,15 @@ table td {
   }
 }
 
+// dropzone look&feel config
+.dropzone {
+  border: 2px dashed #0087F7;
+  border-radius: 5px;
+}
+.dropzone .dz-message {
+  font-size: 200%;
+  font-weight: 400;
+}
 // hr { // I wanted my old HTML4 HR back!
 //   display: block;
 //   margin-top: 0.5em;

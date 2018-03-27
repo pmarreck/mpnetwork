@@ -30,7 +30,7 @@
                   <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
                   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @existing, current_user: @conn.assigns.current_user) %>
                 </div>
-                <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
+                <p><%= link "New Attachment(s)", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
               </div>
             </div>
           </div>

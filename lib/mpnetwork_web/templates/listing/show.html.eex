@@ -35,7 +35,7 @@
                   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
                 </div>
                 <%= if edit_rights do %>
-                  <p><%= link "New Attachment", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
+                  <p><%= link "New Attachment(s)", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
                 <% end %>
               </div>
             </div>
