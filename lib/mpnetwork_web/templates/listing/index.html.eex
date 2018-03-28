@@ -2,19 +2,19 @@
 
 <h4>Latest 20 recently-edited listings</h4>
 
-<%= render("_latest_n.html", search: false, remarks: :rr, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: true) %>
+<%= render("_latest_n.html", search: false, remarks: :rr, draft: false, conn: @conn, listings: @listings, primaries: @primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: true, include_next_oh: false) %>
 
 <br /><br />
 
 <h4>Upcoming broker open houses/inspections</h4>
 
-<%= render("_latest_n.html", search: false, remarks: :inspection, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false) %>
+<%= render("_latest_n.html", search: false, remarks: :inspection, draft: true, conn: @conn, listings: @upcoming_broker_oh_listings, primaries: @upcoming_broker_oh_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false, include_next_oh: true) %>
 
 <br /><br />
 
 <h4>Upcoming customer open houses</h4>
 
-<%= render("_latest_n.html", search: false, remarks: :customer, draft: true, conn: @conn, listings: @upcoming_cust_oh_listings, primaries: @upcoming_cust_oh_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false) %>
+<%= render("_latest_n.html", search: false, remarks: :customer, draft: true, conn: @conn, listings: @upcoming_cust_oh_listings, primaries: @upcoming_cust_oh_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false, include_next_oh: true) %>
 
 <br/>
 <span><%= link "New Listing", to: listing_path(@conn, :new), class: "btn btn-default btn-xl" %></span>
