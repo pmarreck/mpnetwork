@@ -1,7 +1,7 @@
 <%= render(MpnetworkWeb.BroadcastView, "_latest_n.html", conn: @conn, broadcasts: @broadcasts, current_user: @current_user) %>
 <hr class="section" />
 <h4>Listings added in the past week</h4>
-<%= render(MpnetworkWeb.ListingView, "_latest_n.html", search: false, remarks: :rr, draft: false, conn: @conn, listings: @newest_listings, primaries: @newest_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false) %>
+<%= render(MpnetworkWeb.ListingView, "_latest_n.html", search: false, remarks: :rr, draft: false, conn: @conn, listings: @newest_listings, primaries: @newest_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: false, include_next_oh: false) %>
 <%= if !Permissions.read_only?(@current_user) do %>
   <hr class="section" />
   <%= if Permissions.office_admin_or_site_admin?(@current_user) do %>
@@ -9,5 +9,5 @@
   <% else %>
     <h4>Your 20 most recently-edited drafts</h4>
   <% end %>
-  <%= render(MpnetworkWeb.ListingView, "_latest_n.html", search: false, remarks: :broker, draft: true, conn: @conn, listings: @draft_listings, primaries: @draft_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: true) %>
+  <%= render(MpnetworkWeb.ListingView, "_latest_n.html", search: false, remarks: :broker, draft: true, conn: @conn, listings: @draft_listings, primaries: @draft_primaries, current_user: @current_user, include_inserted_at: false, include_modified_at: true, include_next_oh: false) %>
 <% end %>
