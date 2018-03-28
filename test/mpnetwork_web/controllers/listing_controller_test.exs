@@ -5,7 +5,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
 
   import Mpnetwork.Test.Support.Utilities
 
-  alias Mpnetwork.{Realtor, Repo}
+  alias Mpnetwork.{Repo}
   alias Mpnetwork.Realtor.Listing
   # import Mpnetwork.Test.Support.Utilities
   import Mpnetwork.Listing,
@@ -187,30 +187,6 @@ defmodule MpnetworkWeb.ListingControllerTest do
     conn = assign(conn, :current_office, user.broker)
     conn = assign(conn, :current_user, user)
     {:ok, conn: conn, user: user}
-  end
-
-  def fixture(:listing, user) do
-    {:ok, listing} =
-      Realtor.create_listing(
-        Enum.into(
-          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
-          @create_attrs
-        )
-      )
-
-    listing
-  end
-
-  def fixture(:listing, user, attrs \\ @create_attrs) do
-    {:ok, listing} =
-      Realtor.create_listing(
-        Enum.into(
-          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
-          attrs
-        )
-      )
-
-    listing
   end
 
   test "lists all entries on index", %{conn: conn} do

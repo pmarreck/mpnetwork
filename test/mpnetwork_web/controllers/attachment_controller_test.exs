@@ -5,7 +5,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   use MpnetworkWeb.ConnCase, async: true
 
-  alias Mpnetwork.{Listing, Realtor, Upload, Repo}
+  alias Mpnetwork.{Listing, Upload, Repo}
   alias Listing.Attachment
   import Mpnetwork.Test.Support.Utilities
 
@@ -16,58 +16,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   @test_attachment_new_binary_data_base64 "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
   @test_attachment_new_binary_data @test_attachment_new_binary_data_base64 |> Base.decode64!()
 
-  @listing_create_attrs %{
-    listing_status_type: "FS",
-    schools: "Port",
-    prop_tax_usd: "1000",
-    vill_tax_usd: "1000",
-    section_num: "1",
-    block_num: "1",
-    lot_num: "A",
-    live_at: ~N[2010-03-17 12:00:00],
-    expires_on: ~D[2010-04-17],
-    state: "NY",
-    new_construction: true,
-    fios_available: true,
-    tax_rate_code_area: 42,
-    num_skylights: 42,
-    lot_size: "420x240",
-    attached_garage: true,
-    for_rent: true,
-    zip: "11050",
-    ext_urls: ["http://www.yahoo.com"],
-    city: "some city",
-    num_fireplaces: 2,
-    modern_kitchen_countertops: true,
-    deck: true,
-    for_sale: true,
-    central_air: true,
-    stories: 42,
-    num_half_baths: 42,
-    year_built: 1984,
-    draft: true,
-    pool: true,
-    mls_source_id: 42,
-    security_system: true,
-    sq_ft: 42,
-    studio: true,
-    cellular_coverage_quality: 3,
-    hot_tub: true,
-    basement: true,
-    price_usd: 42,
-    realtor_remarks: "some remarks",
-    parking_spaces: 42,
-    description: "some description",
-    num_bedrooms: 42,
-    high_speed_internet_available: true,
-    patio: true,
-    address: "N7 Mass Effect Galaxy",
-    num_garages: 42,
-    num_baths: 42,
-    central_vac: true,
-    eef_led_lighting: true
-  }
-  @post_create_attrs %{
+  @post_attachment_create_attrs %{
     sha256_hash: Upload.sha256_hash(@test_attachment_binary_data),
     content_type: "image/png",
     data: %Upload{
@@ -91,35 +40,16 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     is_image: true,
     primary: true
   }
-  @create_attrs Enum.into(%{data: @test_attachment_binary_data}, @post_create_attrs)
+  # @attachment_create_attrs Enum.into(%{data: @test_attachment_binary_data}, @post_attachment_create_attrs)
   # @update_attrs Enum.into(%{data: @test_attachment_new_binary_data}, @post_update_attrs)
   # @invalid_attrs %{content_type: nil, data: nil, height_pixels: nil, original_filename: nil, is_image: nil, primary: true, sha256_hash: nil, width_pixels: nil}
-  @invalid_post_attrs Enum.into(%{data: nil}, @post_create_attrs)
+  @invalid_post_attrs Enum.into(%{data: nil}, @post_attachment_create_attrs)
 
   setup %{conn: conn} do
     office = office_fixture()
     user = user_fixture(%{office: office, office_id: office.id})
     conn = assign(conn, :current_office, office)
     {:ok, conn: assign(conn, :current_user, user), user: user}
-  end
-
-  def fixture(a, b \\ %{})
-
-  def fixture(:listing, user) do
-    {:ok, listing} =
-      Realtor.create_listing(
-        Enum.into(
-          %{user_id: user.id, user: user, broker_id: user.office_id},
-          @listing_create_attrs
-        )
-      )
-
-    listing
-  end
-
-  def fixture(:attachment, extra_attrs) do
-    {:ok, attachment} = Listing.create_attachment(Enum.into(extra_attrs, @create_attrs))
-    attachment
   end
 
   def attachment_fixture(:listing, user \\ user_fixture()) do
@@ -149,7 +79,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
       post(
         conn,
         attachment_path(conn, :create),
-        attachment: Enum.into(%{listing_id: listing.id, listing: listing}, @post_create_attrs)
+        attachment: Enum.into(%{listing_id: listing.id, listing: listing}, @post_attachment_create_attrs)
       )
 
     # had to do this since redirected_params won't parse querystring params.

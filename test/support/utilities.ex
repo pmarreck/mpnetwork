@@ -1,5 +1,5 @@
 defmodule Mpnetwork.Test.Support.Utilities do
-  alias Mpnetwork.{User, Realtor, Repo}
+  alias Mpnetwork.{Listing, User, Realtor, Repo, Upload}
 
   defp random_uniquifying_string do
     trunc(:rand.uniform() * 100_000_000_000_000_000) |> Integer.to_string()
@@ -177,6 +177,104 @@ defmodule Mpnetwork.Test.Support.Utilities do
       name: "Test User",
       role_id: 2
     }
+  end
+
+  @create_listing_attrs %{
+    listing_status_type: "FS",
+    schools: "Port",
+    prop_tax_usd: "1000",
+    vill_tax_usd: "1000",
+    section_num: "1",
+    block_num: "1",
+    lot_num: "A",
+    live_at: ~N[2017-11-17 12:00:00],
+    expires_on: ~D[2018-04-17],
+    state: "NY",
+    new_construction: true,
+    fios_available: true,
+    tax_rate_code_area: 42,
+    num_skylights: 42,
+    lot_size: "420x240",
+    attached_garage: true,
+    for_rent: true,
+    zip: "11050",
+    ext_urls: ["http://www.yahoo.com"],
+    city: "some city",
+    num_fireplaces: 2,
+    modern_kitchen_countertops: true,
+    deck: true,
+    for_sale: true,
+    central_air: true,
+    stories: 42,
+    num_half_baths: 42,
+    year_built: 1984,
+    draft: true,
+    pool: true,
+    mls_source_id: 42,
+    security_system: true,
+    sq_ft: 42,
+    studio: true,
+    cellular_coverage_quality: 3,
+    hot_tub: true,
+    basement: true,
+    price_usd: 42,
+    realtor_remarks: "some remarks",
+    parking_spaces: 42,
+    description: "some description",
+    num_bedrooms: 42,
+    high_speed_internet_available: true,
+    patio: true,
+    address: "some address",
+    num_garages: 42,
+    num_baths: 42,
+    central_vac: true,
+    eef_led_lighting: true
+  }
+
+  # supposedly a png of a red dot
+  @test_attachment_binary_data_base64 "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+  @test_attachment_binary_data @test_attachment_binary_data_base64 |> Base.decode64!()
+  @post_attachment_create_attrs %{
+    sha256_hash: Upload.sha256_hash(@test_attachment_binary_data),
+    content_type: "image/png",
+    data: %Upload{
+      content_type: "image/png",
+      filename: "test.png",
+      binary: @test_attachment_binary_data
+    },
+    original_filename: "some_original_filename.png",
+    is_image: true,
+    primary: false
+  }
+  @attachment_create_attrs Enum.into(%{data: @test_attachment_binary_data}, @post_attachment_create_attrs)
+
+  def fixture(:listing, user) do
+    {:ok, listing} =
+      Realtor.create_listing(
+        Enum.into(
+          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
+          @create_listing_attrs
+        )
+      )
+
+    listing
+  end
+
+  def fixture(:listing, user, attrs) do
+    {:ok, listing} =
+      Realtor.create_listing(
+        Enum.into(
+          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
+          Enum.into(attrs, @create_listing_attrs)
+        )
+      )
+
+    listing
+  end
+
+  def fixture(:attachment, extra_attrs) do
+    {:ok, attachment} = Listing.create_attachment(Enum.into(extra_attrs, @attachment_create_attrs))
+    attachment
   end
 
   def add_current_user(%Plug.Conn{} = conn, user \\ current_user_stubbed()) do
