@@ -29,8 +29,10 @@
   <pre class="search_example">under contract: 12/1/2017-12/31/2017</pre>
   <pre class="search_example">CL: 12/1/2017-12/31/2017</pre>
   <pre class="search_example">Closed: 12/1/2017-12/31/2017</pre>
-  Searches default to active listings only (listing status of NEW, FS, EXT, PC) unless you search on a specific listing status, or include the words "inactive", "unavailable", "all" or "expired". If you want inactive/unavailable listings, add the word "inactive" or "unavailable" to the search. Also note that UC (under contract) is neither "active" nor "inactive" currently and must thus be searched via "UC", "active or UC" or "inactive or UC".
+  Searches default to active listings only (listing status of NEW, FS, EXT, PC) unless you search on a specific listing status, or include the words "inactive", "unavailable", "all" or "expired". If you want inactive/unavailable listings, add the word "inactive" or "unavailable" to the search, or just add "all" to get everything. <b>Also note that UC (under contract) is considered neither "active" nor "inactive" currently and must thus be searched via "UC", "active or UC" or "inactive or UC"</b>.
   <pre class="search_example">inactive 1000000-2000000 3-5 bedroom 11050</pre>
+  The word "all" (as well as specifying any listing status) will turn off filtering on active-only. So if there's a listing at "5 Fancy Lane" which is under contract, sold, or has an unknown status, you can always find it via something like:
+  <pre class="search_emample">all 5 Fancy Lane</pre>
   Comma-separated values are treated as "OR". So for example,
   <pre class="search_example">11050,11030</pre>
   will search for listings in Port Washington OR Manhasset.<br />
