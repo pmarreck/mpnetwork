@@ -113,7 +113,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
         attachment: Enum.into(%{listing_id: listing.id}, @invalid_post_attrs)
       )
 
-    assert html_response(conn, 200) =~ "New Attachment(s)"
+    assert response(conn, 403) =~ "Forbidden"
   end
 
   test "renders form for editing chosen attachment", %{conn: conn} do

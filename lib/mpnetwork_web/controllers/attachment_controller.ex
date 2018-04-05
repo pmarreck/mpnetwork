@@ -212,7 +212,7 @@ defmodule MpnetworkWeb.AttachmentController do
           |> put_flash(:info, "Attachment created successfully.")
           |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
 
-        {:error, %Ecto.Changeset{} = changeset} ->
+        {:error, %Ecto.Changeset{} = _changeset} ->
           conn
           |> send_resp(403, "Forbidden: Too many attachments")
           # |> put_flash(:error, "Maximum number of attachments already added")
