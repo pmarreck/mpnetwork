@@ -14,8 +14,7 @@ config :mpnetwork,
   attachment_chunk_size: 2_000_000,
   # timeout in ms per chunk, 10s
   attachment_chunk_timeout: 10_000,
-  # not enforced yet!
-  max_attachments_per_listing: 20,
+  max_attachments_per_listing: 25, # 20-ish photos plus maybe a pdf or 2
   cache_name: :attachment_cache
 
 # Configures the endpoint

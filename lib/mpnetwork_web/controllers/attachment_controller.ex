@@ -213,7 +213,10 @@ defmodule MpnetworkWeb.AttachmentController do
           |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "new.html", changeset: changeset, listing: listing, listing_id: listing.id)
+          conn
+          |> send_resp(403, "Forbidden: Too many attachments")
+          # |> put_flash(:error, "Maximum number of attachments already added")
+          # |> render("new.html", changeset: changeset, listing: listing, listing_id: listing.id)
       end
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")

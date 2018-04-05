@@ -1,8 +1,10 @@
 defmodule Mpnetwork.Listing.Attachment do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias Mpnetwork.Listing.Attachment
   alias Mpnetwork.Realtor.Listing
+  alias Mpnetwork.Repo
 
   schema "attachments" do
     # field :listing_id, :id
@@ -25,6 +27,24 @@ defmodule Mpnetwork.Listing.Attachment do
 
     if primary && !is_image do
       add_error(changeset, :primary, "cannot be set on non-images")
+    else
+      changeset
+    end
+  end
+
+  def validate_not_too_many(changeset) do
+    listing_id = get_field(changeset, :listing_id)
+    if listing_id do
+      limit_per_listing = Application.get_env(:mpnetwork, :max_attachments_per_listing)
+      how_many_already = Attachment
+                         |> where([a], a.listing_id == ^listing_id)
+                         |> select([a], count(a.listing_id))
+                         |> Repo.one
+      if how_many_already >= limit_per_listing do
+        add_error(changeset, :listing_id, "already has the limit of #{} attachments per listing")
+      else
+        changeset
+      end
     else
       changeset
     end
@@ -56,5 +76,6 @@ defmodule Mpnetwork.Listing.Attachment do
     |> validate_primary_only_set_on_images
     |> validate_length(:content_type, max: 255, count: :codepoints)
     |> validate_length(:original_filename, max: 255, count: :codepoints)
+    |> validate_not_too_many
   end
 end
