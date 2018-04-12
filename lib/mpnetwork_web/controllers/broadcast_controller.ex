@@ -88,7 +88,7 @@ defmodule MpnetworkWeb.BroadcastController do
     if !Permissions.read_only?(current_user(conn)) do
       broadcast = Realtor.get_broadcast!(id)
 
-      if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 3 do
+      if current_user(conn).id == broadcast.user_id || current_user(conn).role_id < 2 do
         {:ok, _broadcast} = Realtor.delete_broadcast(broadcast)
 
         conn

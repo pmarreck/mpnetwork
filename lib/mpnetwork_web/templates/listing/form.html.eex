@@ -1804,16 +1804,33 @@
             </div>
           </div>
 
-          <!-- 181 -->
-          <div class="form-group<%= if f.errors[:rental_price_usd], do: " has-error" %>">
-            <%= label f, :rental_price_usd, "Rental price", class: "control-label" %>
-            <div class="input-group col-xs-6">
-              <div class="input-group-addon">
-                $
+          <div class="row form-group">
+            <!-- 181 -->
+            <div class="col-xs-6<%= if f.errors[:rental_price_usd], do: " has-error" %>">
+              <%= label f, :rental_price_usd, "Rental price", class: "control-label" %>
+              <div class="input-group">
+                <div class="input-group-addon">
+                  $
+                </div>
+                <%= number_input f, :rental_price_usd, class: "form-control" %>
               </div>
-              <%= number_input f, :rental_price_usd, class: "form-control" %>
+              <%= error_tag f, :rental_price_usd %>
             </div>
-            <%= error_tag f, :rental_price_usd %>
+            <div class="col-xs-6">
+              <!-- ??? -->
+              <div class="<%= if f.errors[:pets_ok], do: "has-error" %>">
+                <%= checkbox f, :pets_ok, class: "checkbox" %>
+                <%= label f, :pets_ok, "Pets OK?", class: "control-label" %>
+                <%= error_tag f, :pets_ok %>
+              </div>
+              <!-- ??? -->
+              <div class="<%= if f.errors[:smoking_ok], do: "has-error" %>">
+                <%= checkbox f, :smoking_ok, class: "checkbox" %>
+                <%= label f, :smoking_ok, "Smoking OK?", class: "control-label" %>
+                <%= error_tag f, :smoking_ok %>
+              </div>
+            </div>
+
           </div>
 
           <!-- 182 -->

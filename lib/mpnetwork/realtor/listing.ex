@@ -219,6 +219,8 @@ defmodule Mpnetwork.Realtor.Listing do
     field(:closing_price_usd, :integer)
     field(:purchaser, :string)
     field(:moved_from, :string)
+    field(:pets_ok, :boolean)
+    field(:smoking_ok, :boolean)
     # field :search_vector, :tsvector # this won't work. wish I could assert on this!
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many(:attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all)
@@ -797,7 +799,9 @@ defmodule Mpnetwork.Realtor.Listing do
       :closed_on,
       :closing_price_usd,
       :purchaser,
-      :moved_from
+      :moved_from,
+      :pets_ok,
+      :smoking_ok,
     ])
   end
 end

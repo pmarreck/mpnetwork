@@ -13,7 +13,7 @@
               </div>
               <!-- /.user-block -->
             </div>
-            <%= if @current_user.id == broadcast.user_id || @current_user.role_id < 3 do %>
+            <%= if @current_user.id == broadcast.user_id || @current_user.role_id < 2 do %>
               <div class="col-md-9">
                 <p><strong><%= raw HtmlSanitizeEx.html5 broadcast.title %></strong></p>
                 <p><%= raw(replace_crlf_with_html_br(HtmlSanitizeEx.html5 broadcast.body)) %></p>

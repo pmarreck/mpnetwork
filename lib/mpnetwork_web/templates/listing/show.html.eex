@@ -1151,11 +1151,25 @@
             </div>
           </div>
 
-          <!-- 181 -->
-          <div class="rental_price_usd">
-            <strong>Rental price:</strong>
-            <%= @listing.rental_price_usd |> dollars %>
+          <div class="row form-group">
+            <!-- 181 -->
+            <div class="col-xs-6 rental_price_usd">
+              <strong>Rental price:</strong>
+              <%= @listing.rental_price_usd |> dollars %>
+            </div>
           </div>
+          <%= if @listing.for_rent || @listing.also_for_rent do %>
+            <div class="row form-group">
+              <div class="col-xs-6 pets_ok">
+                <strong>Pets OK?</strong>
+                <%= yn(@listing.pets_ok) %>
+              </div>
+              <div class="col-xs-4 smoking_ok">
+                <strong>Smoking OK?</strong>
+                <%= yn(@listing.smoking_ok) %>
+              </div>
+            </div>
+          <% end %>
 
           <!-- 182 -->
           <div class="personal_prop_exclusions">

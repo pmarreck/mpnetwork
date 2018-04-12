@@ -246,8 +246,14 @@
           <div class="report-field label-visible"><span class="report-label ">Personal Property Exclusions:</span><span class="report-value"><%= @listing.personal_prop_exclusions %></span></div>
         </div>
         <div class="group orientation-vertical  last-child" style="width: 240px;">
-          <div class="report-field label-visible"><span class="report-label ">Also For Rent:</span><span class="report-value"><%= yn(@listing.also_for_rent || (@listing.for_sale && @listing.for_rent)) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Also For Rent:</span><span class="report-value"><%= yn(@listing.for_rent || (@listing.for_sale && @listing.also_for_rent)) %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Rental Income:</span><span class="report-value"><%= @listing.rental_income_usd |> dollars %></span></div>
+          <%= if @listing.for_rent || (@listing.for_sale && @listing.also_for_rent) do %>
+            <div class="report-field label-visible">
+              <span class="report-label">Smoking OK:</span><span class="report-value"><%= yn @listing.smoking_ok %></span>
+              <span class="report-label">Pets OK:</span><span class="report-value"><%= yn @listing.pets_ok %></span>
+            </div>
+          <% end %>
           <div class="report-field label-visible"><span class="report-label ">Short Sale:</span><span class="report-value"><%= yn @listing.short_sale %></span></div>
           <div class="report-field label-visible"><span class="report-label ">REO:</span><span class="report-value"><%= yn @listing.reo %></span></div>
           <div class="report-field label-visible"><span class="report-label ">MLS#:</span><span class="report-value"><%= @listing.mls_source_id %></span></div>
