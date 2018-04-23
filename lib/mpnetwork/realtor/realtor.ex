@@ -760,15 +760,15 @@ defmodule Mpnetwork.Realtor do
       # normalizes "no smoking" to "nosmoking" (so as not to be caught by the next match; see the following one)
       {~r/"?\bno\ssmoking\b"?/i, "nosmoking"},
       # normalizes "smoking" and "smoking ok" to "(smoking<->ok)|!(no<->smoking)"
-      {~r/"?\bsmoking(?:\sok)?\b"?/i, "(smoking<->ok)|!(no<->smoking)"},
+      {~r/"?\bsmoking(?:\sok)?\b"?/i, "((smoking<->ok)&!(no<->smoking))"},
       # normalizes "nosmoking" to "!(smoking<->ok)|(no<->smoking)"
-      {~r/\bnosmoking\b/i, "!(smoking<->ok)|(no<->smoking)"},
+      {~r/\bnosmoking\b/i, "((no<->smoking)|!(smoking<->ok))"},
       # normalizes "no pets" to "nopets" (so as not to be caught by the next match; see the following one)
       {~r/"?\bno\spets\b"?/i, "nopets"},
       # normalizes "pets" and "pets ok" to "(pets<->ok)|!(no<->pets)"
-      {~r/"?\bpets(?:\sok)?\b"?/i, "(pets<->ok)|!(no<->pets)"},
+      {~r/"?\bpets(?:\sok)?\b"?/i, "((pets<->ok)&!(no<->pets))"},
       # normalizes "nopets" to "!(pets<->ok)|(no<->pets)"
-      {~r/\bnopets\b/i, "!(pets<->ok)|(no<->pets)"},
+      {~r/\bnopets\b/i, "((no<->pets)|!(pets<->ok))"},
       # normalizes rental(s), also-for-rents and lease(s) to "for rent" (which is how these are indexed)
       {~r/\b(?:(?:also\s)?for\s)?(?:rentals?|rent|leases?)\b/i, "for<->rent"},
       # normalizes <-> and <number>
@@ -1011,8 +1011,8 @@ defmodule Mpnetwork.Realtor do
     scope =
       if something_left do
         scope
-        |> where([l], fragment("search_vector @@ to_tsquery(?)", ^q))
-        |> order_by([l], asc: fragment("ts_rank_cd(search_vector, to_tsquery(?), 32)", ^q))
+        |> where([l], fragment("search_vector @@ to_tsquery('english_nostop', ?)", ^q))
+        |> order_by([l], asc: fragment("ts_rank_cd(search_vector, to_tsquery('english_nostop', ?), 32)", ^q))
       else
         scope
       end
