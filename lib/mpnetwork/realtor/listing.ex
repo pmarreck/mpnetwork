@@ -366,6 +366,7 @@ defmodule Mpnetwork.Realtor.Listing do
 
   # If a (possibly newly) non-draft listing comes through with a NEW or FS listing_status_type
   # but no live_at datetime set... Set it to now.
+  # Also do this for EXT listing status.
   def changeset(
         %Listing{} = listing,
         %{"draft" => "false", "listing_status_type" => "NEW", "live_at" => ""} = attrs
@@ -376,6 +377,13 @@ defmodule Mpnetwork.Realtor.Listing do
   def changeset(
         %Listing{} = listing,
         %{"draft" => "false", "listing_status_type" => "FS", "live_at" => ""} = attrs
+      ) do
+    changeset(listing, %{attrs | "live_at" => Timex.to_naive_datetime(Timex.now())})
+  end
+
+  def changeset(
+        %Listing{} = listing,
+        %{"draft" => "false", "listing_status_type" => "EXT", "live_at" => ""} = attrs
       ) do
     changeset(listing, %{attrs | "live_at" => Timex.to_naive_datetime(Timex.now())})
   end

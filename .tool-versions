@@ -1,2 +1,7 @@
-erlang 20.1
-elixir 1.6.3
+# "system" means use whatever system-installed version there is
+# (mine are usually the most current)
+erlang system
+elixir system
+postgres system
+nodejs system
+ruby system
