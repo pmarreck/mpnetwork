@@ -1,5 +1,5 @@
 defmodule Mpnetwork.RealtorTest do
-  use Mpnetwork.DataCase
+  use Mpnetwork.DataCase, async: true
 
   alias Mpnetwork.Realtor
 

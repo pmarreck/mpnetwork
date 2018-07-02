@@ -1,5 +1,5 @@
 defmodule MpnetworkWeb.UserControllerTest do
-  use MpnetworkWeb.ConnCase
+  use MpnetworkWeb.ConnCase, async: true
 
   import Mpnetwork.Test.Support.Utilities
 

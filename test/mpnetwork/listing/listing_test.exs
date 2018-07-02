@@ -1,7 +1,5 @@
 defmodule Mpnetwork.ListingTest do
-  use ExUnit.Case, async: true
-
-  use Mpnetwork.DataCase
+  use Mpnetwork.DataCase, async: true
 
   alias Mpnetwork.{Listing, Upload, Realtor}
 
