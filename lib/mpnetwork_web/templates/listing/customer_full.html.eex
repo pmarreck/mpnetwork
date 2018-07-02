@@ -44,6 +44,7 @@
               <div class="group orientation-vertical " style="width: 265px;">
                 <div class="report-field label-visible"><span class="report-label ">Sec/Area:</span><span class="report-value"><%= @listing.district %></span></div>
                 <div class="report-field label-visible"><span class="report-label ">Devel:</span><span class="report-value"><%= @listing.association %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Hood:</span><span class="report-value"><%= @listing.neighborhood %></span></div>
                 <div class="group orientation-horizontal ">
                   <div class="group orientation-vertical last-child">
                     <div class="report-field label-visible"><span class="report-label ">Schools:</span><span class="report-value"><%= @listing.schools %></span></div>
