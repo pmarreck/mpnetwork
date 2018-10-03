@@ -900,7 +900,7 @@ defmodule Mpnetwork.Realtor do
 
       # normalizes 'dr/drive', 'st/street', 'ln/lane', 'blvd/boulevard', 'ctr/center', 'cir/circle', 'ct/court', 'hts/heights',
       # 'fwy/freeway', 'hwy/highway', 'jct/junction', 'mnr/manor', 'mt/mount', 'pky/parkway', 'pl/place', 'pt/point',
-      # 'rd/road', 'sq/square', 'sta/station', 'tpke/turnpike' to be considered equivalent
+      # 'rd/road', 'sq/square', 'sta/station', 'tpke/turnpike', 'ave/avenue' to be considered equivalent
       {~r/\bdr(?:ive)?\b/i, "(dr|drive)"},
       {~r/\bst(?:reet)?\b/i, "(st|street)"},
       {~r/\b(?:ln|lane)\b/i, "(ln|lane)"},
@@ -921,6 +921,7 @@ defmodule Mpnetwork.Realtor do
       {~r/\bsq(?:uare)?\b/i, "(sq|square)"},
       {~r/\bsta(?:tion)?\b/i, "(sta|station)"},
       {~r/\b(?:tpke|turnpike)\b/i, "(tpke|turnpike)"},
+      {~r/\bave(?:nue)?\b/i, "(ave|avenue)"},
       # normalizes "W,X,Y , Z" to "W|X|Y|Z"
       {~r/\s*\,\s*/, "|"},
       # normalizes "X and Y" or "X AND Y" to "X&Y"
