@@ -895,35 +895,38 @@ defmodule Mpnetwork.Realtor do
          to_string(num) <> abbrev
        end},
 
-      # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes comma which was screwing up the below)
-      {~r/\.\,\s/, ". "},
+      # normalizes "123 Story St., Manhasset" to "123 Story St. Manhasset" (removes commas)
+      {~r/\s*\,\s*/, " "},
 
-      # normalizes 'dr/drive', 'st/street', 'ln/lane', 'blvd/boulevard', 'ctr/center', 'cir/circle', 'ct/court', 'hts/heights',
-      # 'fwy/freeway', 'hwy/highway', 'jct/junction', 'mnr/manor', 'mt/mount', 'pky/parkway', 'pl/place', 'pt/point',
-      # 'rd/road', 'sq/square', 'sta/station', 'tpke/turnpike', 'ave/avenue' to be considered equivalent
-      {~r/\bdr(?:ive)?\b/i, "(dr|drive)"},
-      {~r/\bst(?:reet)?\b/i, "(st|street)"},
-      {~r/\b(?:ln|lane)\b/i, "(ln|lane)"},
-      {~r/\b(?:blvd|boulevard)\b/i, "(blvd|boulevard)"},
+      # normalizes 'dr./drive', 'st./street', 'ln./lane', 'blvd./boulevard', 'ctr/center', 'cir/circle', 'ct/court', 'hts/heights',
+      # 'fwy/freeway', 'hwy/highway', 'jct/junction', 'mnr/manor', 'mt/mount', 'pky/parkway', 'pl./place', 'pt./point',
+      # 'rd./road', 'sq./square', 'sta./station', 'tpke/turnpike', 'ave./avenue' to be considered equivalent.
+      # Abbreviation periods considered optional.
+      {~r/\bdr(?:ive)?\b\.?/i, "(dr|drive)"},
+      {~r/\bst(?:reet)?\b\.?/i, "(st|street)"},
+      {~r/\b(?:ln|lane)\b\.?/i, "(ln|lane)"},
+      {~r/\b(?:blvd|boulevard)\b\.?/i, "(blvd|boulevard)"},
       {~r/\b(?:ctr|center)\b/i, "(ctr|center)"},
       {~r/\bcir(?:cle)?\b/i, "(cir|circle)"},
-      {~r/\b(?:ct|court)\b/i, "(ct|court)"},
+      {~r/\b(?:ct|court)\b\.?/i, "(ct|court)"},
       {~r/\b(?:hts|heights)\b/i, "(hts|heights)"},
       {~r/\b(?:fwy|freeway)\b/i, "(fwy|freeway)"},
       {~r/\b(?:hwy|highway)\b/i, "(hwy|highway)"},
       {~r/\b(?:jct|junction)\b/i, "(jct|junction)"},
       {~r/\b(?:mnr|manor)\b/i, "(mnr|manor)"},
-      {~r/\b(?:mt|mount)\b/i, "(mt|mount)"},
+      {~r/\b(?:mt|mount)\b\.?/i, "(mt|mount)"},
       {~r/\b(?:pky|parkway)\b/i, "(pky|parkway)"},
-      {~r/\bpl(?:ace)?\b/i, "(pl|place)"},
-      {~r/\b(?:pt|point)\b/i, "(pt|point)"},
-      {~r/\b(?:rd|road)\b/i, "(rd|road)"},
-      {~r/\bsq(?:uare)?\b/i, "(sq|square)"},
-      {~r/\bsta(?:tion)?\b/i, "(sta|station)"},
+      {~r/\bpl(?:ace)?\b\.?/i, "(pl|place)"},
+      {~r/\b(?:pt|point)\b\.?/i, "(pt|point)"},
+      {~r/\b(?:rd|road)\b\.?/i, "(rd|road)"},
+      {~r/\bsq(?:uare|\.)?\b\.?/i, "(sq|square)"},
+      {~r/\bsta(?:tion)?\b\.?/i, "(sta|station)"},
       {~r/\b(?:tpke|turnpike)\b/i, "(tpke|turnpike)"},
-      {~r/\bave(?:nue)?\b/i, "(ave|avenue)"},
+      {~r/\bave(?:nue)?\b\.?/i, "(ave|avenue)"},
       # normalizes "W,X,Y , Z" to "W|X|Y|Z"
-      {~r/\s*\,\s*/, "|"},
+      # This has been disabled due to wonky behavior with searches like this:
+      # 123 Foo Bar, Town, State Zipcode
+      # {~r/\s*\,\s*/, "|"},
       # normalizes "X and Y" or "X AND Y" to "X&Y"
       {~r/\s+and\s+/i, "&"},
       # normalizes "X or Y" or "X OR Y" to "X|Y"
@@ -940,6 +943,9 @@ defmodule Mpnetwork.Realtor do
       {~r/\s*\|\s*/, "|"},
       # removes spaces after any !
       {~r/!\s+/, "!"},
+      # trims leading and trailing spaces
+      {~r/^\s+/, ""},
+      {~r/\s+$/, ""},
       # finally, changes any remaining spaces to & (and's the rest) since spaces are not allowed
       {~r/\s+/, "&"}
     ]
@@ -994,8 +1000,12 @@ defmodule Mpnetwork.Realtor do
       {"a<->b|c<->d", "\"a b\" |\"c d\""},
       {"a<2>b", " a  <2> b"},
       {"!b", "not b"},
-      {"W|X|Y|Z", "W, X,Y , Z"},
-      {"123&Story&Ave.&Manhasset", "123 Story Ave., Manhasset"},
+      # I'm disabling comma-delimited values being treated as OR's for now
+      # because this behaves wonky with comma-fied addresses
+      # {"W|X|Y|Z", "W,X,Y,Z"},
+      # instead all commas will simply be removed and ignored for now
+      {"W&X&Y&Z", "W, X,Y ,Z,"},
+      {"123&Story&(ave|avenue)&Manhasset&NY", "123 Story Ave., Manhasset, NY"},
       {"for<->rent", "also for rent"},
       {"for<->rent", "leases"},
       {"for<->rent", "rentals"},
