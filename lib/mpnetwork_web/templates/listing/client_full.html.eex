@@ -78,14 +78,6 @@
                     <div class="report-field label-visible"><span class="report-label ">Gated Prop:</span><span class="report-value"><%= yn @listing.gated_comm %></span></div>
                   </div>
                 </div>
-                <div class="group orientation-horizontal  last-child">
-                  <div class="group orientation-vertical " style="width: 100px;">
-                    <div class="report-field label-visible"><span class="report-label ">Beach Rts:</span><span class="report-value"><%= yn @listing.beach_rights %></span></div>
-                  </div>
-                  <div class="group orientation-vertical  last-child">
-                    <div class="report-field label-visible"><span class="report-label ">Dock Rts:</span><span class="report-value"><%= yn @listing.dock_rights %></span></div>
-                  </div>
-                </div>
               </div>
               <div class="group orientation-vertical  last-child">
                 <div class="group orientation-horizontal ">
@@ -122,6 +114,8 @@
                 </div>
                 <div class="report-field label-visible"><span class="report-label ">Lot Sqft:</span><span class="report-value"><%= @listing.lot_sqft %></span></div>
                 <div class="report-field label-visible"><span class="report-label ">Zoning:</span><span class="report-value"><%= @listing.zoning %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Beach Rts:</span><span class="report-value"><%= yn @listing.beach_rights %></span></div>
+                <div class="report-field label-visible"><span class="report-label ">Dock Rts:</span><span class="report-value"><%= yn @listing.dock_rights %></span></div>
               </div>
             </div>
           </div>
@@ -209,7 +203,7 @@
             <div class="report-field label-visible"><span class="report-label ">Heat:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_heating_type_int_to_ext(@listing.heating_type) %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Heat Zones:</span><span class="report-value"><%= @listing.heat_num_zones %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Sep HW Heater:</span><span class="report-value"><%= yn @listing.sep_hw_heater %></span></div>
-            <div class="report-field label-visible"><span class="report-label ">Permit:</span><span class="report-value"><%= @listing.permit %></span></div>
+            <%= if @listing.permit && @listing.permit != "" do %><div class="report-field label-visible"><span class="report-label ">Permit:</span><span class="report-value"><%= @listing.permit %></span></div><% end %>
           </div>
           <div class="group orientation-vertical  last-child" style="width: 188px;">
             <div class="group orientation-vertical " style="font-style: italic; text-decoration: underline; text-align: center; font-size: 14px;">
@@ -274,37 +268,33 @@
         </div>
       </div>
       <div class="report-field label-visible behavior"><span class="report-label ">Handicap Accessible:</span><span class="report-value"><%= yn @listing.handicap_access %><%= if @listing.handicap_access_desc && @listing.handicap_access_desc != "", do: ", " <> @listing.handicap_access_desc %></span></div>
-      <div class="group orientation-horizontal ">
-        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
-      </div>
-      <div class="group orientation-horizontal ">
-        <%
-           two = @listing.first_cust_oh_start_at && @listing.second_cust_oh_start_at
-           s = if two, do: "s", else: ""
-        %>
-        <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date<%= s %>/Time<%= s %>:</span>
-          <span class="report-value">
-            <%= if @listing.first_cust_oh_start_at do %>
-              <%= @listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
-            <% end %>
-            <%= if two, do: ", " %>
-            <%= if @listing.second_cust_oh_start_at do %>
-              <%= @listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
-              <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
-            <% end %>
-          </span>
+      <%= if @listing.next_cust_oh_note && @listing.next_cust_oh_note != "" do %>
+        <div class="group orientation-horizontal ">
+          <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
         </div>
-      </div>
-      <div class="group orientation-vertical  empty">
-        <div class=""></div>
-      </div>
-      <div class="group orientation-horizontal ">
-        <div class="report-literal report-field ">&nbsp;</div>
-      </div>
-      <div class="group orientation-vertical  empty">
-        <div class=""></div>
-      </div>
+      <% end %>
+      <%
+          two = @listing.first_cust_oh_start_at && @listing.second_cust_oh_start_at
+          any = @listing.first_cust_oh_start_at || @listing.second_cust_oh_start_at
+          s = if two, do: "s", else: ""
+      %>
+      <%= if any do %>
+        <div class="group orientation-horizontal ">
+          <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Date<%= s %>/Time<%= s %>:</span>
+            <span class="report-value">
+              <%= if @listing.first_cust_oh_start_at do %>
+                <%= @listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+                <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
+              <%= if two, do: ", " %>
+              <%= if @listing.second_cust_oh_start_at do %>
+                <%= @listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e") %> @
+                <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      <% end %>
       <div class="group orientation-vertical  behavior">
         <div class="report-literal report-field report-line ">
           <hr>
