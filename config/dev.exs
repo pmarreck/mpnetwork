@@ -71,6 +71,6 @@ config :mpnetwork, Mpnetwork.Repo,
   pool_size: 10
 
 # PryIn
-config :pryin,
-  enabled: true,
-  env: :dev
+# config :pryin,
+#   enabled: true,
+#   env: :dev

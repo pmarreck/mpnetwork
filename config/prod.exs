@@ -88,8 +88,8 @@ config :mpnetwork, Mpnetwork.Repo,
 #   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 # PryIn
-config :pryin,
-  enabled: true,
-  env: :prod
+# config :pryin,
+#   enabled: true,
+#   env: :prod
 
 config :phoenix, :serve_endpoints, true

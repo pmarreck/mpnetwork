@@ -23,8 +23,8 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   secret_key_base: "0UYiCVV96M2bKbnZuilr1oNUY+NRJz8F07d3nWVjUOEwBHmxohBn2W4qjz+9oVUd",
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]],
-  pubsub: [name: Mpnetwork.PubSub, adapter: Phoenix.PubSub.PG2],
-  instrumenters: [PryIn.Instrumenter]
+  pubsub: [name: Mpnetwork.PubSub, adapter: Phoenix.PubSub.PG2]
+  # instrumenters: [PryIn.Instrumenter]
 
 # Configures the job scheduler via Quantum
 config :mpnetwork, Mpnetwork.Scheduler,
@@ -91,14 +91,15 @@ config :mime, :types, %{
 }
 
 # Configures PryIn.io
-config :pryin,
-  api_key: "nigqe8rp2ub9fqn5f3vi29fib6cmbmgiat3omidaedv4ks0i",
-  # This is just for tracking your app version. In an umbrella project, use any of your apps here.
-  otp_app: :mpnetwork,
-  enabled: false,
-  env: :dev
+# config :pryin,
+#   api_key: "nigqe8rp2ub9fqn5f3vi29fib6cmbmgiat3omidaedv4ks0i",
+#   # This is just for tracking your app version. In an umbrella project, use any of your apps here.
+#   otp_app: :mpnetwork,
+#   enabled: false,
+#   env: :dev
 
-config :mpnetwork, Mpnetwork.Repo, loggers: [PryIn.EctoLogger, Ecto.LogEntry]
+# config :mpnetwork, Mpnetwork.Repo, loggers: [PryIn.EctoLogger, Ecto.LogEntry]
+config :mpnetwork, Mpnetwork.Repo, loggers: [Ecto.LogEntry]
 
 # Import Timber, structured logging
 import_config "timber.exs"

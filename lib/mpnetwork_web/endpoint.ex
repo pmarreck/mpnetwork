@@ -55,7 +55,7 @@ defmodule MpnetworkWeb.Endpoint do
   plug(Timber.Integrations.EventPlug)
 
   # Add PryIn plug for metrics monitoring. NOTE: Must remain just before Router plug
-  plug(PryIn.Plug)
+  # plug(PryIn.Plug)
 
   plug(MpnetworkWeb.Router)
 
