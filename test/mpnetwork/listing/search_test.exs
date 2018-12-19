@@ -306,10 +306,18 @@ defmodule Mpnetwork.SearchTest do
     # Also, since I'm doing more and more filtering on query text,
     # it's becoming harder and harder to try to trigger a 500... Ironically.
     def no_500_query_result({0, [], []}), do: true
-    def no_500_query_result({0, [], ["Something was wrong with the search query: <>?!&^$@*&%^(pajklwer"]}), do: true
+
+    def no_500_query_result(
+          {0, [], ["Something was wrong with the search query: <>?!&^$@*&%^(pajklwer"]}
+        ),
+        do: true
+
     def no_500_query_result(_), do: false
+
     test "malformed search doesn't blow up in a 500 and returns expected error (OR EMPTY ARRAY GRRR)" do
-      assert no_500_query_result(Realtor.query_listings("<>?!&^$@*&%^(pajklwer", 50, user_fixture()))
+      assert no_500_query_result(
+               Realtor.query_listings("<>?!&^$@*&%^(pajklwer", 50, user_fixture())
+             )
     end
 
     test "blank search" do

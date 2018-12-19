@@ -23,6 +23,7 @@ defmodule MpnetworkWeb.Coherence.Messages do
 
   def account_already_confirmed, do: dgettext(@domain, "Account already confirmed.")
   def account_is_not_locked, do: dgettext(@domain, "Account is not locked.")
+  def account_created_successfully, do: dgettext(@domain, "Account created successfully.")
   def account_updated_successfully, do: dgettext(@domain, "Account updated successfully.")
   def already_confirmed, do: dgettext(@domain, "already confirmed")
   def already_locked, do: dgettext(@domain, "already locked")
@@ -110,7 +111,8 @@ defmodule MpnetworkWeb.Coherence.Messages do
     do:
       dgettext(
         @domain,
-        "You are using an invalid security token for this site! This security\nviolation has been logged.\n"
+        "You are using an invalid security token for this site! This security\n" <>
+          "violation has been logged.\n"
       )
 
   def mailer_required, do: dgettext(@domain, "Mailer configuration required!")

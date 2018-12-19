@@ -417,6 +417,7 @@ defmodule MpnetworkWeb.ListingController do
         sent_emails
         |> Enum.map(fn sent_email ->
           {name, email} = List.first(sent_email.to)
+
           {success, results} =
             case Mailer.deliver(sent_email) do
               {:ok, results} -> {true, results}
@@ -439,7 +440,11 @@ defmodule MpnetworkWeb.ListingController do
               )
 
             {false, reason, ^name, ^email} ->
-              Logger.info("Error emailing listing id #{id} of type #{type} to #{name} at #{email}, reason given: #{inspect(reason)}")
+              Logger.info(
+                "Error emailing listing id #{id} of type #{type} to #{name} at #{email}, reason given: #{
+                  inspect(reason)
+                }"
+              )
           end
 
           {success, results, name, email}

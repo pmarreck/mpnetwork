@@ -21,9 +21,7 @@ defmodule Mpnetwork.Utils.Regexen do
       (?:
         (?:"(?<name>[^"]+)"|(?<bare_name>[A-Za-z'-]+(?:\\s[A-Za-z'-]+)*))\\s*(?:<(?<quoted_email>#{
     @email_regex_source
-      })>|(?<email>#{
-        @email_regex_source
-      })
+  })>|(?<email>#{@email_regex_source})
       )
     )
     |

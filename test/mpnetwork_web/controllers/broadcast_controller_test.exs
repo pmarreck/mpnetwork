@@ -16,7 +16,7 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
   end
 
   test "required login" do
-    conn = %Plug.Conn{}
+    conn = build_conn() # need a blank conn for this
     conn = get(conn, broadcast_path(conn, :index))
     assert redirected_to(conn, 302) =~ "/sessions/new"
   end

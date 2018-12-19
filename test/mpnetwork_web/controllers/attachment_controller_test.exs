@@ -79,7 +79,8 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
       post(
         conn,
         attachment_path(conn, :create),
-        attachment: Enum.into(%{listing_id: listing.id, listing: listing}, @post_attachment_create_attrs)
+        attachment:
+          Enum.into(%{listing_id: listing.id, listing: listing}, @post_attachment_create_attrs)
       )
 
     # had to do this since redirected_params won't parse querystring params.

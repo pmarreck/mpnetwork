@@ -809,7 +809,7 @@ defmodule Mpnetwork.Realtor.Listing do
       :purchaser,
       :moved_from,
       :pets_ok,
-      :smoking_ok,
+      :smoking_ok
     ])
   end
 end

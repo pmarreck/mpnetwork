@@ -190,7 +190,13 @@ defmodule MpnetworkWeb.AttachmentController do
   # def create(conn, %{"file" => plug_upload})
 
   # if a "file" Plug.Upload comes in via dropzone, shift that to the "data" key on the attachment so everything else "just works"
-  def create(conn, %{"file" => plug_upload, "attachment" => %{"listing_id" => _listing_id} = attachment_params} = _params) do
+  def create(
+        conn,
+        %{
+          "file" => plug_upload,
+          "attachment" => %{"listing_id" => _listing_id} = attachment_params
+        } = _params
+      ) do
     create(conn, %{"attachment" => Map.merge(attachment_params, %{"data" => plug_upload})})
   end
 
@@ -215,6 +221,7 @@ defmodule MpnetworkWeb.AttachmentController do
         {:error, %Ecto.Changeset{} = _changeset} ->
           conn
           |> send_resp(403, "Forbidden: Too many attachments")
+
           # |> put_flash(:error, "Maximum number of attachments already added")
           # |> render("new.html", changeset: changeset, listing: listing, listing_id: listing.id)
       end

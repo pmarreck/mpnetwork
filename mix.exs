@@ -40,6 +40,8 @@ defmodule Mpnetwork.Mixfile do
   defp deps do
     [
       {:distillery, "~> 1.4.0"},
+      {:cowboy, "~> 2.5"},
+      {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.3", override: true},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
@@ -47,11 +49,10 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_html, "~> 2.10.4"},
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.13"},
-      {:cowboy, "~> 1.1.2"},
       # The Coherence guy has been slow about tagging this 0.5.1, so using git SHA for now
-      {:coherence, git: "https://github.com/smpallen99/coherence.git", ref: "1f58ba5"},
+      {:coherence, git: "https://github.com/smpallen99/coherence.git", branch: "master"},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:timex, "~> 3.2.1"},
+      {:timex, "~> 3.3"},
       {:number, "~> 0.5"},
       {:timber, "~> 2.6"},
       {:ex_image_info, "~> 0.1.1"},

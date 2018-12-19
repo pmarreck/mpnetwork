@@ -183,8 +183,7 @@ defmodule MpnetworkWeb.Coherence.ViewHelpers do
 
   @spec signout_link(conn, String.t(), String.t()) :: tuple
   def signout_link(conn, text \\ @signout_link, signout_class \\ "") do
-    link(
-      text,
+    link(text,
       to: coherence_path(@helpers, :session_path, conn, :delete),
       method: :delete,
       class: signout_class
@@ -229,39 +228,5 @@ defmodule MpnetworkWeb.Coherence.ViewHelpers do
     else
       current_user.name
     end
-  end
-
-  @doc """
-  Translates an error message using gettext.
-  """
-  def translate_error({msg, opts}) do
-    # Because error messages were defined within Ecto, we must
-    # call the Gettext module passing our Gettext backend. We
-    # also use the "errors" domain as translations are placed
-    # in the errors.po file.
-    # Ecto will pass the :count keyword if the error message is
-    # meant to be pluralized.
-    # On your own code and templates, depending on whether you
-    # need the message to be pluralized or not, this could be
-    # written simply as:
-    #
-    #     dngettext "errors", "1 file", "%{count} files", count
-    #     dgettext "errors", "is invalid"
-    #
-    if count = opts[:count] do
-      Gettext.dngettext(MpnetworkWeb.Gettext, "errors", msg, msg, count, opts)
-    else
-      Gettext.dgettext(MpnetworkWeb.Gettext, "errors", msg, opts)
-    end
-  end
-
-  @doc """
-  Generates an error string from changeset errors.
-  """
-  def error_string_from_changeset(changeset) do
-    Enum.map(changeset.errors, fn {k, v} ->
-      "#{Phoenix.Naming.humanize(k)} #{translate_error(v)}"
-    end)
-    |> Enum.join(". ")
   end
 end

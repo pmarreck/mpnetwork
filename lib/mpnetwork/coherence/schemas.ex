@@ -10,10 +10,6 @@ defmodule Mpnetwork.Coherence.Schemas do
     @repo.all(@user_schema)
   end
 
-  def list_by_user(opts) do
-    @repo.all(query_by(@user_schema, opts))
-  end
-
   def get_by_user(opts) do
     @repo.get_by(@user_schema, opts)
   end
@@ -42,20 +38,12 @@ defmodule Mpnetwork.Coherence.Schemas do
     @user_schema.changeset(@user_schema.__struct__, %{})
   end
 
-  def create_user(params) do
-    @repo.insert(change_user(params))
-  end
-
-  def create_user!(params) do
-    @repo.insert!(change_user(params))
-  end
-
   def update_user(user, params) do
     @repo.update(change_user(user, params))
   end
 
-  def update_user!(user, params) do
-    @repo.update!(change_user(user, params))
+  def create_user(params) do
+    @repo.insert(change_user(params))
   end
 
   Enum.each([Mpnetwork.Coherence.Invitation, Mpnetwork.Coherence.Rememberable], fn module ->
@@ -71,10 +59,6 @@ defmodule Mpnetwork.Coherence.Schemas do
 
     def unquote(String.to_atom("list_#{name}"))(%Ecto.Query{} = query) do
       @repo.all(query)
-    end
-
-    def unquote(String.to_atom("list_by_#{name}"))(opts) do
-      @repo.all(query_by(unquote(module), opts))
     end
 
     def unquote(String.to_atom("get_#{name}"))(id) do
@@ -105,16 +89,8 @@ defmodule Mpnetwork.Coherence.Schemas do
       @repo.insert(unquote(module).new_changeset(params))
     end
 
-    def unquote(String.to_atom("create_#{name}!"))(params) do
-      @repo.insert!(unquote(module).new_changeset(params))
-    end
-
     def unquote(String.to_atom("update_#{name}"))(struct, params) do
       @repo.update(unquote(module).changeset(struct, params))
-    end
-
-    def unquote(String.to_atom("update_#{name}!"))(struct, params) do
-      @repo.update!(unquote(module).changeset(struct, params))
     end
 
     def unquote(String.to_atom("delete_#{name}"))(struct) do

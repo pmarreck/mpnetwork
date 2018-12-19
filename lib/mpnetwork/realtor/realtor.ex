@@ -1008,7 +1008,7 @@ defmodule Mpnetwork.Realtor do
       {"123&Story&(ave|avenue)&Manhasset&NY", "123 Story Ave., Manhasset, NY"},
       {"for<->rent", "also for rent"},
       {"for<->rent", "leases"},
-      {"for<->rent", "rentals"},
+      {"for<->rent", "rentals"}
     ]
 
     for {expected, input} <- test_cases, do: ^expected = normalize_query(input)
@@ -1023,7 +1023,9 @@ defmodule Mpnetwork.Realtor do
       if something_left do
         scope
         |> where([l], fragment("search_vector @@ to_tsquery('english_nostop', ?)", ^q))
-        |> order_by([l], asc: fragment("ts_rank_cd(search_vector, to_tsquery('english_nostop', ?), 32)", ^q))
+        |> order_by([l],
+          asc: fragment("ts_rank_cd(search_vector, to_tsquery('english_nostop', ?), 32)", ^q)
+        )
       else
         scope
       end

@@ -246,7 +246,10 @@ defmodule Mpnetwork.Test.Support.Utilities do
     is_image: true,
     primary: false
   }
-  @attachment_create_attrs Enum.into(%{data: @test_attachment_binary_data}, @post_attachment_create_attrs)
+  @attachment_create_attrs Enum.into(
+                             %{data: @test_attachment_binary_data},
+                             @post_attachment_create_attrs
+                           )
 
   def fixture(:listing, user) do
     {:ok, listing} =
@@ -273,7 +276,9 @@ defmodule Mpnetwork.Test.Support.Utilities do
   end
 
   def fixture(:attachment, extra_attrs) do
-    {:ok, attachment} = Listing.create_attachment(Enum.into(extra_attrs, @attachment_create_attrs))
+    {:ok, attachment} =
+      Listing.create_attachment(Enum.into(extra_attrs, @attachment_create_attrs))
+
     attachment
   end
 

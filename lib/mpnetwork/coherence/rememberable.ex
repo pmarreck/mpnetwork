@@ -10,8 +10,8 @@ defmodule Mpnetwork.Coherence.Rememberable do
   schema "rememberables" do
     field(:series_hash, :string)
     field(:token_hash, :string)
-    field(:token_created_at, :naive_datetime)
-    belongs_to(:user, Config.user_schema())
+    field(:token_created_at, Timex.Ecto.DateTime)
+    belongs_to(:user, Module.concat(Config.module(), Config.user_schema()))
 
     timestamps()
   end

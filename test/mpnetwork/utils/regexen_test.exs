@@ -138,7 +138,8 @@ defmodule Mpnetwork.Utils.RegexenTest do
        [" someoneelse@somewhereelse.com", "", "", "", "", "someoneelse@somewhereelse.com"]
      ]},
     # only the bare email will be gotten here
-    {"some name some@email.com", [["some name some@email.com", "", "some name", "", "some@email.com"]]},
+    {"some name some@email.com",
+     [["some name some@email.com", "", "some name", "", "some@email.com"]]},
     # only the latter will be picked up here
     {"Peter Marreck, John Russo <john@russo.com>",
      [[" John Russo <john@russo.com>", "", "John Russo", "john@russo.com"]]},

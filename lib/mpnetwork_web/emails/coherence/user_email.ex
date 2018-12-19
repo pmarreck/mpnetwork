@@ -41,9 +41,7 @@ defmodule MpnetworkWeb.Coherence.UserEmail do
     |> to(user_email(invitation))
     |> add_reply_to()
     |> subject(
-      dgettext(
-        "coherence",
-        "%{site_name} - Invitation to create a new account",
+      dgettext("coherence", "%{site_name} - Invitation to create a new account",
         site_name: site_name()
       )
     )

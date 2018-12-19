@@ -14,7 +14,8 @@ config :mpnetwork,
   attachment_chunk_size: 2_000_000,
   # timeout in ms per chunk, 10s
   attachment_chunk_timeout: 10_000,
-  max_attachments_per_listing: 25, # 20-ish photos plus maybe a pdf or 2
+  # 20-ish photos plus maybe a pdf or 2
+  max_attachments_per_listing: 25,
   cache_name: :attachment_cache
 
 # Configures the endpoint
@@ -24,7 +25,8 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192]],
   pubsub: [name: Mpnetwork.PubSub, adapter: Phoenix.PubSub.PG2]
-  # instrumenters: [PryIn.Instrumenter]
+
+# instrumenters: [PryIn.Instrumenter]
 
 # Configures the job scheduler via Quantum
 config :mpnetwork, Mpnetwork.Scheduler,
