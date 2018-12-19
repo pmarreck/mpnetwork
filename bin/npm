@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# This causes any npm commands run in the project root
+# to auto prefix to the "assets" directory.
+# Depends on having "./bin" in your $PATH ahead of /usr/local/bin.
+/usr/local/bin/npm "$@" --prefix assets

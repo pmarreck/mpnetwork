@@ -5,8 +5,8 @@ jobs:
   include:
     - stage: test
       language: elixir
-      elixir: 1.6.3
-      otp_release: 20.1
+      elixir: 1.7.4
+      otp_release: 21.0
       services:
         - postgresql
       before_script:
@@ -19,7 +19,7 @@ jobs:
           - "deps"
     - stage: test
       language: node_js
-      node_js: 9.5.0
+      node_js: 11.4.0
       env:
         global:
           - NODE_ENV=test
@@ -32,8 +32,8 @@ jobs:
           - "assets/node_modules"
     - stage: deploy
       language: elixir
-      elixir: 1.6.3
-      otp_release: 20.1
+      elixir: 1.7.4
+      otp_release: 21.0
       before_script: skip
       install: skip
       script:
