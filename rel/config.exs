@@ -2,7 +2,8 @@
 # They can then be used by adding `plugin MyPlugin` to
 # either an environment, or release definition, where
 # `MyPlugin` is the name of the plugin module.
-Path.join(["rel", "plugins", "*.exs"])
+~w(rel plugins *.exs)
+|> Path.join()
 |> Path.wildcard()
 |> Enum.map(&Code.eval_file(&1))
 
@@ -37,7 +38,8 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"B8ZQgmmb&FehGImXOA;tF>AQ<DKkTSt.7eB}[F|[90{PMR9evUweg%tU!!OI[s~s"
-  set pre_start_hook: "rel/commands/migrate.sh"
+  set vm_args: "rel/vm.args"
+  set pre_start_hooks: "rel/commands"
 end
 
 # You may define one or more releases in this file.
