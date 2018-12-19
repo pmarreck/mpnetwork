@@ -39,7 +39,7 @@ defmodule Mpnetwork.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:distillery, "~> 1.4.0"},
+      {:distillery, "~> 2.0"},
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.3", override: true},
