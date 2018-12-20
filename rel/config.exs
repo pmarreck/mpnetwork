@@ -50,7 +50,8 @@ end
 release :mpnetwork do
   set version: current_version(:mpnetwork)
   set commands: [
-    "migrate": "rel/commands/migrate.sh"
+    migrate: "rel/commands/migrate.sh",
+    seed: "rel/commands/seed.sh",
   ]
   set applications: [
     :runtime_tools

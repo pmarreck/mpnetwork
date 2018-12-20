@@ -1,56 +1,69 @@
-# copied and modified from 
-# https://github.com/bitwalker/distillery/blob/master/docs/Running%20Migrations.md
 defmodule Mpnetwork.ReleaseTasks do
   @start_apps [
     :crypto,
     :ssl,
     :postgrex,
-    :ecto
+    :ecto,
+    # :ecto_sql # If using Ecto 3.0 or higher
   ]
 
-  def myapp, do: :mpnetwork
+  @my_app :mpnetwork
 
-  def repos, do: Application.get_env(myapp(), :ecto_repos, [])
+  @repos Application.get_env(@my_app, :ecto_repos, [])
 
-  def seed do
-    me = myapp()
+  def migrate(_argv) do
+    start_services()
 
-    IO.puts("Loading #{me}..")
-    # Load the code for myapp, but don't start it
-    :ok = Application.load(me)
+    run_migrations()
 
+    stop_services()
+  end
+
+  def seed(_argv) do
+    start_services()
+
+    run_migrations()
+
+    run_seeds()
+
+    stop_services()
+  end
+
+  defp start_services do
     IO.puts("Starting dependencies..")
     # Start apps necessary for executing migrations
     Enum.each(@start_apps, &Application.ensure_all_started/1)
 
-    # Start the Repo(s) for myapp
+    # Start the Repo(s) for app
     IO.puts("Starting repos..")
-    Enum.each(repos(), & &1.start_link(pool_size: 1))
 
-    # Run migrations
-    migrate()
+    # Switch pool_size to 2 for ecto > 3.0
+    Enum.each(@repos, & &1.start_link(pool_size: 1))
+  end
 
-    # Run seed script
-    # Enum.each(repos(), &run_seeds_for/1)
-
-    # Signal shutdown
+  defp stop_services do
     IO.puts("Success!")
     :init.stop()
   end
 
-  def migrate, do: Enum.each(repos(), &run_migrations_for/1)
-
-  def priv_dir(app), do: "#{:code.priv_dir(app)}"
+  defp run_migrations do
+    Enum.each(@repos, &run_migrations_for/1)
+  end
 
   defp run_migrations_for(repo) do
     app = Keyword.get(repo.config, :otp_app)
     IO.puts("Running migrations for #{app}")
-    Ecto.Migrator.run(repo, migrations_path(repo), :up, all: true)
+    migrations_path = priv_path_for(repo, "migrations")
+    Ecto.Migrator.run(repo, migrations_path, :up, all: true)
   end
 
-  def run_seeds_for(repo) do
+  defp run_seeds do
+    Enum.each(@repos, &run_seeds_for/1)
+  end
+
+  defp run_seeds_for(repo) do
     # Run the seed script if it exists
-    seed_script = seeds_path(repo)
+    seed_script = priv_path_for(repo, "seeds.exs")
 
     if File.exists?(seed_script) do
       IO.puts("Running seed script..")
@@ -58,13 +71,17 @@ defmodule Mpnetwork.ReleaseTasks do
     end
   end
 
-  def migrations_path(repo), do: priv_path_for(repo, "migrations")
-
-  def seeds_path(repo), do: priv_path_for(repo, "seeds.exs")
-
-  def priv_path_for(repo, filename) do
+  defp priv_path_for(repo, filename) do
     app = Keyword.get(repo.config, :otp_app)
-    repo_underscore = repo |> Module.split() |> List.last() |> Macro.underscore()
-    Path.join([priv_dir(app), repo_underscore, filename])
+
+    repo_underscore =
+      repo
+      |> Module.split()
+      |> List.last()
+      |> Macro.underscore()
+
+    priv_dir = "#{:code.priv_dir(app)}"
+
+    Path.join([priv_dir, repo_underscore, filename])
   end
 end
