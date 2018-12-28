@@ -49,7 +49,6 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_html, "~> 2.10.4"},
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.13"},
-      # The Coherence guy has been slow about tagging this 0.5.1, so using git SHA for now
       {:coherence, git: "https://github.com/smpallen99/coherence.git", branch: "master"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.3"},
@@ -65,6 +64,8 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_swoosh, "~> 0.2"},
       # want to replace with another solution asap lol. https://imagetragick.com/
       {:mogrify, "~> 0.5.4"},
+      # replacement for the above, hopefully!
+      {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.4", override: true},
@@ -72,7 +73,6 @@ defmodule Mpnetwork.Mixfile do
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
-      # {:pryin, "~> 1.5"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:quantum, ">= 2.2.5"},
       {:ex_rated, "~> 1.3"},

@@ -9,9 +9,7 @@ if Mix.env() == :prod do
     instrumenters: [Timber.Integrations.PhoenixInstrumenter]
 
   # Structure Ecto logs
-  # Note that I manually prefixed PryIn stuff
   config :mpnetwork, Mpnetwork.Repo, loggers: [{Mpnetwork.CustomTimberLogger, :log, [:info]}]
-  # loggers: [PryIn.EctoLogger] ++ [{Mpnetwork.CustomTimberLogger, :log, [:info]}]
 
   # Application.get_env(:mpnetwork, Mpnetwork.Repo)[:loggers]
 end
