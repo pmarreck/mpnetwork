@@ -6,7 +6,7 @@ defmodule MpnetworkWeb.UserControllerTest do
   alias Mpnetwork.Realtor
 
   setup %{conn: conn} do
-    user = user_fixture(role_id: 2)
+    user = user_fixture(%{role_id: 2})
     conn = assign(conn, :current_office, user.broker)
     conn = assign(conn, :current_user, user)
     {:ok, conn: conn, user: user}
@@ -67,7 +67,7 @@ defmodule MpnetworkWeb.UserControllerTest do
 
   describe "update user as office admin" do
     setup %{conn: conn} do
-      user = user_fixture(role_id: 2)
+      user = user_fixture(%{role_id: 2})
       conn = assign(conn, :current_office, user.broker)
       conn = assign(conn, :current_user, user)
       {:ok, conn: conn, user: user}

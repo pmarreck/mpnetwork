@@ -18,7 +18,7 @@ config :mpnetwork, Mpnetwork.Repo,
   username: "postgres",
   password: "postgres",
   database: "mpnetwork_test",
-  hostname: "localhost",
+  hostname: "35.226.111.50", # "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Mailer stub for Swoosh

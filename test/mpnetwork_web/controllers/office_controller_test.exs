@@ -47,8 +47,8 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
-      attrs
-      |> Enum.into(valid_user_attrs())
+      valid_user_attrs()
+      |> Map.merge(attrs)
       |> Realtor.create_user()
 
     user

@@ -7,7 +7,8 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :mpnetwork, MpnetworkWeb.Endpoint,
-  http: [port: 4000],
+  load_from_system_env: true,
+  http: [port: {:system, "DEV_PORT"}],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -67,5 +68,5 @@ config :mpnetwork, Mpnetwork.Repo,
   username: "postgres",
   password: "postgres",
   database: "mpnetwork_dev",
-  hostname: "localhost",
+  hostname: "35.226.111.50", # "localhost",
   pool_size: 10

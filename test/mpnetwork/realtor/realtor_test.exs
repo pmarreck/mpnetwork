@@ -221,7 +221,7 @@ defmodule Mpnetwork.RealtorTest do
       attrs =
         unless attrs[:user_id] || attrs[:user] do
           user = user_fixture()
-          Enum.into(%{user_id: user.id, user: user}, attrs)
+          attrs |> Map.merge(%{user_id: user.id, user: user})
         else
           attrs
         end
@@ -230,14 +230,14 @@ defmodule Mpnetwork.RealtorTest do
       attrs =
         unless attrs[:broker_id] || attrs[:broker] do
           broker = office_fixture()
-          Enum.into(%{broker_id: broker.id, broker: broker}, attrs)
+          attrs |> Map.merge(%{broker_id: broker.id, broker: broker})
         else
           attrs
         end
 
       {:ok, listing} =
-        attrs
-        |> Enum.into(@valid_attrs)
+        @valid_attrs
+        |> Map.merge(attrs)
         |> Realtor.create_listing()
 
       listing |> Repo.preload([:broker, :user])
@@ -479,7 +479,7 @@ defmodule Mpnetwork.RealtorTest do
 
     test "create_user/1 with valid data creates a user" do
       office = office_fixture()
-      valid_attrs = valid_user_attrs(office_id: office.id)
+      valid_attrs = valid_user_attrs(%{office_id: office.id})
       assert {:ok, %User{} = user} = Realtor.create_user(valid_attrs)
       assert user.cell_phone == valid_attrs.cell_phone
       assert user.email == valid_attrs.email
@@ -497,9 +497,9 @@ defmodule Mpnetwork.RealtorTest do
 
     test "update_user/2 with valid data updates the user" do
       office = office_fixture()
-      user = user_fixture(office_id: office.id)
+      user = user_fixture(%{office_id: office.id})
       assert user.url
-      valid_update_attrs = valid_update_user_attrs(office_id: office.id)
+      valid_update_attrs = valid_update_user_attrs(%{office_id: office.id})
       assert {:ok, user} = Realtor.update_user(user, valid_update_attrs)
       assert %User{} = user
       assert user.cell_phone == valid_update_attrs.cell_phone

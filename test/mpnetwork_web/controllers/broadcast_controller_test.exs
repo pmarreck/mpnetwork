@@ -56,14 +56,14 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
   end
 
   test "renders form for editing chosen broadcast", %{conn: conn} do
-    broadcast = broadcast_fixture(user_id: conn.assigns.current_user.id)
+    broadcast = broadcast_fixture(%{user_id: conn.assigns.current_user.id})
     conn = get(conn, broadcast_path(conn, :edit, broadcast))
     assert html_response(conn, 200) =~ "Edit Broadcast"
   end
 
   test "updates chosen broadcast and redirects when data is valid", %{conn: initial_conn} do
     conn = initial_conn
-    broadcast = broadcast_fixture(user_id: conn.assigns.current_user.id)
+    broadcast = broadcast_fixture(%{user_id: conn.assigns.current_user.id})
 
     conn =
       put(
@@ -80,7 +80,7 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
   end
 
   test "does not update chosen broadcast and renders errors when data is invalid", %{conn: conn} do
-    broadcast = broadcast_fixture(user_id: conn.assigns.current_user.id)
+    broadcast = broadcast_fixture(%{user_id: conn.assigns.current_user.id})
 
     conn =
       put(conn, broadcast_path(conn, :update, broadcast), broadcast: invalid_broadcast_attrs())
@@ -90,7 +90,7 @@ defmodule MpnetworkWeb.BroadcastControllerTest do
 
   test "deletes chosen broadcast", %{conn: fresh_conn} do
     conn = fresh_conn
-    broadcast = broadcast_fixture(user_id: conn.assigns.current_user.id)
+    broadcast = broadcast_fixture(%{user_id: conn.assigns.current_user.id})
     conn = delete(conn, broadcast_path(conn, :delete, broadcast))
     assert redirected_to(conn) == broadcast_path(conn, :index)
     refute Repo.get(Broadcast, broadcast.id)

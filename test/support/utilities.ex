@@ -13,8 +13,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
     t = NaiveDateTime.utc_now()
     email = "test#{random_uniquifying_string()}@example.com"
 
-    attrs
-    |> Enum.into(%{
+    %{
       name: "Realtortest User",
       email: email,
       username: email,
@@ -30,13 +29,12 @@ defmodule Mpnetwork.Test.Support.Utilities do
       email_sig: "",
       last_sign_in_at: t,
       current_sign_in_at: t
-    })
+    } |> Map.merge(attrs)
   end
 
   def valid_update_user_attrs(attrs \\ %{}) do
     # email = "test#{random_uniquifying_string()}@example.com"
-    attrs
-    |> Enum.into(%{
+    %{
       name: "Realtortest User#{rand_between(10, 99)}",
       # email: email,
       # username: email,
@@ -50,73 +48,68 @@ defmodule Mpnetwork.Test.Support.Utilities do
       # password_confirmation: "crazytalk!",
       url: "http://homepage-esque.com",
       email_sig: "This is my email signature!"
-    })
+    } |> Map.merge(attrs)
   end
 
   def invalid_user_attrs(attrs \\ %{}) do
-    attrs
-    |> Enum.into(
-      [
-        %{
-          url: "http://homepage",
-          cell_phone: "112",
-          office_phone: "321",
-          office_id: 1,
-          role_id: 3,
-          name: "name",
-          email: "invalid_email",
-          username: "invalid_email",
-          password: "gopher",
-          password_confirmation: "gopher"
-        },
-        %{
-          url: nil,
-          cell_phone: nil,
-          office_phone: nil,
-          office_id: nil,
-          role_id: nil,
-          name: nil,
-          email: nil,
-          username: nil,
-          password: nil,
-          password_confirmation: nil
-        }
-      ]
-      |> Enum.random()
-    )
+    [
+      %{
+        url: "http://homepage",
+        cell_phone: "112",
+        office_phone: "321",
+        office_id: 1,
+        role_id: 3,
+        name: "name",
+        email: "invalid_email",
+        username: "invalid_email",
+        password: "gopher",
+        password_confirmation: "gopher"
+      },
+      %{
+        url: nil,
+        cell_phone: nil,
+        office_phone: nil,
+        office_id: nil,
+        role_id: nil,
+        name: nil,
+        email: nil,
+        username: nil,
+        password: nil,
+        password_confirmation: nil
+      }
+    ]
+    |> Enum.random()
+    |> Map.merge(attrs)
   end
 
   def valid_office_attrs(attrs \\ %{}) do
-    attrs
-    |> Enum.into(%{
+    %{
       name: "Coach#{trunc(:rand.uniform() * 1_000_000_000_000)}",
       address: "1 Test Drive #{trunc(:rand.uniform() * 1_000_000_000_000)}",
       city: "Port Washington",
       state: "NY",
       zip: "11050",
       phone: "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}"
-    })
+    } |> Map.merge(attrs)
   end
 
   def valid_broadcast_attrs(attrs \\ %{}) do
-    attrs
-    |> Enum.into(%{
+    %{
       body: "some broadcast body",
       title: "some broadcast title"
-    })
+    } |> Map.merge(attrs)
   end
 
   def valid_update_broadcast_attrs(attrs \\ %{}) do
-    attrs
-    |> Enum.into(%{
+    %{
       body: "some updated broadcast body",
       title: "some updated broadcast title"
-    })
+    } |> Map.merge(attrs)
   end
 
   def invalid_broadcast_attrs(attrs \\ %{}) do
     attrs
-    |> Enum.into(%{
+    |> Map.merge(%{
       body: nil,
       title: nil
     })
@@ -131,7 +124,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
       end
 
     attrs =
-      Enum.into(attrs, Enum.into(%{broker: office, office_id: office.id}, valid_user_attrs()))
+      valid_user_attrs() |> Map.merge(%{broker: office, office_id: office.id}) |> Map.merge(attrs)
 
     {:ok, user} = Realtor.create_user(attrs)
     Repo.preload(user, :broker)
@@ -139,8 +132,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
 
   def office_fixture(attrs \\ %{}) do
     {:ok, office} =
-      attrs
-      |> Enum.into(valid_office_attrs())
+      valid_office_attrs()
+      |> Map.merge(attrs)
       |> Realtor.create_office()
 
     office
@@ -151,14 +144,14 @@ defmodule Mpnetwork.Test.Support.Utilities do
     attrs =
       unless attrs[:user_id] do
         user = user_fixture()
-        Enum.into(%{user_id: user.id}, attrs)
+        Map.merge(attrs, %{user_id: user.id})
       else
         attrs
       end
 
     {:ok, broadcast} =
-      attrs
-      |> Enum.into(valid_broadcast_attrs())
+      valid_broadcast_attrs()
+      |> Map.merge(attrs)
       |> Realtor.create_broadcast()
 
     broadcast
@@ -246,18 +239,12 @@ defmodule Mpnetwork.Test.Support.Utilities do
     is_image: true,
     primary: false
   }
-  @attachment_create_attrs Enum.into(
-                             %{data: @test_attachment_binary_data},
-                             @post_attachment_create_attrs
-                           )
+  @attachment_create_attrs Map.merge(@post_attachment_create_attrs, %{data: @test_attachment_binary_data})
 
   def fixture(:listing, user) do
     {:ok, listing} =
       Realtor.create_listing(
-        Enum.into(
-          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
-          @create_listing_attrs
-        )
+        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
       )
 
     listing
@@ -266,10 +253,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def fixture(:listing, user, attrs) do
     {:ok, listing} =
       Realtor.create_listing(
-        Enum.into(
-          %{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker},
-          Enum.into(attrs, @create_listing_attrs)
-        )
+        @create_listing_attrs |> Map.merge(attrs) |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
       )
 
     listing
@@ -277,7 +261,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
 
   def fixture(:attachment, extra_attrs) do
     {:ok, attachment} =
-      Listing.create_attachment(Enum.into(extra_attrs, @attachment_create_attrs))
+      Listing.create_attachment(Map.merge(@attachment_create_attrs, extra_attrs))
 
     attachment
   end
