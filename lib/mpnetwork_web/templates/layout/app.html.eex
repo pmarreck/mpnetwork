@@ -273,6 +273,6 @@
       immediately after the control sidebar -->
       <div class="control-sidebar-bg"></div>
     </div> <!-- /container -->
-    <script src="<%= static_url(@conn, "/js/app.js") |> String.trim_trailing("?vsn=d") %>"></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>
