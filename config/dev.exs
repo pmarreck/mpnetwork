@@ -8,7 +8,7 @@ use Mix.Config
 # with brunch.io to recompile .js and .css sources.
 config :mpnetwork, MpnetworkWeb.Endpoint,
   load_from_system_env: true,
-  http: [port: {:system, "DEV_PORT"}],
+  http: [port: {:system, "PORT"}],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
