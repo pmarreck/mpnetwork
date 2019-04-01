@@ -2,7 +2,8 @@
   "repository": {},
   "license": "MIT",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "deploy": "brunch build --production"
   },
   "dependencies": {
     "admin-lte": "^2.4.10",
