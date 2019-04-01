@@ -59,12 +59,10 @@ function ConvertFromUTCToLocalDatetime(utc_dt, tz = mpnetwork.config.tz){
   switch(utc_dt) {
     case "":
       return "";
-      break;
     default:
       var local_dt = moment.utc(utc_dt).tz(tz).format(mpnetwork.config.local_datetimeformat);
       // alert("converting from utc " + utc_dt + " to local " + local_dt);
       return local_dt;
-      break;
   }
 }
 // "export" this so it can be accessed from bootstrap-table config and console
@@ -74,12 +72,10 @@ function ConvertFromUTCToLocalDate(utc_d){
   switch(utc_d) {
     case "":
       return "";
-      break;
     default:
       var local_d = moment.utc(utc_d).format(mpnetwork.config.moment_local_dateformat);
       // alert("converting from utc " + utc_d + " to local " + local_d);
       return local_d;
-      break;
   }
 }
 // "export" this so it can be accessed from bootstrap-table config and console
@@ -89,14 +85,12 @@ function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
   switch(local_dt) {
     case "":
       return "";
-      break;
     default:
       var only_first = local_dt.split(/; ?/)[0]
       var parsed_dt = moment.tz(only_first, mpnetwork.config.friendly_datetimeformat, tz)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
       var utc_dt = parsed_dt.utc().format();
       return utc_dt;
-      break;
   }
 }
 // "export" this so it can be accessed from bootstrap-table config and console
@@ -106,7 +100,6 @@ function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
   switch(local_dt) {
     case "":
       return "";
-      break;
     default:
       var parsed_dt = moment.tz(local_dt, mpnetwork.config.local_datetimeformat, tz)
       // var utc_dt = parsed_dt.add(-parsed_dt.utcOffset(), 'm').local().format();
@@ -115,7 +108,6 @@ function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
       // alert("converting local " + local_dt + " to UTC " + utc_dt);
       return utc_dt;
       // return local_dt;
-      break;
   }
 }
 // "export" this so it can be accessed from bootstrap-table config and console
@@ -125,15 +117,8 @@ function ConvertFromLocalToUTCDate(local_d){
   switch(local_d) {
     case "":
       return "";
-      break;
     default:
-      // alert("about to try to convert this date from local to utc:" + local_d);
-      var utc_d = moment(local_d, mpnetwork.config.moment_local_dateformat).format(mpnetwork.config.utc_dateformat); //moment(local_d).local().format();
-      // var utc_d = moment.utc(moment.local(local_d)).toISOString();
-      // alert("converting local " + local_d + " to UTC " + utc_d);
-      return utc_d;
-      // return local_d;
-      break;
+      return moment(local_d, mpnetwork.config.moment_local_dateformat).format(mpnetwork.config.utc_dateformat);
   }
 }
 // "export" this so it can be accessed from bootstrap-table config and console

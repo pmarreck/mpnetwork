@@ -15,7 +15,7 @@
     "bootstrap-table": "~1.11.2",
     "dropzone": "^5.5.1",
     "jquery": "^3.3.1",
-    "moment": "~2.19.3",
+    "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "npm": "^6.9.0",
     "phoenix": "^1.4.3",
@@ -26,7 +26,7 @@
     "select2": "~4.0.5"
   },
   "devDependencies": {
-    "babel-brunch": "^7.0.1",
+    "babel-brunch": "^6.1.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
@@ -40,6 +40,7 @@
     "less-brunch": "^2.10.0",
     "mocha": "^5.2.0",
     "refute": "~1.0.2",
+    "uglify-es": "^3.3.9",
     "uglify-js-brunch": "^2.10.0"
   }
 }
