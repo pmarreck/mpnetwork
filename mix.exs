@@ -65,7 +65,7 @@ defmodule Mpnetwork.Mixfile do
       # want to replace with another solution asap lol. https://imagetragick.com/
       {:mogrify, "~> 0.5.4"},
       # replacement for the above, hopefully!
-      {:resamplex, "~> 0.1.0"},
+      # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.4", override: true},
