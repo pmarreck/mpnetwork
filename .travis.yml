@@ -10,6 +10,7 @@ jobs:
       services:
         - postgresql
       before_install:
+        - pkg-config --variable pc_path pkg-config
         - bash install_vips.sh
       before_script:
         - PGPASSWORD=postgres psql -c 'create database mpnetwork_test;' -U postgres

@@ -39,7 +39,7 @@ environment :prod do
   set include_src: false
   set cookie: :"B8ZQgmmb&FehGImXOA;tF>AQ<DKkTSt.7eB}[F|[90{PMR9evUweg%tU!!OI[s~s"
   set vm_args: "rel/vm.args"
-  set pre_start_hooks: "rel/commands"
+  set pre_start_hooks: "rel/commands/prestart_hooks"
 end
 
 # You may define one or more releases in this file.
@@ -50,7 +50,7 @@ end
 release :mpnetwork do
   set version: current_version(:mpnetwork)
   set commands: [
-    migrate: "rel/commands/migrate.sh",
+    migrate: "rel/commands/prestart_hooks/migrate.sh",
     seed: "rel/commands/seed.sh",
   ]
   set applications: [

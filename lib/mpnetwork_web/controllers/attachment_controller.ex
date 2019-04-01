@@ -232,7 +232,6 @@ defmodule MpnetworkWeb.AttachmentController do
 
   # note: this actually delivers the binary data, not an HTML view
   def show(conn, %{"id" => id, "w" => width, "h" => height}) do
-    import Plug.Conn
     attachment = get_cached(id, width, height)
     # obey the If-None-Match header and send a Not Modified if they're the same
     expected_hash = get_req_header(conn, "if-none-match")
