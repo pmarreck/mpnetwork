@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+health=$(gigalixir ps | jq .pods[0].status)
+if [ $health == "\"Healthy\"" ]
+then
+  echo "Health check: SUCCESS"
+  exit 0
+else
+  echo "Failed health check :("
+  echo "Expected value: 'Healthy'"
+  echo "Got value: $health"
+  exit 1
+fi

@@ -80,7 +80,7 @@ config :logger, level: :info
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
   # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
-  pool_size: 25,
+  pool_size: 9, # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
   ssl: true
 
 # Guardian
