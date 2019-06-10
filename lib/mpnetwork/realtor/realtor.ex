@@ -484,11 +484,15 @@ defmodule Mpnetwork.Realtor do
   #   Regex.match?(@zipcode_regex, query)
   # end
 
-  defp convert_binary_date_parts_to_date_struct(year, month, day)
+  defp convert_binary_date_parts_to_naivedatetime_struct(year, month, day)
        when is_binary(year) and is_binary(month) and is_binary(day) do
-    case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
+    date = case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
       {:ok, date} -> date
       {:error, _} -> nil
+    end
+    case date do
+      nil -> nil
+      date -> ({:ok, date} = NaiveDateTime.new(date, ~T[00:00:00]); date)
     end
   end
 
@@ -551,8 +555,8 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
@@ -592,8 +596,8 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
@@ -636,8 +640,8 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_date_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_date_struct(finish_yr, finish_mon, finish_day)
+    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->

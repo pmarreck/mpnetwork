@@ -65,8 +65,4 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "mpnetwork_dev",
-  hostname: "35.226.111.50", # "localhost",
   pool_size: 10

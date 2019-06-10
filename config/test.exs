@@ -15,10 +15,7 @@ config :logger, level: :warn
 # Configure your database
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
   database: "mpnetwork_test",
-  hostname: "35.226.111.50", # "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Mailer stub for Swoosh

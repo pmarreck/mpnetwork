@@ -69,7 +69,7 @@ defmodule MpnetworkWeb.ListingController do
 
   # Round Robin landing view
   def index(conn, _params) do
-    listings = Realtor.list_latest_listings_excluding_new(nil, 20)
+    listings = Realtor.list_latest_listings_excluding_new(nil, 30)
     primaries = Listing.primary_images_for_listings(listings, AttachmentMetadata)
     # draft_listings = Realtor.list_latest_draft_listings(conn.assigns.current_user)
     # draft_primaries = Listing.primary_images_for_listings(draft_listings, AttachmentMetadata)
