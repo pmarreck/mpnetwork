@@ -423,6 +423,7 @@ defmodule Mpnetwork.Realtor do
 
     {_consumed_query, final_scope, errors} =
       {query, blank_scope, []}
+      |> try_determine_default_scope()
       |> try_my_office(current_user)
       |> try_mine(current_user)
       |> try_pricerange()
@@ -547,6 +548,8 @@ defmodule Mpnetwork.Realtor do
   @daterange_uc_regex ~r/(?:uc|under contract): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
   # search on "closed" date
   @daterange_cl_regex ~r/(?:cl|closed): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
+  # search on "expired" date
+  @daterange_exp_regex ~r/(?:exp|expired): ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4}) ?\- ?([01]?[0-9])\/([0123]?[0-9])\/([0-9]{4})/i
 
   defp _process_daterangesearch(
          {query, scope, errors},
@@ -674,6 +677,47 @@ defmodule Mpnetwork.Realtor do
     end
   end
 
+  defp _process_daterangesearch(
+         {query, scope, errors},
+         :EXP,
+         regex,
+         {start_yr, start_mon, start_day},
+         {finish_yr, finish_mon, finish_day}
+       ) do
+    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
+
+    cond do
+      valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""),
+         scope |> where([l], l.expires_on >= ^valid_startday and l.expires_on <= ^valid_finishday),
+         errors}
+
+      !valid_startday && valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid start day in Expired Date search range: #{start_mon}/#{start_day}/#{start_yr}"
+           | errors
+         ]}
+
+      valid_startday && !valid_finishday ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Invalid end day in Expired Date search range: #{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
+
+      true ->
+        {Regex.replace(regex, query, ""), scope,
+         [
+           "Dates are both invalid in Expired Date search range: #{start_mon}/#{start_day}/#{
+             start_yr
+           }-#{finish_mon}/#{finish_day}/#{finish_yr}"
+           | errors
+         ]}
+    end
+  end
+
   defp try_daterange({query, scope, errors}) do
     {query, scope, errors} =
       case Regex.run(@daterange_fs_regex, query) do
@@ -720,6 +764,21 @@ defmodule Mpnetwork.Realtor do
           {query, scope, errors}
       end
 
+    {query, scope, errors} =
+      case Regex.run(@daterange_exp_regex, query) do
+        [_, start_mon, start_day, start_yr, finish_mon, finish_day, finish_yr] ->
+          _process_daterangesearch(
+            {query, scope, errors},
+            :EXP,
+            @daterange_exp_regex,
+            {start_yr, start_mon, start_day},
+            {finish_yr, finish_mon, finish_day}
+          )
+
+        _ ->
+          {query, scope, errors}
+      end
+
     {query, scope, errors}
   end
 
@@ -730,18 +789,23 @@ defmodule Mpnetwork.Realtor do
     {query, scope, errors}
   end
 
-  # Default to active listing statuses unless the word "inactive" or "unavailable" is used, for ease
-  # OR if a specific listing status type is used at all, do not add the default active scope
+  # Default to active listing statuses unless any of these searches are performed
   @active_regex ~r/\b(?:active|available)\b/i
   @inactive_regex ~r/\b(?:inactive|unavailable)\b/i
   @all_regex ~r/\ball\b/i
   @expired_regex ~r/\bexpired\b/i
-  defp try_active_inactive({query, scope, errors}) do
-    query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
-    query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
-
-    if Regex.match?(@all_regex, query) or Regex.match?(@listing_status_type_regex, query) or
-         Regex.match?(@expired_regex, query) do
+  defp try_determine_default_scope({query, scope, errors}) do
+    if (
+          Regex.match?(@all_regex, query) or
+          Regex.match?(@active_regex, query) or
+          Regex.match?(@inactive_regex, query) or
+          Regex.match?(@listing_status_type_regex, query) or
+          Regex.match?(@expired_regex, query) or
+          Regex.match?(@daterange_fs_regex, query) or
+          Regex.match?(@daterange_uc_regex, query) or
+          Regex.match?(@daterange_cl_regex, query) or
+          Regex.match?(@daterange_exp_regex, query)
+      ) do
       # just pass it through
       {Regex.replace(@all_regex, query, ""), scope, errors}
     else
@@ -749,6 +813,13 @@ defmodule Mpnetwork.Realtor do
       {Regex.replace(@active_regex, query, ""),
        scope |> where([l], l.listing_status_type in ~w[NEW FS EXT PC]), errors}
     end
+  end
+
+
+  defp try_active_inactive({query, scope, errors}) do
+    query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
+    query = Regex.replace(@inactive_regex, query, "(CL|WR|TOM|EXP)")
+    {query, scope, errors}
   end
 
   defp _filter_nonnumeric(num) when is_binary(num) do

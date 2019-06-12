@@ -245,16 +245,44 @@ defmodule Mpnetwork.SearchTest do
       assert {1, [listing], []} == Realtor.query_listings("all things belong to mine", 50, user)
     end
 
+    test "date range search on for-sale (FS/NEW) day" do
+      listing = listing_fixture(%{listing_status_type: "NEW", live_at: ~N[2017-01-23 22:50:00.000000]})
+      user = listing.user
+
+      assert {1, [listing], []} == Realtor.query_listings("fs: 1/1/2017-2/1/2017", 50, user)
+
+      assert {1, [listing], ["Invalid start day in Listing Date search range: 11/33/2017"]} ==
+               Realtor.query_listings("fs: 11/33/2017-12/1/2017", 50, user)
+    end
+
     test "date range search on under-contract (UC) day" do
       listing = listing_fixture(%{listing_status_type: "UC", uc_on: ~D[2017-12-01]})
       user = listing.user
 
-      # Note that you have to specify "UC" in front here because the default search scope is active listings only,
-      # and adding any listing status turns that off.
-      assert {1, [listing], []} == Realtor.query_listings("UC uc: 11/1/2017-12/1/2017", 50, user)
+      assert {1, [listing], []} == Realtor.query_listings("uc: 11/1/2017-12/1/2017", 50, user)
 
       assert {1, [listing], ["Invalid start day in Under Contract date search range: 11/33/2017"]} ==
-               Realtor.query_listings("UC uc: 11/33/2017-12/1/2017", 50, user)
+               Realtor.query_listings("uc: 11/33/2017-12/1/2017", 50, user)
+    end
+
+    test "date range search on closing (CL) day" do
+      listing = listing_fixture(%{listing_status_type: "CL", closing_price_usd: 100000, closed_on: ~D[2017-12-01]})
+      user = listing.user
+
+      assert {1, [listing], []} == Realtor.query_listings("cl: 11/1/2017-12/2/2017", 50, user)
+
+      assert {1, [listing], ["Invalid start day in Closing Date search range: 11/33/2017"]} ==
+               Realtor.query_listings("cl: 11/33/2017-12/1/2017", 50, user)
+    end
+
+    test "date range search on expired (EXP) day" do
+      listing = listing_fixture(%{listing_status_type: "EXP", expires_on: ~D[2017-12-01]})
+      user = listing.user
+
+      assert {1, [listing], []} == Realtor.query_listings("EXP: 11/1/2017-12/2/2017", 50, user)
+
+      assert {1, [listing], ["Invalid start day in Expired Date search range: 11/33/2017"]} ==
+               Realtor.query_listings("exp: 11/33/2017-12/1/2017", 50, user)
     end
 
     test "search on both id # as well as same # in address" do
