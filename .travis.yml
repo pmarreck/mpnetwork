@@ -5,7 +5,7 @@ jobs:
   include:
     - stage: test
       language: elixir
-      elixir: 1.7.4
+      elixir: 1.8
       otp_release: 21.0
       services:
         - postgresql
@@ -35,7 +35,7 @@ jobs:
           - "assets/node_modules"
     - stage: deploy
       language: elixir
-      elixir: 1.7.4
+      elixir: 1.8
       otp_release: 21.0
       before_script: skip
       install: skip

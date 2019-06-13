@@ -93,7 +93,7 @@ config :mime, :types, %{
 config :mpnetwork, Mpnetwork.Repo, loggers: [Ecto.LogEntry]
 
 # Import Timber, structured logging
-import_config "timber.exs"
+# import_config "timber.exs"
 
 # Configures ex_rated (rate limiter) used in image conversion
 # Current limit is 4 images a second
