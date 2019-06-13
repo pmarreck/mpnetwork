@@ -295,8 +295,8 @@
           <div class="form-group row">
             <!-- 39 -->
             <div class="col-xs-6 live_at">
-              <strong>Listing visible on:</strong>
-              <%= utc_date_to_local_date(@listing.live_at) %>
+              <strong>Listing went live at:</strong>
+              <%= utc_datetime_to_local_datetime(@listing.live_at) %>
             </div>
 
             <!-- 40 -->

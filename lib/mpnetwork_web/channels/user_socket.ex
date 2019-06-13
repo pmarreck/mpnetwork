@@ -4,8 +4,8 @@ defmodule MpnetworkWeb.UserSocket do
   ## Channels
   # channel "room:*", MpnetworkWeb.RoomChannel
 
-  ## Transports
-  transport(:websocket, Phoenix.Transports.WebSocket, timeout: 45_000)
+  ## Transports # configuration moved based on deprecation to endpoint.ex
+  # transport(:websocket, Phoenix.Transports.WebSocket, timeout: 45_000)
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can

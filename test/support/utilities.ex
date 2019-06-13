@@ -241,19 +241,19 @@ defmodule Mpnetwork.Test.Support.Utilities do
   }
   @attachment_create_attrs Map.merge(@post_attachment_create_attrs, %{data: @test_attachment_binary_data})
 
-  def fixture(:listing, user) do
+  def fixture(:listing, user, attrs) do
     {:ok, listing} =
       Realtor.create_listing(
-        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
+        @create_listing_attrs |> Map.merge(attrs) |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
       )
 
     listing
   end
 
-  def fixture(:listing, user, attrs) do
+  def fixture(:listing, user) do
     {:ok, listing} =
       Realtor.create_listing(
-        @create_listing_attrs |> Map.merge(attrs) |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
+        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
       )
 
     listing

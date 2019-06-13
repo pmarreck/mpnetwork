@@ -51,9 +51,15 @@ defmodule Mpnetwork.Mixfile do
       {:gettext, "~> 0.13"},
       {:coherence, "~> 0.5.2"},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:timex, "~> 3.3"},
+      # {:timex, "~> 3.5"},
+      # moved dep to git commit to squash big dep warning on elixir 1.8:
+      # https://github.com/bitwalker/timex/commit/f59156b59552ca113c3d4b978d3773997971c67c
+      {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
       {:number, "~> 0.5"},
-      {:timber, "~> 2.6"},
+      {:timber_ecto, "~> 2.0"},
+      {:timber_plug, "~> 1.0"},
+      {:timber_phoenix, "~> 1.0"},
+      {:timber, "~> 3.1"},
       {:ex_image_info, "~> 0.1.1"},
       # provides `mix eliver.bump` for hot prod upgrades
       {:eliver, "~> 2.0"},

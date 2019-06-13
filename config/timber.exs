@@ -9,7 +9,7 @@ if Mix.env() == :prod do
     instrumenters: [Timber.Integrations.PhoenixInstrumenter]
 
   # Structure Ecto logs
-  config :mpnetwork, Mpnetwork.Repo, loggers: [{Mpnetwork.CustomTimberLogger, :log, [:info]}]
+  # config :mpnetwork, Mpnetwork.Repo, loggers: [{Mpnetwork.CustomTimberLogger, :log, [:info]}]
 
   # Application.get_env(:mpnetwork, Mpnetwork.Repo)[:loggers]
 end

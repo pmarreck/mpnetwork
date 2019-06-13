@@ -116,6 +116,10 @@ defmodule MpnetworkWeb.GlobalHelpers do
     datetime_to_standard_humanized(date, format, tz)
   end
 
+  def utc_datetime_to_local_datetime(date, format \\ "%-m/%-d/%Y %l:%M %p", tz \\ "EDT") do
+    datetime_to_standard_humanized(date, format, tz)
+  end
+
   # convert falsey values to "N", anything else to "Y"
   def yn(bool), do: if(bool, do: "Y", else: "N")
 

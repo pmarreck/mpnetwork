@@ -1,7 +1,9 @@
 defmodule MpnetworkWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :mpnetwork
 
-  socket("/socket", MpnetworkWeb.UserSocket)
+  socket "/socket", MpnetworkWeb.UserSocket,
+    websocket: [timeout: 45_000],
+    longpoll: [timeout: 45_000]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -51,8 +53,8 @@ defmodule MpnetworkWeb.Endpoint do
   )
 
   # Add Timber plugs for capturing HTTP context and events
-  plug(Timber.Integrations.ContextPlug)
-  plug(Timber.Integrations.EventPlug)
+  # plug(Timber.Integrations.ContextPlug)
+  # plug(Timber.Integrations.EventPlug)
 
   plug(MpnetworkWeb.Router)
 
