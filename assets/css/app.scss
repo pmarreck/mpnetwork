@@ -1,16 +1,16 @@
-@import 'node_modules/bootstrap/dist/css/bootstrap.min';
-@import 'node_modules/admin-lte/dist/css/AdminLTE.min';
-@import 'node_modules/admin-lte/dist/css/skins/_all-skins.min';
-@import 'node_modules/select2/dist/css/select2.min';
-@import 'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min';
-@import 'node_modules/bootstrap-daterangepicker/daterangepicker.scss';
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../node_modules/admin-lte/dist/css/AdminLTE.min.css';
+@import '../node_modules/admin-lte/dist/css/skins/_all-skins.min.css';
+@import '../node_modules/select2/dist/css/select2.min.css';
+@import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css';
+@import '../node_modules/bootstrap-daterangepicker/daterangepicker.css';
 
-@import 'node_modules/quill/dist/quill.core';
-@import 'node_modules/quill/dist/quill.snow';
+@import '../node_modules/quill/dist/quill.core.css';
+@import '../node_modules/quill/dist/quill.snow.css';
 
-@import 'node_modules/bootstrap-table/dist/bootstrap-table.min';
+@import '../node_modules/bootstrap-table/dist/bootstrap-table.min.css';
 
-@import 'node_modules/dropzone/dist/dropzone';
+@import '../node_modules/dropzone/dist/dropzone.css';
 
 // @import 'node_modules/quill/dist/quill.bubble';
 

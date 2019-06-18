@@ -42,7 +42,7 @@
     "less-brunch": "^2.10",
     "mocha": "^6.1",
     "refute": "~1.0",
-    "uglify-es": "^3.3",
-    "uglify-js-brunch": "^2.10"
+    "uglify-es": "~3.3",
+    "uglify-es-brunch": "~1.0.5"
   }
 }
