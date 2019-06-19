@@ -10,7 +10,7 @@ defmodule MpnetworkWeb.PageControllerTest do
 
   test "GET / with login works", %{conn: conn} do
     user = user_fixture()
-    _listing = fixture(:listing, user, %{expires_on: ~D[2048-04-17]})
+    # _listing = fixture(:listing, user, %{expires_on: ~D[2000-04-17]})
 
     conn =
       conn

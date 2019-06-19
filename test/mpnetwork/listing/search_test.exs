@@ -251,7 +251,7 @@ defmodule Mpnetwork.SearchTest do
 
       assert {1, [listing], []} == Realtor.query_listings("fs: 1/1/2017-2/1/2017", 50, user)
 
-      assert {1, [listing], ["Invalid start day in Listing Date search range: 11/33/2017"]} ==
+      assert {0, [], ["Invalid start day in Listing Date search range: 11/33/2017"]} ==
                Realtor.query_listings("fs: 11/33/2017-12/1/2017", 50, user)
     end
 
@@ -261,7 +261,7 @@ defmodule Mpnetwork.SearchTest do
 
       assert {1, [listing], []} == Realtor.query_listings("uc: 11/1/2017-12/1/2017", 50, user)
 
-      assert {1, [listing], ["Invalid start day in Under Contract date search range: 11/33/2017"]} ==
+      assert {0, [], ["Invalid start day in Under Contract date search range: 11/33/2017"]} ==
                Realtor.query_listings("uc: 11/33/2017-12/1/2017", 50, user)
     end
 
@@ -271,7 +271,7 @@ defmodule Mpnetwork.SearchTest do
 
       assert {1, [listing], []} == Realtor.query_listings("cl: 11/1/2017-12/2/2017", 50, user)
 
-      assert {1, [listing], ["Invalid start day in Closing Date search range: 11/33/2017"]} ==
+      assert {0, [], ["Invalid start day in Closing Date search range: 11/33/2017"]} ==
                Realtor.query_listings("cl: 11/33/2017-12/1/2017", 50, user)
     end
 
@@ -281,7 +281,7 @@ defmodule Mpnetwork.SearchTest do
 
       assert {1, [listing], []} == Realtor.query_listings("EXP: 11/1/2017-12/2/2017", 50, user)
 
-      assert {1, [listing], ["Invalid start day in Expired Date search range: 11/33/2017"]} ==
+      assert {0, [], ["Invalid start day in Expired Date search range: 11/33/2017"]} ==
                Realtor.query_listings("exp: 11/33/2017-12/1/2017", 50, user)
     end
 

@@ -405,6 +405,16 @@ defmodule Mpnetwork.Realtor do
     end
   end
 
+  defp nil_search_scope do
+    from(
+      l in Listing,
+      where: l.id == -1
+    )
+  end
+
+  defp scope_nothing_if_errors(state = {_query, _scope, []}), do: state
+  defp scope_nothing_if_errors({query, _scope, errors}), do: {query, nil_search_scope(), errors}
+
   @doc """
   Queries listings.
   """
@@ -432,6 +442,7 @@ defmodule Mpnetwork.Realtor do
       |> try_listing_status_type()
       |> search_all_fields_using_postgres_fulltext_search()
       |> try_id()
+      |> scope_nothing_if_errors()
 
     limited_final_scope = final_scope |> limit([l], ^max)
 
