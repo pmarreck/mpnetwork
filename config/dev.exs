@@ -65,5 +65,5 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "mpnetwork_dev",
+  url: System.get_env("DATABASE_URL"),
   pool_size: 10

@@ -4,8 +4,9 @@ defmodule Mpnetwork.Repo do
   @doc """
   Dynamically loads the repository url from the
   DATABASE_URL environment variable.
+  EDIT: 6/19/2019: moved back to env config which THEN reads from the right environment variable.
   """
   def init(_, opts) do
-    {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
+    {:ok, opts}
   end
 end

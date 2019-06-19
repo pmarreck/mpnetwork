@@ -15,7 +15,8 @@ config :logger, level: :warn
 # Configure your database
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "mpnetwork_test",
+  database: "mpnetwork_test", # for some reason, `mix test` errors unless this key is here, regardless of :url key presence
+  url: System.get_env("TEST_DATABASE_URL"),
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Mailer stub for Swoosh
