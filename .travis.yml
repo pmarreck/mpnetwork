@@ -22,7 +22,7 @@ jobs:
           - "deps"
     - stage: test
       language: node_js
-      node_js: 11.4.0
+      node_js: 12.1.0
       env:
         global:
           - NODE_ENV=test
