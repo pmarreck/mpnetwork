@@ -1,22 +1,13 @@
-@import "bootstrap";
-@import "admin-lte";
-@import "select2";
-@import "bootstrap-datepicker";
-@import "bootstrap-daterangepicker";
-@import "quill";
-@import "bootstrap-table";
-@import "dropzone";
-
-// @import '../node_modules/bootstrap/dist/css/bootstrap.min';
-// @import '../node_modules/admin-lte/dist/css/AdminLTE.min';
-// @import '../node_modules/admin-lte/dist/css/skins/_all-skins.min';
-// @import '../node_modules/select2/dist/css/select2.min';
-// @import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min';
-// @import '../node_modules/bootstrap-daterangepicker/daterangepicker.scss';
-// @import '../node_modules/quill/dist/quill.core';
-// @import '../node_modules/quill/dist/quill.snow';
-// @import '../node_modules/bootstrap-table/dist/bootstrap-table.min';
-// @import '../node_modules/dropzone/dist/dropzone';
+@import '../node_modules/bootstrap/dist/css/bootstrap';
+@import '../node_modules/admin-lte/dist/css/AdminLTE';
+@import '../node_modules/admin-lte/dist/css/skins/_all-skins';
+@import '../node_modules/select2/dist/css/select2';
+@import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3';
+@import '../node_modules/bootstrap-daterangepicker/daterangepicker.scss';
+@import '../node_modules/quill/dist/quill.core';
+@import '../node_modules/quill/dist/quill.snow';
+@import '../node_modules/bootstrap-table/dist/bootstrap-table';
+@import '../node_modules/dropzone/dist/dropzone';
 
 // @import 'node_modules/quill/dist/quill.bubble';
 
@@ -24,14 +15,18 @@
 //   width: 100%
 // }
 
-.checkbox {
-  display: inline;
+.checkbox-inline {
+  // display: inline !important;
   margin-right: 3px !important;
+  margin-top: 0px !important;
 }
 
 // hack to override this issue after spending too much time trying to solve it properly
-.select2-container--default .select2-selection--single {
-  padding: 2px 2px
+.select2-container--default .select2-selection--single, .select2-selection .select2-selection--single {
+  padding-top: 2px !important;
+  padding-right: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 2px !important;
 }
 
 // hack to override a width of a certain admin-lte pane in a certain context (minified menu dropdowns)

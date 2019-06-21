@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "admin-lte": "^2.4.12",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "~3.4.1",
     "bootstrap-carousel-swipe": "~0.0.6",
     "bootstrap-datepicker": "~1.9.0",
     "bootstrap-daterangepicker": "^2.1.27",

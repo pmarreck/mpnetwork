@@ -16,16 +16,16 @@ exports.config = {
     javascripts: {
       joinTo: {
         "js/app.js": [
-          "js/*.js",
-          /^node_modules/
+          /^node_modules/,
+          "js/*.js"
         ]
       }
     },
     stylesheets: {
       joinTo: {
         "css/app.css": [
-          "css/*.scss",
-          /^node_modules/
+          /^node_modules/,
+          "css/*.scss"
         ],
         "css/public_listing.css": [
           "css/public_listing.css"
@@ -80,13 +80,13 @@ exports.config = {
       jQuery: 'jquery'
     },
     styles: {
-      bootstrap: ["dist/css/bootstrap.min.css"],
-      'admin-lte': ["dist/css/AdminLTE.min.css", "dist/css/skins/_all-skins.min.css"],
-      select2: ["dist/css/select2.min.css"],
-      'bootstrap-datepicker': ["dist/css/bootstrap-datepicker3.min.css"],
+      bootstrap: ["dist/css/bootstrap.css"],
+      'admin-lte': ["dist/css/AdminLTE.css", "dist/css/skins/_all-skins.css"],
+      select2: ["dist/css/select2.css"],
+      'bootstrap-datepicker': ["dist/css/bootstrap-datepicker3.css"],
       'bootstrap-daterangepicker': ["daterangepicker.scss"],
       quill: ["dist/quill.core.css", "dist/quill.snow.css"],
-      'bootstrap-table': ["dist/bootstrap-table.min.css"],
+      'bootstrap-table': ["dist/bootstrap-table.css"],
       dropzone: ["dist/dropzone.css"]
     }
   }

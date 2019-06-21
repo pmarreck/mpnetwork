@@ -46,7 +46,7 @@
         <div class="box-body">
           <!-- 1 -->
           <div class="form-group<%= if f.errors[:draft], do: " has-error" %>">
-            <%= checkbox f, :draft, class: "checkbox" %>
+            <%= checkbox f, :draft, class: "checkbox-inline" %>
             <%= label f, :draft, "Draft?", class: "control-label" %>
             <i>Work-in-progress that only you can see. Uncheck and save to publish/make public.</i>
             <%= error_tag f, :draft %>
@@ -56,7 +56,7 @@
             <div class="col-xs-6">
               <!-- 2 -->
               <div class="<%= if f.errors[:for_sale], do: " has-error" %>">
-                <%= checkbox f, :for_sale, class: "checkbox" %>
+                <%= checkbox f, :for_sale, class: "checkbox-inline" %>
                 <%= label f, :for_sale, "For Sale?", class: "control-label" %>
                 <%= error_tag f, :for_sale %>
               </div>
@@ -65,7 +65,7 @@
             <div class="col-xs-6">
               <!-- 3 -->
               <div class="<%= if f.errors[:for_rent], do: " has-error" %>">
-                <%= checkbox f, :for_rent, class: "checkbox" %>
+                <%= checkbox f, :for_rent, class: "checkbox-inline" %>
                 <%= label f, :for_rent, "For Rent?", class: "control-label" %>
                 <%= error_tag f, :for_rent %>
               </div>
@@ -85,7 +85,7 @@
 
             <!-- 5 -->
             <div class="form-group col-xs-6<%= if f.errors[:studio], do: " has-error" %>">
-              <%= checkbox f, :studio, class: "checkbox" %>
+              <%= checkbox f, :studio, class: "checkbox-inline" %>
               <%= label f, :studio, "Studio?", class: "control-label" %>
               <%= error_tag f, :studio %>
             </div>
@@ -263,7 +263,7 @@
 
           <!-- 18 -->
           <div class="form-group<%= if f.errors[:corner], do: " has-error" %>">
-            <%= checkbox f, :corner, class: "checkbox" %>
+            <%= checkbox f, :corner, class: "checkbox-inline" %>
             <%= label f, :corner, "Corner?", class: "control-label" %>
             <%= error_tag f, :corner %>
           </div>
@@ -277,7 +277,7 @@
 
           <!-- 20 -->
           <div class="form-group<%= if f.errors[:cul_de_sac], do: " has-error" %>">
-            <%= checkbox f, :cul_de_sac, class: "checkbox" %>
+            <%= checkbox f, :cul_de_sac, class: "checkbox-inline" %>
             <%= label f, :cul_de_sac, "Cul-de-sac?", class: "control-label" %>
             <%= error_tag f, :cul_de_sac %>
           </div>
@@ -285,7 +285,7 @@
           <div class="row form-group">
           <!-- 21 -->
             <div class="col-xs-6<%= if f.errors[:waterfront], do: " has-error" %>">
-              <%= checkbox f, :waterfront, class: "checkbox" %>
+              <%= checkbox f, :waterfront, class: "checkbox-inline" %>
               <%= label f, :waterfront, "Waterfront?", class: "control-label" %>
               <%= error_tag f, :waterfront %>
             </div>
@@ -308,7 +308,7 @@
 
             <!-- 24 -->
             <div class="col-xs-6<%= if f.errors[:waterview], do: " has-error" %>">
-              <%= checkbox f, :waterview, class: "checkbox" %>
+              <%= checkbox f, :waterview, class: "checkbox-inline" %>
               <%= label f, :waterview, "Waterview?", class: "control-label" %>
               <%= error_tag f, :waterview %>
             </div>
@@ -317,7 +317,7 @@
           <div class="row form-group">
             <!-- 25 -->
             <div class="col-xs-6<%= if f.errors[:bulkhead], do: " has-error" %>">
-              <%= checkbox f, :bulkhead, class: "checkbox" %>
+              <%= checkbox f, :bulkhead, class: "checkbox-inline" %>
               <%= label f, :bulkhead, "Bulkhead?", class: "control-label" %>
               <%= error_tag f, :bulkhead %>
             </div>
@@ -333,14 +333,14 @@
           <div class="row form-group">
             <!-- 27 -->
             <div class="col-xs-6<%= if f.errors[:dock_rights], do: " has-error" %>">
-              <%= checkbox f, :dock_rights, class: "checkbox" %>
+              <%= checkbox f, :dock_rights, class: "checkbox-inline" %>
               <%= label f, :dock_rights, "Dock rights?", class: "control-label" %>
               <%= error_tag f, :dock_rights %>
             </div>
 
             <!-- 28 -->
             <div class="col-xs-6<%= if f.errors[:beach_rights], do: " has-error" %>">
-              <%= checkbox f, :beach_rights, class: "checkbox" %>
+              <%= checkbox f, :beach_rights, class: "checkbox-inline" %>
               <%= label f, :beach_rights, "Beach rights?", class: "control-label" %>
               <%= error_tag f, :beach_rights %>
             </div>
@@ -349,14 +349,14 @@
           <div class="row form-group">
             <!-- 29 -->
             <div class="col-xs-6<%= if f.errors[:adult_comm], do: " has-error" %>">
-              <%= checkbox f, :adult_comm, class: "checkbox" %>
+              <%= checkbox f, :adult_comm, class: "checkbox-inline" %>
               <%= label f, :adult_comm, "Adult community?", class: "control-label" %>
               <%= error_tag f, :adult_comm %>
             </div>
 
             <!-- 30 -->
             <div class="col-xs-6<%= if f.errors[:gated_comm], do: " has-error" %>">
-              <%= checkbox f, :gated_comm, class: "checkbox" %>
+              <%= checkbox f, :gated_comm, class: "checkbox-inline" %>
               <%= label f, :gated_comm, "Gated community?", class: "control-label" %>
               <%= error_tag f, :gated_comm %>
             </div>
@@ -680,7 +680,7 @@
 
             <!-- 51 -->
             <div class="col-xs-6<%= if f.errors[:eat_in_kitchen], do: " has-error" %>">
-              <%= checkbox f, :eat_in_kitchen, class: "checkbox" %>
+              <%= checkbox f, :eat_in_kitchen, class: "checkbox-inline" %>
               <%= label f, :eat_in_kitchen, "Eat-in kitchen?", class: "control-label" %>
               <%= error_tag f, :eat_in_kitchen %>
             </div>
@@ -696,21 +696,21 @@
           <div class="row form-group">
             <!-- 53 -->
             <div class="col-xs-4<%= if f.errors[:den], do: " has-error" %>">
-              <%= checkbox f, :den, class: "checkbox" %>
+              <%= checkbox f, :den, class: "checkbox-inline" %>
               <%= label f, :den, "Den?", class: "control-label" %>
               <%= error_tag f, :den %>
             </div>
 
             <!-- 54 -->
             <div class="col-xs-4<%= if f.errors[:office], do: " has-error" %>">
-              <%= checkbox f, :office, class: "checkbox" %>
+              <%= checkbox f, :office, class: "checkbox-inline" %>
               <%= label f, :office, "Office?", class: "control-label" %>
               <%= error_tag f, :office %>
             </div>
 
             <!-- 55 -->
             <div class="col-xs-4<%= if f.errors[:attic], do: " has-error" %>">
-              <%= checkbox f, :attic, class: "checkbox" %>
+              <%= checkbox f, :attic, class: "checkbox-inline" %>
               <%= label f, :attic, "Attic?", class: "control-label" %>
               <%= error_tag f, :attic %>
             </div>
@@ -718,7 +718,7 @@
 
           <!-- 56 -->
           <div class="form-group<%= if f.errors[:mbr_first_fl], do: " has-error" %>">
-            <%= checkbox f, :mbr_first_fl, class: "checkbox" %>
+            <%= checkbox f, :mbr_first_fl, class: "checkbox-inline" %>
             <%= label f, :mbr_first_fl, "Master bedroom on 1st floor?", class: "control-label" %>
             <%= error_tag f, :mbr_first_fl %>
           </div>
@@ -732,7 +732,7 @@
 
           <!-- 58 -->
           <div class="form-group<%= if f.errors[:handicap_access], do: " has-error" %>">
-            <%= checkbox f, :handicap_access, class: "checkbox" %>
+            <%= checkbox f, :handicap_access, class: "checkbox-inline" %>
             <%= label f, :handicap_access, "Handicap access?", class: "control-label" %>
             <%= error_tag f, :handicap_access %>
           </div>
@@ -754,14 +754,14 @@
           <div class="row form-group">
             <!-- 61 -->
             <div class="col-xs-6<%= if f.errors[:basement], do: " has-error" %>">
-              <%= checkbox f, :basement, class: "checkbox" %>
+              <%= checkbox f, :basement, class: "checkbox-inline" %>
               <%= label f, :basement, "Basement?", class: "control-label" %>
               <%= error_tag f, :basement %>
             </div>
 
             <!-- 63 -->
             <div class="col-xs-6<%= if f.errors[:finished_basement], do: " has-error" %>">
-              <%= checkbox f, :finished_basement, class: "checkbox" %>
+              <%= checkbox f, :finished_basement, class: "checkbox-inline" %>
               <%= label f, :finished_basement, "Finished basement?", class: "control-label" %>
               <%= error_tag f, :finished_basement %>
             </div>
@@ -780,14 +780,14 @@
           <div class="row form-group">
             <!-- 65 -->
             <div class="col-xs-6<%= if f.errors[:w_w_carpet], do: " has-error" %>">
-              <%= checkbox f, :w_w_carpet, class: "checkbox" %>
+              <%= checkbox f, :w_w_carpet, class: "checkbox-inline" %>
               <%= label f, :w_w_carpet, "Wall-to-wall carpet?", class: "control-label" %>
               <%= error_tag f, :w_w_carpet %>
             </div>
 
             <!-- 66 -->
             <div class="col-xs-6<%= if f.errors[:wood_floors], do: " has-error" %>">
-              <%= checkbox f, :wood_floors, class: "checkbox" %>
+              <%= checkbox f, :wood_floors, class: "checkbox-inline" %>
               <%= label f, :wood_floors, "Hardwood floors?", class: "control-label" %>
               <%= error_tag f, :wood_floors %>
             </div>
@@ -802,7 +802,7 @@
             </div>
             <!-- 68 -->
             <div class="col-xs-6<%= if f.errors[:new_construction], do: " has-error" %>">
-              <%= checkbox f, :new_construction, class: "checkbox" %>
+              <%= checkbox f, :new_construction, class: "checkbox-inline" %>
               <%= label f, :new_construction, "New construction?", class: "control-label" %>
               <%= error_tag f, :new_construction %>
             </div>
@@ -862,14 +862,14 @@
           <div class="row form-group">
             <!-- 152 -->
             <div class="col-xs-6<%= if f.errors[:security_system], do: " has-error" %>">
-              <%= checkbox f, :security_system, class: "checkbox" %>
+              <%= checkbox f, :security_system, class: "checkbox-inline" %>
               <%= label f, :security_system, "Security system?", class: "control-label" %>
               <%= error_tag f, :security_system %>
             </div>
 
             <!-- 151 -->
             <div class="col-xs-6<%= if f.errors[:central_vac], do: " has-error" %>">
-              <%= checkbox f, :central_vac, class: "checkbox" %>
+              <%= checkbox f, :central_vac, class: "checkbox-inline" %>
               <%= label f, :central_vac, "Central vac?", class: "control-label" %>
               <%= error_tag f, :central_vac %>
             </div>
@@ -877,21 +877,21 @@
 
           <!-- 153 -->
           <div class="form-group<%= if f.errors[:fios_available], do: " has-error" %>">
-            <%= checkbox f, :fios_available, class: "checkbox" %>
+            <%= checkbox f, :fios_available, class: "checkbox-inline" %>
             <%= label f, :fios_available, "FIOS available?", class: "control-label" %>
             <%= error_tag f, :fios_available %>
           </div>
 
           <!-- 154 -->
           <div class="form-group<%= if f.errors[:high_speed_internet_available], do: " has-error" %>">
-            <%= checkbox f, :high_speed_internet_available, class: "checkbox" %>
+            <%= checkbox f, :high_speed_internet_available, class: "checkbox-inline" %>
             <%= label f, :high_speed_internet_available, "High speed internet available? (including FIOS)", class: "control-label" %>
             <%= error_tag f, :high_speed_internet_available %>
           </div>
 
           <!-- 155 -->
           <div class="form-group<%= if f.errors[:modern_kitchen_countertops], do: " has-error" %>">
-            <%= checkbox f, :modern_kitchen_countertops, class: "checkbox" %>
+            <%= checkbox f, :modern_kitchen_countertops, class: "checkbox-inline" %>
             <%= label f, :modern_kitchen_countertops, "Modern kitchen countertops?", class: "control-label" %>
             <%= error_tag f, :modern_kitchen_countertops %>
           </div>
@@ -956,7 +956,7 @@
 
           <!-- 79 -->
           <div class="form-group<%= if f.errors[:attached_garage], do: " has-error" %>">
-            <%= checkbox f, :attached_garage, class: "checkbox" %>
+            <%= checkbox f, :attached_garage, class: "checkbox-inline" %>
             <%= label f, :attached_garage, "Attached garage?", class: "control-label" %>
             <%= error_tag f, :attached_garage %>
           </div>
@@ -971,7 +971,7 @@
           <div class="row form-group">
             <!-- 82 -->
             <div class="col-xs-3<%= if f.errors[:deck], do: " has-error" %>">
-              <%= checkbox f, :deck, class: "checkbox" %>
+              <%= checkbox f, :deck, class: "checkbox-inline" %>
               <%= label f, :deck, "Deck?", class: "control-label" %>
               <%= error_tag f, :deck %>
             </div>
@@ -987,7 +987,7 @@
           <div class="row form-group">
             <!-- 84 -->
             <div class="col-xs-3<%= if f.errors[:patio], do: " has-error" %>">
-              <%= checkbox f, :patio, class: "checkbox" %>
+              <%= checkbox f, :patio, class: "checkbox-inline" %>
               <%= label f, :patio, "Patio?", class: "control-label" %>
               <%= error_tag f, :patio %>
             </div>
@@ -1003,7 +1003,7 @@
           <div class="row form-group">
             <!-- 86 -->
             <div class="col-xs-3<%= if f.errors[:porch], do: " has-error" %>">
-              <%= checkbox f, :porch, class: "checkbox" %>
+              <%= checkbox f, :porch, class: "checkbox-inline" %>
               <%= label f, :porch, "Porch?", class: "control-label" %>
               <%= error_tag f, :porch %>
             </div>
@@ -1019,7 +1019,7 @@
           <div class="row form-group">
             <!-- 88 -->
             <div class="col-xs-3<%= if f.errors[:pool], do: " has-error" %>">
-              <%= checkbox f, :pool, class: "checkbox" %>
+              <%= checkbox f, :pool, class: "checkbox-inline" %>
               <%= label f, :pool, "Pool?", class: "control-label" %>
               <%= error_tag f, :pool %>
             </div>
@@ -1034,21 +1034,21 @@
 
           <!-- 90 -->
           <div class="form-group<%= if f.errors[:hot_tub], do: " has-error" %>">
-            <%= checkbox f, :hot_tub, class: "checkbox" %>
+            <%= checkbox f, :hot_tub, class: "checkbox-inline" %>
             <%= label f, :hot_tub, "Hot tub?", class: "control-label" %>
             <%= error_tag f, :hot_tub %>
           </div>
 
           <!-- 91 -->
           <div class="form-group<%= if f.errors[:ing_sprinks], do: " has-error" %>">
-            <%= checkbox f, :ing_sprinks, class: "checkbox" %>
+            <%= checkbox f, :ing_sprinks, class: "checkbox-inline" %>
             <%= label f, :ing_sprinks, "Inground sprinkler?", class: "control-label" %>
             <%= error_tag f, :ing_sprinks %>
           </div>
 
           <!-- 92 -->
           <div class="form-group<%= if f.errors[:tennis_ct], do: " has-error" %>">
-            <%= checkbox f, :tennis_ct, class: "checkbox" %>
+            <%= checkbox f, :tennis_ct, class: "checkbox-inline" %>
             <%= label f, :tennis_ct, "Tennis court?", class: "control-label" %>
             <%= error_tag f, :tennis_ct %>
           </div>
@@ -1062,7 +1062,7 @@
 
           <!-- 94 -->
           <div class="form-group<%= if f.errors[:equestrian], do: " has-error" %>">
-            <%= checkbox f, :equestrian, class: "checkbox" %>
+            <%= checkbox f, :equestrian, class: "checkbox-inline" %>
             <%= label f, :equestrian, "Horse property?", class: "control-label" %>
             <%= error_tag f, :equestrian %>
           </div>
@@ -1144,7 +1144,7 @@
 
             <!-- 106 -->
             <div class="col-xs-4<%= if f.errors[:central_air], do: " has-error" %>">
-              <%= checkbox f, :central_air, class: "checkbox" %>
+              <%= checkbox f, :central_air, class: "checkbox-inline" %>
               <%= label f, :central_air, "Central air?", class: "control-label" %>
               <%= error_tag f, :central_air %>
             </div>
@@ -1169,7 +1169,7 @@
           <div class="row form-group">
             <!-- 107 -->
             <div class="col-xs-6<%= if f.errors[:sewer], do: " has-error" %>">
-              <%= checkbox f, :sewer, class: "checkbox" %>
+              <%= checkbox f, :sewer, class: "checkbox-inline" %>
               <%= label f, :sewer, "Sewer?", class: "control-label" %>
               <%= error_tag f, :sewer %>
             </div>
@@ -1185,7 +1185,7 @@
           <div class="row form-group">
             <!-- 109 -->
             <div class="col-xs-6<%= if f.errors[:sep_hw_heater], do: " has-error" %>">
-              <%= checkbox f, :sep_hw_heater, class: "checkbox" %>
+              <%= checkbox f, :sep_hw_heater, class: "checkbox-inline" %>
               <%= label f, :sep_hw_heater, "Separate hw heater?", class: "control-label" %>
               <%= error_tag f, :sep_hw_heater %>
             </div>
@@ -1221,7 +1221,7 @@
         <div class="box-body">
           <!-- 113 -->
           <div class="form-group<%= if f.errors[:energy_eff], do: " has-error" %>">
-            <%= checkbox f, :energy_eff, class: "checkbox" %>
+            <%= checkbox f, :energy_eff, class: "checkbox-inline" %>
             <%= label f, :energy_eff, "Energy-efficient features?", class: "control-label" %>
             <%= error_tag f, :energy_eff %>
           </div>
@@ -1229,14 +1229,14 @@
           <div class="row form-group">
             <!-- 114 -->
             <div class="col-xs-6<%= if f.errors[:eef_led_lighting], do: " has-error" %>">
-              <%= checkbox f, :eef_led_lighting, class: "checkbox" %>
+              <%= checkbox f, :eef_led_lighting, class: "checkbox-inline" %>
               <%= label f, :eef_led_lighting, "LED lighting", class: "control-label" %>
               <%= error_tag f, :eef_led_lighting %>
             </div>
 
             <!-- 115 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_stove], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_stove, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_stove, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_stove, "Energy✩ stove", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_stove %>
             </div>
@@ -1245,14 +1245,14 @@
           <div class="row form-group">
             <!-- 116 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_refrigerator], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_refrigerator, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_refrigerator, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_refrigerator, "Energy✩ refrigerator", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_refrigerator %>
             </div>
 
             <!-- 117 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_dishwasher], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_dishwasher, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_dishwasher, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_dishwasher, "Energy✩ dishwasher", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_dishwasher %>
             </div>
@@ -1261,14 +1261,14 @@
           <div class="row form-group">
             <!-- 118 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_washer], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_washer, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_washer, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_washer, "Energy✩ washer", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_washer %>
             </div>
 
             <!-- 119 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_dryer], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_dryer, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_dryer, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_dryer, "Energy✩ dryer", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_dryer %>
             </div>
@@ -1277,14 +1277,14 @@
           <div class="row form-group">
             <!-- 120 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_water_heater], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_water_heater, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_water_heater, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_water_heater, "Energy✩ water heater", class: "control-label", style: "width:55%" %>
               <%= error_tag f, :eef_energy_star_water_heater %>
             </div>
 
             <!-- 121 -->
             <div class="col-xs-6<%= if f.errors[:eef_geothermal_water_heater], do: " has-error" %>">
-              <%= checkbox f, :eef_geothermal_water_heater, class: "checkbox" %>
+              <%= checkbox f, :eef_geothermal_water_heater, class: "checkbox-inline" %>
               <%= label f, :eef_geothermal_water_heater, "Geothermal water heater", class: "control-label", style: "width:65%" %>
               <%= error_tag f, :eef_geothermal_water_heater %>
             </div>
@@ -1293,14 +1293,14 @@
           <div class="row form-group">
             <!-- 122 -->
             <div class="col-xs-6<%= if f.errors[:eef_solar_water_heater], do: " has-error" %>">
-              <%= checkbox f, :eef_solar_water_heater, class: "checkbox" %>
+              <%= checkbox f, :eef_solar_water_heater, class: "checkbox-inline" %>
               <%= label f, :eef_solar_water_heater, "Solar water heater", class: "control-label" %>
               <%= error_tag f, :eef_solar_water_heater %>
             </div>
 
             <!-- 123 -->
             <div class="col-xs-6<%= if f.errors[:eef_tankless_water_heater], do: " has-error" %>">
-              <%= checkbox f, :eef_tankless_water_heater, class: "checkbox" %>
+              <%= checkbox f, :eef_tankless_water_heater, class: "checkbox-inline" %>
               <%= label f, :eef_tankless_water_heater, "Tankless water heater", class: "control-label", style: "width:65%" %>
               <%= error_tag f, :eef_tankless_water_heater %>
             </div>
@@ -1309,14 +1309,14 @@
           <div class="row form-group">
             <!-- 124 -->
             <div class="col-xs-6<%= if f.errors[:eef_double_pane_windows], do: " has-error" %>">
-              <%= checkbox f, :eef_double_pane_windows, class: "checkbox" %>
+              <%= checkbox f, :eef_double_pane_windows, class: "checkbox-inline" %>
               <%= label f, :eef_double_pane_windows, "Double-pane windows", class: "control-label", style: "width:75%" %>
               <%= error_tag f, :eef_double_pane_windows %>
             </div>
 
             <!-- 125 -->
             <div class="col-xs-6<%= if f.errors[:eef_insulated_windows], do: " has-error" %>">
-              <%= checkbox f, :eef_insulated_windows, class: "checkbox" %>
+              <%= checkbox f, :eef_insulated_windows, class: "checkbox-inline" %>
               <%= label f, :eef_insulated_windows, "Insulated windows", class: "control-label" %>
               <%= error_tag f, :eef_insulated_windows %>
             </div>
@@ -1325,14 +1325,14 @@
           <div class="row form-group">
             <!-- 126 -->
             <div class="col-xs-6<%= if f.errors[:eef_tinted_windows], do: " has-error" %>">
-              <%= checkbox f, :eef_tinted_windows, class: "checkbox" %>
+              <%= checkbox f, :eef_tinted_windows, class: "checkbox-inline" %>
               <%= label f, :eef_tinted_windows, "Tinted windows", class: "control-label" %>
               <%= error_tag f, :eef_tinted_windows %>
             </div>
 
             <!-- 127 -->
             <div class="col-xs-6<%= if f.errors[:eef_triple_pane_windows], do: " has-error" %>">
-              <%= checkbox f, :eef_triple_pane_windows, class: "checkbox" %>
+              <%= checkbox f, :eef_triple_pane_windows, class: "checkbox-inline" %>
               <%= label f, :eef_triple_pane_windows, "Triple-pane windows", class: "control-label" %>
               <%= error_tag f, :eef_triple_pane_windows %>
             </div>
@@ -1340,7 +1340,7 @@
 
           <!-- 128 -->
           <div class="form-group<%= if f.errors[:eef_energy_star_windows], do: " has-error" %>">
-            <%= checkbox f, :eef_energy_star_windows, class: "checkbox" %>
+            <%= checkbox f, :eef_energy_star_windows, class: "checkbox-inline" %>
             <%= label f, :eef_energy_star_windows, "Energy✩ windows", class: "control-label" %>
             <%= error_tag f, :eef_energy_star_windows %>
           </div>
@@ -1348,14 +1348,14 @@
           <div class="row form-group">
             <!-- 129 -->
             <div class="col-xs-6<%= if f.errors[:eef_storm_doors], do: " has-error" %>">
-              <%= checkbox f, :eef_storm_doors, class: "checkbox" %>
+              <%= checkbox f, :eef_storm_doors, class: "checkbox-inline" %>
               <%= label f, :eef_storm_doors, "Storm doors", class: "control-label" %>
               <%= error_tag f, :eef_storm_doors %>
             </div>
 
             <!-- 130 -->
             <div class="col-xs-6<%= if f.errors[:eef_insulated_doors], do: " has-error" %>">
-              <%= checkbox f, :eef_insulated_doors, class: "checkbox" %>
+              <%= checkbox f, :eef_insulated_doors, class: "checkbox-inline" %>
               <%= label f, :eef_insulated_doors, "Insulated doors", class: "control-label" %>
               <%= error_tag f, :eef_insulated_doors %>
             </div>
@@ -1363,7 +1363,7 @@
 
           <!-- 131 -->
           <div class="form-group<%= if f.errors[:eef_energy_star_doors], do: " has-error" %>">
-            <%= checkbox f, :eef_energy_star_doors, class: "checkbox" %>
+            <%= checkbox f, :eef_energy_star_doors, class: "checkbox-inline" %>
             <%= label f, :eef_energy_star_doors, "Energy✩ doors", class: "control-label" %>
             <%= error_tag f, :eef_energy_star_doors %>
           </div>
@@ -1371,14 +1371,14 @@
           <div class="row form-group">
             <!-- 132 -->
             <div class="col-xs-6<%= if f.errors[:eef_foam_insulation], do: " has-error" %>">
-              <%= checkbox f, :eef_foam_insulation, class: "checkbox" %>
+              <%= checkbox f, :eef_foam_insulation, class: "checkbox-inline" %>
               <%= label f, :eef_foam_insulation, "Foam insulation", class: "control-label" %>
               <%= error_tag f, :eef_foam_insulation %>
             </div>
 
             <!-- 133 -->
             <div class="col-xs-6<%= if f.errors[:eef_cellulose_insulation], do: " has-error" %>">
-              <%= checkbox f, :eef_cellulose_insulation, class: "checkbox" %>
+              <%= checkbox f, :eef_cellulose_insulation, class: "checkbox-inline" %>
               <%= label f, :eef_cellulose_insulation, "Cellulose insulation", class: "control-label" %>
               <%= error_tag f, :eef_cellulose_insulation %>
             </div>
@@ -1386,14 +1386,14 @@
 
           <!-- 134 -->
           <div class="form-group<%= if f.errors[:eef_blown_insulation], do: " has-error" %>">
-            <%= checkbox f, :eef_blown_insulation, class: "checkbox" %>
+            <%= checkbox f, :eef_blown_insulation, class: "checkbox-inline" %>
             <%= label f, :eef_blown_insulation, "Blown insulation", class: "control-label" %>
             <%= error_tag f, :eef_blown_insulation %>
           </div>
 
           <!-- 135 -->
           <div class="form-group<%= if f.errors[:eef_programmable_thermostat], do: " has-error" %>">
-            <%= checkbox f, :eef_programmable_thermostat, class: "checkbox" %>
+            <%= checkbox f, :eef_programmable_thermostat, class: "checkbox-inline" %>
             <%= label f, :eef_programmable_thermostat, "Programmable thermostat", class: "control-label" %>
             <%= error_tag f, :eef_programmable_thermostat %>
           </div>
@@ -1401,14 +1401,14 @@
           <div class="row form-group">
             <!-- 136 -->
             <div class="col-xs-6<%= if f.errors[:eef_low_flow_showers_fixtures], do: " has-error" %>">
-              <%= checkbox f, :eef_low_flow_showers_fixtures, class: "checkbox" %>
+              <%= checkbox f, :eef_low_flow_showers_fixtures, class: "checkbox-inline" %>
               <%= label f, :eef_low_flow_showers_fixtures, "Low-flow shower fixtures", class: "control-label", style: "width:75%" %>
               <%= error_tag f, :eef_low_flow_showers_fixtures %>
             </div>
 
             <!-- 137 -->
             <div class="col-xs-6<%= if f.errors[:eef_low_flow_dual_flush_toilet], do: " has-error" %>">
-              <%= checkbox f, :eef_low_flow_dual_flush_toilet, class: "checkbox" %>
+              <%= checkbox f, :eef_low_flow_dual_flush_toilet, class: "checkbox-inline" %>
               <%= label f, :eef_low_flow_dual_flush_toilet, "Low-flow dual-flush toilet", class: "control-label", style: "width:75%" %>
               <%= error_tag f, :eef_low_flow_dual_flush_toilet %>
             </div>
@@ -1416,7 +1416,7 @@
 
           <!-- 138 -->
           <div class="form-group<%= if f.errors[:eef_gray_water_system], do: " has-error" %>">
-            <%= checkbox f, :eef_gray_water_system, class: "checkbox" %>
+            <%= checkbox f, :eef_gray_water_system, class: "checkbox-inline" %>
             <%= label f, :eef_gray_water_system, "Greywater system", class: "control-label" %>
             <%= error_tag f, :eef_gray_water_system %>
           </div>
@@ -1424,14 +1424,14 @@
           <div class="row form-group">
             <!-- 139 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_furnace], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_furnace, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_furnace, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_furnace, "Energy✩ furnace", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_furnace %>
             </div>
 
             <!-- 140 -->
             <div class="col-xs-6<%= if f.errors[:eef_geothermal_heating], do: " has-error" %>">
-              <%= checkbox f, :eef_geothermal_heating, class: "checkbox" %>
+              <%= checkbox f, :eef_geothermal_heating, class: "checkbox-inline" %>
               <%= label f, :eef_geothermal_heating, "Geothermal heating", class: "control-label" %>
               <%= error_tag f, :eef_geothermal_heating %>
             </div>
@@ -1440,14 +1440,14 @@
           <div class="row form-group">
             <!-- 141 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_ac], do: " has-error" %>" title="(Non-central A/C)">
-              <%= checkbox f, :eef_energy_star_ac, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_ac, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_ac, "Energy✩ A/C", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_ac %>
             </div>
 
             <!-- 142 -->
             <div class="col-xs-6<%= if f.errors[:eef_energy_star_cac], do: " has-error" %>">
-              <%= checkbox f, :eef_energy_star_cac, class: "checkbox" %>
+              <%= checkbox f, :eef_energy_star_cac, class: "checkbox-inline" %>
               <%= label f, :eef_energy_star_cac, "Energy✩ CAC", class: "control-label" %>
               <%= error_tag f, :eef_energy_star_cac %>
             </div>
@@ -1456,14 +1456,14 @@
           <div class="row form-group">
             <!-- 143 -->
             <div class="col-xs-6<%= if f.errors[:eef_geothermal_ac], do: " has-error" %>">
-              <%= checkbox f, :eef_geothermal_ac, class: "checkbox" %>
+              <%= checkbox f, :eef_geothermal_ac, class: "checkbox-inline" %>
               <%= label f, :eef_geothermal_ac, "Geothermal A/C", class: "control-label" %>
               <%= error_tag f, :eef_geothermal_ac %>
             </div>
 
             <!-- 144 -->
             <div class="col-xs-6<%= if f.errors[:eef_solar_ac], do: " has-error" %>">
-              <%= checkbox f, :eef_solar_ac, class: "checkbox" %>
+              <%= checkbox f, :eef_solar_ac, class: "checkbox-inline" %>
               <%= label f, :eef_solar_ac, "Solar A/C", class: "control-label" %>
               <%= error_tag f, :eef_solar_ac %>
             </div>
@@ -1472,14 +1472,14 @@
           <div class="row form-group">
             <!-- 145 -->
             <div class="col-xs-6<%= if f.errors[:eef_solar_panels], do: " has-error" %>">
-              <%= checkbox f, :eef_solar_panels, class: "checkbox" %>
+              <%= checkbox f, :eef_solar_panels, class: "checkbox-inline" %>
               <%= label f, :eef_solar_panels, "Solar panels", class: "control-label" %>
               <%= error_tag f, :eef_solar_panels %>
             </div>
 
             <!-- 146 -->
             <div class="col-xs-6<%= if f.errors[:eef_solar_pool_cover], do: " has-error" %>">
-              <%= checkbox f, :eef_solar_pool_cover, class: "checkbox" %>
+              <%= checkbox f, :eef_solar_pool_cover, class: "checkbox-inline" %>
               <%= label f, :eef_solar_pool_cover, "Solar pool cover", class: "control-label" %>
               <%= error_tag f, :eef_solar_pool_cover %>
             </div>
@@ -1487,14 +1487,14 @@
 
           <!-- 147 -->
           <div class="form-group<%= if f.errors[:eef_windmill], do: " has-error" %>">
-            <%= checkbox f, :eef_windmill, class: "checkbox" %>
+            <%= checkbox f, :eef_windmill, class: "checkbox-inline" %>
             <%= label f, :eef_windmill, "Windmill", class: "control-label" %>
             <%= error_tag f, :eef_windmill %>
           </div>
 
           <!-- 148 -->
           <div class="form-group<%= if f.errors[:green_certified], do: " has-error" %>">
-            <%= checkbox f, :green_certified, class: "checkbox" %>
+            <%= checkbox f, :green_certified, class: "checkbox-inline" %>
             <%= label f, :green_certified, "Green-certified?", class: "control-label" %>
             <%= error_tag f, :green_certified %>
           </div>
@@ -1557,7 +1557,7 @@
 
           <!-- 160 -->
           <div class="form-group<%= if f.errors[:broker_agent_owned], do: " has-error" %>">
-            <%= checkbox f, :broker_agent_owned, class: "checkbox" %>
+            <%= checkbox f, :broker_agent_owned, class: "checkbox-inline" %>
             <%= label f, :broker_agent_owned, "Broker/agent-owned?", class: "control-label" %>
             <%= error_tag f, :broker_agent_owned %>
           </div>
@@ -1692,14 +1692,14 @@
           <div class="row form-group">
             <!-- 169 -->
             <div class="col-xs-6<%= if f.errors[:buyer_exclusions], do: " has-error" %>">
-              <%= checkbox f, :buyer_exclusions, class: "checkbox" %>
+              <%= checkbox f, :buyer_exclusions, class: "checkbox-inline" %>
               <%= label f, :buyer_exclusions, "Buyer exclusions?", class: "control-label" %>
               <%= error_tag f, :buyer_exclusions %>
             </div>
 
             <!-- 170 -->
             <div class="col-xs-6<%= if f.errors[:negotiate_direct], do: " has-error" %>">
-              <%= checkbox f, :negotiate_direct, class: "checkbox" %>
+              <%= checkbox f, :negotiate_direct, class: "checkbox-inline" %>
               <%= label f, :negotiate_direct, "Negotiate direct?", class: "control-label" %>
               <%= error_tag f, :negotiate_direct %>
             </div>
@@ -1707,7 +1707,7 @@
 
           <!-- 171 -->
           <div class="form-group<%= if f.errors[:offers_presentable], do: " has-error" %>">
-            <%= checkbox f, :offers_presentable, class: "checkbox" %>
+            <%= checkbox f, :offers_presentable, class: "checkbox-inline" %>
             <%= label f, :offers_presentable, "Offers presentable?", class: "control-label" %>
             <%= error_tag f, :offers_presentable %>
           </div>
@@ -1728,14 +1728,14 @@
 
           <!-- 174 -->
           <div class="form-group<%= if f.errors[:lockbox], do: " has-error" %>">
-            <%= checkbox f, :lockbox, class: "checkbox" %>
+            <%= checkbox f, :lockbox, class: "checkbox-inline" %>
             <%= label f, :lockbox, "Lockbox?", class: "control-label" %>
             <%= error_tag f, :lockbox %>
           </div>
 
           <!-- 175 -->
           <div class="form-group<%= if f.errors[:owner_financing], do: " has-error" %>">
-            <%= checkbox f, :owner_financing, class: "checkbox" %>
+            <%= checkbox f, :owner_financing, class: "checkbox-inline" %>
             <%= label f, :owner_financing, "Owner-financed?", class: "control-label" %>
             <%= error_tag f, :owner_financing %>
           </div>
@@ -1798,7 +1798,7 @@
 
             <!-- 180 -->
             <div class="col-xs-6<%= if f.errors[:also_for_rent], do: " has-error" %>">
-              <%= checkbox f, :also_for_rent, class: "checkbox" %>
+              <%= checkbox f, :also_for_rent, class: "checkbox-inline" %>
               <%= label f, :also_for_rent, "Also for rent?", class: "control-label" %>
               <%= error_tag f, :also_for_rent %>
             </div>
@@ -1819,13 +1819,13 @@
             <div class="col-xs-6">
               <!-- ??? -->
               <div class="<%= if f.errors[:pets_ok], do: "has-error" %>">
-                <%= checkbox f, :pets_ok, class: "checkbox" %>
+                <%= checkbox f, :pets_ok, class: "checkbox-inline" %>
                 <%= label f, :pets_ok, "Pets OK?", class: "control-label" %>
                 <%= error_tag f, :pets_ok %>
               </div>
               <!-- ??? -->
               <div class="<%= if f.errors[:smoking_ok], do: "has-error" %>">
-                <%= checkbox f, :smoking_ok, class: "checkbox" %>
+                <%= checkbox f, :smoking_ok, class: "checkbox-inline" %>
                 <%= label f, :smoking_ok, "Smoking OK?", class: "control-label" %>
                 <%= error_tag f, :smoking_ok %>
               </div>
@@ -1850,14 +1850,14 @@
           <div class="row form-group">
             <!-- 184 -->
             <div class="col-xs-6<%= if f.errors[:reo], do: " has-error" %>">
-              <%= checkbox f, :reo, class: "checkbox" %>
+              <%= checkbox f, :reo, class: "checkbox-inline" %>
               <%= label f, :reo, "REO?", class: "control-label" %>
               <%= error_tag f, :reo %>
             </div>
 
             <!-- 185 -->
             <div class="col-xs-6<%= if f.errors[:short_sale], do: " has-error" %>">
-              <%= checkbox f, :short_sale, class: "checkbox" %>
+              <%= checkbox f, :short_sale, class: "checkbox-inline" %>
               <%= label f, :short_sale, "Short sale?", class: "control-label" %>
               <%= error_tag f, :short_sale %>
             </div>
