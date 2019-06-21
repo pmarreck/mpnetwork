@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-rm priv/static/js/*
-rm priv/static/css/*
+rm -r priv/static/*

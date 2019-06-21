@@ -1,13 +1,22 @@
-@import '../node_modules/bootstrap/dist/css/bootstrap.min';
-@import '../node_modules/admin-lte/dist/css/AdminLTE.min';
-@import '../node_modules/admin-lte/dist/css/skins/_all-skins.min';
-@import '../node_modules/select2/dist/css/select2.min';
-@import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min';
-@import '../node_modules/bootstrap-daterangepicker/daterangepicker.scss';
-@import '../node_modules/quill/dist/quill.core';
-@import '../node_modules/quill/dist/quill.snow';
-@import '../node_modules/bootstrap-table/dist/bootstrap-table.min';
-@import '../node_modules/dropzone/dist/dropzone';
+@import "bootstrap";
+@import "admin-lte";
+@import "select2";
+@import "bootstrap-datepicker";
+@import "bootstrap-daterangepicker";
+@import "quill";
+@import "bootstrap-table";
+@import "dropzone";
+
+// @import '../node_modules/bootstrap/dist/css/bootstrap.min';
+// @import '../node_modules/admin-lte/dist/css/AdminLTE.min';
+// @import '../node_modules/admin-lte/dist/css/skins/_all-skins.min';
+// @import '../node_modules/select2/dist/css/select2.min';
+// @import '../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min';
+// @import '../node_modules/bootstrap-daterangepicker/daterangepicker.scss';
+// @import '../node_modules/quill/dist/quill.core';
+// @import '../node_modules/quill/dist/quill.snow';
+// @import '../node_modules/bootstrap-table/dist/bootstrap-table.min';
+// @import '../node_modules/dropzone/dist/dropzone';
 
 // @import 'node_modules/quill/dist/quill.bubble';
 

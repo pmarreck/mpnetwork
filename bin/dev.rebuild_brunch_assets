@@ -1,1 +1,2 @@
+dev.kick_brunch
 cd assets; node node_modules/brunch/bin/brunch build --debug; cd ..
