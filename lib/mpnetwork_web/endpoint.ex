@@ -27,6 +27,8 @@ defmodule MpnetworkWeb.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
+  plug(Plug.HealthCheck)
+
   plug(Plug.RequestId)
 
   plug(
