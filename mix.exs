@@ -77,7 +77,8 @@ defmodule Mpnetwork.Mixfile do
       {:ex_crypto, "~> 0.4", override: true},
       {:ecto, "~> 2.2.6", override: true},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
-      {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", branch: "master"},
+      # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
+      {:ecto_enum, "~> 1.3"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:quantum, ">= 2.2.5"},
