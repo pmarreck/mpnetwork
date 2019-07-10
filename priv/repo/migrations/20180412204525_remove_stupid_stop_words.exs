@@ -467,6 +467,8 @@ defmodule Mpnetwork.Repo.Migrations.RemoveStupidStopWords do
 
   def up_statements do
     [
+      "DROP TEXT SEARCH CONFIGURATION IF EXISTS public.english_nostop;",
+      "DROP TEXT SEARCH DICTIONARY IF EXISTS english_stem_nostop;",
       "CREATE TEXT SEARCH DICTIONARY english_stem_nostop (
         Template = snowball
         , Language = english

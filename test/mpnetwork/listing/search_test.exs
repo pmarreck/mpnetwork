@@ -115,10 +115,17 @@ defmodule Mpnetwork.SearchTest do
       assert {1, [listing], []} == Realtor.query_listings("mine", 50, listing.user)
     end
 
+    test "listing query listings with 'my drafts'" do
+      listing_draft = listing_fixture(%{draft: true})
+      other_listing = listing_fixture(%{draft: false, user: listing_draft.user, user_id: listing_draft.user_id, broker: listing_draft.user.broker, broker_id: listing_draft.user.office_id})
+      assert {2, [other_listing, listing_draft], []} == Realtor.query_listings("my", 50, listing_draft.user)
+      assert {1, [listing_draft], []} == Realtor.query_listings("my drafts", 50, listing_draft.user)
+    end
+
     test "listing query listings with price range only" do
       listing = listing_fixture()
       user = listing.user
-      assert {:ok, listing} = Realtor.update_listing(listing, %{price_usd: 200})
+      {:ok, listing} = Realtor.update_listing(listing, %{price_usd: 200})
       assert {1, [listing], []} == Realtor.query_listings("150-$250", 50, user)
     end
 
