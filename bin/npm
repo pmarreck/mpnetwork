@@ -2,4 +2,10 @@
 # This causes any npm commands run in the project root
 # to auto prefix to the "assets" directory.
 # Depends on having "./bin" frontmost in your $PATH.
+
+# Temporarily remove binstub so the actual NPM is found, and not this one in a recursive loop.
+# (How did this ever work without this bit? And how hacky is this, exactly?)
+OLDPATH=$PATH
+export PATH=${PATH/\.\/bin:/}
 `which npm` "$@" --prefix assets
+export PATH=$OLDPATH
