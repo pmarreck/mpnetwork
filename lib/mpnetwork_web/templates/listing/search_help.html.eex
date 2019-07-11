@@ -6,6 +6,7 @@
   By address fragment: <pre class="search_example">55 plandome</pre>
   By price range (searches both rental price and list price; characters such as $ and , are ignored): <pre class="search_example">$500,000-1000000</pre>
   Listings owned by you: <pre class="search_example">my</pre><pre class="search_example">mine</pre>
+  Your drafts: <pre class="search_example">my drafts</pre><pre class="search_example">my draft</pre>
   Listings owned by your office: <pre class="search_example">my office</pre>
   Manhasset school district: <pre class="search_example">SD6</pre>
   Port Washington school district: <pre class="search_example">SD4</pre>
@@ -31,13 +32,8 @@
   <pre class="search_example">Closed: 12/1/2017-12/31/2017</pre>
   Searches default to active listings only (listing status of NEW, FS, EXT, PC) unless you search on a specific listing status, or include the words "inactive", "unavailable", "all" or "expired". If you want inactive/unavailable listings, add the word "inactive" or "unavailable" to the search, or just add "all" to get everything. <b>Also note that UC (under contract) is considered neither "active" nor "inactive" currently and must thus be searched via "UC", "active or UC" or "inactive or UC"</b>.
   <pre class="search_example">inactive 1000000-2000000 3-5 bedroom 11050</pre>
-  The word "all" (as well as specifying any listing status) will turn off filtering on active-only. So if there's a listing at "5 Fancy Lane" which is under contract, sold, or has an unknown status, you can always find it via something like:
+  The word "all" (as well as specifying any listing status) will turn off the default filtering-out of anything not active. So if there's a listing at "5 Fancy Lane" which is under contract, sold, or has an unknown status, you can always find it via something like:
   <pre class="search_emample">all 5 Fancy Lane</pre>
-  Comma-separated values are treated as "OR". So for example,
-  <pre class="search_example">11050,11030</pre>
-  will search for listings in Port Washington OR Manhasset.<br />
-  So to search both under-contract and inactive listings, you could use:
-  <pre class="search_example">UC, inactive</pre>
   You can search by almost any other attributes: <pre class="search_example">expired tudor waterfront (solar OR windmill) 500000-1000000</pre>
   When searching by multiple attributes, it filters on all of them, so <pre class="search_example">rent waterfront</pre> will find rentals on the waterfront (rent AND waterfront).<br />
   You can also use and, or, not (or the equivalent symbols &, |, !) and parentheses:

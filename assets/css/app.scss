@@ -10,11 +10,9 @@
 @import '../node_modules/dropzone/dist/dropzone';
 
 // @import 'node_modules/quill/dist/quill.bubble';
-
 // .fancy {
 //   width: 100%
 // }
-
 .checkbox-inline {
   // display: inline !important;
   margin-right: 3px !important;
@@ -22,7 +20,8 @@
 }
 
 // hack to override this issue after spending too much time trying to solve it properly
-.select2-container--default .select2-selection--single, .select2-selection .select2-selection--single {
+.select2-container--default .select2-selection--single,
+.select2-selection .select2-selection--single {
   padding-top: 2px !important;
   padding-right: 2px !important;
   padding-bottom: 2px !important;
@@ -30,8 +29,8 @@
 }
 
 // hack to override a width of a certain admin-lte pane in a certain context (minified menu dropdowns)
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>a>span:not(.pull-right),
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>.treeview-menu {
   width: 210px;
 }
 
@@ -40,11 +39,13 @@
   animation: blink-animation 1s steps(5, start) infinite;
   -webkit-animation: blink-animation 1s steps(5, start) infinite;
 }
+
 @keyframes blink-animation {
   to {
     visibility: hidden;
   }
 }
+
 @-webkit-keyframes blink-animation {
   to {
     visibility: hidden;
@@ -52,7 +53,9 @@
 }
 
 .inspection {
-  table, th, td {
+  table,
+  th,
+  td {
     border: 1px solid lightgrey !important;
   }
 }
@@ -61,6 +64,17 @@ pre.search_example {
   width: 500px;
 }
 
+// code examples
+// oops, this is already in the css I'm using, lol. Leaving this here for posterity though
+// code {
+//   display: inline;
+//   font-family: monospace;
+//   white-space: pre;
+//   margin: 1em 0;
+//   border: 1px solid #ccc;
+//   padding: 1px;
+//   background-color: white;
+// }
 // so that tables in certain views which MUST contain some certain amount of information can at least be scrolled left-right on mobile devices
 main.main {
   overflow-x: scroll;
@@ -77,7 +91,6 @@ li p {
 }
 
 //// RICH TEXT EDITOR STYLES
-
 #rte_container {
   background-color: white;
   height: 160px;
@@ -96,20 +109,25 @@ li p {
   content: 'Small';
   font-size: 10px !important;
 }
+
 .ql-picker-label[data-value="10px"]::before {
   content: 'Small' !important;
 }
+
 .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
   content: 'Large';
   font-size: 18px !important;
 }
+
 .ql-picker-label[data-value="18px"]::before {
   content: 'Large' !important;
 }
+
 .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before {
   content: 'XL';
   font-size: 24px !important;
 }
+
 .ql-picker-label[data-value="24px"]::before {
   content: 'XL' !important;
 }
@@ -126,16 +144,14 @@ li p {
   overflow-x: inherit;
   overflow-y: inherit;
 }
+
 // .wrapper .main {
 //   overflow-x: inherit;
 // }
-
 //// LISTING TABLE STYLES
-
 // body {
 //   font-family: arial;
 // }
-
 table.listing {
   // border: 1px solid #ccc;
   width: 100%;
@@ -156,22 +172,19 @@ table.listing {
     border-top: 0;
     margin-top: 0;
   }
-  td.remarks > div {
+  td.remarks>div {
     // display: inline-block;
     overflow: hidden;
-    max-height: 38px;
-    // max-width: 150px;
+    max-height: 38px; // max-width: 150px;
     // white-space: nowrap;
     // text-overflow: ellipsis;
     transition: all 1s ease;
   }
-  td.remarks:hover > div {
+  td.remarks:hover>div {
     // display: auto;
-    overflow: auto;
-    // white-space: normal;
+    overflow: auto; // white-space: normal;
     // text-overflow: auto;
-    max-height: 600px;
-    // max-width: 100%;
+    max-height: 600px; // max-width: 100%;
     transition: all 1s ease;
   }
   th {
@@ -180,8 +193,7 @@ table.listing {
     border: 0;
     padding: 10px;
     text-align: left;
-    text-transform: uppercase;
-    // font-size: 14px;
+    text-transform: uppercase; // font-size: 14px;
     // font-weight: bold;
     letter-spacing: 0px;
   }
@@ -271,10 +283,12 @@ table td {
   border: 2px dashed #0087F7;
   border-radius: 5px;
 }
+
 .dropzone .dz-message {
   font-size: 200%;
   font-weight: 400;
 }
+
 // hr { // I wanted my old HTML4 HR back!
 //   display: block;
 //   margin-top: 0.5em;
@@ -284,19 +298,22 @@ table td {
 //   border-style: inset;
 //   border-width: 1px;
 // }
+hr.section {
+  // Getting fancy this time!
+  overflow: visible;
+  /* For IE */
+  padding: 0;
+  border: none; // border-top: medium double #999;
+  color: #999;
+  text-align: center;
+  height: 10px;
+  box-shadow: inset 0 10px 10px -10px rgba(0, 0, 0, 0.75);
+}
 
-hr.section { // Getting fancy this time!
-  overflow: visible; /* For IE */
-  padding: 0;
-  border: none;
-  // border-top: medium double #999;
-  color: #999;
-  text-align: center;
-  height: 10px;
-  box-shadow: inset 0 10px 10px -10px rgba(0, 0, 0, 0.75);
-}
-hr.section-with-S { // Getting REALLY fancy this time!
-  overflow: visible; /* For IE */
+hr.section-with-S {
+  // Getting REALLY fancy this time!
+  overflow: visible;
+  /* For IE */
   padding: 0;
   border: none;
   color: #999;
@@ -304,6 +321,7 @@ hr.section-with-S { // Getting REALLY fancy this time!
   height: 10px;
   box-shadow: inset 0 10px 10px -10px rgba(0, 0, 0, 0.75);
 }
+
 hr.section-with-S:after {
   content: "§";
   display: inline-block;

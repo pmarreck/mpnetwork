@@ -169,6 +169,9 @@
             <div class="report-field label-visible"><span class="report-label ">Horse Prop:</span><span class="report-value"><%= yn @listing.equestrian %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Appearance:</span><span class="report-value"><%= @listing.appearance %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Waterfront/Frontage:</span><span class="report-value"><%= yn @listing.waterfront %><%= if @listing.water_frontage_ft, do: ", #{@listing.water_frontage_ft}ft", else: "" %></span></div>
+            <%= if @listing.waterfront && @listing.waterfront_type do %>
+              <div class="report-field label-visible"><span class="report-label ">Waterfront Type:</span><span class="report-value"><%= @listing.waterfront_type %></span></div>
+            <% end %>
             <div class="report-field label-visible"><span class="report-label ">Waterview:</span><span class="report-value"><%= yn @listing.waterview %></span></div>
             <div class="report-field label-visible"><span class="report-label ">Bulkhead:</span><span class="report-value"><%= yn @listing.bulkhead %><%= if @listing.bulkhead_ft, do: ", #{@listing.bulkhead_ft}ft", else: "" %></span></div>
           </div>
