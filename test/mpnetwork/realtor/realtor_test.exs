@@ -385,6 +385,11 @@ defmodule Mpnetwork.RealtorTest do
       listing = Realtor.get_listing!(listing.id)
       assert listing.listing_status_type == :EXP
     end
+
+    test "saving a listing with a class of Land is successful if beds/baths missing" do
+      # this will just blow up if it's invalid
+      listing_fixture(%{class_type: :land, num_bedrooms: nil, num_baths: nil, num_half_baths: nil})
+    end
   end
 
   describe "offices" do

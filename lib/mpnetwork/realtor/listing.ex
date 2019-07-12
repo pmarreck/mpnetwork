@@ -353,6 +353,25 @@ defmodule Mpnetwork.Realtor.Listing do
 
   defp validate_required_field_when_another_field_has_value(changeset, _), do: changeset
 
+  defp is_not_blank(val), do: val != nil && val != ""
+
+  defp validate_required_unless_field_is_value(changeset, fields, field, value) do
+    unless get_field(changeset, field) == value do
+      Enum.reduce(fields, changeset, fn(field, changeset) -> (
+          if is_not_blank(get_field(changeset, field)) do
+            changeset
+          else
+            humanized_field = Regex.replace(~r/num_/, "#{field}", "# ")
+            humanized_field = Regex.replace(~r/_/, humanized_field, " ")
+            add_error(changeset, field, "#{humanized_field} must have a value unless the property class is \"Land\"")
+          end
+        )
+      end)
+    else
+      changeset
+    end
+  end
+
   @doc """
     Relaxed requireds for listing attributes in "draft" status.
     That was easy...
@@ -403,9 +422,6 @@ defmodule Mpnetwork.Realtor.Listing do
       :state,
       :zip,
       :price_usd,
-      :num_bedrooms,
-      :num_baths,
-      :num_half_baths,
       :schools,
       :prop_tax_usd,
       :vill_tax_usd,
@@ -414,6 +430,11 @@ defmodule Mpnetwork.Realtor.Listing do
       :lot_num,
       :expires_on
     ])
+    |> validate_required_unless_field_is_value([
+      :num_bedrooms,
+      :num_baths,
+      :num_half_baths,
+    ], :class_type, :land)
     |> constraints
   end
 
