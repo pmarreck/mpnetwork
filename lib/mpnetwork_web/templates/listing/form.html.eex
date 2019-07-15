@@ -1705,6 +1705,13 @@
             </div>
           </div>
 
+          <!-- 182 -->
+          <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
+            <%= label f, :personal_prop_exclusions, "Personal property exclusions", class: "control-label" %>
+            <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
+            <%= error_tag f, :personal_prop_exclusions %>
+          </div>
+
           <!-- 171 -->
           <div class="form-group<%= if f.errors[:offers_presentable], do: " has-error" %>">
             <%= checkbox f, :offers_presentable, class: "checkbox-inline" %>
@@ -1831,13 +1838,6 @@
               </div>
             </div>
 
-          </div>
-
-          <!-- 182 -->
-          <div class="form-group<%= if f.errors[:personal_prop_exclusions], do: " has-error" %>">
-            <%= label f, :personal_prop_exclusions, "Personal property exclusions", class: "control-label" %>
-            <%= text_input f, :personal_prop_exclusions, class: "form-control" %>
-            <%= error_tag f, :personal_prop_exclusions %>
           </div>
 
           <!-- 183 -->

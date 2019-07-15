@@ -1067,6 +1067,12 @@
             </div>
           </div>
 
+          <!-- 182 -->
+          <div class="personal_prop_exclusions">
+            <strong>Personal property exclusions:</strong>
+            <%= @listing.personal_prop_exclusions %>
+          </div>
+
           <!-- 171 -->
           <div class="offers_presentable">
             <strong>Offers presentable?</strong>
@@ -1170,12 +1176,6 @@
               </div>
             </div>
           <% end %>
-
-          <!-- 182 -->
-          <div class="personal_prop_exclusions">
-            <strong>Personal property exclusions:</strong>
-            <%= @listing.personal_prop_exclusions %>
-          </div>
 
           <!-- 183 -->
           <div class="mls_source_id">
