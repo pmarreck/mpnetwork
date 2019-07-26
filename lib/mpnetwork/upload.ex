@@ -27,6 +27,9 @@ defmodule Mpnetwork.Upload do
       "image/psd" -> true
       "image/tiff" -> true
       "image/webp" -> true
+      "image/heic" -> true
+      "image/heif" -> true
+      "image/jp2" -> true
       _ -> false
     end
   end

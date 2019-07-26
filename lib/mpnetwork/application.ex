@@ -14,17 +14,17 @@ defmodule Mpnetwork.Application do
       supervisor(MpnetworkWeb.Endpoint, []),
       # Start your own worker by calling: Mpnetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(Mpnetwork.Worker, [arg1, arg2, arg3]),
-      worker(Cachex, [
-        Application.get_env(:mpnetwork, :cache_name),
-        [
-          limit: %Cachex.Limit{
-            # bumped after implementation of app-cached thumbnails of arbitrary size
-            limit: 5000,
-            policy: Cachex.Policy.LRW,
-            reclaim: 0.1
-          }
-        ]
-      ]),
+      # worker(Cachex, [
+      #   Application.get_env(:mpnetwork, :cache_name),
+      #   [
+      #     limit: %Cachex.Limit{
+      #       # bumped after implementation of app-cached thumbnails of arbitrary size
+      #       limit: 5000,
+      #       policy: Cachex.Policy.LRW,
+      #       reclaim: 0.1
+      #     }
+      #   ]
+      # ]),
       worker(Mpnetwork.Scheduler, [])
     ]
 
