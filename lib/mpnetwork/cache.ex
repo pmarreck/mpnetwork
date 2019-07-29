@@ -114,7 +114,20 @@ defmodule Mpnetwork.Cache do
     end
   end
 
-  # def purge(cache_name, opts \\ [])
+  # expire all cache entries that haven't been accessed in a month
+  # Currently applies to all caches regardless of name
+  def purge(), do: purge(Config.get(:cache_name))
+  def purge(cache_name), do: purge(cache_name, Config.get(:default_cache_expiry))
+  def purge(_cache_name, opts) do
+    ago = NaiveDateTime.utc_now() |> Timex.shift(opts)
+    #select all keys whose updated_at is older than the configured duration
+    from(
+      c in Cache,
+      where: c.updated_at < ^ago
+    )
+    |> Repo.delete_all
+  end
+
 
   # def dump(cache_name, path, opts \\ [])
 

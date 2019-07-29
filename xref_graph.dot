@@ -30,6 +30,118 @@ digraph "xref graph" {
   "lib/mpnetwork_web/controllers/broadcast_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
   "lib/mpnetwork_web/controllers/broadcast_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
   "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork/repo.ex"
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/attachment_controller.ex"
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/cache.ex"
+  "lib/mpnetwork/cache.ex" -> "lib/mpnetwork/config.ex"
+  "lib/mpnetwork/cache.ex" -> "lib/mpnetwork/repo.ex"
+  "lib/mpnetwork/cache.ex" -> "lib/mpnetwork/schema/cache.ex" [label="(struct)"]
+  "lib/mpnetwork/schema/cache.ex" -> "lib/mpnetwork/ecto/term.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/config.ex"
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/attachment.ex" [label="(struct)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex"
+  "lib/mpnetwork/listing/attachment_metadata.ex" -> "lib/mpnetwork/realtor/listing.ex"
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/listing.ex"
+  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/crypto.ex"
+  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/listing/attachment.ex" [label="(struct)"]
+  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex" [label="(struct)"]
+  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/repo.ex"
+  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/upload.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/upload.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/broadcast_controller.ex"
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/listing_controller.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/listing/listing.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/realtor/listing.ex" [label="(struct)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/repo.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/utils/regexen.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/emails/client_email.ex"
+  "lib/mpnetwork_web/emails/client_email.ex" -> "lib/mpnetwork_web/views/email_view.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/error_helpers.ex" -> "lib/mpnetwork_web/gettext.ex"
+  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/emails/client_email.ex" -> "lib/mpnetwork_web/views/layout_view.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/attachment_view.ex"
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/broadcast_view.ex"
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/listing_view.ex"
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/ecto_enums.ex"
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/listing/listing.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/views/page_view.ex"
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/broadcast_view.ex"
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/listing_view.ex"
+  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/page_view.ex"
+  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/emails/mpnetwork_mailer.ex"
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/office_controller.ex"
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/realtor/office.ex" [label="(struct)"]
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/page_controller.ex"
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/listing/listing.ex"
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/profile_controller.ex"
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/controllers/user_controller.ex"
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/permissions.ex"
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/realtor/user.ex" [label="(struct)"]
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
+  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/router.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/controllers/broadcast_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/coherence_view_helpers.ex"
@@ -43,18 +155,11 @@ digraph "xref graph" {
   "lib/mpnetwork_web/views/coherence/registration_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/registration_view.ex" -> "lib/mpnetwork_web/views/coherence/coherence_view_helpers.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/registration_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/error_helpers.ex" -> "lib/mpnetwork_web/gettext.ex"
   "lib/mpnetwork/coherence/invitation.ex"
   "lib/mpnetwork/coherence/invitation.ex" -> "lib/mpnetwork/utils/regexen.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/error_helpers.ex"
+  "lib/mpnetwork/cache.ex"
   "lib/mpnetwork_web/controllers/user_controller.ex"
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork/realtor/user.ex" [label="(struct)"]
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/user_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/session_view.ex"
   "lib/mpnetwork_web/views/coherence/session_view.ex" -> "lib/mpnetwork_web/coherence_web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/session_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
@@ -65,39 +170,11 @@ digraph "xref graph" {
   "lib/mpnetwork/realtor/user.ex"
   "lib/mpnetwork/realtor/office.ex"
   "lib/mpnetwork_web/views/page_view.ex"
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/broadcast_view.ex"
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/broadcast_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/views/listing_view.ex"
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/ecto_enums.ex"
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/listing/listing.ex" [label="(compile)"]
-  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/crypto.ex"
-  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/listing/attachment.ex" [label="(struct)"]
-  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex" [label="(struct)"]
-  "lib/mpnetwork/listing/attachment_metadata.ex" -> "lib/mpnetwork/realtor/listing.ex"
-  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/repo.ex"
-  "lib/mpnetwork/listing/listing.ex" -> "lib/mpnetwork/upload.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/views/page_view.ex"
-  "lib/mpnetwork_web/views/listing_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/page_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork/release_tasks.ex"
   "lib/mpnetwork_web/endpoint.ex"
   "lib/mpnetwork_web/endpoint.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
   "lib/mpnetwork_web/endpoint.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
+  "lib/mpnetwork_web/endpoint.ex" -> "lib/plugs/health_check.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/coherence_view.ex"
   "lib/mpnetwork_web/views/coherence/coherence_view.ex" -> "lib/mpnetwork_web/coherence_web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/coherence_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
@@ -128,8 +205,10 @@ digraph "xref graph" {
   "lib/mpnetwork/coherence/schemas.ex" -> "lib/mpnetwork/realtor/user.ex"
   "lib/mpnetwork/coherence/schemas.ex" -> "lib/mpnetwork/repo.ex"
   "lib/mpnetwork/listing/attachment.ex"
+  "lib/mpnetwork/ecto/term.ex"
   "lib/mpnetwork/upload.ex"
   "lib/mpnetwork/jobs.ex"
+  "lib/mpnetwork/jobs.ex" -> "lib/mpnetwork/cache.ex"
   "lib/mpnetwork/jobs.ex" -> "lib/mpnetwork/realtor/realtor.ex"
   "lib/mpnetwork_web/controllers/coherence/responders/json.ex"
   "lib/mpnetwork/crypto.ex"
@@ -159,12 +238,6 @@ digraph "xref graph" {
   "lib/mpnetwork_web/views/profile_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/profile_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/controllers/page_controller.ex"
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/listing/listing.ex"
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/page_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork/realtor/realtor.ex"
   "lib/mpnetwork_web/web.ex"
   "lib/mpnetwork_web/coherence_web.ex"
@@ -174,44 +247,13 @@ digraph "xref graph" {
   "lib/mpnetwork/listing/search.ex"
   "lib/mpnetwork_web/views/coherence/email_view.ex"
   "lib/mpnetwork_web/emails/client_email.ex"
-  "lib/mpnetwork_web/emails/client_email.ex" -> "lib/mpnetwork_web/views/email_view.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/email_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
-  "lib/mpnetwork_web/emails/client_email.ex" -> "lib/mpnetwork_web/views/layout_view.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/attachment_view.ex"
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/attachment_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/broadcast_view.ex"
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/listing_view.ex"
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/views/page_view.ex"
-  "lib/mpnetwork_web/views/layout_view.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/broadcast_view.ex"
+  "lib/plugs/health_check.ex"
+  "lib/mpnetwork/schema/cache.ex"
   "lib/mpnetwork/scheduler.ex"
   "lib/mpnetwork_web/views/layout_view.ex"
   "lib/mpnetwork/repo.ex"
   "lib/mpnetwork_web/controllers/attachment_controller.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/config.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/attachment.ex" [label="(struct)"]
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/listing/listing.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork/upload.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/attachment_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/confirmation_view.ex"
   "lib/mpnetwork_web/views/coherence/confirmation_view.ex" -> "lib/mpnetwork_web/coherence_web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/confirmation_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
@@ -230,7 +272,6 @@ digraph "xref graph" {
   "lib/mpnetwork_web/views/coherence/invitation_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
   "lib/mpnetwork/realtor/broadcast.ex"
   "lib/mpnetwork_web/views/coherence/password_view.ex"
-  "lib/mpnetwork_web/views/coherence/password_view.ex" -> "lib/mpnetwork/realtor/realtor.ex"
   "lib/mpnetwork_web/views/coherence/password_view.ex" -> "lib/mpnetwork_web/coherence_web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/password_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/coherence/password_view.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
@@ -244,12 +285,6 @@ digraph "xref graph" {
   "lib/mpnetwork/application.ex" -> "lib/mpnetwork_web/endpoint.ex"
   "lib/mpnetwork_web/global_helpers.ex"
   "lib/mpnetwork_web/controllers/profile_controller.ex"
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/global_helpers.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/profile_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/user_view.ex"
   "lib/mpnetwork_web/views/user_view.ex" -> "lib/mpnetwork/permissions.ex"
   "lib/mpnetwork_web/views/user_view.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
@@ -262,18 +297,6 @@ digraph "xref graph" {
   "lib/mpnetwork_web/views/attachment_view.ex"
   "lib/mpnetwork_web/channels/user_socket.ex"
   "lib/mpnetwork_web/controllers/listing_controller.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/listing/attachment_metadata.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/listing/listing.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/realtor/listing.ex" [label="(struct)"]
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/repo.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork/utils/regexen.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/emails/client_email.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/emails/mpnetwork_mailer.ex"
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/listing_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
   "lib/mpnetwork/listing/attachment_metadata.ex"
   "lib/mpnetwork/coherence/rememberable.ex"
   "lib/mpnetwork_web/views/email_view.ex"
@@ -288,10 +311,4 @@ digraph "xref graph" {
   "lib/mpnetwork_web/views/coherence/unlock_view.ex" -> "lib/mpnetwork_web/views/error_helpers.ex" [label="(compile)"]
   "lib/mpnetwork_web/views/listing_view.ex"
   "lib/mpnetwork_web/controllers/office_controller.ex"
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/permissions.ex"
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/realtor/office.ex" [label="(struct)"]
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork/realtor/realtor.ex"
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/gettext.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/router.ex" [label="(compile)"]
-  "lib/mpnetwork_web/controllers/office_controller.ex" -> "lib/mpnetwork_web/web.ex" [label="(compile)"]
 }

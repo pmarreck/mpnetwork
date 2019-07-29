@@ -16,7 +16,8 @@ config :mpnetwork,
   attachment_chunk_timeout: 10_000,
   # 20-ish photos plus maybe a pdf or 2
   max_attachments_per_listing: 25,
-  cache_name: :attachment_cache
+  cache_name: :attachment_cache,
+  default_cache_expiry: [months: -2] # passed directly to Timex.shift
 
 # Configures the endpoint
 config :mpnetwork, MpnetworkWeb.Endpoint,
