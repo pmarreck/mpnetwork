@@ -34,7 +34,8 @@ config :mpnetwork, Mpnetwork.Scheduler,
   timezone: "America/New_York",
   jobs: [
     # Runs every midnight:
-    {"@daily", {Mpnetwork.Jobs, :set_expired_listings_to_exp_status, []}}
+    {"@daily", {Mpnetwork.Jobs, :set_expired_listings_to_exp_status, []}},
+    {"@daily", {Mpnetwork.Jobs, :delete_old_cache_entries, []}}
   ]
 
 # Configures Elixir's Logger
