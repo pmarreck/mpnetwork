@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+proj=${PWD##*/}
+args=("$@")
+gigalixir ps:scale -s ${args[0]} -a $proj

@@ -107,6 +107,59 @@ defmodule MpnetworkWeb.ListingController do
     )
   end
 
+  # when receiving a "clone_id" param, clone the values from that id
+  def new(conn, %{"clone_id" => clone_id} = _params) do
+    if !Permissions.read_only?(current_user(conn)) do
+      listing = Realtor.get_listing!(clone_id) # |> Repo.preload([:user, :broker, :colisting_agent])
+      # broker = listing.broker
+      # agent = listing.user
+      # colisting_agent = listing.colisting_agent
+      # Nil out or replace the values that are no longer relevant
+      unless listing.listing_status_type in [:NEW, :FS, :EXT, :UC, :PC] do
+        changeset = Realtor.change_listing(%{
+          listing |
+            user_id: current_user(conn).id,
+            broker_id: conn.assigns.current_office && conn.assigns.current_office.id,
+            live_at: nil,
+            expires_on: nil,
+            uc_on: nil,
+            prop_closing_on: nil,
+            closed_on: nil,
+            closing_price_usd: nil,
+            purchaser: nil,
+            moved_from: nil,
+            price_usd: nil,
+            prior_price_usd: listing.price_usd,
+            listing_status_type: nil,
+            draft: true,
+            for_sale: false,
+            for_rent: false,
+            owner_name: nil,
+            status_showing_phone: nil,
+            listing_agent_phone: nil,
+            colisting_agent_phone: nil,
+            addl_listing_agent_name: nil,
+            addl_listing_agent_phone: nil,
+            addl_listing_broker_name: nil,
+            selling_agent_name: nil,
+            selling_agent_phone: nil,
+            selling_broker_name: nil
+        })
+        render(
+          conn,
+          "new.html",
+          changeset: changeset,
+          offices: offices(),
+          users: users(conn.assigns.current_office, conn.assigns.current_user)
+        )
+      else
+        send_resp(conn, 405, "You can only clone inactive listings")
+      end
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
+  end
+
   def new(conn, _params) do
     if !Permissions.read_only?(current_user(conn)) do
       changeset =

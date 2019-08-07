@@ -123,6 +123,9 @@
             <% end %>
             <%= if !Permissions.read_only?(@current_user) do %>
               <td class="text-right">
+                <%= unless listing.listing_status_type in [:NEW, :FS, :EXT, :UC, :PC] do %>
+                  <span><%= link "Clone", to: listing_path(@conn, :new, %{clone_id: listing.id}), class: "btn btn-default btn-xs" %></span>
+                <% end %>
                 <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
                   <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
                   <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
