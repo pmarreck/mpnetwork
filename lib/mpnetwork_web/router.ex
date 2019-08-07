@@ -83,6 +83,7 @@ defmodule MpnetworkWeb.Router do
     get("/listings/inspections", ListingController, :inspection_sheet, as: :upcoming_inspections)
     resources("/broadcasts", BroadcastController)
     resources("/listings", ListingController)
+    put("/listings", ListingController, :create) # couldn't get Clone to work otherwise
     resources("/attachments", AttachmentController)
     resources("/profiles", ProfileController, as: :profile, only: [:edit, :update, :show])
     get("/search", ListingController, :search, as: :search)

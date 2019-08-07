@@ -1,6 +1,5 @@
 <div><br /></div>
 <%= render("_jumpto.html", existing: @existing) %>
-
 <%= form_for @changeset, @action, [class: "contains-datetimes"], fn f -> %>
 
 <section class="content">
