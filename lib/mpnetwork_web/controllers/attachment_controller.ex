@@ -104,7 +104,7 @@ defmodule MpnetworkWeb.AttachmentController do
           {^sha256_hash, _, _} -> true
           ^id -> true
           ^sha256_hash -> true
-          _ -> (IO.puts "Skipped key: #{inspect key}") && false
+          _ -> false
         end
       end)
 
@@ -333,7 +333,6 @@ defmodule MpnetworkWeb.AttachmentController do
     # clear cache of any resized versions of the old image (as well as the old image itself)
     purge_cached(old_attachment)
     # replace old data with new data at old attachment id by saving
-# IO.inspect "Changeset changes: #{inspect attachment_changeset.changes}"
     attachment = Repo.update!(attachment_changeset)
     # redirect to show page
     conn
