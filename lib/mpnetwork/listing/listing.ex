@@ -115,6 +115,66 @@ defmodule Mpnetwork.Listing do
     end)
   end
 
+  defp do_rotate_attachment(degrees, attachment) when degrees in [-90, 90] do
+    import Mogrify
+    import Mogrify.Options.Transform
+# IO.inspect "Old sha256: #{inspect attachment.sha256_hash}"
+    # write temp file to disk
+    {:ok, tempfile} = Temp.create()
+    File.write!(tempfile, attachment.data) # should close file handle
+    # do rotation on disk
+    rotated_image = (open(tempfile) |> add_option(option_rotate("#{degrees}")) |> save)
+    # read new file off disk into memory
+    rotated_image_data = File.read!(rotated_image.path)
+    # parse new file's dimensions
+    {binary_data_content_type, width_pixels, height_pixels} =
+      Upload.extract_meta_from_binary_data(rotated_image_data, attachment.content_type)
+    new_sha256_hash = :crypto.hash(:sha256, rotated_image_data)
+# IO.inspect "New sha256: #{inspect new_sha256_hash}"
+# IO.inspect "Old content-type: #{attachment.content_type}"
+# IO.inspect "New content-type: #{binary_data_content_type}"
+# IO.inspect "Old width_pixels: #{attachment.width_pixels}"
+# IO.inspect "New width_pixels: #{width_pixels}"
+# IO.inspect "Old height_pixels: #{attachment.height_pixels}"
+# IO.inspect "New height_pixels: #{height_pixels}"
+    # clean up rotated file
+    File.rm!(rotated_image.path)
+
+    # return the modified attachment changeset (not saved yet)
+    attachment
+    |> Attachment.changeset(%{
+      width_pixels: width_pixels,
+      height_pixels: height_pixels,
+      content_type: binary_data_content_type,
+      sha256_hash: new_sha256_hash,
+      data: rotated_image_data,
+      inserted_at: attachment.inserted_at,
+      updated_at: Timex.now("EDT")
+    })
+  end
+
+  def rotate_attachment_left_90!(%Attachment{} = attachment) do
+# IO.puts "Rotating attachment id #{attachment.id} left 90"
+    do_rotate_attachment(-90, attachment)
+  end
+
+  def rotate_attachment_left_90!(id) when is_integer(id) or is_binary(id) do
+    # retrieve image from cache
+    get_attachment!(id)
+    |> rotate_attachment_left_90!
+  end
+
+  def rotate_attachment_right_90!(%Attachment{} = attachment) do
+# IO.puts "Rotating attachment id #{attachment.id} right 90"
+    do_rotate_attachment(90, attachment)
+  end
+
+  def rotate_attachment_right_90!(id) when is_integer(id) or is_binary(id) do
+    # retrieve image from cache
+    get_attachment!(id)
+    |> rotate_attachment_right_90!
+  end
+
   @doc """
   Gets a single attachment at a given width and height.
 
@@ -177,7 +237,8 @@ defmodule Mpnetwork.Listing do
         # then we will parse the new file's actual dimensions
         {binary_data_content_type, width_pixels, height_pixels} =
           Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
-
+        # clean up the non-tempfile
+        File.rm!(image.path)
         # then we will return this (which currently gets stored in the app cache)
         # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
         attachment

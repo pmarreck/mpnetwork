@@ -69,7 +69,7 @@ defmodule Mpnetwork.Mixfile do
       {:swoosh, "~> 0.10"},
       {:phoenix_swoosh, "~> 0.2"},
       # want to replace with another solution asap lol. https://imagetragick.com/
-      {:mogrify, "~> 0.5.4"},
+      {:mogrify, "~> 0.7.2"},
       # replacement for the above, hopefully!
       # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles

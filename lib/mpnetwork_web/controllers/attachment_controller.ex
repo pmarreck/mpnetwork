@@ -2,7 +2,7 @@ defmodule MpnetworkWeb.AttachmentController do
   use MpnetworkWeb, :controller
 
   require Mpnetwork.Upload
-  alias Mpnetwork.{Listing, Realtor, Upload, Config, Permissions, Cache}
+  alias Mpnetwork.{Listing, Realtor, Upload, Config, Permissions, Cache, Repo}
   alias Mpnetwork.Listing.{Attachment, AttachmentMetadata}
 
   require Logger
@@ -104,7 +104,7 @@ defmodule MpnetworkWeb.AttachmentController do
           {^sha256_hash, _, _} -> true
           ^id -> true
           ^sha256_hash -> true
-          _ -> false
+          _ -> (IO.puts "Skipped key: #{inspect key}") && false
         end
       end)
 
@@ -323,6 +323,37 @@ defmodule MpnetworkWeb.AttachmentController do
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
     end
+  end
+
+  def rotate_left(conn, %{"id" => id}) do
+    # get the old attachment
+    old_attachment = get_cached(id, false)
+    # do the rotation and get back the rotated attachment changeset
+    attachment_changeset = Listing.rotate_attachment_left_90!(old_attachment)
+    # clear cache of any resized versions of the old image (as well as the old image itself)
+    purge_cached(old_attachment)
+    # replace old data with new data at old attachment id by saving
+# IO.inspect "Changeset changes: #{inspect attachment_changeset.changes}"
+    attachment = Repo.update!(attachment_changeset)
+    # redirect to show page
+    conn
+    |> put_flash(:info, "Attachment rotated successfully.")
+    |> redirect(to: attachment_path(conn, :edit, attachment))
+  end
+
+  def rotate_right(conn, %{"id" => id}) do
+    # get the old attachment
+    old_attachment = get_cached(id, false)
+    # do the rotation and get back the rotated attachment changeset
+    attachment_changeset = Listing.rotate_attachment_right_90!(old_attachment)
+    # clear cache of any resized versions of the old image (as well as the old image itself)
+    purge_cached(old_attachment)
+    # replace old data with new data at old attachment id by saving
+    attachment = Repo.update!(attachment_changeset)
+    # redirect to show page
+    conn
+    |> put_flash(:info, "Attachment rotated successfully.")
+    |> redirect(to: attachment_path(conn, :edit, attachment))
   end
 
   def delete(conn, %{"id" => id}) do

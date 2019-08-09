@@ -29,7 +29,7 @@
           <% end %>
         </td>
         <td class="text-right">
-            <span><%= link "#{if attachment.is_image, do: "Enlarge", else: "View/Download"}", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
+            <span><%= link "#{if attachment.is_image, do: "View Full", else: "View/Download"}", to: attachment_path(@conn, :show, attachment), class: "btn btn-default btn-xs" %></span>
           <%= if edit_rights do %>
             <span><%= link "Edit", to: attachment_path(@conn, :edit, attachment), class: "btn btn-default btn-xs" %></span>
             <span><%= link "Delete", to: attachment_path(@conn, :delete, attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xs" %></span>
