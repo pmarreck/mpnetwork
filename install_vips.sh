@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# vips 8.7.2
+# vips 8.8.1
 VIPS_VERSION_MAJOR=8
 VIPS_VERSION_MINOR=8
-VIPS_VERSION_MICRO=0
+VIPS_VERSION_MICRO=1
 vips_site=https://github.com/libvips/libvips/releases/download
 version=$VIPS_VERSION_MAJOR.$VIPS_VERSION_MINOR.$VIPS_VERSION_MICRO
 
@@ -28,3 +28,5 @@ tar xf vips-$version.tar.gz
 cd vips-$version
 CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0 ./configure --prefix=$HOME/vips $*
 make && make install
+rm vips-$version.tar.gz
+rm -rf vips-$version
