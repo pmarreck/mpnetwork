@@ -1,8 +1,7 @@
 defmodule Mpnetwork.Coherence.Rememberable do
   @moduledoc false
-  use Ecto.Schema
+  use Mpnetwork.Ecto.Schema
 
-  import Ecto.Changeset
   import Ecto.Query
 
   alias Coherence.Config
@@ -10,7 +9,7 @@ defmodule Mpnetwork.Coherence.Rememberable do
   schema "rememberables" do
     field(:series_hash, :string)
     field(:token_hash, :string)
-    field(:token_created_at, Timex.Ecto.DateTime)
+    field(:token_created_at, :utc_datetime_usec)
     belongs_to(:user, Config.user_schema())
 
     timestamps()

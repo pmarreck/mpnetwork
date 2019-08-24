@@ -2,8 +2,8 @@
 # but excludes the actual binary data for performance reasons
 
 defmodule Mpnetwork.Listing.AttachmentMetadata do
-  use Ecto.Schema
-  # import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
+
   alias Mpnetwork.Realtor.Listing
 
   schema "attachments" do

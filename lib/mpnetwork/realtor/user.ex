@@ -1,6 +1,6 @@
 defmodule Mpnetwork.User do
   @moduledoc false
-  use Ecto.Schema
+  use Mpnetwork.Ecto.Schema
   use Coherence.Schema
   import Mpnetwork.Utils.Regexen
 
@@ -41,6 +41,14 @@ defmodule Mpnetwork.User do
     timestamps()
   end
 
+  defp convert_any_strings_to_atoms(list) when is_list(list) do
+    list
+    |> Enum.map(fn
+      item when is_binary(item) -> String.to_existing_atom(item)
+      item when is_atom(item) -> item
+    end)
+  end
+
   def changeset(model, params \\ %{}) do
     params =
       params
@@ -62,7 +70,7 @@ defmodule Mpnetwork.User do
         :role_id,
         :url,
         :email_sig
-      ] ++ coherence_fields()
+      ] ++ convert_any_strings_to_atoms(coherence_fields())
     )
     |> validate_required([:username, :email, :office_id])
     |> validate_format(:email, email_regex())

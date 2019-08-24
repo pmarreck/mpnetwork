@@ -2,8 +2,7 @@ defmodule Mpnetwork.Coherence.Invitation do
   @moduledoc """
   Schema to support inviting a someone to create an account.
   """
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
   import Mpnetwork.Utils.Regexen
 
   schema "invitations" do

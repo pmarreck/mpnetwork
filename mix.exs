@@ -44,12 +44,14 @@ defmodule Mpnetwork.Mixfile do
       {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.3", override: true},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
+      {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10.4"},
       {:phoenix_live_reload, "~> 1.1", only: :dev},
       {:gettext, "~> 0.13"},
-      {:coherence, "~> 0.5.2"},
+      # {:coherence, "~> 0.5.2"},
+      # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
+      {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
       {:ex_doc, "~> 0.14", only: :dev},
       # {:timex, "~> 3.5"},
       # moved dep to git commit to squash big dep warning on elixir 1.8:
@@ -75,7 +77,7 @@ defmodule Mpnetwork.Mixfile do
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.4", override: true},
-      {:ecto, "~> 2.2.6", override: true},
+      {:ecto_sql, "~> 3.1.6"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
       {:ecto_enum, "~> 1.3"},
@@ -83,7 +85,8 @@ defmodule Mpnetwork.Mixfile do
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:quantum, ">= 2.2.5"},
       {:ex_rated, "~> 1.3"},
-      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+      {:lz4, "~> 0.2.2", hex: :lz4_erl},
     ]
   end
 

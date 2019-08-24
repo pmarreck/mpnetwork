@@ -1153,7 +1153,7 @@ defmodule Mpnetwork.Realtor do
       ** (Ecto.NoResultsError)
 
   """
-  def get_listing!(id), do: Repo.get!(Listing, id) |> Repo.preload([:broker, :user])
+  def get_listing!(id), do: Repo.get!(Listing, id, preload: [:broker, :user])
 
   @doc """
   Gets a list of listings based on a list of ID's.
@@ -1170,8 +1170,7 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_listings(ids) when is_list(ids) do
-    Repo.all(from(l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]))
-    |> Repo.preload([:broker, :user])
+    Repo.all(from(l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]), preload: [:broker, :user])
   end
 
   @doc """
@@ -1210,6 +1209,8 @@ defmodule Mpnetwork.Realtor do
     |> Repo.update()
   end
 
+  ### Undelete/soft-delete support
+
   @doc """
   Deletes a Listing.
 
@@ -1223,7 +1224,32 @@ defmodule Mpnetwork.Realtor do
 
   """
   def delete_listing(%Listing{} = listing) do
-    Repo.delete(listing)
+    case Repo.delete(listing) do
+      {:ok, listing} -> {:ok, get_deleted_listing(listing.id)}
+      result -> result
+    end
+  end
+
+  # def delete_all_listings(query \\ Listing) do
+  #   Repo.delete_all(query)
+  # end
+
+  def list_deleted_listings() do
+    Repo.all(from(l in Listing, prefix: "public", where: not is_nil(l.deleted_at)))
+  end
+
+  def get_deleted_listing(id) do
+    Repo.get(from(l in Listing, prefix: "public"), id)
+  end
+
+  def undelete_listing(listing) do
+    listing
+    |> Listing.undelete_changeset()
+    |> Repo.update()
+  end
+
+  def hard_delete_listing(listing) do
+    Repo.hard_delete(listing)
   end
 
   @doc """

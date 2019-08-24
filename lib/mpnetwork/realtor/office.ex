@@ -1,6 +1,6 @@
 defmodule Mpnetwork.Realtor.Office do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
+
   import Mpnetwork.Utils.Regexen
   alias Mpnetwork.Realtor.Office
 

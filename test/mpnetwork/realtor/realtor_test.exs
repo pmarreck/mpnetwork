@@ -1,7 +1,7 @@
 defmodule Mpnetwork.RealtorTest do
   use Mpnetwork.DataCase, async: true
 
-  alias Mpnetwork.Realtor
+  alias Mpnetwork.{Realtor, User}
 
   import Mpnetwork.Test.Support.Utilities
 
@@ -216,6 +216,10 @@ defmodule Mpnetwork.RealtorTest do
       eef_led_lighting: nil
     }
 
+    defp with_listing_preloads(listing) do
+      listing |> Repo.preload([:broker, :user])
+    end
+
     def listing_fixture(attrs \\ %{}) do
       # first add an associated user if none exists
       attrs =
@@ -240,16 +244,16 @@ defmodule Mpnetwork.RealtorTest do
         |> Map.merge(attrs)
         |> Realtor.create_listing()
 
-      listing |> Repo.preload([:broker, :user])
+      listing
     end
 
     test "list_listings/2 returns all listings" do
-      listing = listing_fixture()
+      listing = listing_fixture() |> with_listing_preloads
       assert Realtor.list_latest_listings(nil, 10) == [listing]
     end
 
     test "get_listing!/1 returns the listing with given id" do
-      listing = listing_fixture() |> Repo.preload([:user, :broker])
+      listing = listing_fixture()
       assert Realtor.get_listing!(listing.id) == listing
     end
 
@@ -275,7 +279,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.for_rent == true
       assert listing.zip == "11050"
       assert listing.ext_urls == ["http://www.yahoo.com"]
-      assert listing.live_at == ~N[2017-04-17 12:00:00.000000]
+      assert listing.live_at == ~N[2017-04-17 12:00:00]
       assert listing.city == "New York"
       assert listing.num_fireplaces == 3
       assert listing.modern_kitchen_countertops == true
@@ -328,7 +332,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.for_rent == false
       assert listing.zip == "11030-1234"
       assert listing.ext_urls == ["http://www.google.com"]
-      assert listing.live_at == ~N[2017-04-17 12:00:00.000000]
+      assert listing.live_at == ~N[2017-04-17 12:00:00]
       assert listing.city == "some updated city"
       assert listing.num_fireplaces == 43
       assert listing.modern_kitchen_countertops == false
@@ -362,7 +366,7 @@ defmodule Mpnetwork.RealtorTest do
     end
 
     test "update_listing/2 with invalid data returns error changeset" do
-      listing = listing_fixture() |> Repo.preload([:user, :broker])
+      listing = listing_fixture()
       assert {:error, %Ecto.Changeset{}} = Realtor.update_listing(listing, @invalid_attrs)
       assert listing == Realtor.get_listing!(listing.id)
     end
@@ -389,6 +393,81 @@ defmodule Mpnetwork.RealtorTest do
     test "saving a listing with a class of Land is successful if beds/baths missing" do
       # this will just blow up if it's invalid
       listing_fixture(%{class_type: :land, num_bedrooms: nil, num_baths: nil, num_half_baths: nil})
+    end
+
+    # undelete tests
+    test "soft deletes a listing in the database" do
+      listing = listing_fixture() |> with_listing_preloads
+      user = listing.user
+      {:ok, _} = Realtor.delete_listing(listing)
+
+      assert [] = Realtor.list_listings(user)
+      assert_raise Ecto.NoResultsError, fn -> Realtor.get_listing!(listing.id) end
+
+      assert {:error, _} = Realtor.create_listing(%{id: listing.id})
+
+      assert_raise Ecto.StaleEntryError, fn ->
+        Realtor.update_listing(listing, %{address: "1 Deterministic Road"})
+      end
+
+      assert_raise Ecto.StaleEntryError, fn ->
+        Realtor.delete_listing(listing)
+      end
+
+      assert [soft_deleted_listing] = Realtor.list_deleted_listings()
+      assert listings_equal?(listing, soft_deleted_listing)
+    end
+
+
+    # test "soft deletes all listings in the database" do
+    #   listing = listing_fixture()
+    #   assert {1, nil} = Realtor.delete_all_listings()
+
+    #   assert [] = Realtor.list_listings(listing.user)
+    #   assert nil == Realtor.get_listing(listing.id)
+
+    #   assert {:error, _} = Realtor.create_listing(%{id: listing.id})
+
+    #   assert_raise Ecto.StaleEntryError, fn ->
+    #     Realtor.update_listing(listing, %{name: "name"})
+    #   end
+
+    #   assert_raise Ecto.StaleEntryError, fn ->
+    #     Realtor.delete_listing(listing)
+    #   end
+
+    #   assert [soft_deleted_listing] = Realtor.list_deleted_listings()
+    #   assert listings_equal?(listing, soft_deleted_listing)
+    # end
+
+
+    test "undoes a soft delete on a listing in the database" do
+      listing = listing_fixture() |> with_listing_preloads
+      user = listing.user
+      {:ok, listing} = Realtor.delete_listing(listing)
+
+      assert [] = Realtor.list_listings(user)
+
+      {:ok, listing} = Realtor.undelete_listing(listing)
+
+      assert [new_listing] = Realtor.list_listings(user)
+      assert listings_equal?(listing, new_listing)
+    end
+
+    test "completely deletes a listing from the database" do
+      listing = listing_fixture()
+      {:ok, listing} = Realtor.delete_listing(listing)
+      {:ok, _} = Realtor.hard_delete_listing(listing)
+
+      assert [] = Realtor.list_deleted_listings()
+
+      listing = listing_fixture()
+      {:ok, _} = Realtor.delete_listing(listing)
+      assert [_] = Realtor.list_deleted_listings()
+    end
+
+    defp listings_equal?(left, right) do
+      left.id == right.id and left.address == right.address
     end
   end
 

@@ -92,7 +92,9 @@ config :mime, :types, %{
   "application/json" => ["json"]
 }
 
-config :mpnetwork, Mpnetwork.Repo, loggers: [Ecto.LogEntry]
+config :mpnetwork, Mpnetwork.Repo,
+  loggers: [Ecto.LogEntry],
+  migration_timestamps: [type: :utc_datetime_usec]
 
 # Import Timber, structured logging
 # import_config "timber.exs"

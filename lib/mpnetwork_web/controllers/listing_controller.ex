@@ -7,8 +7,7 @@ defmodule MpnetworkWeb.ListingController do
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
-  import Listing,
-    only: [public_client_full_code: 1, public_broker_full_code: 1, public_customer_full_code: 1]
+  import Mpnetwork.Listing.LinkCodeGen
 
   plug(
     :put_layout,
@@ -331,7 +330,7 @@ defmodule MpnetworkWeb.ListingController do
 
   defp _do_public_listing(conn, signature, type_of_listing) do
     {decrypted_id, decrypted_expiration_date} =
-      Listing.from_listing_code(signature, type_of_listing)
+      from_listing_code(signature, type_of_listing)
 
     listing =
       Realtor.get_listing!(decrypted_id) |> Repo.preload([:user, :broker, :colisting_agent])

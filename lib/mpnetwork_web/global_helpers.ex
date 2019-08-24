@@ -50,10 +50,15 @@ defmodule MpnetworkWeb.GlobalHelpers do
     "NEVER! Welcome!"
   end
 
-  def relative_humanized_time(%Ecto.DateTime{} = ecto_datetime) do
-    utc_datetime = ecto_datetime |> convert_ecto_datetime_to_utc_datetime
-    relative_humanized_time(utc_datetime)
-  end
+  # def relative_humanized_time(%Ecto.DateTime{} = ecto_datetime) do
+  #   utc_datetime = ecto_datetime |> convert_ecto_datetime_to_utc_datetime
+  #   relative_humanized_time(utc_datetime)
+  # end
+
+  # def relative_humanized_time(%DateTime{} = datetime) do
+  #   utc_datetime = datetime |> convert_datetime_to_utc_datetime
+  #   relative_humanized_time(utc_datetime)
+  # end
 
   def relative_humanized_time(%DateTime{} = datetime) do
     {:ok, fmt} = Timex.format(datetime, "{relative}", :relative)
@@ -78,12 +83,19 @@ defmodule MpnetworkWeb.GlobalHelpers do
   #   # Regex.replace(~r/(?:ays?|ours?|inutes?)/, fmt, "")
   # end
 
-  defp convert_ecto_datetime_to_utc_datetime(%Ecto.DateTime{} = edt) do
-    edt
-    |> Ecto.DateTime.to_erl()
-    |> NaiveDateTime.from_erl!()
-    |> DateTime.from_naive!("Etc/UTC")
-  end
+  # defp convert_ecto_datetime_to_utc_datetime(%Ecto.DateTime{} = edt) do
+  #   edt
+  #   |> Ecto.DateTime.to_erl()
+  #   |> NaiveDateTime.from_erl!()
+  #   |> DateTime.from_naive!("Etc/UTC")
+  # end
+
+  # defp convert_datetime_to_utc_datetime(%DateTime{} = edt) do
+  #   edt
+  #   |> DateTime.to_erl()
+  #   |> NaiveDateTime.from_erl!()
+  #   |> DateTime.from_naive!("Etc/UTC")
+  # end
 
   def current_datetime_standard_humanized(tz \\ "EDT") do
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
@@ -93,9 +105,16 @@ defmodule MpnetworkWeb.GlobalHelpers do
   def datetime_to_standard_humanized(nil, _, _), do: ""
   def datetime_to_standard_humanized("", _, _), do: ""
 
-  def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, format, tz) do
+  # def datetime_to_standard_humanized(%Ecto.DateTime{} = datetime, format, tz) do
+  #   datetime
+  #   |> Ecto.DateTime.to_erl()
+  #   |> NaiveDateTime.from_erl!()
+  #   |> datetime_to_standard_humanized(format, tz)
+  # end
+
+  def datetime_to_standard_humanized(%DateTime{} = datetime, format, tz) do
     datetime
-    |> Ecto.DateTime.to_erl()
+    |> NaiveDateTime.to_erl()
     |> NaiveDateTime.from_erl!()
     |> datetime_to_standard_humanized(format, tz)
   end

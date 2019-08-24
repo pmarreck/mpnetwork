@@ -1,6 +1,5 @@
 defmodule Mpnetwork.Schema.Cache do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
 
   schema "cache" do
     field :key, Mpnetwork.Ecto.Term

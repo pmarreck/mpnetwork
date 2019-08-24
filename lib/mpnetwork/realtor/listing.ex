@@ -1,7 +1,8 @@
 defmodule Mpnetwork.Realtor.Listing do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.SoftDelete.Schema
   alias Mpnetwork.Realtor.Listing
+
+  @timestamps_opts [type: :utc_datetime_usec]
 
   schema "listings" do
     field(:draft, :boolean)
@@ -225,6 +226,8 @@ defmodule Mpnetwork.Realtor.Listing do
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many(:attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all)
 
+    field(:deleted_at, :utc_datetime_usec)
+
     timestamps()
   end
 
@@ -380,7 +383,7 @@ defmodule Mpnetwork.Realtor.Listing do
     listing
     |> casts(attrs)
     |> validate_required([:user_id, :broker_id, :address])
-    |> constraints
+    |> listing_constraints
   end
 
   # If a (possibly newly) non-draft listing comes through with a NEW or FS listing_status_type
@@ -435,10 +438,14 @@ defmodule Mpnetwork.Realtor.Listing do
       :num_baths,
       :num_half_baths,
     ], :class_type, :land)
-    |> constraints
+    |> listing_constraints
   end
 
-  defp constraints(listing) do
+  def undelete_changeset(struct) do
+    cast(struct, %{deleted_at: nil}, [:deleted_at])
+  end
+
+  defp listing_constraints(%Ecto.Changeset{} = listing) do
     this_year = Timex.today().year
     # now for text BLOBs
     listing
@@ -830,7 +837,8 @@ defmodule Mpnetwork.Realtor.Listing do
       :purchaser,
       :moved_from,
       :pets_ok,
-      :smoking_ok
+      :smoking_ok,
+      :deleted_at
     ])
   end
 end

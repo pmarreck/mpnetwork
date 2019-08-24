@@ -158,7 +158,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
   end
 
   def current_user_stubbed do
-    t = Ecto.DateTime.utc()
+    t = DateTime.utc_now()
 
     %User{
       id: 1,

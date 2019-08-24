@@ -8,8 +8,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
   alias Mpnetwork.{Repo}
   alias Mpnetwork.Realtor.Listing
   # import Mpnetwork.Test.Support.Utilities
-  import Mpnetwork.Listing,
-    only: [public_client_full_code: 1, public_client_full_code: 2, now_in_unix_epoch_days: 0]
+  import Mpnetwork.Listing.LinkCodeGen
 
   @create_attrs %{
     listing_status_type: "FS",

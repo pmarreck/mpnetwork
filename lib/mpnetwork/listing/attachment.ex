@@ -1,6 +1,6 @@
 defmodule Mpnetwork.Listing.Attachment do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
+
   import Ecto.Query
   alias Mpnetwork.Listing.Attachment
   alias Mpnetwork.Realtor.Listing

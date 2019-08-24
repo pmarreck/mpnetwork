@@ -1,6 +1,5 @@
 defmodule Mpnetwork.Realtor.Broadcast do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Mpnetwork.Ecto.Schema
   alias Mpnetwork.Realtor.Broadcast
 
   schema "broadcasts" do
