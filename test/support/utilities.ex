@@ -1,12 +1,16 @@
 defmodule Mpnetwork.Test.Support.Utilities do
   alias Mpnetwork.{Listing, User, Realtor, Repo, Upload}
 
-  defp random_uniquifying_string do
-    trunc(:rand.uniform() * 100_000_000_000_000_000) |> Integer.to_string()
+  def random_uniquifying_string do
+    rand_between(10_000_000_000_000_000, 99_999_999_999_999_999) |> Integer.to_string()
   end
 
-  defp rand_between(first, last) do
+  def rand_between(first, last) do
     trunc(:rand.uniform() * (last - first) + first)
+  end
+
+  def valid_us_phone_num do
+    "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}"
   end
 
   def valid_user_attrs(attrs \\ %{}) do
@@ -19,10 +23,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
       username: email,
       password: "unit test all the things!",
       password_confirmation: "unit test all the things!",
-      cell_phone:
-        "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}",
-      office_phone:
-        "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}",
+      cell_phone: valid_us_phone_num(),
+      office_phone: valid_us_phone_num(),
       office_id: 1,
       role_id: 3,
       url: "http://homepage.com",
@@ -38,10 +40,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
       name: "Realtortest User#{rand_between(10, 99)}",
       # email: email,
       # username: email,
-      cell_phone:
-        "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}",
-      office_phone:
-        "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}",
+      cell_phone: valid_us_phone_num(),
+      office_phone: valid_us_phone_num(),
       # role_id: 4,
       # current_password: "unit test all the things!",
       # password: "crazytalk!",
@@ -84,12 +84,12 @@ defmodule Mpnetwork.Test.Support.Utilities do
 
   def valid_office_attrs(attrs \\ %{}) do
     %{
-      name: "Coach#{trunc(:rand.uniform() * 1_000_000_000_000)}",
-      address: "1 Test Drive #{trunc(:rand.uniform() * 1_000_000_000_000)}",
+      name: "Coach" <> random_uniquifying_string(),
+      address: "1 Test Drive " <> random_uniquifying_string(),
       city: "Port Washington",
       state: "NY",
       zip: "11050",
-      phone: "(#{rand_between(100, 999)}) #{rand_between(100, 999)}-#{rand_between(1000, 9999)}"
+      phone: valid_us_phone_num()
     } |> Map.merge(attrs)
   end
 

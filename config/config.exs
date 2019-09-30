@@ -17,7 +17,8 @@ config :mpnetwork,
   # 20-ish photos plus maybe a pdf or 2
   max_attachments_per_listing: 25,
   cache_name: :attachment_cache,
-  default_cache_expiry: [months: -2] # passed directly to Timex.shift
+  default_cache_expiry: [months: -2], # passed directly to Timex.shift
+  default_session_expiry: [months: -6]
 
 # Configures the endpoint
 config :mpnetwork, MpnetworkWeb.Endpoint,
@@ -35,7 +36,8 @@ config :mpnetwork, Mpnetwork.Scheduler,
   jobs: [
     # Runs every midnight:
     {"@daily", {Mpnetwork.Jobs, :set_expired_listings_to_exp_status, []}},
-    {"@daily", {Mpnetwork.Jobs, :delete_old_cache_entries, []}}
+    {"@daily", {Mpnetwork.Jobs, :delete_old_cache_entries, []}},
+    {"@daily", {Mpnetwork.Jobs, :delete_old_sessions, []}}
   ]
 
 # Configures Elixir's Logger
@@ -72,7 +74,10 @@ config :coherence,
   max_failed_login_attempts: 6,
   unlock_timeout_minutes: 10,
   unlock_token_expire_minutes: 60,
-  rememberable_cookie_expire_hours: 14 * 24
+  rememberable_cookie_expire_hours: 30 * 24,
+  session_model: Mpnetwork.Schema.Session,
+  session_repo: Mpnetwork.Repo,
+  schema_key: :id
 
 config :coherence, MpnetworkWeb.Coherence.Mailer,
   adapter: Swoosh.Adapters.SparkPost,
