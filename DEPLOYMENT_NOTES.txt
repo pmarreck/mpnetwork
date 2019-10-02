@@ -1,0 +1,3 @@
+Note: Not all Erlang/Elixir versions are supported out of the box. Have to check this:
+https://github.com/HashNuke/heroku-buildpack-elixir/blob/master/README.md#version-support
+You will get errors on deployment if you select an incompatible version via the buildpack config.
