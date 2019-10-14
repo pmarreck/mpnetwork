@@ -54,7 +54,9 @@ defmodule Mpnetwork.ReleaseTasks do
     app = Keyword.get(repo.config, :otp_app)
     IO.puts("Running migrations for #{app}")
     migrations_path = priv_path_for(repo, "migrations")
-    Ecto.Migrator.run(repo, migrations_path, :up, all: true)
+    # added a pattern match just to ensure migrations actually run and don't return an error value
+    # successful run will return a list, either empty or with the migration numbers that actually ran
+    true = is_list(Ecto.Migrator.run(repo, migrations_path, :up, all: true))
   end
 
   defp run_seeds do
