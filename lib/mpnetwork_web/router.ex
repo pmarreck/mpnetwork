@@ -81,6 +81,8 @@ defmodule MpnetworkWeb.Router do
   scope "/", MpnetworkWeb do
     pipe_through([:protected, :admin_protected])
     resources("/offices", OfficeController)
+    get("/users/locked_users", UserController, :locked_users)
+    post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
   end
 

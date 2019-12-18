@@ -41,12 +41,12 @@ defmodule Mpnetwork.Mixfile do
     [
       {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.10.4"},
+      {:phoenix_html, "~> 2.13"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.13"},
       # {:coherence, "~> 0.5.2"},
@@ -57,16 +57,16 @@ defmodule Mpnetwork.Mixfile do
       # moved dep to git commit to squash big dep warning on elixir 1.8:
       # https://github.com/bitwalker/timex/commit/f59156b59552ca113c3d4b978d3773997971c67c
       {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
-      {:number, "~> 0.5"},
+      {:number, "~> 1.0"},
       # {:timber_ecto, "~> 2.0"},
       # {:timber_plug, "~> 1.0"},
       # {:timber_phoenix, "~> 1.0"},
       # {:timber, "~> 3.1"},
-      {:ex_image_info, "~> 0.1.1"},
+      {:ex_image_info, "~> 0.2"},
       # provides `mix eliver.bump` for hot prod upgrades
       {:eliver, "~> 2.0"},
       # {:cachex, "~> 2.1"},
-      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:swoosh, "~> 0.10"},
       {:phoenix_swoosh, "~> 0.2"},
@@ -76,16 +76,16 @@ defmodule Mpnetwork.Mixfile do
       # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
-      {:ex_crypto, "~> 0.4", override: true},
-      {:ecto_sql, "~> 3.1.6"},
+      {:ex_crypto, "~> 0.10"},
+      {:ecto_sql, "~> 3.3"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
       {:ecto_enum, "~> 1.3"},
-      {:html_sanitize_ex, "~> 1.3.0-rc3"},
-      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:html_sanitize_ex, "~> 1.4"},
+      {:dialyxir, "~> 0.5.0", only: :dev, runtime: false},
       {:quantum, ">= 2.2.5"},
       {:ex_rated, "~> 1.3"},
-      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:lz4, "~> 0.2.2", hex: :lz4_erl},
     ]
   end

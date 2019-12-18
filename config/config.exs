@@ -5,6 +5,9 @@
 # is restricted to this project.
 use Mix.Config
 
+# Phoenix configuration
+config :phoenix, :json_library, Jason
+
 # General application configuration
 config :mpnetwork,
   ecto_repos: [Mpnetwork.Repo],

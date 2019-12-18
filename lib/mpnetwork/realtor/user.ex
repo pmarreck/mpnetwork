@@ -35,8 +35,9 @@ defmodule Mpnetwork.User do
     has_many(:listings, Mpnetwork.Realtor.Listing, on_delete: :delete_all)
     has_many(:broadcasts, Mpnetwork.Realtor.Broadcast, on_delete: :delete_all)
 
-    # adds :password_hash
+    # adds :password_hash, :failed_attempts, :locked_at
     coherence_schema()
+
 
     timestamps()
   end

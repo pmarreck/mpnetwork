@@ -5,13 +5,42 @@ defmodule MpnetworkWeb.UserController do
 
   def index(conn, _params) do
     users =
-      if Permissions.site_admin?(conn.assigns.current_user) do
+      if Permissions.site_admin?(current_user(conn)) do
         Realtor.list_users()
       else
         Realtor.list_users(conn.assigns.current_office)
       end
 
     render(conn, "index.html", users: users)
+  end
+
+  def locked_users(conn, _params) do
+    users =
+      if Permissions.site_admin?(current_user(conn)) do
+        Realtor.list_locked_users()
+      else
+        Realtor.list_locked_users(conn.assigns.current_office)
+      end
+
+    render(conn, "locked_users.html", users: users)
+  end
+
+  def unlock_user(conn, %{"id" => id}) do
+    user = Realtor.get_user!(id)
+    if Permissions.office_admin_of_office_or_site_admin?(current_user(conn), user.broker) do
+      case Realtor.update_user(user, %{"failed_attempts" => 0, "locked_at" => nil}) do
+        {:ok, _user} ->
+          conn
+          |> put_flash(:info, "User unlocked successfully.")
+          |> redirect(to: user_path(conn, :locked_users))
+        {:error, %Ecto.Changeset{} = _changeset} ->
+          conn
+          |> put_flash(:error, "There was a problem unlocking this user.")
+          |> redirect(to: user_path(conn, :locked_users))
+      end
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
   end
 
   # New users should be invited and go through that workflow

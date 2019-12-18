@@ -67,6 +67,42 @@ defmodule Mpnetwork.Realtor do
   end
 
   @doc """
+  Returns the list of locked users.
+
+  ## Examples
+
+      iex> list_locked_users()
+      [%User{}, ...]
+
+  """
+  def list_locked_users do
+    Repo.all(
+      from(
+        u in User,
+        join: o in assoc(u, :broker),
+        preload: [broker: o],
+        where: not(is_nil(u.locked_at)) and u.failed_attempts > 0,
+        order_by: [asc: o.name, asc: o.city, asc: u.name]
+      )
+    )
+  end
+
+  def list_locked_users(nil), do: list_locked_users()
+
+  def list_locked_users(office) do
+    Repo.all(
+      from(
+        u in User,
+        join: o in assoc(u, :broker),
+        preload: [broker: o],
+        where: u.office_id == ^office.id,
+        where: not(is_nil(u.locked_at)) and u.failed_attempts > 0,
+        order_by: [asc: u.name]
+      )
+    )
+  end
+
+  @doc """
   Returns the list of broadcasts.
 
   ## Examples

@@ -1,0 +1,31 @@
+<h2>Locked Users</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name/Email</th>
+      <th>Phone #'s</th>
+      <th>Office</th>
+      <th>Role</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td><%= user.name %><br/><%= user.email %></td>
+      <td><%= if user.office_phone && user.office_phone != "", do: "(o) #{user.office_phone}" %><br/>
+      <%= if user.cell_phone && user.cell_phone != "", do: "(c) #{user.cell_phone}" %></td>
+      <td><%= user.broker && "#{user.broker.name}#{if user.broker.city != "", do: " @ "}#{user.broker.city}" %></td>
+      <td><%= role_id_to_name(user.role_id) %></td>
+
+      <td class="text-right">
+        <span><%= link "Detail", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+        <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(@conn), user) && is_locked?(user) do %>
+          <span><%= link "Unlock", to: user_path(@conn, :unlock_user, user), method: :post, class: "btn btn-danger btn-xs" %></span>
+        <% end %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
