@@ -23,11 +23,12 @@ defmodule Mpnetwork.Coherence.Rememberable do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
+  @rememberable_fields ~w[series_hash token_hash token_created_at user_id]a
   @spec changeset(Ecto.Schema.t(), Map.t()) :: Ecto.Changeset.t()
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, ~w(series_hash token_hash token_created_at user_id))
-    |> validate_required(~w(series_hash token_hash token_created_at user_id)a)
+    |> cast(params, @rememberable_fields)
+    |> validate_required(@rememberable_fields)
   end
 
   @doc """
