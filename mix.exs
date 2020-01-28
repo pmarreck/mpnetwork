@@ -80,7 +80,7 @@ defmodule Mpnetwork.Mixfile do
       {:ecto_sql, "~> 3.3"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
-      {:ecto_enum, "~> 1.3"},
+      {:ecto_enum, "~> 1.4"},
       {:html_sanitize_ex, "~> 1.4"},
       {:dialyxir, "~> 0.5.0", only: :dev, runtime: false},
       {:quantum, ">= 2.2.5"},

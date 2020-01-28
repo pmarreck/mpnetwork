@@ -474,7 +474,8 @@ defmodule MpnetworkWeb.ListingController do
             case Mailer.deliver(sent_email) do
               {:ok, results} -> {true, results}
               {:error, :timeout} -> {false, :timeout}
-              {:error, reason} -> {false, reason}
+              {:error, {httpcode, %{"errors" => errors}}} when is_integer(httpcode) and is_list(errors) -> {false, errors |> Enum.map(fn %{"code" => code, "message" => message} -> "Error code #{code}: #{message}" end) |> Enum.join(", ")}
+              {:error, reason} -> {false, inspect reason}
               unknown -> {false, unknown}
             end
 
