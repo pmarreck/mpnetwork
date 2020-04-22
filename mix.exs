@@ -42,12 +42,13 @@ defmodule Mpnetwork.Mixfile do
       {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.1"},
-      {:phoenix, "~> 1.4"},
+      {:phoenix, "~> 1.4.16"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.13"},
+      {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_live_dashboard, "~> 0.1"},
       {:gettext, "~> 0.13"},
       # {:coherence, "~> 0.5.2"},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
@@ -80,7 +81,9 @@ defmodule Mpnetwork.Mixfile do
       {:ecto_sql, "~> 3.3"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
-      {:ecto_enum, "~> 1.4"},
+      # {:ecto_enum, "~> 1.4"},
+      # Repinned to a commit on 20200422 due to mix dependency fixes that did not result in a version bump:
+      {:ecto_enum, git: "https://github.com/gjaldon/ecto_enum.git", commit: "ab13face20729deb0cb2f325dc052fd6fd05c26a"},
       {:html_sanitize_ex, "~> 1.4"},
       {:dialyxir, "~> 0.5.0", only: :dev, runtime: false},
       {:quantum, ">= 2.2.5"},

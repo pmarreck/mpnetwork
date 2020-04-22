@@ -5,6 +5,8 @@ defmodule MpnetworkWeb.Endpoint do
     websocket: [timeout: 45_000],
     longpoll: [timeout: 45_000]
 
+  socket "/live", Phoenix.LiveView.Socket
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest

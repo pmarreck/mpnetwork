@@ -1,6 +1,7 @@
 defmodule MpnetworkWeb.Router do
   use MpnetworkWeb, :router
   use Coherence.Router
+  import Phoenix.LiveDashboard.Router
   alias Mpnetwork.Repo
 
   # def create_timber_user_context(conn, _opts) do
@@ -84,6 +85,7 @@ defmodule MpnetworkWeb.Router do
     get("/users/locked_users", UserController, :locked_users)
     post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
+    live_dashboard "/dashboard"
   end
 
   scope "/", MpnetworkWeb do
