@@ -9,9 +9,11 @@ defmodule Mpnetwork.Application do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Mpnetwork.Repo, []),
+      Mpnetwork.Repo,
+      MpnetworkWeb.Telemetry,
       # Start the endpoint when the application starts
-      supervisor(MpnetworkWeb.Endpoint, []),
+      # supervisor(MpnetworkWeb.Endpoint, []),
+      MpnetworkWeb.Endpoint,
       # Start your own worker by calling: Mpnetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(Mpnetwork.Worker, [arg1, arg2, arg3]),
       # worker(Cachex, [

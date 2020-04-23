@@ -31,6 +31,10 @@ defmodule MpnetworkWeb.Endpoint do
 
   plug(Plug.HealthCheck)
 
+  plug Phoenix.LiveDashboard.RequestLogger,
+    param_key: "request_logger",
+    cookie_key: "request_logger"
+
   plug(Plug.RequestId)
 
   plug(

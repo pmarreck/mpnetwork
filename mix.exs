@@ -48,7 +48,7 @@ defmodule Mpnetwork.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.1"},
+      {:phoenix_live_dashboard, "~> 0.2"},
       {:gettext, "~> 0.13"},
       # {:coherence, "~> 0.5.2"},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
@@ -90,6 +90,8 @@ defmodule Mpnetwork.Mixfile do
       {:ex_rated, "~> 1.3"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:lz4, "~> 0.2.2", hex: :lz4_erl},
+      {:telemetry_poller, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.4"},
     ]
   end
 
