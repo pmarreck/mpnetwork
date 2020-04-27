@@ -41,9 +41,9 @@ defmodule Mpnetwork.Mixfile do
     [
       {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
-      {:plug_cowboy, "~> 2.1"},
-      {:phoenix, "~> 1.4.16"},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:plug_cowboy, "~> 2.2"},
+      {:phoenix, "~> 1.5.1"},
+      {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14"},
@@ -54,10 +54,10 @@ defmodule Mpnetwork.Mixfile do
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
       {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
       {:ex_doc, "~> 0.14", only: :dev},
-      # {:timex, "~> 3.5"},
+      {:timex, "~> 3.6.1"},
       # moved dep to git commit to squash big dep warning on elixir 1.8:
       # https://github.com/bitwalker/timex/commit/f59156b59552ca113c3d4b978d3773997971c67c
-      {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
+      # {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
       {:number, "~> 1.0"},
       # {:timber_ecto, "~> 2.0"},
       # {:timber_plug, "~> 1.0"},

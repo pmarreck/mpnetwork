@@ -29,7 +29,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   secret_key_base: "0UYiCVV96M2bKbnZuilr1oNUY+NRJz8F07d3nWVjUOEwBHmxohBn2W4qjz+9oVUd",
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192, idle_timeout: 90_000]],
-  pubsub: [name: Mpnetwork.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: Mpnetwork.PubSub,
   live_view: [signing_salt: "PYrQj52mo6Vea1U5vw7Pr6DaSTe6N2Gn"]
 
 # Configures the job scheduler via Quantum

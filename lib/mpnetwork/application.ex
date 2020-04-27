@@ -8,8 +8,11 @@ defmodule Mpnetwork.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      # Start the PubSub system
+      {Phoenix.PubSub, name: Mpnetwork.PubSub},
       # Start the Ecto repository
       Mpnetwork.Repo,
+      # Start telemetry for Phoenix LiveDashboard
       MpnetworkWeb.Telemetry,
       # Start the endpoint when the application starts
       # supervisor(MpnetworkWeb.Endpoint, []),
