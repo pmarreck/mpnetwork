@@ -28,7 +28,7 @@ exports.config = {
           "css/*.scss"
         ],
         "css/public_listing.css": [
-          "css/public_listing.css"
+          "css/public_listing.scss"
         ]
       }
     },

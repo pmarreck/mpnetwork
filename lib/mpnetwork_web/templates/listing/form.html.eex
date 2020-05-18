@@ -1877,7 +1877,7 @@
           <% end %>
 
           <div class="form-group">
-            <%= label f, :ext_urls, "Add an external URL", class: "control-label" %><i>&nbsp;&nbsp;(You can add multiple URL's by saving the listing after each one)</i>
+            <%= label f, :ext_urls, "Add an external URL (such as to a virtual tour, etc.)", class: "control-label" %><i>&nbsp;&nbsp;(You can add multiple URL's by saving the listing after each one)</i>
             <%= text_input f, :ext_urls, name: "listing[ext_urls][]", value: "", class: "form-control" %>
           </div>
 

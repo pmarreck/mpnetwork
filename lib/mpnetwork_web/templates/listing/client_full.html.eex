@@ -119,12 +119,42 @@
               </div>
             </div>
           </div>
-          <div class="group orientation-vertical" style="width: 250px;">
-            <div class="group orientation-vertical last-child" style="width: 250px;">
+          <div class="group orientation-vertical" style="width: 240px;">
+            <div class="group orientation-vertical last-child" style="width: 240px;">
               <div class="multi-photo" style="display: table-cell; vertical-align: middle">
-                <%= if @showcase_image && @showcase_image.is_image do %>
-                  <img class="main-listing-photo" src="<%= attachment_path(@conn, :show_public, (@showcase_image.sha256_hash |> Base.url_encode64), w: 250, h: 192) %>" />
-                <% end %>
+<% {photo_attachments, _other_attachments} = Enum.split_with(@attachments, &(&1.is_image)) %>
+<% primary_photo = Enum.find(photo_attachments, List.first(photo_attachments), &(&1.primary)) %>
+                <div id="photo-carousel" class="carousel slide" data-interval="false">
+                  <ol class="carousel-indicators">
+                    <%= for {attachment, idx} <- Enum.with_index(photo_attachments) do %>
+                      <li data-target="#photo-carousel" data-slide-to="<%= idx %>"<%= if attachment.primary, do: " class=\"active\"", else: "" %>></li>
+                    <% end %>
+                  </ol>
+                  <div class="carousel-inner">
+                    <%= for attachment <- photo_attachments do %>
+                      <%
+                        # NOTE: If no photos have a div with class "active", the carousel will BREAK. FYI!!!
+                        # That is why I default to the first photo above if no primary photo exists yet
+                      %>
+                      <div class="item<%= if attachment.id == primary_photo.id, do: " active", else: "" %>">
+                        <%= link to: attachment_path(@conn, :show, attachment), title: "Click to view in original size" do %>
+                          <img class="main-listing-photo img-responsive" src="<%= attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192) %>" />
+                        <% end %>
+                        <%= if attachment.primary do %>
+                          <div class="carousel-caption">
+                            Featured Photo
+                          </div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <a class="left carousel-control" href="#photo-carousel" data-slide="prev">
+                    <span class="fa fa-angle-left"></span>
+                  </a>
+                  <a class="right carousel-control" href="#photo-carousel" data-slide="next">
+                    <span class="fa fa-angle-right"></span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

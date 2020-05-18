@@ -1,3 +1,18 @@
+  @import '../node_modules/bootstrap/dist/css/bootstrap';
+  @import '../node_modules/admin-lte/dist/css/AdminLTE';
+
+  @media print {
+    .carousel-control,
+    .carousel-indicators {
+      display: none !important;
+    }
+  }
+
+  .carousel-control {
+    width: 10% !important;
+    left: -10px !important;
+  }
+
   .ui-box {
     position: absolute;
     top: 0px;
@@ -15,9 +30,9 @@
     bottom: 5px;
     background-color: #4692ff;
     z-index: -2;
-    border-radius: 16px;
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
+    border-radius: 16px;
     opacity: 0.90;
   }
 
@@ -134,6 +149,7 @@
     background-repeat: no-repeat;
     /*background-image: url("../../Lib/SDS/Plugins/Box/Images/DarkBottomRight.png");*/
   }
+
   /* end @import url("../Lib/SDS/Plugins/Box/Box.css"); */
 
   .ui-dialog-titlebar {
@@ -175,6 +191,7 @@
   .ui-dialog-buttonpane button {
     min-width: 80px;
   }
+
   /* end @import url("../Lib/SDS/Plugins/Box/DialogBox.css"); */
 
   .popup {
@@ -291,6 +308,7 @@
   .msie .popup td.bottom .bubbletail {
     /*background: url("../../Lib/SDS/Plugins/Bubble/IE/bubble-tail2.png") no-repeat center !important;*/
   }
+
   /* end @import url("../Lib/SDS/Plugins/Bubble/bubble.css"); */
 
   .search-field .field-label {
@@ -449,6 +467,7 @@
     background-position: 0 0;
     box-shadow: none;
   }
+
   /* end @import url("../Lib/SDS/Forms/Search/SearchField.css"); */
 
   .ui-helper-hidden {
@@ -1714,6 +1733,7 @@
     filter: Alpha(Opacity=30);
     border-radius: 8px;
   }
+
   /* end @import url("../Lib/External/jQueryUI/1.11.4/jquery-ui.css"); */
 
   .select2-container {
@@ -2350,6 +2370,7 @@
   .select2-container--classic.select2-container--open .select2-dropdown {
     border-color: #5897fb
   }
+
   /* end @import url("../Lib/External/jQueryPlugins/select2.min.css"); */
 
   #SaveSearchForm {
@@ -2373,6 +2394,7 @@
   div.spinner-container img {
     padding-bottom: 32px;
   }
+
   /* end @import url("Criteria.Save.css"); */
 
   .dynamic-panel-toolbar {
@@ -2576,6 +2598,7 @@
   .dynamic-panel .toolbar-item-label {
     display: inline;
   }
+
   /* end @import url("Criteria.Dynamic.css"); */
 
   #ui-datepicker-div {
@@ -2915,6 +2938,7 @@
     height: 100%;
     margin-top: 0px;
   }
+
   /* end @import url("Criteria.css"); */
 
   .autocomplete-w1 {
@@ -2953,6 +2977,7 @@
     font-weight: normal;
     color: #3399FF;
   }
+
   /* end @import url("../Lib/External/jQueryPlugins/autocomplete/styles.css"); */
 
   .master-dynamic-nav {
@@ -5433,6 +5458,7 @@
   #MicrosoftNav #navbarLabelToggleInput {
     display: none;
   }
+
   /* end @import url("Results.css"); */
 
   @page {
@@ -5444,6 +5470,7 @@
   .template-report .hidden {
     display: none !important;
   }
+
   /*
   this causes trouble with the virtual earth map control.
   .template-report img { border: solid 1px #ccc; width:270px; }
@@ -5518,6 +5545,7 @@
   .template-report div.group {
     padding: 0 !important;
   }
+
   /* fix ie7 rounding error on percentage widths */
 
   .msie7 .template-report .last-child {
@@ -5561,3 +5589,4 @@
   .template-report div.orientation-vertical>.report-line+.behavior-hidden+.behavior-hidden+.report-line {
     display: none !important;
   }
+  

@@ -340,6 +340,7 @@ defmodule MpnetworkWeb.ListingController do
     co_agent = listing.colisting_agent
     id = listing.id
     %{^id => showcase_image} = Listing.primary_images_for_listings([listing], AttachmentMetadata)
+    attachments = Listing.list_attachments(id, AttachmentMetadata)
 
     case DateTime.compare(decrypted_expiration_date, Timex.now()) do
       :gt ->
@@ -350,7 +351,8 @@ defmodule MpnetworkWeb.ListingController do
           broker: broker,
           agent: agent,
           co_agent: co_agent,
-          showcase_image: showcase_image
+          showcase_image: showcase_image,
+          attachments: attachments
         )
 
       _ ->

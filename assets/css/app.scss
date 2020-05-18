@@ -9,6 +9,19 @@
 @import '../node_modules/bootstrap-table/dist/bootstrap-table';
 @import '../node_modules/dropzone/dist/dropzone';
 
+@media print {
+  .carousel-control,
+  .carousel-indicators {
+    display: none !important;
+  }
+}
+
+.carousel-control {
+  width: 10% !important;
+  left: -10px !important;
+}
+
+
 // @import 'node_modules/quill/dist/quill.bubble';
 // .fancy {
 //   width: 100%
