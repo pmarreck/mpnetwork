@@ -69,7 +69,7 @@ defmodule Mpnetwork.Mixfile do
       # {:cachex, "~> 2.1"},
       {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
-      {:swoosh, "~> 0.10"},
+      {:swoosh, "~> 0.25.4"},
       {:phoenix_swoosh, "~> 0.2"},
       # want to replace with another solution asap lol. https://imagetragick.com/
       {:mogrify, "~> 0.7.2"},
