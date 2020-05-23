@@ -1,3 +1,8 @@
 Note: Not all Erlang/Elixir versions are supported out of the box. Have to check this:
 https://github.com/HashNuke/heroku-buildpack-elixir/blob/master/README.md#version-support
 You will get errors on deployment if you select an incompatible version via the buildpack config.
+
+NOTES ON DOWNGRADING
+Make sure to rm -rf BOTH the deps AND _build dirs.
+If you are using apt to manage the dep and want to hold it, use `sudo apt-mark [un]hold esl-erlang`
+and to look at held packages use `apt-mark showhold`

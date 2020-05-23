@@ -29,6 +29,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
 
 # Do not print debug messages in production
 config :logger, level: :info
+# config :logger, :console, format: "[$level] $message\n"
 
 # ## SSL Support
 #
@@ -77,6 +78,7 @@ config :logger, level: :info
 # Database config
 # Configure your database
 # Note that {:system, "DATABASE_URL"} is deprecated so the db url is now set in the init callback in Mpnetwork.Repo
+
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),

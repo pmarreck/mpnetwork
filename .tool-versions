@@ -1,7 +1,8 @@
 # "system" means use whatever system-installed version there is
 # (mine are usually the most current)
+# Erlang had an SSL or crypto issue when installing 22.3.4.1 via asdf, so it's installed via apt for now
 erlang system
-elixir system
+elixir 1.10.3
 postgres system
 nodejs 12.4.0
 ruby system

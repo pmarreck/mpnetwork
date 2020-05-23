@@ -6,7 +6,7 @@ jobs:
     - stage: test
       language: elixir
       elixir: 1.10.3
-      otp_release: 23.0
+      otp_release: 22.3.4
       services:
         - postgresql
       before_install:
@@ -36,7 +36,7 @@ jobs:
     - stage: deploy
       language: elixir
       elixir: 1.10.3
-      otp_release: 23.0
+      otp_release: 22.3.4
       before_script: skip
       install: skip
       script:

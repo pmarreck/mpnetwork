@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+mix deps.get
+mix compile
+export SECRET_KEY_BASE="$(mix phx.gen.secret)"
+# the following should already be set in the dev environment
+# export DATABASE_URL="postgresql://user:pass@localhost:5432/foo"
+MIX_ENV=prod mix distillery.release --env=prod
+# if you are a running distillery below 2.1, then run this instead: MIX_ENV=prod mix release --env=prod
+APP_NAME=mpnetwork
+MY_HOSTNAME=example.com MY_COOKIE=t3HlcnNqbBlKnmGzvxT1lfjokBKdRcCWce5ZuUb4ZUkZCNJdyVUyFqszPzU2R REPLACE_OS_VARS=true MY_NODE_NAME=foo@127.0.0.1 PORT=8080 _build/prod/rel/$APP_NAME/bin/$APP_NAME foreground
+curl -H "X-Forwarded-Proto: https" localhost:8080
