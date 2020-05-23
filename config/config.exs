@@ -26,11 +26,11 @@ config :mpnetwork,
 # Configures the endpoint
 config :mpnetwork, MpnetworkWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
   http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192, idle_timeout: 90_000]],
   pubsub_server: Mpnetwork.PubSub,
-  live_view: [signing_salt: System.get_env("LIVE_VIEW_SIGNING_SALT")]
+  live_view: [signing_salt: System.fetch_env!("LIVE_VIEW_SIGNING_SALT")]
 
 # Configures the job scheduler via Quantum
 config :mpnetwork, Mpnetwork.Scheduler,
@@ -85,7 +85,7 @@ config :coherence,
 
 config :coherence, MpnetworkWeb.Coherence.Mailer,
   adapter: Swoosh.Adapters.SparkPost,
-  api_key: System.get_env("SPARKPOST_API_KEY"),
+  api_key: System.fetch_env!("SPARKPOST_API_KEY"),
   endpoint: "https://api.sparkpost.com/api/v1"
 
 # %% End Coherence Configuration %%
@@ -93,7 +93,7 @@ config :coherence, MpnetworkWeb.Coherence.Mailer,
 # Configures Swoosh (email wrapper) for the mpnetwork app
 config :mpnetwork, Mpnetwork.Mailer,
   adapter: Swoosh.Adapters.SparkPost,
-  api_key: System.get_env("SPARKPOST_API_KEY"),
+  api_key: System.fetch_env!("SPARKPOST_API_KEY"),
   endpoint: "https://api.sparkpost.com/api/v1"
 
 # Configures Mime

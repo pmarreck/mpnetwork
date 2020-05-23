@@ -25,7 +25,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   static_url: [scheme: "https", host: "${STATIC_URL}", port: 443],
   force_ssl: [hsts: true, rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: "${SECRET_KEY_BASE}"
+  secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -81,7 +81,7 @@ config :logger, level: :info
 
 config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
+  url: System.fetch_env!("DATABASE_URL"),
   # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
   pool_size: 9, # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
   ssl: true
