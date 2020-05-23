@@ -25,7 +25,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   static_url: [scheme: "https", host: "${STATIC_URL}", port: 443],
   force_ssl: [hsts: true, rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: "${SECRET_KEY_BASE}"
+  secret_key_base: {:system, "SECRET_KEY_BASE"}
 
 # Do not print debug messages in production
 config :logger, level: :info
