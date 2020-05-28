@@ -26,7 +26,7 @@ defmodule Mpnetwork.Mixfile do
     [
       # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated]
+      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated, :os_mon]
     ]
   end
 
@@ -95,6 +95,8 @@ defmodule Mpnetwork.Mixfile do
       # Removing -lerl_interface (which was deprecated in OTP23) from the libs allows it to compile.
       # I have no idea if it generates correct code, but it compiles.
       # in `./deps/lz4/c_src/Makefile`, on line 36: `LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lei`
+      # @tsloughter not long after said...
+      # Suggest using the git master version since it uses the rebar3 plugin that works on OTP-23
       {:telemetry_poller, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
     ]
