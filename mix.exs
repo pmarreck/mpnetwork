@@ -89,7 +89,12 @@ defmodule Mpnetwork.Mixfile do
       {:quantum, ">= 2.2.5"},
       {:ex_rated, "~> 1.3"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:lz4, "~> 0.2.2", hex: :lz4_erl},
+      {:lz4, "~> 0.2.2", hex: :lz4_erl}, # note: may not build on OTP23:
+      # @vanvoljg on Elixir Slack #general channel @ 5/27/20 8:21 PM:
+      # As an update on my end, I was able to get erlang_lz4 to compile with OTP23 by modifying the makefile.
+      # Removing -lerl_interface (which was deprecated in OTP23) from the libs allows it to compile.
+      # I have no idea if it generates correct code, but it compiles.
+      # in `./deps/lz4/c_src/Makefile`, on line 36: `LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lei`
       {:telemetry_poller, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
     ]
