@@ -13,7 +13,7 @@
       <br/>
     <% end %>
     <span><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xl" %></span>
-    <%= if !Permissions.read_only?(@current_user) && @listing.listing_status_type not in [:NEW, :FS, :EXT, :UC, :PC] do %>
+    <%= if @listing.listing_status_type not in [:NEW, :FS, :EXT, :UC, :PC] do %>
       <span><%= link "Clone this listing", to: listing_path(@conn, :new, %{clone_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
     <% end %>
     <span><%= link "View listing sheet (broker full)", to: public_broker_full_path(@conn, :broker_full, public_broker_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
