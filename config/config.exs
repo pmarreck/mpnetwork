@@ -32,6 +32,9 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   pubsub_server: Mpnetwork.PubSub,
   live_view: [signing_salt: System.fetch_env!("LIVE_VIEW_SIGNING_SALT")]
 
+# Configures the tz database for Quantum
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 # Configures the job scheduler via Quantum
 config :mpnetwork, Mpnetwork.Scheduler,
   overlap: false,

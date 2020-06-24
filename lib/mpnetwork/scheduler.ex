@@ -1,3 +1,3 @@
 defmodule Mpnetwork.Scheduler do
-  use Quantum.Scheduler, otp_app: :mpnetwork
+  use Quantum, otp_app: :mpnetwork
 end
