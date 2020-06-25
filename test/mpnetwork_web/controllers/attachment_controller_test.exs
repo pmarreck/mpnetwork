@@ -1,9 +1,7 @@
 defmodule MpnetworkWeb.AttachmentControllerTest do
-  # use ExUnit.Case, async: true
+  use MpnetworkWeb.ConnCase, async: true
 
   import Ecto.Query, warn: false
-
-  use MpnetworkWeb.ConnCase, async: true
 
   alias Mpnetwork.{Listing, Upload, Repo}
   alias Listing.Attachment

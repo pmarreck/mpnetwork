@@ -23,3 +23,6 @@ config :mpnetwork, Mpnetwork.Repo,
 config :mpnetwork, Mpnetwork.Mailer, adapter: Swoosh.Adapters.Test
 
 config :coherence, MpnetworkWeb.Coherence.Mailer, adapter: Swoosh.Adapters.Test
+
+# Change password hash algorithm to a no-op to make tests faster
+config :coherence, :password_hashing_alg, Mpnetwork.Utils.NoopHash

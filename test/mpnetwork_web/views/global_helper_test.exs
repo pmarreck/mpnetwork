@@ -1,5 +1,5 @@
 defmodule Mpnetwork.GlobalHelperTest do
-  use MpnetworkWeb.ConnCase, async: true
+  use ExUnit.Case, async: true
   alias MpnetworkWeb.GlobalHelpers, as: H
 
   test "renders datalist properly" do
