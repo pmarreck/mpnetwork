@@ -87,9 +87,14 @@ defmodule Mpnetwork.User do
     |> unique_constraint(:username)
     |> foreign_key_constraint(:office_id)
     |> check_constraint(
-      :listings,
+      :attachments,
       name: "attachments_listing_id_fkey",
       message: "still has listings and/or listing attachments assigned to them"
+    )
+    |> foreign_key_constraint(
+      :listings,
+      name: "listings_user_id_fkey",
+      message: "still has listings assigned to them"
     )
     |> validate_coherence(params)
   end
