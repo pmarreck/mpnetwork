@@ -81,5 +81,6 @@ defmodule Mpnetwork.Listing.Attachment do
     |> validate_length(:content_type, max: 255, count: :codepoints)
     |> validate_length(:original_filename, max: 255, count: :codepoints)
     |> validate_not_too_many
+    |> foreign_key_constraint(:listing_id)
   end
 end

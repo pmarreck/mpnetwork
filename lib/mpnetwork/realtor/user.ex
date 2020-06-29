@@ -32,8 +32,8 @@ defmodule Mpnetwork.User do
     # Realtor
     field(:role_id, :integer, default: 3)
     # belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
-    has_many(:listings, Mpnetwork.Realtor.Listing, on_delete: :delete_all)
-    has_many(:broadcasts, Mpnetwork.Realtor.Broadcast, on_delete: :delete_all)
+    has_many(:listings, Mpnetwork.Realtor.Listing)
+    has_many(:broadcasts, Mpnetwork.Realtor.Broadcast)
 
     # adds :password_hash, :failed_attempts, :locked_at
     coherence_schema()
@@ -86,16 +86,6 @@ defmodule Mpnetwork.User do
     |> unique_constraint(:email)
     |> unique_constraint(:username)
     |> foreign_key_constraint(:office_id)
-    |> check_constraint(
-      :attachments,
-      name: "attachments_listing_id_fkey",
-      message: "still has listings and/or listing attachments assigned to them"
-    )
-    |> foreign_key_constraint(
-      :listings,
-      name: "listings_user_id_fkey",
-      message: "still has listings assigned to them"
-    )
     |> validate_coherence(params)
   end
 
