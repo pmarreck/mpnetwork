@@ -27,4 +27,4 @@
 
 # Enable SMP automatically based on availability
 # On OTP21+, this is not needed anymore.
--smp auto
+# -smp auto

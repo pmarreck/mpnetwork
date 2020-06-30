@@ -56,8 +56,6 @@ defmodule Mpnetwork.User do
       |> copy_email_to_username_unless_username_exists
       |> default_role_to_realtor
 
-    # |> check_constraint(:listings, name: "listings_user_id_fkey", message: "still has listings assigned to them")
-    # |> check_constraint(:broadcasts, name: "broadcasts_user_id_fkey", message: "still has broadcasts assigned to them")
     model
     |> cast(
       params,

@@ -85,7 +85,7 @@ defmodule MpnetworkWeb.Router do
     get("/users/locked_users", UserController, :locked_users)
     post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
-    live_dashboard "/dashboard", metrics: MpnetworkWeb.Telemetry
+    live_dashboard "/dashboard", metrics: MpnetworkWeb.Telemetry, env_keys: ["SOURCE_VERSION"]
   end
 
   scope "/", MpnetworkWeb do
