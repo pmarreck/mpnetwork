@@ -91,7 +91,7 @@ defmodule Mpnetwork.User do
     model
     |> cast(
       params,
-      ~w(password password_confirmation reset_password_token reset_password_sent_at)
+      ~w(password password_confirmation reset_password_token reset_password_sent_at)a
     )
     |> validate_coherence_password_reset(params)
   end

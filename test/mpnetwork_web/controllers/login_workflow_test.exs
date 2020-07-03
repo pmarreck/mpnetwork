@@ -22,4 +22,9 @@ defmodule MpnetworkWeb.LoginWorkflowTest do
     assert html_response(conn, 200) =~ "No listings"
   end
 
+  test "GET /passwords/new doesn't error and is accessible", %{conn: conn} do
+    conn = get(conn, "/passwords/new")
+    assert response(conn, 200)
+  end
+
 end

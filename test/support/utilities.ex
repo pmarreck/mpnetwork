@@ -122,6 +122,14 @@ defmodule Mpnetwork.Test.Support.Utilities do
       else
         office_fixture()
       end
+    office_id =
+      if attrs[:office_id] do
+        attrs[:office_id]
+      else
+        office.id
+      end
+    # sanity check
+    office_id = office.id
 
     attrs =
       valid_user_attrs() |> Map.merge(%{broker: office, office_id: office.id}) |> Map.merge(attrs)
@@ -244,7 +252,7 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def fixture(:listing, user, attrs) do
     {:ok, listing} =
       Realtor.create_listing(
-        @create_listing_attrs |> Map.merge(attrs) |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
+        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker}) |> Map.merge(attrs)
       )
 
     listing

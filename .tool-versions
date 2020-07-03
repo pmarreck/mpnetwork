@@ -2,6 +2,7 @@
 # (mine are usually the most current)
 erlang 22.3.4.1
 elixir 1.10.3
-postgres system
+postgres 9.6.18
 nodejs 12.4.0
 ruby system
+

@@ -57,7 +57,6 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "edit user as admin" do
-    # setup [:create_user]
 
     test "renders form for editing chosen user", %{conn: conn, user: user} do
       conn = get(conn, user_path(conn, :edit, user))
@@ -66,12 +65,6 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "update user as office admin" do
-    setup %{conn: conn} do
-      user = user_fixture(%{role_id: 2})
-      conn = assign(conn, :current_office, user.broker)
-      conn = assign(conn, :current_user, user)
-      {:ok, conn: conn, user: user}
-    end
 
     test "redirects when data is valid", %{conn: conn, user: user} do
       initial_conn = conn
@@ -91,10 +84,10 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
 
     test "does not delete chosen user if user is not from same office", %{conn: conn, user: user} do
-      conn = delete(conn, user_path(conn, :delete, user))
+      realtor_from_another_office = user_fixture(%{role_id: 3})
+      conn = delete(conn, user_path(conn, :delete, realtor_from_another_office))
       assert response(conn, 405) =~ "Not allowed"
     end
 
@@ -112,10 +105,35 @@ defmodule MpnetworkWeb.UserControllerTest do
         get(conn, user_path(conn, :show, user_from_same_office))
       end)
     end
+
+    test "does not 500 when trying to delete a user with listings assigned to them", %{conn: conn, user: office_admin_user} do
+      initial_conn = conn
+      broker = office_admin_user.broker
+      realtor_from_same_office =
+        user_fixture(%{broker: broker, office_id: broker.id, role_id: 3})
+
+      # # some sanity chex
+      # 2 = office_admin_user.role_id
+      # 3 = realtor_from_same_office.role_id
+      # ^broker = realtor_from_same_office.broker
+      # ^office_admin_user = conn.assigns.current_user
+
+      _listing = fixture(:listing, realtor_from_same_office)
+
+      # # sanitychex
+      # assert listing.user_id == realtor_from_same_office.id
+      # assert listing.broker_id == broker.id
+
+      conn = delete(conn, user_path(conn, :delete, realtor_from_same_office))
+      refute conn.status == 500
+      assert redirected_to(conn) == user_path(conn, :index)
+      conn = initial_conn
+      # make sure they're gone
+      assert_error_sent(404, fn ->
+        get(conn, user_path(conn, :show, realtor_from_same_office))
+      end)
+    end
+
   end
 
-  defp create_user(_) do
-    user = user_fixture()
-    {:ok, user: user}
-  end
 end
