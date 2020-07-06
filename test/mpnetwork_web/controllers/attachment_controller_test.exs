@@ -45,7 +45,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   setup %{conn: conn} do
     office = office_fixture()
-    user = user_fixture(%{office: office, office_id: office.id})
+    user = user_fixture(%{broker: office})
     conn = assign(conn, :current_office, office)
     {:ok, conn: assign(conn, :current_user, user), user: user}
   end

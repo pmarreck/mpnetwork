@@ -581,7 +581,7 @@ defmodule Mpnetwork.RealtorTest do
 
     test "update_user/2 with valid data updates the user" do
       office = office_fixture()
-      user = user_fixture(%{office_id: office.id})
+      user = user_fixture(%{broker: office})
       assert user.url
       valid_update_attrs = valid_update_user_attrs(%{office_id: office.id})
       assert {:ok, user} = Realtor.update_user(user, valid_update_attrs)

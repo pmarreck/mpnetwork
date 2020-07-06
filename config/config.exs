@@ -82,6 +82,8 @@ config :coherence,
   unlock_timeout_minutes: 10,
   unlock_token_expire_minutes: 60,
   rememberable_cookie_expire_hours: 30 * 24,
+  invitation_permitted_attributes: ["office_id", "name", "email", "token"],
+  registration_permitted_attributes: ["office_id", "name", "email", "token", "password", "password_confirmation"],
   session_model: Mpnetwork.Schema.Session,
   session_repo: Mpnetwork.Repo,
   schema_key: :id

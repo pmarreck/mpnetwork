@@ -5,6 +5,20 @@ defmodule Mpnetwork.Test.Support.Utilities do
     rand_between(10_000_000_000_000_000, 99_999_999_999_999_999) |> Integer.to_string()
   end
 
+  @doc """
+  Get a random string of given length.
+
+  Returns a random url safe encoded64 string of the given length.
+  Used to generate tokens for the various modules that require unique tokens.
+  """
+  @spec random_string(integer) :: binary
+  def random_string(length) do
+    length
+    |> :crypto.strong_rand_bytes()
+    |> Base.url_encode64()
+    |> binary_part(0, length)
+  end
+
   def rand_between(first, last) do
     trunc(:rand.uniform() * (last - first) + first)
   end
@@ -120,7 +134,13 @@ defmodule Mpnetwork.Test.Support.Utilities do
       if attrs[:broker] do
         attrs[:broker]
       else
-        office_fixture()
+        if attrs[:office_id] do
+          # we won't retrieve office from db nor create one if an office_id is provided
+          nil
+        else
+          # but if neither is provided, we create an office
+          office_fixture()
+        end
       end
     office_id =
       if attrs[:office_id] do
@@ -128,11 +148,11 @@ defmodule Mpnetwork.Test.Support.Utilities do
       else
         office.id
       end
-    # sanity check
-    office_id = office.id
+    # sanity check to make sure any passed-in office_id matches any passed-in broker
+    ^office_id = (if office, do: office.id, else: office_id)
 
     attrs =
-      valid_user_attrs() |> Map.merge(%{broker: office, office_id: office.id}) |> Map.merge(attrs)
+      valid_user_attrs() |> Map.merge(%{broker: office, office_id: office_id}) |> Map.merge(attrs)
 
     {:ok, user} = Realtor.create_user(attrs)
     Repo.preload(user, :broker)

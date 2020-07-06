@@ -18,6 +18,8 @@ defmodule Mpnetwork.Repo do
 
   def hard_delete(struct) do
     {prefix, table} = table_for(struct)
+    # note: I had a deadlock on this multi once in a test, could not duplicate it with same seed (49866).
+    # Perhaps review in future.
     Multi.new()
     |> Multi.run(:disable_after_delete_trigger, fn repo, _ ->
       query = "ALTER TABLE #{prefix}.#{table} DISABLE TRIGGER #{table}_logical_delete_tg;"

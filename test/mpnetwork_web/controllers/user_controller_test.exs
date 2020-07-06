@@ -85,7 +85,7 @@ defmodule MpnetworkWeb.UserControllerTest do
 
   describe "delete user" do
 
-    test "does not delete chosen user if user is not from same office", %{conn: conn, user: user} do
+    test "does not delete chosen user if user is not from same office", %{conn: conn, user: _user} do
       realtor_from_another_office = user_fixture(%{role_id: 3})
       conn = delete(conn, user_path(conn, :delete, realtor_from_another_office))
       assert response(conn, 405) =~ "Not allowed"
