@@ -81,7 +81,7 @@ defmodule Mpnetwork.Realtor do
         u in User,
         join: o in assoc(u, :broker),
         preload: [broker: o],
-        where: not(is_nil(u.locked_at)) and u.failed_attempts > 0,
+        where: not is_nil(u.locked_at) and u.failed_attempts > 0,
         order_by: [asc: o.name, asc: o.city, asc: u.name]
       )
     )
@@ -96,7 +96,7 @@ defmodule Mpnetwork.Realtor do
         join: o in assoc(u, :broker),
         preload: [broker: o],
         where: u.office_id == ^office.id,
-        where: not(is_nil(u.locked_at)) and u.failed_attempts > 0,
+        where: not is_nil(u.locked_at) and u.failed_attempts > 0,
         order_by: [asc: u.name]
       )
     )
@@ -534,13 +534,19 @@ defmodule Mpnetwork.Realtor do
 
   defp convert_binary_date_parts_to_naivedatetime_struct(year, month, day)
        when is_binary(year) and is_binary(month) and is_binary(day) do
-    date = case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
-      {:ok, date} -> date
-      {:error, _} -> nil
-    end
+    date =
+      case Date.new(_try_integer(year), _try_integer(month), _try_integer(day)) do
+        {:ok, date} -> date
+        {:error, _} -> nil
+      end
+
     case date do
-      nil -> nil
-      date -> ({:ok, date} = NaiveDateTime.new(date, ~T[00:00:00]); date)
+      nil ->
+        nil
+
+      date ->
+        {:ok, date} = NaiveDateTime.new(date, ~T[00:00:00])
+        date
     end
   end
 
@@ -605,8 +611,11 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
+    valid_startday =
+      convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+
+    valid_finishday =
+      convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
@@ -646,8 +655,11 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
+    valid_startday =
+      convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+
+    valid_finishday =
+      convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
@@ -690,8 +702,11 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
+    valid_startday =
+      convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+
+    valid_finishday =
+      convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
@@ -731,13 +746,17 @@ defmodule Mpnetwork.Realtor do
          {start_yr, start_mon, start_day},
          {finish_yr, finish_mon, finish_day}
        ) do
-    valid_startday = convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
-    valid_finishday = convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
+    valid_startday =
+      convert_binary_date_parts_to_naivedatetime_struct(start_yr, start_mon, start_day)
+
+    valid_finishday =
+      convert_binary_date_parts_to_naivedatetime_struct(finish_yr, finish_mon, finish_day)
 
     cond do
       valid_startday && valid_finishday ->
         {Regex.replace(regex, query, ""),
-         scope |> where([l], l.expires_on >= ^valid_startday and l.expires_on <= ^valid_finishday),
+         scope
+         |> where([l], l.expires_on >= ^valid_startday and l.expires_on <= ^valid_finishday),
          errors}
 
       !valid_startday && valid_finishday ->
@@ -842,17 +861,15 @@ defmodule Mpnetwork.Realtor do
   @all_regex ~r/\ball\b/i
   @expired_regex ~r/\bexpired\b/i
   defp try_determine_default_scope({query, scope, errors}) do
-    if (
-          Regex.match?(@all_regex, query) or
-          Regex.match?(@active_regex, query) or
-          Regex.match?(@inactive_regex, query) or
-          Regex.match?(@listing_status_type_regex, query) or
-          Regex.match?(@expired_regex, query) or
-          Regex.match?(@daterange_fs_regex, query) or
-          Regex.match?(@daterange_uc_regex, query) or
-          Regex.match?(@daterange_cl_regex, query) or
-          Regex.match?(@daterange_exp_regex, query)
-      ) do
+    if Regex.match?(@all_regex, query) or
+         Regex.match?(@active_regex, query) or
+         Regex.match?(@inactive_regex, query) or
+         Regex.match?(@listing_status_type_regex, query) or
+         Regex.match?(@expired_regex, query) or
+         Regex.match?(@daterange_fs_regex, query) or
+         Regex.match?(@daterange_uc_regex, query) or
+         Regex.match?(@daterange_cl_regex, query) or
+         Regex.match?(@daterange_exp_regex, query) do
       # just pass it through
       {Regex.replace(@all_regex, query, ""), scope, errors}
     else
@@ -861,7 +878,6 @@ defmodule Mpnetwork.Realtor do
        scope |> where([l], l.listing_status_type in ~w[NEW FS EXT PC]), errors}
     end
   end
-
 
   defp try_active_inactive({query, scope, errors}) do
     query = Regex.replace(@active_regex, query, "(NEW|FS|EXT|PC)")
@@ -1206,7 +1222,9 @@ defmodule Mpnetwork.Realtor do
 
   """
   def get_listings(ids) when is_list(ids) do
-    Repo.all(from(l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]), preload: [:broker, :user])
+    Repo.all(from(l in Listing, where: l.id in ^ids, order_by: [desc: l.updated_at]),
+      preload: [:broker, :user]
+    )
   end
 
   @doc """

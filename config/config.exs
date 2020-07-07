@@ -20,7 +20,8 @@ config :mpnetwork,
   # 20-ish photos plus maybe a pdf or 2
   max_attachments_per_listing: 25,
   cache_name: :attachment_cache,
-  default_cache_expiry: [months: -2], # passed directly to Timex.shift
+  # passed directly to Timex.shift
+  default_cache_expiry: [months: -2],
   default_session_expiry: [months: -6]
 
 # Configures the endpoint
@@ -28,7 +29,13 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   render_errors: [view: MpnetworkWeb.ErrorView, accepts: ~w(html json)],
-  http: [protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192, idle_timeout: 90_000]],
+  http: [
+    protocol_options: [
+      max_request_line_length: 8192,
+      max_header_value_length: 8192,
+      idle_timeout: 90_000
+    ]
+  ],
   pubsub_server: Mpnetwork.PubSub,
   live_view: [signing_salt: System.fetch_env!("LIVE_VIEW_SIGNING_SALT")]
 
@@ -83,7 +90,14 @@ config :coherence,
   unlock_token_expire_minutes: 60,
   rememberable_cookie_expire_hours: 30 * 24,
   invitation_permitted_attributes: ["office_id", "name", "email", "token"],
-  registration_permitted_attributes: ["office_id", "name", "email", "token", "password", "password_confirmation"],
+  registration_permitted_attributes: [
+    "office_id",
+    "name",
+    "email",
+    "token",
+    "password",
+    "password_confirmation"
+  ],
   session_model: Mpnetwork.Schema.Session,
   session_repo: Mpnetwork.Repo,
   schema_key: :id

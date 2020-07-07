@@ -24,6 +24,7 @@ defmodule MpnetworkWeb.Router do
     plug(:fetch_flash)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
+
     plug(Coherence.Authentication.Session,
       store: Coherence.CredentialStore.Session,
       db_model: @user_schema,
@@ -42,12 +43,14 @@ defmodule MpnetworkWeb.Router do
     plug(:fetch_flash)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
+
     plug(Coherence.Authentication.Session,
       protected: true,
       store: Coherence.CredentialStore.Session,
       db_model: @user_schema,
       id_key: @id_key
     )
+
     plug(:create_office_context)
     # plug(:create_timber_user_context)
   end
@@ -85,7 +88,7 @@ defmodule MpnetworkWeb.Router do
     get("/users/locked_users", UserController, :locked_users)
     post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
-    live_dashboard "/dashboard", metrics: MpnetworkWeb.Telemetry, env_keys: ["SOURCE_VERSION"]
+    live_dashboard("/dashboard", metrics: MpnetworkWeb.Telemetry, env_keys: ["SOURCE_VERSION"])
   end
 
   scope "/", MpnetworkWeb do
@@ -99,7 +102,8 @@ defmodule MpnetworkWeb.Router do
     get("/listings/inspections", ListingController, :inspection_sheet, as: :upcoming_inspections)
     resources("/broadcasts", BroadcastController)
     resources("/listings", ListingController)
-    put("/listings", ListingController, :create) # couldn't get Clone to work otherwise
+    # couldn't get Clone to work otherwise
+    put("/listings", ListingController, :create)
     post("/attachments/:id/rotate_left", AttachmentController, :rotate_left)
     post("/attachments/:id/rotate_right", AttachmentController, :rotate_right)
     resources("/attachments", AttachmentController)

@@ -27,12 +27,14 @@ defmodule MpnetworkWeb.UserController do
 
   def unlock_user(conn, %{"id" => id}) do
     user = Realtor.get_user!(id)
+
     if Permissions.office_admin_of_office_or_site_admin?(current_user(conn), user.broker) do
       case Realtor.update_user(user, %{"failed_attempts" => 0, "locked_at" => nil}) do
         {:ok, _user} ->
           conn
           |> put_flash(:info, "User unlocked successfully.")
           |> redirect(to: user_path(conn, :locked_users))
+
         {:error, %Ecto.Changeset{} = _changeset} ->
           conn
           |> put_flash(:error, "There was a problem unlocking this user.")

@@ -57,6 +57,7 @@ defmodule Mpnetwork.SearchTest do
       central_vac: true,
       eef_led_lighting: true
     }
+
     # @update_attrs %{schools: "Man", prop_tax_usd: "100", vill_tax_usd: "100", section_num: "B", block_num: "2", lot_num: "D", live_at: ~N[2017-04-17 12:00:00.000000], expires_on: ~D[2017-09-17], state: "some updated state", new_construction: false, fios_available: false, tax_rate_code_area: 43, num_skylights: 43, lot_size: "43x43", attached_garage: false, for_rent: false, zip: "some updated zip", ext_urls: ["http://www.google.com"], city: "some updated city", num_fireplaces: 43, modern_kitchen_countertops: false, deck: false, for_sale: false, central_air: false, stories: 43, num_half_baths: 43, year_built: 2000, draft: false, pool: false, mls_source_id: 43, security_system: false, sq_ft: 43, studio: false, cellular_coverage_quality: 4, hot_tub: false, basement: false, price_usd: 43, realtor_remarks: "some updated remarks", parking_spaces: 43, description: "some updated description", num_bedrooms: 43, high_speed_internet_available: false, patio: false, address: "some updated address", num_garages: 43, num_baths: 43, central_vac: false, eef_led_lighting: false}
     # @invalid_attrs %{live_at: nil, expires_on: nil, state: nil, new_construction: nil, fios_available: nil, tax_rate_code_area: nil, prop_tax_usd: nil, num_skylights: nil, lot_size: nil, attached_garage: nil, for_rent: nil, zip: nil, ext_urls: nil, city: nil, num_fireplaces: nil, modern_kitchen_countertops: nil, deck: nil, for_sale: nil, central_air: nil, stories: nil, num_half_baths: nil, year_built: nil, draft: nil, pool: nil, mls_source_id: nil, security_system: nil, sq_ft: nil, studio: nil, cellular_coverage_quality: nil, hot_tub: nil, basement: nil, price_usd: nil, realtor_remarks: nil, parking_spaces: nil, description: nil, num_bedrooms: nil, high_speed_internet_available: nil, patio: nil, address: nil, num_garages: nil, num_baths: nil, central_vac: nil, eef_led_lighting: nil}
 
@@ -117,9 +118,21 @@ defmodule Mpnetwork.SearchTest do
 
     test "listing query listings with 'my drafts'" do
       listing_draft = listing_fixture(%{draft: true})
-      other_listing = listing_fixture(%{draft: false, user: listing_draft.user, user_id: listing_draft.user_id, broker: listing_draft.user.broker, broker_id: listing_draft.user.office_id})
-      assert {2, [other_listing, listing_draft], []} == Realtor.query_listings("my", 50, listing_draft.user)
-      assert {1, [listing_draft], []} == Realtor.query_listings("my drafts", 50, listing_draft.user)
+
+      other_listing =
+        listing_fixture(%{
+          draft: false,
+          user: listing_draft.user,
+          user_id: listing_draft.user_id,
+          broker: listing_draft.user.broker,
+          broker_id: listing_draft.user.office_id
+        })
+
+      assert {2, [other_listing, listing_draft], []} ==
+               Realtor.query_listings("my", 50, listing_draft.user)
+
+      assert {1, [listing_draft], []} ==
+               Realtor.query_listings("my drafts", 50, listing_draft.user)
     end
 
     test "listing query listings with price range only" do
@@ -253,7 +266,9 @@ defmodule Mpnetwork.SearchTest do
     end
 
     test "date range search on for-sale (FS/NEW) day" do
-      listing = listing_fixture(%{listing_status_type: "NEW", live_at: ~N[2017-01-23 22:50:00.000000]})
+      listing =
+        listing_fixture(%{listing_status_type: "NEW", live_at: ~N[2017-01-23 22:50:00.000000]})
+
       user = listing.user
 
       assert {1, [listing], []} == Realtor.query_listings("fs: 1/1/2017-2/1/2017", 50, user)
@@ -273,7 +288,13 @@ defmodule Mpnetwork.SearchTest do
     end
 
     test "date range search on closing (CL) day" do
-      listing = listing_fixture(%{listing_status_type: "CL", closing_price_usd: 100000, closed_on: ~D[2017-12-01]})
+      listing =
+        listing_fixture(%{
+          listing_status_type: "CL",
+          closing_price_usd: 100_000,
+          closed_on: ~D[2017-12-01]
+        })
+
       user = listing.user
 
       assert {1, [listing], []} == Realtor.query_listings("cl: 11/1/2017-12/2/2017", 50, user)

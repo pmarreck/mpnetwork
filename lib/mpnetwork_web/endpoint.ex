@@ -1,11 +1,12 @@
 defmodule MpnetworkWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :mpnetwork
 
-  socket "/socket", MpnetworkWeb.UserSocket,
+  socket("/socket", MpnetworkWeb.UserSocket,
     websocket: [timeout: 45_000],
     longpoll: [timeout: 45_000]
+  )
 
-  socket "/live", Phoenix.LiveView.Socket
+  socket("/live", Phoenix.LiveView.Socket)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -31,9 +32,10 @@ defmodule MpnetworkWeb.Endpoint do
 
   plug(Plug.HealthCheck)
 
-  plug Phoenix.LiveDashboard.RequestLogger,
+  plug(Phoenix.LiveDashboard.RequestLogger,
     param_key: "request_logger",
     cookie_key: "request_logger"
+  )
 
   plug(Plug.RequestId)
 
@@ -68,9 +70,10 @@ defmodule MpnetworkWeb.Endpoint do
 
   def init(_key, config) do
     if config[:load_from_system_env] do
-      port = (System.get_env("PORT") || 4000) # raise "expected the PORT environment variable to be set"
+      # raise "expected the PORT environment variable to be set"
+      port = System.get_env("PORT") || 4000
       config = Keyword.put(config, :http, [:inet6, port: port])
-      static_host = (System.get_env("STATIC_URL") || "localhost")
+      static_host = System.get_env("STATIC_URL") || "localhost"
       static_url = Keyword.get(config, :static_url)
       # scheme = (Keyword.get(static_url, :scheme) || "https")
       # port = (Keyword.get(static_url, :port) || "443")

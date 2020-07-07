@@ -38,7 +38,6 @@ defmodule Mpnetwork.User do
     # adds :password_hash, :failed_attempts, :locked_at
     coherence_schema()
 
-
     timestamps()
   end
 

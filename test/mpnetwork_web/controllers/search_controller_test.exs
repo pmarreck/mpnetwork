@@ -29,6 +29,7 @@ defmodule MpnetworkWeb.SearchControllerTest do
   test "search of a date range on listing date works", %{conn: conn} do
     user = user_fixture()
     _listing = fixture(:listing, user)
+
     conn =
       conn
       |> assign(:current_user, user)
@@ -36,5 +37,4 @@ defmodule MpnetworkWeb.SearchControllerTest do
 
     assert html_response(conn, 200) =~ "FS"
   end
-
 end

@@ -26,5 +26,4 @@ defmodule MpnetworkWeb.LoginWorkflowTest do
     conn = get(conn, "/passwords/new")
     assert response(conn, 200)
   end
-
 end

@@ -360,15 +360,19 @@ defmodule Mpnetwork.Realtor.Listing do
 
   defp validate_required_unless_field_is_value(changeset, fields, field, value) do
     unless get_field(changeset, field) == value do
-      Enum.reduce(fields, changeset, fn(field, changeset) -> (
-          if is_not_blank(get_field(changeset, field)) do
-            changeset
-          else
-            humanized_field = Regex.replace(~r/num_/, "#{field}", "# ")
-            humanized_field = Regex.replace(~r/_/, humanized_field, " ")
-            add_error(changeset, field, "#{humanized_field} must have a value unless the property class is \"Land\"")
-          end
-        )
+      Enum.reduce(fields, changeset, fn field, changeset ->
+        if is_not_blank(get_field(changeset, field)) do
+          changeset
+        else
+          humanized_field = Regex.replace(~r/num_/, "#{field}", "# ")
+          humanized_field = Regex.replace(~r/_/, humanized_field, " ")
+
+          add_error(
+            changeset,
+            field,
+            "#{humanized_field} must have a value unless the property class is \"Land\""
+          )
+        end
       end)
     else
       changeset
@@ -433,11 +437,15 @@ defmodule Mpnetwork.Realtor.Listing do
       :lot_num,
       :expires_on
     ])
-    |> validate_required_unless_field_is_value([
-      :num_bedrooms,
-      :num_baths,
-      :num_half_baths,
-    ], :class_type, :land)
+    |> validate_required_unless_field_is_value(
+      [
+        :num_bedrooms,
+        :num_baths,
+        :num_half_baths
+      ],
+      :class_type,
+      :land
+    )
     |> listing_constraints
   end
 

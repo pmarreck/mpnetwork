@@ -57,7 +57,6 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "edit user as admin" do
-
     test "renders form for editing chosen user", %{conn: conn, user: user} do
       conn = get(conn, user_path(conn, :edit, user))
       assert html_response(conn, 200) =~ "Editing #{user.name}"
@@ -65,7 +64,6 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "update user as office admin" do
-
     test "redirects when data is valid", %{conn: conn, user: user} do
       initial_conn = conn
       updated_fields = valid_update_user_attrs()
@@ -84,7 +82,6 @@ defmodule MpnetworkWeb.UserControllerTest do
   end
 
   describe "delete user" do
-
     test "does not delete chosen user if user is not from same office", %{conn: conn, user: _user} do
       realtor_from_another_office = user_fixture(%{role_id: 3})
       conn = delete(conn, user_path(conn, :delete, realtor_from_another_office))
@@ -106,11 +103,13 @@ defmodule MpnetworkWeb.UserControllerTest do
       end)
     end
 
-    test "does not 500 when trying to delete a user with listings assigned to them", %{conn: conn, user: office_admin_user} do
+    test "does not 500 when trying to delete a user with listings assigned to them", %{
+      conn: conn,
+      user: office_admin_user
+    } do
       initial_conn = conn
       broker = office_admin_user.broker
-      realtor_from_same_office =
-        user_fixture(%{broker: broker, office_id: broker.id, role_id: 3})
+      realtor_from_same_office = user_fixture(%{broker: broker, office_id: broker.id, role_id: 3})
 
       # # some sanity chex
       # 2 = office_admin_user.role_id
@@ -133,7 +132,5 @@ defmodule MpnetworkWeb.UserControllerTest do
         get(conn, user_path(conn, :show, realtor_from_same_office))
       end)
     end
-
   end
-
 end

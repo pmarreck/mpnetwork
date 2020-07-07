@@ -3,26 +3,29 @@ defmodule Mpnetwork.Ecto.DbSession do
   import Ecto.Query
 
   @session_model Application.get_env(:coherence, :session_model)
-  @session_repo  Application.get_env(:coherence, :session_repo)
+  @session_repo Application.get_env(:coherence, :session_repo)
 
   def get_user_data(repo, user, creds, id_key) do
     @session_model
     |> where([s], s.token == ^creds)
     |> @session_repo.one
     |> case do
-      nil -> nil
+      nil ->
+        nil
+
       session ->
-        user_id = get_id user, id_key, session.user_id
+        user_id = get_id(user, id_key, session.user_id)
 
         session.user_type
-        |> String.to_atom
+        |> String.to_atom()
         |> where([u], field(u, ^id_key) == ^user_id)
         |> repo.one
     end
   end
 
   def put_credentials(_repo, user, creds, id_key) do
-    id_str = "#{Map.get user, id_key}"
+    id_str = "#{Map.get(user, id_key)}"
+
     params = %{
       token: creds,
       user_type: Atom.to_string(user.__struct__),
@@ -47,13 +50,15 @@ defmodule Mpnetwork.Ecto.DbSession do
     |> case do
       nil ->
         nil
+
       user ->
-        @session_repo.delete user
+        @session_repo.delete(user)
     end
   end
 
   def delete_user_logins(user, id_key \\ :id) do
-    id_str = "#{Map.get user, id_key}"
+    id_str = "#{Map.get(user, id_key)}"
+
     where(@session_model, [s], s.user_id == ^id_str)
     |> @session_repo.delete_all
   end
@@ -62,9 +67,11 @@ defmodule Mpnetwork.Ecto.DbSession do
   defp get_id(user, id_key, user_id) do
     case user.__struct__.__schema__(:type, id_key) do
       int when int in [:integer, :id] ->
-        String.to_integer user_id
+        String.to_integer(user_id)
+
       :string ->
         user_id
+
       unknown ->
         raise "Error: Unknown key type '#{unknown}' on #{user.__struct__}"
     end

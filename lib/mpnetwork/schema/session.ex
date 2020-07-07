@@ -4,10 +4,10 @@ defmodule Mpnetwork.Schema.Session do
   import Ecto.Changeset
 
   schema "sessions" do
-    field :token, :string
-    field :user_type, :string
-    field :user_id, :string
-    field :data, Mpnetwork.Ecto.CompressedTerm
+    field(:token, :string)
+    field(:user_type, :string)
+    field(:user_id, :string)
+    field(:data, Mpnetwork.Ecto.CompressedTerm)
     timestamps()
   end
 

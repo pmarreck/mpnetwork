@@ -9,8 +9,8 @@ defmodule Mpnetwork.Ecto.Term do
 
   def dump(term), do: {:ok, :erlang.term_to_binary(term)}
 
-  def embed_as(_), do: :self # :dump is the other option
+  # :dump is the other option
+  def embed_as(_), do: :self
 
   def equal?(term1, term2), do: term1 == term2
-
 end

@@ -83,13 +83,16 @@ defmodule Mpnetwork.Mixfile do
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
       # {:ecto_enum, "~> 1.4"},
       # Repinned to a commit on 20200422 due to mix dependency fixes that did not result in a version bump:
-      {:ecto_enum, git: "https://github.com/gjaldon/ecto_enum.git", commit: "ab13face20729deb0cb2f325dc052fd6fd05c26a"},
+      {:ecto_enum,
+       git: "https://github.com/gjaldon/ecto_enum.git",
+       commit: "ab13face20729deb0cb2f325dc052fd6fd05c26a"},
       {:html_sanitize_ex, "~> 1.4"},
       {:dialyxir, "~> 0.5.0", only: :dev, runtime: false},
       {:quantum, ">= 2.2.5"},
       {:ex_rated, "~> 1.3"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:lz4, "~> 0.2.2", hex: :lz4_erl}, # note: may not build on OTP23:
+      # note: may not build on OTP23:
+      {:lz4, "~> 0.2.2", hex: :lz4_erl},
       # @vanvoljg on Elixir Slack #general channel @ 5/27/20 8:21 PM:
       # As an update on my end, I was able to get erlang_lz4 to compile with OTP23 by modifying the makefile.
       # Removing -lerl_interface (which was deprecated in OTP23) from the libs allows it to compile.
@@ -98,7 +101,7 @@ defmodule Mpnetwork.Mixfile do
       # @tsloughter not long after said...
       # Suggest using the git master version since it uses the rebar3 plugin that works on OTP-23
       {:telemetry_poller, "~> 0.4"},
-      {:telemetry_metrics, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.4"}
     ]
   end
 

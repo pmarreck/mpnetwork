@@ -13,11 +13,14 @@ defmodule Mpnetwork.Repo do
   end
 
   # the source key can either have a tuple of {prefix, table} or just the table name string
-  defp table_for(%{__meta__: %{source: {schema_prefix, source}}}) when is_binary(source), do: {schema_prefix, source}
+  defp table_for(%{__meta__: %{source: {schema_prefix, source}}}) when is_binary(source),
+    do: {schema_prefix, source}
+
   defp table_for(%{__meta__: %{source: source}}) when is_binary(source), do: {:public, source}
 
   def hard_delete(struct) do
     {prefix, table} = table_for(struct)
+
     # note: I had a deadlock on this multi once in a test, could not duplicate it with same seed (49866).
     # Perhaps review in future.
     Multi.new()
@@ -32,5 +35,4 @@ defmodule Mpnetwork.Repo do
     end)
     |> transaction()
   end
-
 end

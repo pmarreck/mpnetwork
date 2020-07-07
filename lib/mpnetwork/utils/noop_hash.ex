@@ -12,5 +12,4 @@ defmodule Mpnetwork.Utils.NoopHash do
   def checkpw(str, str), do: true
 
   # ...that's it
-
 end

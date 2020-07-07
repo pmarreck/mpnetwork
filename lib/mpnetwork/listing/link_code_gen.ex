@@ -1,5 +1,4 @@
 defmodule Mpnetwork.Listing.LinkCodeGen do
-
   alias Mpnetwork.Crypto
 
   @doc """
@@ -75,5 +74,4 @@ defmodule Mpnetwork.Listing.LinkCodeGen do
   defp timex_datetime_from_unix_epoch_days(days) do
     Timex.from_unix(days * 24 * 60 * 60)
   end
-
 end

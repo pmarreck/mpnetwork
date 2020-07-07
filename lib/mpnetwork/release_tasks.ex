@@ -4,7 +4,8 @@ defmodule Mpnetwork.ReleaseTasks do
     :ssl,
     :postgrex,
     :ecto,
-    :ecto_sql # If using Ecto 3.0 or higher
+    # If using Ecto 3.0 or higher
+    :ecto_sql
   ]
 
   @my_app :mpnetwork

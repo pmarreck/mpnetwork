@@ -16,12 +16,12 @@ defmodule Mpnetwork.Ecto.CompressedTerm do
     <<version>> <> comp
   end
 
-  defp decompress(<< 1, bin::binary >>) when is_binary(bin) do
+  defp decompress(<<1, bin::binary>>) when is_binary(bin) do
     {:ok, decomp} = LZ4.unpack(bin)
     decomp
   end
 
-  defp decompress(<< _bin::binary>>), do: raise "Unsupported compression version"
+  defp decompress(<<_bin::binary>>), do: raise("Unsupported compression version")
 
   def type, do: :binary
 
@@ -31,8 +31,8 @@ defmodule Mpnetwork.Ecto.CompressedTerm do
 
   def dump(term), do: {:ok, compress(:erlang.term_to_binary(term))}
 
-  def embed_as(_), do: :self # :dump is the other option
+  # :dump is the other option
+  def embed_as(_), do: :self
 
   def equal?(term1, term2), do: term1 == term2
-
 end

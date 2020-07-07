@@ -386,32 +386,39 @@ defmodule MpnetworkWeb.ListingControllerTest do
     names_emails = "#{name} <#{email}>"
     parsed_names_emails = [{"Peter Tester", "test@mpwrealestateboard.network"}]
     subject = "Property of Interest: #{listing.address}"
-    body = "<p>Dear @name_placeholder,</p><p><br />\n</p><p><a href=\"@listing_link_placeholder\" target=\"_blank\">Please take a look!</a></p><p><br />\n</p><p>Regards,</p>#{conn.assigns.current_user.email_sig}"
+
+    body =
+      "<p>Dear @name_placeholder,</p><p><br />\n</p><p><a href=\"@listing_link_placeholder\" target=\"_blank\">Please take a look!</a></p><p><br />\n</p><p>Regards,</p>#{
+        conn.assigns.current_user.email_sig
+      }"
+
     type = "broker"
     url = public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
     cc_self = false
     conn = original_authenticated_conn
-    conn = post(conn, email_listing_path(conn, :send_email, listing), %{
-     "id" => listing.id,
-      "email" => %{
-        "names_emails" => names_emails,
-        "cc_self" => cc_self,
-        "subject" => subject,
-        "body" => body,
-        "type" => type,
-        "url" => url
-      }
-    })
+
+    conn =
+      post(conn, email_listing_path(conn, :send_email, listing), %{
+        "id" => listing.id,
+        "email" => %{
+          "names_emails" => names_emails,
+          "cc_self" => cc_self,
+          "subject" => subject,
+          "body" => body,
+          "type" => type,
+          "url" => url
+        }
+      })
+
     expected_redirect_path = listing_path(conn, :show, listing)
     assert redirected_to(conn) == expected_redirect_path
     # for some reason I couldn't just refer to original_authenticated_conn in the next line
     conn = get(recycle_authenticated(conn, user), expected_redirect_path)
     assert html_response(conn, 200) =~ "Listing emailed to these recipients successfully"
-    assert_email_sent to: parsed_names_emails, subject: subject
+    assert_email_sent(to: parsed_names_emails, subject: subject)
 
     # Mpnetwork.ClientEmail.send_client(
     #   email, name, subject, body, user, listing, url, cc_self
     # )
-
   end
 end

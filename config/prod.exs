@@ -17,7 +17,11 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   load_from_system_env: true,
   http: [
     port: {:system, "PORT"},
-    protocol_options: [max_request_line_length: 8192, max_header_value_length: 8192, idle_timeout: 90_000]
+    protocol_options: [
+      max_request_line_length: 8192,
+      max_header_value_length: 8192,
+      idle_timeout: 90_000
+    ]
   ],
   root: ".",
   server: true,
@@ -83,7 +87,8 @@ config :mpnetwork, Mpnetwork.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.fetch_env!("DATABASE_URL"),
   # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
-  pool_size: 9, # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
+  # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
+  pool_size: 9,
   ssl: true
 
 # Guardian

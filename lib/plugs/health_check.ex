@@ -5,6 +5,7 @@ defmodule Plug.HealthCheck do
 
   def call(%Plug.Conn{request_path: "/health_check"} = conn, _opts) do
     vers = System.fetch_env!("SOURCE_VERSION")
+
     conn
     |> send_resp(200, vers)
     |> halt()

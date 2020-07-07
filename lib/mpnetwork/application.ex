@@ -30,7 +30,7 @@ defmodule Mpnetwork.Application do
       #     }
       #   ]
       # ]),
-      Mpnetwork.Scheduler,
+      Mpnetwork.Scheduler
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

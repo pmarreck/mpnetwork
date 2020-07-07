@@ -418,7 +418,6 @@ defmodule Mpnetwork.RealtorTest do
       assert listings_equal?(listing, soft_deleted_listing)
     end
 
-
     # test "soft deletes all listings in the database" do
     #   listing = listing_fixture()
     #   assert {1, nil} = Realtor.delete_all_listings()
@@ -439,7 +438,6 @@ defmodule Mpnetwork.RealtorTest do
     #   assert [soft_deleted_listing] = Realtor.list_deleted_listings()
     #   assert listings_equal?(listing, soft_deleted_listing)
     # end
-
 
     test "undoes a soft delete on a listing in the database" do
       listing = listing_fixture() |> with_listing_preloads

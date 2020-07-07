@@ -12,5 +12,4 @@ defmodule Mpnetwork.Jobs do
   def delete_old_sessions() do
     Session.delete_old_sessions()
   end
-
 end

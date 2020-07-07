@@ -121,14 +121,18 @@ defmodule Mpnetwork.Listing do
 
     # write temp file to disk
     {:ok, tempfile} = Temp.create()
-    File.write!(tempfile, attachment.data) # should close file handle
+    # should close file handle
+    File.write!(tempfile, attachment.data)
     # do rotation on disk
-    rotated_image = (open(tempfile) |> add_option(option_rotate("#{degrees}")) |> quality("85") |> save)
+    rotated_image =
+      open(tempfile) |> add_option(option_rotate("#{degrees}")) |> quality("85") |> save
+
     # read new file off disk into memory
     rotated_image_data = File.read!(rotated_image.path)
     # parse new file's dimensions
     {binary_data_content_type, width_pixels, height_pixels} =
       Upload.extract_meta_from_binary_data(rotated_image_data, attachment.content_type)
+
     new_sha256_hash = :crypto.hash(:sha256, rotated_image_data)
     # clean up rotated file
     File.rm!(rotated_image.path)
@@ -228,6 +232,7 @@ defmodule Mpnetwork.Listing do
         # then we will parse the new file's actual dimensions
         {binary_data_content_type, width_pixels, height_pixels} =
           Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
+
         # clean up the non-tempfile
         File.rm!(image.path)
         # then we will return this (which currently gets stored in the app cache)
@@ -344,5 +349,4 @@ defmodule Mpnetwork.Listing do
   def change_attachment(%Attachment{} = attachment) do
     Attachment.changeset(attachment, %{})
   end
-
 end

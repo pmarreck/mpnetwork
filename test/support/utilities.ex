@@ -45,7 +45,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
       email_sig: "",
       last_sign_in_at: t,
       current_sign_in_at: t
-    } |> Map.merge(attrs)
+    }
+    |> Map.merge(attrs)
   end
 
   def valid_update_user_attrs(attrs \\ %{}) do
@@ -62,7 +63,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
       # password_confirmation: "crazytalk!",
       url: "http://homepage-esque.com",
       email_sig: "This is my email signature!"
-    } |> Map.merge(attrs)
+    }
+    |> Map.merge(attrs)
   end
 
   def invalid_user_attrs(attrs \\ %{}) do
@@ -104,21 +106,24 @@ defmodule Mpnetwork.Test.Support.Utilities do
       state: "NY",
       zip: "11050",
       phone: valid_us_phone_num()
-    } |> Map.merge(attrs)
+    }
+    |> Map.merge(attrs)
   end
 
   def valid_broadcast_attrs(attrs \\ %{}) do
     %{
       body: "some broadcast body",
       title: "some broadcast title"
-    } |> Map.merge(attrs)
+    }
+    |> Map.merge(attrs)
   end
 
   def valid_update_broadcast_attrs(attrs \\ %{}) do
     %{
       body: "some updated broadcast body",
       title: "some updated broadcast title"
-    } |> Map.merge(attrs)
+    }
+    |> Map.merge(attrs)
   end
 
   def invalid_broadcast_attrs(attrs \\ %{}) do
@@ -142,14 +147,16 @@ defmodule Mpnetwork.Test.Support.Utilities do
           office_fixture()
         end
       end
+
     office_id =
       if attrs[:office_id] do
         attrs[:office_id]
       else
         office.id
       end
+
     # sanity check to make sure any passed-in office_id matches any passed-in broker
-    ^office_id = (if office, do: office.id, else: office_id)
+    ^office_id = if office, do: office.id, else: office_id
 
     attrs =
       valid_user_attrs() |> Map.merge(%{broker: office, office_id: office_id}) |> Map.merge(attrs)
@@ -267,12 +274,21 @@ defmodule Mpnetwork.Test.Support.Utilities do
     is_image: true,
     primary: false
   }
-  @attachment_create_attrs Map.merge(@post_attachment_create_attrs, %{data: @test_attachment_binary_data})
+  @attachment_create_attrs Map.merge(@post_attachment_create_attrs, %{
+                             data: @test_attachment_binary_data
+                           })
 
   def fixture(:listing, user, attrs) do
     {:ok, listing} =
       Realtor.create_listing(
-        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker}) |> Map.merge(attrs)
+        @create_listing_attrs
+        |> Map.merge(%{
+          user_id: user.id,
+          user: user,
+          broker_id: user.broker.id,
+          broker: user.broker
+        })
+        |> Map.merge(attrs)
       )
 
     listing
@@ -281,7 +297,13 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def fixture(:listing, user) do
     {:ok, listing} =
       Realtor.create_listing(
-        @create_listing_attrs |> Map.merge(%{user_id: user.id, user: user, broker_id: user.broker.id, broker: user.broker})
+        @create_listing_attrs
+        |> Map.merge(%{
+          user_id: user.id,
+          user: user,
+          broker_id: user.broker.id,
+          broker: user.broker
+        })
       )
 
     listing

@@ -41,14 +41,13 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
 
   test "can invite new user", %{conn: conn} do
     params = %{"invitation" => %{"name" => "John Doe", "email" => "john@example.com"}}
-    conn = post conn, invitation_path(conn, :create), params
+    conn = post(conn, invitation_path(conn, :create), params)
     assert get_flash(conn, :info) =~ "Invitation sent"
     # assert conn.private[:phoenix_flash] == %{"info" => "Invitation sent."}
     assert html_response(conn, 302)
   end
 
   test "can register as a new user from an invitation", %{conn: conn} do
-    original_conn = conn
     original_office = conn.assigns.current_office
     # create invitation (or just put a code into the db somehow, check coherence's own tests)
     invitation = insert_invitation()
@@ -60,6 +59,7 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
     conn = get(conn, invitation_path(conn, :edit, token))
     assert html_response(conn, 200)
     conn = unauthenticated_conn
+
     params = %{
       "token" => token,
       "user" => %{
@@ -70,31 +70,9 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
         "office_id" => original_office.id
       }
     }
+
     conn = post(conn, invitation_path(conn, :create_user), params)
-    assert html_response(conn, 302) # if it redirected, it was successful
-    
+    # if it redirected, it was successful
+    assert html_response(conn, 302)
   end
-
-#   test "POST / with login and password and Remember checked works", %{conn: conn} do
-#     user = user_fixture(%{password: "test", password_confirmation: "test"})
-
-#     conn =
-#       conn
-#       |> post("/sessions", %{session: %{email: user.email, password: "test"}, remember: true})
-
-#     # assert redirected to root
-#     assert html_response(conn, 302) =~ "<a href=\"/\">redirected</a>"
-
-#     conn =
-#       conn
-#       |> get("/")
-
-#     assert html_response(conn, 200) =~ "No listings"
-#   end
-
-#   test "GET /passwords/new doesn't error and is accessible", %{conn: conn} do
-#     conn = get(conn, "/passwords/new")
-#     assert response(conn, 200)
-#   end
-
 end
