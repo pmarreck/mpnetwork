@@ -20,7 +20,7 @@ defmodule MpnetworkWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import MpnetworkWeb.Router.Helpers
+      alias MpnetworkWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint MpnetworkWeb.Endpoint

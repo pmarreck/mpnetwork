@@ -214,7 +214,7 @@ defmodule MpnetworkWeb.AttachmentController do
         {:ok, attachment} ->
           conn
           |> put_flash(:info, "Attachment created successfully.")
-          |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
+          |> redirect(to: Routes.attachment_path(conn, :index, listing_id: attachment.listing_id))
 
         {:error, %Ecto.Changeset{} = _changeset} ->
           conn
@@ -309,7 +309,7 @@ defmodule MpnetworkWeb.AttachmentController do
 
           conn
           |> put_flash(:info, "Attachment updated successfully.")
-          |> redirect(to: attachment_path(conn, :index, listing_id: attachment.listing_id))
+          |> redirect(to: Routes.attachment_path(conn, :index, listing_id: attachment.listing_id))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(
@@ -337,7 +337,7 @@ defmodule MpnetworkWeb.AttachmentController do
     # redirect to show page
     conn
     |> put_flash(:info, "Attachment rotated successfully.")
-    |> redirect(to: attachment_path(conn, :edit, attachment))
+    |> redirect(to: Routes.attachment_path(conn, :edit, attachment))
   end
 
   def rotate_right(conn, %{"id" => id}) do
@@ -352,7 +352,7 @@ defmodule MpnetworkWeb.AttachmentController do
     # redirect to show page
     conn
     |> put_flash(:info, "Attachment rotated successfully.")
-    |> redirect(to: attachment_path(conn, :edit, attachment))
+    |> redirect(to: Routes.attachment_path(conn, :edit, attachment))
   end
 
   def delete(conn, %{"id" => id}) do
@@ -367,7 +367,7 @@ defmodule MpnetworkWeb.AttachmentController do
 
       conn
       |> put_flash(:info, "Attachment deleted successfully.")
-      |> redirect(to: attachment_path(conn, :index, listing_id: listing.id))
+      |> redirect(to: Routes.attachment_path(conn, :index, listing_id: listing.id))
     else
       send_resp(conn, 403, "Forbidden: You are not allowed to access these attachments")
     end

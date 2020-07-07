@@ -57,13 +57,13 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   test "lists all entries on index", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, attachment_path(conn, :index, listing_id: listing.id))
+    conn = get(conn, Routes.attachment_path(conn, :index, listing_id: listing.id))
     assert html_response(conn, 200) =~ "Attachments for #{listing.address}"
   end
 
   test "renders form for new attachments", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, attachment_path(conn, :new, listing_id: listing.id))
+    conn = get(conn, Routes.attachment_path(conn, :new, listing_id: listing.id))
     assert html_response(conn, 200) =~ "New Attachment(s)"
   end
 
@@ -76,7 +76,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     conn =
       post(
         conn,
-        attachment_path(conn, :create),
+        Routes.attachment_path(conn, :create),
         attachment:
           Enum.into(%{listing_id: listing.id, listing: listing}, @post_attachment_create_attrs)
       )
@@ -87,18 +87,18 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
     listing_id = String.to_integer(listing_id)
     assert listing_id == listing.id
-    assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
+    assert redirected_to(conn) == Routes.attachment_path(conn, :index, listing_id: listing.id)
 
     [%Attachment{id: attachment_id} = attachment] =
       Repo.all(from(a in Attachment, where: a.listing_id == ^listing_id))
 
     conn = initial_conn
-    conn = get(conn, attachment_path(conn, :show, attachment_id))
+    conn = get(conn, Routes.attachment_path(conn, :show, attachment_id))
     assert response(conn, 200) =~ @test_attachment_binary_data
     conn = initial_conn
     # the following header triggers the ETag comparison server-side
     conn = put_req_header(conn, "if-none-match", Base.encode16(attachment.sha256_hash))
-    conn = get(conn, attachment_path(conn, :show, attachment_id))
+    conn = get(conn, Routes.attachment_path(conn, :show, attachment_id))
     assert response(conn, 304)
   end
 
@@ -108,7 +108,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     conn =
       post(
         conn,
-        attachment_path(conn, :create),
+        Routes.attachment_path(conn, :create),
         attachment: Enum.into(%{listing_id: listing.id}, @invalid_post_attrs)
       )
 
@@ -117,41 +117,41 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   test "renders form for editing chosen attachment", %{conn: conn} do
     {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, attachment_path(conn, :edit, attachment))
+    conn = get(conn, Routes.attachment_path(conn, :edit, attachment))
     assert html_response(conn, 200) =~ "Editing Attachment"
   end
 
   test "updates chosen attachment and redirects when data is valid", %{conn: conn} do
     initial_conn = conn
     {listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = put(conn, attachment_path(conn, :update, attachment), attachment: @post_update_attrs)
-    assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
+    conn = put(conn, Routes.attachment_path(conn, :update, attachment), attachment: @post_update_attrs)
+    assert redirected_to(conn) == Routes.attachment_path(conn, :index, listing_id: listing.id)
     conn = initial_conn
-    conn = get(conn, attachment_path(conn, :show, attachment))
+    conn = get(conn, Routes.attachment_path(conn, :show, attachment))
     assert response(conn, 200) == @test_attachment_new_binary_data
   end
 
   test "does not update chosen attachment and renders errors when data is invalid", %{conn: conn} do
     {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = put(conn, attachment_path(conn, :update, attachment), attachment: @invalid_post_attrs)
+    conn = put(conn, Routes.attachment_path(conn, :update, attachment), attachment: @invalid_post_attrs)
     assert html_response(conn, 200) =~ "Editing Attachment"
   end
 
   test "deletes chosen attachment", %{conn: conn} do
     initial_conn = conn
     {listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = delete(conn, attachment_path(conn, :delete, attachment))
-    assert redirected_to(conn) == attachment_path(conn, :index, listing_id: listing.id)
+    conn = delete(conn, Routes.attachment_path(conn, :delete, attachment))
+    assert redirected_to(conn) == Routes.attachment_path(conn, :index, listing_id: listing.id)
     conn = initial_conn
 
     assert_error_sent(404, fn ->
-      get(conn, attachment_path(conn, :show, attachment))
+      get(conn, Routes.attachment_path(conn, :show, attachment))
     end)
   end
 
   test "shows attachment based on base64-encoded sha256 hash of attachment", %{conn: conn} do
     {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, attachment_path(conn, :show, attachment.sha256_hash |> Base.url_encode64()))
+    conn = get(conn, Routes.attachment_path(conn, :show, attachment.sha256_hash |> Base.url_encode64()))
     assert response(conn, 200) == @test_attachment_binary_data
   end
 end

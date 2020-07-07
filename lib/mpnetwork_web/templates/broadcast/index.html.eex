@@ -1,4 +1,4 @@
 <h2>The <%= @length %> Most Recent Broadcasts</h2>
 <%= render("_latest_n.html", conn: @conn, broadcasts: @broadcasts, current_user: @current_user) %>
 
-<%= link "New Broadcast", to: broadcast_path(@conn, :new), class: "btn btn-default btn-xl" %>
+<%= link "New Broadcast", to: Routes.broadcast_path(@conn, :new), class: "btn btn-default btn-xl" %>

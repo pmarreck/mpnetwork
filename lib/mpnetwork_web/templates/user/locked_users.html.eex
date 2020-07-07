@@ -20,9 +20,9 @@
       <td><%= GlobalHelpers.role_id_to_name(user.role_id) %></td>
 
       <td class="text-right">
-        <span><%= link "Detail", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Detail", to: Routes.user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
         <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(@conn), user) && is_locked?(user) do %>
-          <span><%= link "Unlock", to: user_path(@conn, :unlock_user, user), method: :post, class: "btn btn-danger btn-xs" %></span>
+          <span><%= link "Unlock", to: Routes.user_path(@conn, :unlock_user, user), method: :post, class: "btn btn-danger btn-xs" %></span>
         <% end %>
       </td>
     </tr>

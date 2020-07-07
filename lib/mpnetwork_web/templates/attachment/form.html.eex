@@ -24,9 +24,9 @@
       <%= label f, "File attachment:", class: "control-label" %>
       <%= if f.data.id do %>
           <%= if f.data.is_image do %>
-            <img style="width:100%;max-width:600px;padding-bottom:5px" src="<%= attachment_path(@conn, :show, f.data.id) %>" />
+            <img style="width:100%;max-width:600px;padding-bottom:5px" src="<%= Routes.attachment_path(@conn, :show, f.data.id) %>" />
           <% else %>
-            <%= link "Download/view \"#{f.data.original_filename}\"", to: attachment_path(@conn, :show, f.data.id) %>
+            <%= link "Download/view \"#{f.data.original_filename}\"", to: Routes.attachment_path(@conn, :show, f.data.id) %>
           <% end %>
       <% end %>
       <%= file_input f, :data, class: "form-control" %>
@@ -40,14 +40,14 @@
     </div>
     <div class="form-group">
       <%= if @attachment && @attachment.is_image do %>
-        <span><%= link "↶", to: attachment_path(@conn, :rotate_left, @attachment), method: :post, class: "btn btn-default", title: "Rotate Left" %></span>
-        <span><%= link "↷", to: attachment_path(@conn, :rotate_right, @attachment), method: :post, class: "btn btn-default", title: "Rotate Right" %></span>
+        <span><%= link "↶", to: Routes.attachment_path(@conn, :rotate_left, @attachment), method: :post, class: "btn btn-default", title: "Rotate Left" %></span>
+        <span><%= link "↷", to: Routes.attachment_path(@conn, :rotate_right, @attachment), method: :post, class: "btn btn-default", title: "Rotate Right" %></span>
       <% end %>
     </div>
   <% end %>
 <% end %>
 <br />
 <%= if @attachment do %>
-  <%= link "Delete", to: attachment_path(@conn, :delete, @attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xl" %></span>
+  <%= link "Delete", to: Routes.attachment_path(@conn, :delete, @attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xl" %></span>
 <% end %>
 <br />

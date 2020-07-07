@@ -26,10 +26,10 @@
               <div class="col-xs-12">
 
                 <div class="form-group">
-                  <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
+                  <div><%= link "Manage photos/attachments for this listing", to: Routes.attachment_path(@conn, :index, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></div>
                   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @existing, current_user: @conn.assigns.current_user) %>
                 </div>
-                <p><%= link "New Attachment(s)", to: attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
+                <p><%= link "New Attachment(s)", to: Routes.attachment_path(@conn, :new, %{listing_id: @existing.id}), class: "btn btn-default btn-xl" %></p>
               </div>
             </div>
           </div>
@@ -2011,7 +2011,7 @@
     <div class="form-group col-md-12">
         <span style="float: left"><%= submit "Save Listing", class: "btn btn-primary", style: "width: 100px" %></span>
         <%= if @existing do %>
-          <span style="float: right"><%= link "Delete Listing", to: listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
+          <span style="float: right"><%= link "Delete Listing", to: Routes.listing_path(@conn, :delete, @existing), method: :delete, data: [confirm: "Are you sure you want to delete this listing?"], class: "btn btn-danger btn-xl" %></span>
         <% end %>
     </div>
   </div>

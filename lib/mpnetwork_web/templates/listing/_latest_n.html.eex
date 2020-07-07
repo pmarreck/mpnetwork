@@ -52,14 +52,14 @@
               <td data-label="Updated"><%= listing.updated_at |> GlobalHelpers.utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
             <td data-label="Address">
-              <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
+              <%= link listing.address, to: Routes.listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
               <%= if @draft && listing.draft && listing.user_id == @current_user.id do %> (Your Draft)<% end %>
             </td>
             <%= if @primaries do %>
               <td data-label="Photo">
                   <%= if @primaries[listing.id] do %>
-                    <%= link to: listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
-                      <img style="max-width:100px;" src="<%= attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
+                    <%= link to: Routes.listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
+                      <img style="max-width:100px;" src="<%= Routes.attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
                     <% end %>
                   <% end %>
               </td>
@@ -123,11 +123,11 @@
             <% end %>
             <td class="text-right">
               <%= unless listing.listing_status_type in [:NEW, :FS, :EXT, :UC, :PC] do %>
-                <span><%= link "Clone", to: listing_path(@conn, :new, %{clone_id: listing.id}), class: "btn btn-default btn-xs" %></span>
+                <span><%= link "Clone", to: Routes.listing_path(@conn, :new, %{clone_id: listing.id}), class: "btn btn-default btn-xs" %></span>
               <% end %>
               <%= if !Permissions.read_only?(@current_user) && Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, listing) do %>
-                <span><%= link "Edit", to: listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
-                <span><%= link "Delete", to: listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+                <span><%= link "Edit", to: Routes.listing_path(@conn, :edit, listing), class: "btn btn-default btn-xs" %></span>
+                <span><%= link "Delete", to: Routes.listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
               <% end %>
             </td>
           </tr>

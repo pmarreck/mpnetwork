@@ -29,7 +29,7 @@ defmodule MpnetworkWeb.BroadcastController do
         {:ok, broadcast} ->
           conn
           |> put_flash(:info, "Broadcast created successfully.")
-          |> redirect(to: broadcast_path(conn, :show, broadcast))
+          |> redirect(to: Routes.broadcast_path(conn, :show, broadcast))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
@@ -71,7 +71,7 @@ defmodule MpnetworkWeb.BroadcastController do
           {:ok, broadcast} ->
             conn
             |> put_flash(:info, "Broadcast updated successfully.")
-            |> redirect(to: broadcast_path(conn, :show, broadcast))
+            |> redirect(to: Routes.broadcast_path(conn, :show, broadcast))
 
           {:error, %Ecto.Changeset{} = changeset} ->
             render(conn, "edit.html", broadcast: broadcast, changeset: changeset)
@@ -93,7 +93,7 @@ defmodule MpnetworkWeb.BroadcastController do
 
         conn
         |> put_flash(:info, "Broadcast deleted successfully.")
-        |> redirect(to: broadcast_path(conn, :index))
+        |> redirect(to: Routes.broadcast_path(conn, :index))
       else
         send_resp(conn, 405, "Not allowed")
       end

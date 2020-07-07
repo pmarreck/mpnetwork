@@ -20,7 +20,7 @@ defmodule MpnetworkWeb do
     quote do
       use Phoenix.Controller, log: false, namespace: MpnetworkWeb
       import Plug.Conn
-      import MpnetworkWeb.Router.Helpers
+      alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.Gettext
       # import Coherence current_user and logged_in? into all controllers
       import Coherence, only: [current_user: 1, logged_in?: 1]
@@ -39,7 +39,7 @@ defmodule MpnetworkWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import MpnetworkWeb.Router.Helpers
+      alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.ErrorHelpers
       import MpnetworkWeb.Gettext
       # custom global helpers

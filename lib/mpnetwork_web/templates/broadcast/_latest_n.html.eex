@@ -20,8 +20,8 @@
               </div>
               <div class="col-md-1">
                 <div class="text-right">
-                  <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
-                  <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+                  <%= link "Edit", to: Routes.broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
+                  <%= link "Delete", to: Routes.broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
                 </div>
               </div>
             <% else %>
@@ -31,8 +31,8 @@
                   <%= if !Permissions.read_only?(@current_user) do %>
                     <%= if Permissions.owner_or_admin_of_same_office_or_site_admin?(@current_user, broadcast) do %>
                       <div class="text-right">
-                        <%= link "Edit", to: broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
-                        <%= link "Delete", to: broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+                        <%= link "Edit", to: Routes.broadcast_path(@conn, :edit, broadcast), class: "btn btn-default btn-xs" %>
+                        <%= link "Delete", to: Routes.broadcast_path(@conn, :delete, broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
                       </div>
                     <% end %>
                   <% end %>

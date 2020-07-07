@@ -8,17 +8,17 @@
 <section class="content">
   <div class="form-group">
     <%= if edit_rights do %>
-      <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+      <span><%= link "Edit this listing", to: Routes.listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
     <% else %>
       <br/>
     <% end %>
-    <span><%= link "Email this listing", to: email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xl" %></span>
+    <span><%= link "Email this listing", to: Routes.email_listing_path(@conn, :email_listing, @listing.id), class: "btn btn-default btn-xl" %></span>
     <%= if @listing.listing_status_type not in [:NEW, :FS, :EXT, :UC, :PC] do %>
-      <span><%= link "Clone this listing", to: listing_path(@conn, :new, %{clone_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
+      <span><%= link "Clone this listing", to: Routes.listing_path(@conn, :new, %{clone_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
     <% end %>
-    <span><%= link "View listing sheet (broker full)", to: public_broker_full_path(@conn, :broker_full, LinkCodeGen.public_broker_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
-    <span><%= link "View listing sheet (client full)", to: public_client_full_path(@conn, :client_full, LinkCodeGen.public_client_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
-    <span><%= link "View listing sheet (customer full)", to: public_customer_full_path(@conn, :customer_full, LinkCodeGen.public_customer_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (broker full)", to: Routes.public_broker_full_path(@conn, :broker_full, LinkCodeGen.public_broker_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (client full)", to: Routes.public_client_full_path(@conn, :client_full, LinkCodeGen.public_client_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (customer full)", to: Routes.public_customer_full_path(@conn, :customer_full, LinkCodeGen.public_customer_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
     <div><br /></div>
     <div class="row">
       <div class="col-md-6">
@@ -33,12 +33,12 @@
 
                 <div class="form-group">
                   <%= if edit_rights do %>
-                    <div><%= link "Manage photos/attachments for this listing", to: attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></div>
+                    <div><%= link "Manage photos/attachments for this listing", to: Routes.attachment_path(@conn, :index, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></div>
                   <% end %>
                   <%= render("_listing_attachments.html", conn: @conn, attachments: @attachments, listing: @listing, current_user: @current_user) %>
                 </div>
                 <%= if edit_rights do %>
-                  <p><%= link "New Attachment(s)", to: attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
+                  <p><%= link "New Attachment(s)", to: Routes.attachment_path(@conn, :new, %{listing_id: @listing.id}), class: "btn btn-default btn-xl" %></p>
                 <% end %>
               </div>
             </div>
@@ -1286,7 +1286,7 @@
 <br />
 
 <%= if @listing.user_id == @current_user.id do %>
-  <span><%= link "Edit this listing", to: listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
+  <span><%= link "Edit this listing", to: Routes.listing_path(@conn, :edit, @listing), class: "btn btn-default btn-xl" %></span>
 <% end %>
 &nbsp;&nbsp;
-<span><%= link "<< Back to all listings", to: listing_path(@conn, :index) %></span>
+<span><%= link "<< Back to all listings", to: Routes.listing_path(@conn, :index) %></span>

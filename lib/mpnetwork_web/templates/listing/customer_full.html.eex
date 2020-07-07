@@ -143,8 +143,8 @@
                         # That is why I default to the first photo above if no primary photo exists yet
                       %>
                       <div class="item<%= if attachment.id == primary_photo.id, do: " active", else: "" %>">
-                        <%= link to: attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64)), title: "Click to view in original size" do %>
-                          <img class="main-listing-photo img-responsive" src="<%= attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192) %>" />
+                        <%= link to: Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64)), title: "Click to view in original size" do %>
+                          <img class="main-listing-photo img-responsive" src="<%= Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192) %>" />
                         <% end %>
                         <%= if attachment.primary do %>
                           <div class="carousel-caption">

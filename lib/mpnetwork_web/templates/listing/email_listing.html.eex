@@ -1,10 +1,10 @@
 <%= render(MpnetworkWeb.PageView, "_breadcrumb.html", assigns: Enum.into(@conn.assigns, %{breadcrumb_path: ~w[ Listings Email ]})) %>
 
 <h4>Send an email linking to <%= @listing.address %></h4>
-<p><%= link "Preview the link (customer-full format)", to: public_customer_full_path(@conn, :customer_full, LinkCodeGen.public_customer_full_code(@listing)), target: "_blank" %></p>
-<p><%= link "Preview the link (client-full format)", to: public_client_full_path(@conn, :client_full, LinkCodeGen.public_client_full_code(@listing)), target: "_blank" %></p>
-<p><%= link "Preview the link (broker-full format)", to: public_broker_full_path(@conn, :broker_full, LinkCodeGen.public_broker_full_code(@listing)), target: "_blank" %></p>
-<%= form_for @conn, email_listing_path(@conn, :send_email, @listing.id), [as: :email, class: "contains-richtexteditor"], fn f -> %>
+<p><%= link "Preview the link (customer-full format)", to: Routes.public_customer_full_path(@conn, :customer_full, LinkCodeGen.public_customer_full_code(@listing)), target: "_blank" %></p>
+<p><%= link "Preview the link (client-full format)", to: Routes.public_client_full_path(@conn, :client_full, LinkCodeGen.public_client_full_code(@listing)), target: "_blank" %></p>
+<p><%= link "Preview the link (broker-full format)", to: Routes.public_broker_full_path(@conn, :broker_full, LinkCodeGen.public_broker_full_code(@listing)), target: "_blank" %></p>
+<%= form_for @conn, Routes.email_listing_path(@conn, :send_email, @listing.id), [as: :email, class: "contains-richtexteditor"], fn f -> %>
 
   <div class="form-group">
     <%= label f, "List of multiple names and/or emails to email this listing to:", class: "control-label" %>
@@ -39,6 +39,6 @@
 
   <div class="form-group">
     <%= submit "Send Email", class: "btn btn-primary" %>
-    <%= link "Cancel", to: listing_path(@conn, :show, @listing.id), class: "btn" %>
+    <%= link "Cancel", to: Routes.listing_path(@conn, :show, @listing.id), class: "btn" %>
   </div>
 <% end %>

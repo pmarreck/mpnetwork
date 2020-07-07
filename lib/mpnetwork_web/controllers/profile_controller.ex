@@ -31,7 +31,7 @@ defmodule MpnetworkWeb.ProfileController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Profile updated successfully.")
-          |> redirect(to: profile_path(conn, :show, user))
+          |> redirect(to: Routes.profile_path(conn, :show, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(

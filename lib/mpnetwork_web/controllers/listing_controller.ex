@@ -192,7 +192,7 @@ defmodule MpnetworkWeb.ListingController do
         {:ok, listing} ->
           conn
           |> put_flash(:info, "Listing created successfully.")
-          |> redirect(to: listing_path(conn, :show, listing))
+          |> redirect(to: Routes.listing_path(conn, :show, listing))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(
@@ -278,7 +278,7 @@ defmodule MpnetworkWeb.ListingController do
           {:ok, listing} ->
             conn
             |> put_flash(:info, "Listing updated successfully.")
-            |> redirect(to: listing_path(conn, :show, listing))
+            |> redirect(to: Routes.listing_path(conn, :show, listing))
 
           {:error, %Ecto.Changeset{} = changeset} ->
             attachments = Listing.list_attachments(id, AttachmentMetadata)
@@ -310,7 +310,7 @@ defmodule MpnetworkWeb.ListingController do
 
         conn
         |> put_flash(:info, "Listing deleted successfully.")
-        |> redirect(to: listing_path(conn, :index))
+        |> redirect(to: Routes.listing_path(conn, :index))
       else
         send_resp(conn, 405, "Not allowed")
       end
@@ -413,7 +413,7 @@ defmodule MpnetworkWeb.ListingController do
       :error,
       "ERROR: At least one email address is required"
     )
-    |> redirect(to: email_listing_path(conn, :email_listing, id))
+    |> redirect(to: Routes.email_listing_path(conn, :email_listing, id))
   end
 
   def send_email(
@@ -439,13 +439,13 @@ defmodule MpnetworkWeb.ListingController do
     url =
       case type do
         "broker" ->
-          public_broker_full_url(conn, :broker_full, LinkCodeGen.public_broker_full_code(listing))
+          Routes.public_broker_full_url(conn, :broker_full, LinkCodeGen.public_broker_full_code(listing))
 
         "client" ->
-          public_client_full_url(conn, :client_full, LinkCodeGen.public_client_full_code(listing))
+          Routes.public_client_full_url(conn, :client_full, LinkCodeGen.public_client_full_code(listing))
 
         "customer" ->
-          public_customer_full_url(conn, :customer_full, LinkCodeGen.public_customer_full_code(listing))
+          Routes.public_customer_full_url(conn, :customer_full, LinkCodeGen.public_customer_full_code(listing))
 
         _ ->
           raise "unknown public listing type: #{type}"
@@ -537,7 +537,7 @@ defmodule MpnetworkWeb.ListingController do
               unparse_names_emails(parsed_names_emails)
             }" <> if(cc_self, do: ". You were bcc'd on every email.", else: "")
           )
-          |> redirect(to: listing_path(conn, :show, id))
+          |> redirect(to: Routes.listing_path(conn, :show, id))
 
         false ->
           conn
@@ -547,12 +547,12 @@ defmodule MpnetworkWeb.ListingController do
               fail_reasons
             }"
           )
-          |> redirect(to: email_listing_path(conn, :email_listing, id))
+          |> redirect(to: Routes.email_listing_path(conn, :email_listing, id))
       end
     else
       conn
       |> put_flash(:error, "ERROR: No valid email addresses were detected")
-      |> redirect(to: email_listing_path(conn, :email_listing, id))
+      |> redirect(to: Routes.email_listing_path(conn, :email_listing, id))
     end
   end
 

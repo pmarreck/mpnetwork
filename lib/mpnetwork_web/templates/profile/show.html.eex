@@ -39,5 +39,5 @@
 
 </ul>
 
-<span><%= link "Edit", to: profile_path(@conn, :edit, @user) %></span>
-<span><%= link "Back", to: page_path(@conn, :index) %></span>
+<span><%= link "Edit", to: Routes.profile_path(@conn, :edit, @user) %></span>
+<span><%= link "Back", to: Routes.page_path(@conn, :index) %></span>

@@ -27,10 +27,10 @@
       <td><%= office.url && link office.url, to: office.url %></td>
       <%= if @show_controls do %>
         <td class="text-right">
-          <span><%= link "Show", to: office_path(@conn, :show, office), class: "btn btn-default btn-xs" %></span>
-          <span><%= link "Edit", to: office_path(@conn, :edit, office), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Show", to: Routes.office_path(@conn, :show, office), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Edit", to: Routes.office_path(@conn, :edit, office), class: "btn btn-default btn-xs" %></span>
           <%= if Permissions.site_admin?(@conn.assigns.current_user) do %>
-            <span><%= link "Delete", to: office_path(@conn, :delete, office), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+            <span><%= link "Delete", to: Routes.office_path(@conn, :delete, office), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
           <% end %>
         </td>
       <% end %>
@@ -39,4 +39,4 @@
   </tbody>
 </table>
 
-<span><%= link "New Office", to: office_path(@conn, :new) %></span>
+<span><%= link "New Office", to: Routes.office_path(@conn, :new) %></span>

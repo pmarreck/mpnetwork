@@ -1,5 +1,5 @@
 <h2>Profile for <%= @user.name %></h2>
 
-<%= render "form.html", Map.put(assigns, :action, profile_path(@conn, :update, @user)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.profile_path(@conn, :update, @user)) %>
 
-<span><%= link "Back", to: page_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.page_path(@conn, :index) %></span>

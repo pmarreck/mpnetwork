@@ -61,14 +61,14 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
   describe "index" do
     test "lists all offices", %{conn: conn} do
-      conn = get(conn, office_path(conn, :index))
+      conn = get(conn, Routes.office_path(conn, :index))
       assert html_response(conn, 200) =~ "Offices"
     end
   end
 
   describe "new office" do
     test "renders form", %{conn: conn} do
-      conn = get(conn, office_path(conn, :new))
+      conn = get(conn, Routes.office_path(conn, :new))
       assert html_response(conn, 200) =~ "New Office"
     end
   end
@@ -76,18 +76,18 @@ defmodule MpnetworkWeb.OfficeControllerTest do
   describe "create office" do
     test "redirects to show when data is valid", %{conn: conn} do
       original_conn = conn
-      conn = post(conn, office_path(conn, :create), office: create_attrs())
+      conn = post(conn, Routes.office_path(conn, :create), office: create_attrs())
 
       assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == office_path(conn, :show, id)
+      assert redirected_to(conn) == Routes.office_path(conn, :show, id)
 
       conn = original_conn
-      conn = get(conn, office_path(conn, :show, id))
+      conn = get(conn, Routes.office_path(conn, :show, id))
       assert html_response(conn, 200) =~ "some name"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, office_path(conn, :create), office: @invalid_attrs)
+      conn = post(conn, Routes.office_path(conn, :create), office: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Office"
     end
   end
@@ -96,7 +96,7 @@ defmodule MpnetworkWeb.OfficeControllerTest do
     setup [:create_office]
 
     test "renders form for editing chosen office", %{conn: conn, office: office} do
-      conn = get(conn, office_path(conn, :edit, office))
+      conn = get(conn, Routes.office_path(conn, :edit, office))
       assert html_response(conn, 200) =~ "Edit Office"
     end
   end
@@ -106,16 +106,16 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
     test "redirects when data is valid", %{conn: conn, office: office} do
       original_conn = conn
-      conn = put(conn, office_path(conn, :update, office), office: @update_attrs)
-      assert redirected_to(conn) == office_path(conn, :show, office)
+      conn = put(conn, Routes.office_path(conn, :update, office), office: @update_attrs)
+      assert redirected_to(conn) == Routes.office_path(conn, :show, office)
 
       conn = original_conn
-      conn = get(conn, office_path(conn, :show, office))
+      conn = get(conn, Routes.office_path(conn, :show, office))
       assert html_response(conn, 200) =~ "some updated address"
     end
 
     test "renders errors when data is invalid", %{conn: conn, office: office} do
-      conn = put(conn, office_path(conn, :update, office), office: @invalid_attrs)
+      conn = put(conn, Routes.office_path(conn, :update, office), office: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Office"
     end
   end
@@ -125,12 +125,12 @@ defmodule MpnetworkWeb.OfficeControllerTest do
 
     test "deletes chosen office", %{conn: conn, office: office} do
       original_conn = conn
-      conn = delete(conn, office_path(conn, :delete, office))
-      assert redirected_to(conn) == office_path(conn, :index)
+      conn = delete(conn, Routes.office_path(conn, :delete, office))
+      assert redirected_to(conn) == Routes.office_path(conn, :index)
       conn = original_conn
 
       assert_error_sent(404, fn ->
-        get(conn, office_path(conn, :show, office))
+        get(conn, Routes.office_path(conn, :show, office))
       end)
     end
   end

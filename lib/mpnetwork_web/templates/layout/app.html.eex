@@ -79,7 +79,7 @@
           </div>
 
           <!-- search form (Optional) -->
-          <form action="<%= listing_path(@conn, :index) %>" method="get" class="sidebar-form">
+          <form action="<%= Routes.listing_path(@conn, :index) %>" method="get" class="sidebar-form">
             <div class="input-group">
               <input type="text" name="q" class="form-control" value="<%= @conn.params["q"] %>" placeholder="Search..." title="Try a search to see results, plus examples of other possible searches.">
               <span class="input-group-btn">
@@ -111,9 +111,9 @@
                   </span>
               </a>
               <ul class="treeview-menu">
-                <li><%= link "Browse", to: broadcast_path(@conn, :index) %></li>
+                <li><%= link "Browse", to: Routes.broadcast_path(@conn, :index) %></li>
                 <%= if !Permissions.read_only?(@current_user) do %>
-                  <li><%= link "Add", to: broadcast_path(@conn, :new) %></li>
+                  <li><%= link "Add", to: Routes.broadcast_path(@conn, :new) %></li>
                 <% end %>
               </ul>
             </li>
@@ -124,11 +124,11 @@
                   </span>
               </a>
               <ul class="treeview-menu">
-                <li><%= link "Round Robin Report", to: listing_path(@conn, :index) %></li>
-                <li><%= link "Inspection/Open House Sheet", to: upcoming_inspections_path(@conn, :inspection_sheet) %></li>
-                <li><%= link "My Office's Listings", to: listing_path(@conn, :index, q: "my office", limit: 50) %></li>
+                <li><%= link "Round Robin Report", to: Routes.listing_path(@conn, :index) %></li>
+                <li><%= link "Inspection/Open House Sheet", to: Routes.upcoming_inspections_path(@conn, :inspection_sheet) %></li>
+                <li><%= link "My Office's Listings", to: Routes.listing_path(@conn, :index, q: "my office", limit: 50) %></li>
                 <%= if !Permissions.read_only?(@current_user) do %>
-                  <li><%= link "Add New Listing", to: listing_path(@conn, :new) %></li>
+                  <li><%= link "Add New Listing", to: Routes.listing_path(@conn, :new) %></li>
                 <% end %>
               </ul>
             </li>
@@ -139,7 +139,7 @@
                   </span>
               </a>
               <ul class="treeview-menu">
-                <li><%= link "Example Search Requests", to: search_help_path(@conn, :search_help) %></li>
+                <li><%= link "Example Search Requests", to: Routes.search_help_path(@conn, :search_help) %></li>
               </ul>
             </li>
             <%= if @current_user.role_id < 3 do %>
@@ -150,10 +150,10 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><%= link "Invite a new user", to: invitation_path(@conn, :new) %></li>
-                  <li><%= link "Edit users", to: user_path(@conn, :index) %></li>
-                  <li><%= link "Unlock users", to: user_path(@conn, :locked_users) %></li>
-                  <li><%= link "Edit offices", to: office_path(@conn, :index) %></li>
+                  <li><%= link "Invite a new user", to: Routes.invitation_path(@conn, :new) %></li>
+                  <li><%= link "Edit users", to: Routes.user_path(@conn, :index) %></li>
+                  <li><%= link "Unlock users", to: Routes.user_path(@conn, :locked_users) %></li>
+                  <li><%= link "Edit offices", to: Routes.office_path(@conn, :index) %></li>
                 </ul>
               </li>
             <% end %>

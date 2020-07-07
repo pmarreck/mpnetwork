@@ -34,12 +34,12 @@ defmodule MpnetworkWeb.UserController do
         {:ok, _user} ->
           conn
           |> put_flash(:info, "User unlocked successfully.")
-          |> redirect(to: user_path(conn, :locked_users))
+          |> redirect(to: Routes.user_path(conn, :locked_users))
 
         {:error, %Ecto.Changeset{} = _changeset} ->
           conn
           |> put_flash(:error, "There was a problem unlocking this user.")
-          |> redirect(to: user_path(conn, :locked_users))
+          |> redirect(to: Routes.user_path(conn, :locked_users))
       end
     else
       send_resp(conn, 405, "Not allowed")
@@ -79,7 +79,7 @@ defmodule MpnetworkWeb.UserController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "User created successfully.")
-          |> redirect(to: user_path(conn, :show, user))
+          |> redirect(to: Routes.user_path(conn, :show, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(
@@ -121,7 +121,7 @@ defmodule MpnetworkWeb.UserController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "User updated successfully.")
-          |> redirect(to: user_path(conn, :show, user))
+          |> redirect(to: Routes.user_path(conn, :show, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(
@@ -146,7 +146,7 @@ defmodule MpnetworkWeb.UserController do
 
       conn
       |> put_flash(:info, "User deleted successfully.")
-      |> redirect(to: user_path(conn, :index))
+      |> redirect(to: Routes.user_path(conn, :index))
     else
       send_resp(conn, 405, "Not allowed")
     end

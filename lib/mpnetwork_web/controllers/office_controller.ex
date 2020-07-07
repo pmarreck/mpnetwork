@@ -26,7 +26,7 @@ defmodule MpnetworkWeb.OfficeController do
         {:ok, office} ->
           conn
           |> put_flash(:info, "Office created successfully.")
-          |> redirect(to: office_path(conn, :show, office))
+          |> redirect(to: Routes.office_path(conn, :show, office))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
@@ -59,7 +59,7 @@ defmodule MpnetworkWeb.OfficeController do
         {:ok, office} ->
           conn
           |> put_flash(:info, "Office updated successfully.")
-          |> redirect(to: office_path(conn, :show, office))
+          |> redirect(to: Routes.office_path(conn, :show, office))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", office: office, changeset: changeset)
@@ -76,7 +76,7 @@ defmodule MpnetworkWeb.OfficeController do
 
       conn
       |> put_flash(:info, "Office deleted successfully.")
-      |> redirect(to: office_path(conn, :index))
+      |> redirect(to: Routes.office_path(conn, :index))
     else
       send_resp(conn, 405, "Not allowed, need to be a site administrator to delete offices")
     end

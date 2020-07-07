@@ -5,6 +5,6 @@
 <p><%= @office.phone %></p>
 <p><%= @office.url %></p>
 
-<span><%= link "Edit", to: office_path(@conn, :edit, @office), class: "btn btn-default btn-xl" %></span>
+<span><%= link "Edit", to: Routes.office_path(@conn, :edit, @office), class: "btn btn-default btn-xl" %></span>
 &nbsp;
-<span><%= link "Back", to: office_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.office_path(@conn, :index) %></span>

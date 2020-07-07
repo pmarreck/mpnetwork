@@ -2,11 +2,11 @@
 
 
 <%= render "form.html", changeset: @changeset,
-                        action: listing_path(@conn, :create),
+                        action: Routes.listing_path(@conn, :create),
                         conn: @conn,
                         attachments: [],
                         offices: @offices,
                         users: @users,
                         existing: false %>
 <p><i>Attachments can be added after saving the listing</i></p>
-<span><%= link "Back", to: listing_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.listing_path(@conn, :index) %></span>

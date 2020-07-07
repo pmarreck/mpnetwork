@@ -11,7 +11,7 @@ defmodule MpnetworkWeb.Coherence do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import MpnetworkWeb.Router.Helpers
+      alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.ErrorHelpers
       import MpnetworkWeb.Gettext
       import MpnetworkWeb.Coherence.ViewHelpers
@@ -29,9 +29,8 @@ defmodule MpnetworkWeb.Coherence do
       import Ecto
       import Ecto.Query
       import Plug.Conn
-      import MpnetworkWeb.Router.Helpers
+      alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.Gettext
-      import Coherence.ControllerHelpers
 
       alias Coherence.Config
       alias Coherence.ControllerHelpers, as: Helpers

@@ -189,12 +189,12 @@ defmodule MpnetworkWeb.ListingControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get(conn, listing_path(conn, :index))
+    conn = get(conn, Routes.listing_path(conn, :index))
     assert html_response(conn, 200) =~ ~r/Latest [0-9]+/
   end
 
   test "renders form for new listings", %{conn: conn} do
-    conn = get(conn, listing_path(conn, :new))
+    conn = get(conn, Routes.listing_path(conn, :new))
     assert html_response(conn, 200) =~ "Attachments can be added after saving the listing"
   end
 
@@ -207,47 +207,47 @@ defmodule MpnetworkWeb.ListingControllerTest do
     conn =
       post(
         conn,
-        listing_path(conn, :create),
+        Routes.listing_path(conn, :create),
         listing: Enum.into(%{user_id: user.id, user: user}, @create_attrs)
       )
 
     assert %{id: id} = redirected_params(conn)
-    assert redirected_to(conn) == listing_path(conn, :show, id)
+    assert redirected_to(conn) == Routes.listing_path(conn, :show, id)
     conn = original_conn
-    conn = get(conn, listing_path(conn, :show, id))
+    conn = get(conn, Routes.listing_path(conn, :show, id))
     assert html_response(conn, 200) =~ "some city"
   end
 
   test "does not create listing and renders errors when data is invalid", %{conn: conn} do
-    conn = post(conn, listing_path(conn, :create), listing: @invalid_attrs)
+    conn = post(conn, Routes.listing_path(conn, :create), listing: @invalid_attrs)
     assert html_response(conn, 200) =~ "is invalid"
   end
 
   test "does not 500 if a varchar(255) field is exceeded", %{conn: conn} do
-    conn = post(conn, listing_path(conn, :create), listing: @create_varchar_overflow_attrs)
+    conn = post(conn, Routes.listing_path(conn, :create), listing: @create_varchar_overflow_attrs)
     assert html_response(conn, 200) =~ "should be at most 255 character(s)"
   end
 
   test "renders form for editing chosen listing", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, listing_path(conn, :edit, listing))
+    conn = get(conn, Routes.listing_path(conn, :edit, listing))
     assert html_response(conn, 200) =~ "listing[for_sale]"
   end
 
   test "updates chosen listing and redirects when data is valid", %{conn: initial_conn} do
     conn = initial_conn
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = put(conn, listing_path(conn, :update, listing), listing: @update_attrs)
+    conn = put(conn, Routes.listing_path(conn, :update, listing), listing: @update_attrs)
     assert Repo.get(Listing, listing.id)
-    assert redirected_to(conn) == listing_path(conn, :show, listing)
+    assert redirected_to(conn) == Routes.listing_path(conn, :show, listing)
 
-    conn = get(initial_conn, listing_path(initial_conn, :show, listing))
+    conn = get(initial_conn, Routes.listing_path(initial_conn, :show, listing))
     assert html_response(conn, 200) =~ "XX"
   end
 
   test "does not update chosen listing and renders errors when data is invalid", %{conn: conn} do
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = put(conn, listing_path(conn, :update, listing), listing: @invalid_attrs)
+    conn = put(conn, Routes.listing_path(conn, :update, listing), listing: @invalid_attrs)
     assert html_response(conn, 200) =~ "Oops"
   end
 
@@ -261,18 +261,18 @@ defmodule MpnetworkWeb.ListingControllerTest do
       Enum.into(%{city: "custom123city", price_usd: nil, draft: false}, @update_attrs)
 
     # should fail
-    conn = put(conn, listing_path(conn, :update, listing), listing: validation_failing_attrs)
+    conn = put(conn, Routes.listing_path(conn, :update, listing), listing: validation_failing_attrs)
     assert html_response(conn, 200) =~ "custom123city"
   end
 
   test "deletes chosen listing", %{conn: initial_conn} do
     conn = initial_conn
     listing = fixture(:listing, conn.assigns.current_user)
-    conn = delete(conn, listing_path(conn, :delete, listing))
-    assert redirected_to(conn) == listing_path(conn, :index)
+    conn = delete(conn, Routes.listing_path(conn, :delete, listing))
+    assert redirected_to(conn) == Routes.listing_path(conn, :index)
 
     assert_error_sent(404, fn ->
-      get(initial_conn, listing_path(initial_conn, :show, listing))
+      get(initial_conn, Routes.listing_path(initial_conn, :show, listing))
     end)
   end
 
@@ -280,7 +280,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
     listing = fixture(:listing, conn.assigns.current_user)
 
     conn =
-      get(conn, public_client_full_path(conn, :client_full, LinkCodeGen.public_client_full_code(listing)))
+      get(conn, Routes.public_client_full_path(conn, :client_full, LinkCodeGen.public_client_full_code(listing)))
 
     assert html_response(conn, 200)
   end
@@ -291,7 +291,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
     conn =
       get(
         conn,
-        public_client_full_path(
+        Routes.public_client_full_path(
           conn,
           :client_full,
           LinkCodeGen.public_client_full_code(listing, LinkCodeGen.now_in_unix_epoch_days() - 1)
@@ -303,20 +303,20 @@ defmodule MpnetworkWeb.ListingControllerTest do
 
   test "inspection sheet returns 200 and a relevant listing from you", %{conn: conn} do
     fixture(:listing, conn.assigns.current_user, @create_upcoming_broker_oh_attrs)
-    conn = get(conn, upcoming_inspections_path(conn, :inspection_sheet))
+    conn = get(conn, Routes.upcoming_inspections_path(conn, :inspection_sheet))
     assert response(conn, 200) =~ "inspectionaddress"
   end
 
   test "inspection sheet returns a relevant listing from someone else", %{conn: conn} do
     other_user = user_fixture()
     fixture(:listing, other_user, @create_upcoming_broker_oh_attrs)
-    conn = get(conn, upcoming_inspections_path(conn, :inspection_sheet))
+    conn = get(conn, Routes.upcoming_inspections_path(conn, :inspection_sheet))
     assert response(conn, 200) =~ "inspectionaddress"
   end
 
   test "inspection sheet should never show draft listings", %{conn: conn} do
     fixture(:listing, conn.assigns.current_user, @create_upcoming_INVALID_broker_oh_attrs)
-    conn = get(conn, upcoming_inspections_path(conn, :inspection_sheet))
+    conn = get(conn, Routes.upcoming_inspections_path(conn, :inspection_sheet))
     refute response(conn, 200) =~ "inspectionaddress"
   end
 
@@ -334,17 +334,17 @@ defmodule MpnetworkWeb.ListingControllerTest do
       )
 
     conn = assign(original_conn, :current_user, office_admin_1)
-    conn = get(conn, listing_path(conn, :edit, listing_1))
+    conn = get(conn, Routes.listing_path(conn, :edit, listing_1))
     assert response(conn, 200) =~ "shouldbeuneditablebyotheradmins"
     conn = assign(original_conn, :current_user, office_admin_2)
     start_conn = conn
-    conn = get(conn, listing_path(conn, :edit, listing_1))
+    conn = get(conn, Routes.listing_path(conn, :edit, listing_1))
     assert response(conn, 405)
 
     conn =
       put(
         start_conn,
-        listing_path(conn, :update, listing_1),
+        Routes.listing_path(conn, :update, listing_1),
         listing: %{address: "shouldn't be possible"}
       )
 
@@ -361,10 +361,10 @@ defmodule MpnetworkWeb.ListingControllerTest do
     conn = conn |> assign(:current_user, office_admin)
 
     conn =
-      put(conn, listing_path(conn, :update, listing), listing: %{address: "SHOULD be possible"})
+      put(conn, Routes.listing_path(conn, :update, listing), listing: %{address: "SHOULD be possible"})
 
-    assert redirected_to(conn) == listing_path(conn, :show, listing)
-    conn = get(initial_conn, listing_path(initial_conn, :show, listing))
+    assert redirected_to(conn) == Routes.listing_path(conn, :show, listing)
+    conn = get(initial_conn, Routes.listing_path(initial_conn, :show, listing))
     assert html_response(conn, 200) =~ "SHOULD be possible"
   end
 
@@ -378,7 +378,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
     listing = fixture(:listing, user)
     conn = conn |> assign(:current_user, user)
     original_authenticated_conn = conn
-    conn = get(conn, email_listing_path(conn, :email_listing, listing))
+    conn = get(conn, Routes.email_listing_path(conn, :email_listing, listing))
     assert html_response(conn, 200) =~ "Preview the link"
 
     email = "test@mpwrealestateboard.network"
@@ -393,12 +393,12 @@ defmodule MpnetworkWeb.ListingControllerTest do
       }"
 
     type = "broker"
-    url = public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
+    url = Routes.public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
     cc_self = false
     conn = original_authenticated_conn
 
     conn =
-      post(conn, email_listing_path(conn, :send_email, listing), %{
+      post(conn, Routes.email_listing_path(conn, :send_email, listing), %{
         "id" => listing.id,
         "email" => %{
           "names_emails" => names_emails,
@@ -410,7 +410,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
         }
       })
 
-    expected_redirect_path = listing_path(conn, :show, listing)
+    expected_redirect_path = Routes.listing_path(conn, :show, listing)
     assert redirected_to(conn) == expected_redirect_path
     # for some reason I couldn't just refer to original_authenticated_conn in the next line
     conn = get(recycle_authenticated(conn, user), expected_redirect_path)

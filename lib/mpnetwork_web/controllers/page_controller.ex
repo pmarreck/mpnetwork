@@ -41,6 +41,6 @@ defmodule MpnetworkWeb.PageController do
   end
 
   def bare_session_redirect(conn, _params) do
-    redirect(conn, to: page_path(conn, :index))
+    redirect(conn, to: Routes.page_path(conn, :index))
   end
 end

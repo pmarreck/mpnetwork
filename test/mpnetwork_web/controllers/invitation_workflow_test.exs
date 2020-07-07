@@ -41,7 +41,7 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
 
   test "can invite new user", %{conn: conn} do
     params = %{"invitation" => %{"name" => "John Doe", "email" => "john@example.com"}}
-    conn = post(conn, invitation_path(conn, :create), params)
+    conn = post(conn, Routes.invitation_path(conn, :create), params)
     assert get_flash(conn, :info) =~ "Invitation sent"
     # assert conn.private[:phoenix_flash] == %{"info" => "Invitation sent."}
     assert html_response(conn, 302)
@@ -56,7 +56,7 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
     conn = assign(conn, :current_user, nil)
     conn = assign(conn, :current_office, nil)
     unauthenticated_conn = conn
-    conn = get(conn, invitation_path(conn, :edit, token))
+    conn = get(conn, Routes.invitation_path(conn, :edit, token))
     assert html_response(conn, 200)
     conn = unauthenticated_conn
 
@@ -71,7 +71,7 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
       }
     }
 
-    conn = post(conn, invitation_path(conn, :create_user), params)
+    conn = post(conn, Routes.invitation_path(conn, :create_user), params)
     # if it redirected, it was successful
     assert html_response(conn, 302)
   end

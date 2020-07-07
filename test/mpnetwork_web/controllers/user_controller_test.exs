@@ -14,14 +14,14 @@ defmodule MpnetworkWeb.UserControllerTest do
 
   describe "index" do
     test "lists all users", %{conn: conn} do
-      conn = get(conn, user_path(conn, :index))
+      conn = get(conn, Routes.user_path(conn, :index))
       assert html_response(conn, 200) =~ "All Users"
     end
   end
 
   describe "new user" do
     test "renders form", %{conn: conn} do
-      conn = get(conn, user_path(conn, :new))
+      conn = get(conn, Routes.user_path(conn, :new))
       assert html_response(conn, 200) =~ "New User"
     end
   end
@@ -31,14 +31,14 @@ defmodule MpnetworkWeb.UserControllerTest do
       conn = original_conn
       office = conn.assigns.current_office
       valid_attrs = valid_user_attrs(%{broker: office, office_id: office.id})
-      conn = post(conn, user_path(conn, :create), user: valid_attrs)
+      conn = post(conn, Routes.user_path(conn, :create), user: valid_attrs)
 
       assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == user_path(conn, :show, id)
+      assert redirected_to(conn) == Routes.user_path(conn, :show, id)
 
       conn = original_conn
 
-      conn = get(conn, user_path(conn, :show, id))
+      conn = get(conn, Routes.user_path(conn, :show, id))
       assert html_response(conn, 200) =~ valid_attrs.name
     end
 
@@ -48,7 +48,7 @@ defmodule MpnetworkWeb.UserControllerTest do
       conn =
         post(
           conn,
-          user_path(conn, :create),
+          Routes.user_path(conn, :create),
           user: invalid_user_attrs(%{broker: office, office_id: office.id})
         )
 
@@ -58,7 +58,7 @@ defmodule MpnetworkWeb.UserControllerTest do
 
   describe "edit user as admin" do
     test "renders form for editing chosen user", %{conn: conn, user: user} do
-      conn = get(conn, user_path(conn, :edit, user))
+      conn = get(conn, Routes.user_path(conn, :edit, user))
       assert html_response(conn, 200) =~ "Editing #{user.name}"
     end
   end
@@ -67,16 +67,16 @@ defmodule MpnetworkWeb.UserControllerTest do
     test "redirects when data is valid", %{conn: conn, user: user} do
       initial_conn = conn
       updated_fields = valid_update_user_attrs()
-      conn = put(conn, user_path(conn, :update, user), user: updated_fields)
-      assert redirected_to(conn) == user_path(conn, :show, user)
+      conn = put(conn, Routes.user_path(conn, :update, user), user: updated_fields)
+      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
 
       conn = initial_conn
-      conn = get(conn, user_path(conn, :show, user))
+      conn = get(conn, Routes.user_path(conn, :show, user))
       assert html_response(conn, 200) =~ updated_fields.cell_phone
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, user_path(conn, :update, user), user: invalid_user_attrs())
+      conn = put(conn, Routes.user_path(conn, :update, user), user: invalid_user_attrs())
       assert html_response(conn, 200) =~ "Editing #{user.name}"
     end
   end
@@ -84,7 +84,7 @@ defmodule MpnetworkWeb.UserControllerTest do
   describe "delete user" do
     test "does not delete chosen user if user is not from same office", %{conn: conn, user: _user} do
       realtor_from_another_office = user_fixture(%{role_id: 3})
-      conn = delete(conn, user_path(conn, :delete, realtor_from_another_office))
+      conn = delete(conn, Routes.user_path(conn, :delete, realtor_from_another_office))
       assert response(conn, 405) =~ "Not allowed"
     end
 
@@ -94,12 +94,12 @@ defmodule MpnetworkWeb.UserControllerTest do
       {:ok, user_from_same_office} =
         Realtor.update_user(user, %{office_id: conn.assigns.current_user.office_id})
 
-      conn = delete(conn, user_path(conn, :delete, user_from_same_office))
-      assert redirected_to(conn) == user_path(conn, :index)
+      conn = delete(conn, Routes.user_path(conn, :delete, user_from_same_office))
+      assert redirected_to(conn) == Routes.user_path(conn, :index)
       conn = initial_conn
 
       assert_error_sent(404, fn ->
-        get(conn, user_path(conn, :show, user_from_same_office))
+        get(conn, Routes.user_path(conn, :show, user_from_same_office))
       end)
     end
 
@@ -123,13 +123,13 @@ defmodule MpnetworkWeb.UserControllerTest do
       # assert listing.user_id == realtor_from_same_office.id
       # assert listing.broker_id == broker.id
 
-      conn = delete(conn, user_path(conn, :delete, realtor_from_same_office))
+      conn = delete(conn, Routes.user_path(conn, :delete, realtor_from_same_office))
       refute conn.status == 500
-      assert redirected_to(conn) == user_path(conn, :index)
+      assert redirected_to(conn) == Routes.user_path(conn, :index)
       conn = initial_conn
       # make sure they're gone
       assert_error_sent(404, fn ->
-        get(conn, user_path(conn, :show, realtor_from_same_office))
+        get(conn, Routes.user_path(conn, :show, realtor_from_same_office))
       end)
     end
   end
