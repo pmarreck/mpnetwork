@@ -5,18 +5,18 @@
           <div class="row">
             <div class="col-md-2">
               <div class="user-block">
-                <img class="img-circle img-bordered-sm" src="<%= gravatar_url(broadcast.user.email) %>" alt="user image">
+                <img class="img-circle img-bordered-sm" src="<%= GlobalHelpers.gravatar_url(broadcast.user.email) %>" alt="user image">
                     <span class="username">
                       <a href="#"><%= broadcast.user.name %></a>
                     </span>
-                <span class="description">Posted <%= broadcast.inserted_at |> relative_humanized_time %></span>
+                <span class="description">Posted <%= broadcast.inserted_at |> GlobalHelpers.relative_humanized_time %></span>
               </div>
               <!-- /.user-block -->
             </div>
             <%= if @current_user.id == broadcast.user_id || @current_user.role_id < 2 do %>
               <div class="col-md-9">
                 <p><strong><%= raw HtmlSanitizeEx.html5 broadcast.title %></strong></p>
-                <p><%= raw(replace_crlf_with_html_br(HtmlSanitizeEx.html5 broadcast.body)) %></p>
+                <p><%= raw(GlobalHelpers.replace_crlf_with_html_br(HtmlSanitizeEx.html5 broadcast.body)) %></p>
               </div>
               <div class="col-md-1">
                 <div class="text-right">

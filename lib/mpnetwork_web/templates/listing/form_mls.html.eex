@@ -2158,7 +2158,7 @@
 			<div class="formgroup formitem vertical" id="c273" style="width:180px;">
 				<span class="formtext formitem" id="c274" property="handi_desc"><label for="c274-text"><a>Handicap Access Desc:</a></label><input class="textinput value" id="c274-text" maxlength="40" name="" size="56" type="text" value=""><span class="required-indicator" style="display: none;">*</span></span>
 			</div>
-			<%= datalist_input("listing[siding_desc]", %{id: "sidingAutocomplete", list_name: "sidingList", data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"]}) %>
+			<%= GlobalHelpers.datalist_input("listing[siding_desc]", %{id: "sidingAutocomplete", list_name: "sidingList", data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"]}) %>
 			</div>
 			<div class="formgroup formitem horizontal" id="c275">
 			<div class="formgroup formitem vertical" id="c276" style="width:224px;">

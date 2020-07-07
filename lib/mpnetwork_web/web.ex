@@ -43,7 +43,7 @@ defmodule MpnetworkWeb do
       import MpnetworkWeb.ErrorHelpers
       import MpnetworkWeb.Gettext
       # custom global helpers
-      import MpnetworkWeb.GlobalHelpers
+      alias MpnetworkWeb.GlobalHelpers
       # import Coherence current_user and logged_in? into all controllers
       import Coherence, only: [current_user: 1, logged_in?: 1]
     end

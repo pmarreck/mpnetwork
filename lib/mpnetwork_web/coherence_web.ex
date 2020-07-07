@@ -16,7 +16,7 @@ defmodule MpnetworkWeb.Coherence do
       import MpnetworkWeb.Gettext
       import MpnetworkWeb.Coherence.ViewHelpers
       # custom global helpers
-      import MpnetworkWeb.GlobalHelpers
+      alias MpnetworkWeb.GlobalHelpers
     end
   end
 

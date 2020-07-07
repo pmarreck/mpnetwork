@@ -8,7 +8,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
   alias Mpnetwork.{Repo}
   alias Mpnetwork.Realtor.Listing
   # import Mpnetwork.Test.Support.Utilities
-  import Mpnetwork.Listing.LinkCodeGen
+  alias Mpnetwork.Listing.LinkCodeGen
 
   @create_attrs %{
     listing_status_type: "FS",
@@ -280,7 +280,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
     listing = fixture(:listing, conn.assigns.current_user)
 
     conn =
-      get(conn, public_client_full_path(conn, :client_full, public_client_full_code(listing)))
+      get(conn, public_client_full_path(conn, :client_full, LinkCodeGen.public_client_full_code(listing)))
 
     assert html_response(conn, 200)
   end
@@ -294,7 +294,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
         public_client_full_path(
           conn,
           :client_full,
-          public_client_full_code(listing, now_in_unix_epoch_days() - 1)
+          LinkCodeGen.public_client_full_code(listing, LinkCodeGen.now_in_unix_epoch_days() - 1)
         )
       )
 

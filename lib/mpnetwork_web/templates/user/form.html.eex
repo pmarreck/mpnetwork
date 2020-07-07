@@ -52,7 +52,7 @@
 
   <div class="form-group<%= if f.errors[:office_id], do: " has-error" %>" title="note: can only be changed by admins">
     <%= label f, :office_id, "Broker:", class: "control-label" %>
-    <%= select f, :office_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
+    <%= select f, :office_id, GlobalHelpers.prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
     <%= error_tag f, :office_id %>
   </div>
 

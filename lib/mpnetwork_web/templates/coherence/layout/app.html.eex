@@ -55,7 +55,7 @@
           <%= if @conn.assigns[:current_user] do %>
             <div class="user-panel">
               <div class="pull-left image">
-                <img title="Want your face here? Make an account at gravatar.com associated with the email address you use to log in here!" src="<%= gravatar_url(@current_user.email) %>" class="img-circle" alt="User Image">
+                <img title="Want your face here? Make an account at gravatar.com associated with the email address you use to log in here!" src="<%= GlobalHelpers.gravatar_url(@current_user.email) %>" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
                 <p><%= @current_user.name %></p>
@@ -95,7 +95,7 @@
       <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
-          <%= current_datetime_standard_humanized() %>
+          <%= GlobalHelpers.current_datetime_standard_humanized() %>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2017 <a href="http://mecha.engineering">Mecha LLC</a>.</strong> All rights reserved.

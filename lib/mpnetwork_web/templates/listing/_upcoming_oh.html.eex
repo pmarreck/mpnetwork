@@ -34,23 +34,23 @@
             <td>
               <%= if @which_type == :cust do %>
                 <%= if listing.first_cust_oh_start_at do %>
-                  <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                 <% end %>
                 <%= if listing.first_cust_oh_start_at && listing.second_cust_oh_start_at, do: "; " %>
                 <%= if listing.second_cust_oh_start_at do %>
-                  <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                 <% end %>
               <% else %>
                 <%= if listing.first_broker_oh_start_at do %>
-                  <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                 <% end %>
                 <%= if listing.first_broker_oh_start_at && listing.second_broker_oh_start_at, do: "; " %>
                 <%= if listing.second_broker_oh_start_at do %>
-                  <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e") %> @
-                  <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                  <%= listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e") %> @
+                  <span class="nowrap"><%= (listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                 <% end %>
               <% end %>
             </td>

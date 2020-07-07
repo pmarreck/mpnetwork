@@ -114,7 +114,7 @@
             <!-- 7 -->
             <div class="col-xs-5<%= if f.errors[:city], do: " has-error" %>">
               <%= label f, :city, class: "control-label" %>
-              <%= datalist_input f, :city, %{
+              <%= GlobalHelpers.datalist_input f, :city, %{
                 list_name: "cityList",
                 data: [ "Manhasset", "Port Washington" ],
                 class: "form-control"} %>
@@ -124,7 +124,7 @@
             <!-- 8 -->
             <div class="col-xs-3<%= if f.errors[:state], do: " has-error" %>">
               <%= label f, :state, class: "control-label" %>
-              <%= datalist_input f, :state, %{
+              <%= GlobalHelpers.datalist_input f, :state, %{
                 list_name: "stateList",
                 data: ~w[ NY ],
                 class: "form-control"} %>
@@ -134,7 +134,7 @@
             <!-- 9 -->
             <div class="col-xs-4<%= if f.errors[:zip], do: " has-error" %>">
               <%= label f, :zip, class: "control-label" %>
-              <%= datalist_input f, :zip, %{
+              <%= GlobalHelpers.datalist_input f, :zip, %{
                 list_name: "zipList",
                 data: ~w[ 11030 11050 ],
                 class: "form-control"} %>
@@ -189,7 +189,7 @@
           <div class="form-group<%= if f.errors[:schools], do: " has-error" %>">
             <%= label f, :schools, "School district(s)", class: "control-label" %>
             <em>Please try to include the school district # as "SD#"</em>
-            <%= datalist_input f, :schools, %{
+            <%= GlobalHelpers.datalist_input f, :schools, %{
               list_name: "schoolsList",
               data: [
                 "Amityville - SD6",
@@ -917,7 +917,7 @@
           <!-- 75 -->
           <div class="form-group<%= if f.errors[:siding_desc], do: " has-error" %>">
             <%= label f, :siding_desc, "Exterior construction", class: "control-label" %>
-            <%= datalist_input f, :siding_desc, %{
+            <%= GlobalHelpers.datalist_input f, :siding_desc, %{
               list_name: "sidingList",
               data: ["Natural wood", "Painted wood", "Engineered wood", "Aluminum", "Natural stone", "Cultured stone", "Stucco", "Brick"],
               class: "form-control"} %>
@@ -1548,9 +1548,9 @@
           <div class="form-group<%= if f.errors[:broker_id], do: " has-error" %>" title="note: can only be changed by site admins">
             <%= label f, :broker_id, "Broker:", class: "control-label" %>
             <%= if Permissions.site_admin?(current_user(@conn)) do %>
-              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px" %>
+              <%= select f, :broker_id, GlobalHelpers.prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px" %>
             <% else %>
-              <%= select f, :broker_id, prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px", disabled: "disabled" %>
+              <%= select f, :broker_id, GlobalHelpers.prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "min-width:380px", disabled: "disabled" %>
             <% end %>
             <%= error_tag f, :broker_id %>
           </div>
@@ -1566,9 +1566,9 @@
           <div class="form-group<%= if f.errors[:user_id], do: " has-error" %>" title="note: can only be changed by the owner of the listing or an office admin">
             <%= label f, :user_id, "Agent:", class: "control-label" %>
             <%= if !@existing || Permissions.owner_or_admin_of_same_office_or_site_admin?(current_user(@conn), @existing) do %>
-              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px" %>
+              <%= select f, :user_id, GlobalHelpers.prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px" %>
             <% else %>
-              <%= select f, :user_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px", disabled: "disabled" %>
+              <%= select f, :user_id, GlobalHelpers.prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:280px", disabled: "disabled" %>
             <% end %>
             <%= error_tag f, :user_id %>
           </div>
@@ -1588,7 +1588,7 @@
           <!-- 163 -->
           <div class="form-group<%= if f.errors[:colisting_agent_id], do: " has-error" %>">
             <%= label f, :colisting_agent_id, "Co-listing agent", class: "control-label" %>:&nbsp;
-            <%= select f, :colisting_agent_id, prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
+            <%= select f, :colisting_agent_id, GlobalHelpers.prepend_blank_select_opt(for(u <- @users, do: {u.name, u.id})), class: "fancy", style: "min-width:250px" %>
             <%= error_tag f, :colisting_agent_id %>
           </div>
 
@@ -1885,7 +1885,7 @@
       </div>
     </div>
 
-<% duration_dropdown_vals = prepend_blank_select_opt(for(o <- 1..16, do: {"#{(o * 30)/60.0} hour#{if o==2, do: "", else: "s"}", (o*30)})) %>
+<% duration_dropdown_vals = GlobalHelpers.prepend_blank_select_opt(for(o <- 1..16, do: {"#{(o * 30)/60.0} hour#{if o==2, do: "", else: "s"}", (o*30)})) %>
 
     <div class="col-md-6">
       <a name="openhouse"></a>

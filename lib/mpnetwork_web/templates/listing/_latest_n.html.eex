@@ -44,12 +44,12 @@
         <tbody>
     <%= for listing <- @listings do %>
         <tr>
-            <td data-label="Went Live"><%= listing.live_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
+            <td data-label="Went Live"><%= listing.live_at |> GlobalHelpers.utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <%= if @include_inserted_at do %>
-              <td data-label="Added"><%= listing.inserted_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
+              <td data-label="Added"><%= listing.inserted_at |> GlobalHelpers.utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
             <%= if @include_modified_at do %>
-              <td data-label="Updated"><%= listing.updated_at |> utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
+              <td data-label="Updated"><%= listing.updated_at |> GlobalHelpers.utc_date_to_local_date("%-m/%-d/%Y %l:%M%p") %></td>
             <% end %>
             <td data-label="Address">
               <%= link listing.address, to: listing_path(@conn, :show, listing), title: "Click to view listing detail" %><%= if listing.city && listing.city != "", do: ", #{listing.city}", else: "" %>
@@ -75,20 +75,20 @@
             </td>
             <td data-label="Price"><%= Number.Currency.number_to_currency(listing.price_usd, precision: 0) %></td>
             <td data-label="Broker"><%= if listing.broker, do: listing.broker.name %></td>
-            <td data-label="Rent?"><%= yn(listing.for_rent) %></td>
+            <td data-label="Rent?"><%= GlobalHelpers.yn(listing.for_rent) %></td>
             <%= if @include_next_oh do %>
               <%= if @remarks == :customer do %>
                 <td data-label="Customer OH">
                   <%= if listing.first_cust_oh_start_at do %>
                     <%= if Timex.compare(listing.first_cust_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
-                      <%= listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
-                      <span class="nowrap"><%= (listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
+                      <%= listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e %Y") %> @
+                      <span class="nowrap"><%= (listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_cust_oh_start_at |> NaiveDateTime.add(listing.first_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_cust_oh_start_at do %>; <br /><% end %></span>
                     <% end %>
                   <% end %>
                   <%= if listing.second_cust_oh_start_at do %>
                     <%= if Timex.compare(listing.second_cust_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
-                      <%= listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
-                      <span class="nowrap"><%= (listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                      <%= listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e %Y") %> @
+                      <span class="nowrap"><%= (listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_cust_oh_start_at |> NaiveDateTime.add(listing.second_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                     <% end %>
                   <% end %>
                 </td>
@@ -96,14 +96,14 @@
                 <td data-label="Broker OH">
                   <%= if listing.first_broker_oh_start_at do %>
                     <%= if Timex.compare(listing.first_broker_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
-                      <%= listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
-                      <span class="nowrap"><%= (listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>
+                      <%= listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e %Y") %> @
+                      <span class="nowrap"><%= (listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.first_broker_oh_start_at |> NaiveDateTime.add(listing.first_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %><%= if listing.second_broker_oh_start_at do %>; <br /><% end %></span>
                     <% end %>
                   <% end %>
                   <%= if listing.second_broker_oh_start_at do %>
                     <%= if Timex.compare(listing.second_broker_oh_start_at, datetime_to_show_open_houses_after) == 1 do %>
-                      <%= listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a %b %e %Y") %> @
-                      <span class="nowrap"><%= (listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                      <%= listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a %b %e %Y") %> @
+                      <span class="nowrap"><%= (listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (listing.second_broker_oh_start_at |> NaiveDateTime.add(listing.second_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
                     <% end %>
                   <% end %>
                 </td>

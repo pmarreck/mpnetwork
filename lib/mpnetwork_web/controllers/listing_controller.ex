@@ -7,7 +7,7 @@ defmodule MpnetworkWeb.ListingController do
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
-  import Mpnetwork.Listing.LinkCodeGen
+  alias Mpnetwork.Listing.LinkCodeGen
 
   plug(
     :put_layout,
@@ -332,7 +332,7 @@ defmodule MpnetworkWeb.ListingController do
   end
 
   defp _do_public_listing(conn, signature, type_of_listing) do
-    {decrypted_id, decrypted_expiration_date} = from_listing_code(signature, type_of_listing)
+    {decrypted_id, decrypted_expiration_date} = LinkCodeGen.from_listing_code(signature, type_of_listing)
 
     listing =
       Realtor.get_listing!(decrypted_id) |> Repo.preload([:user, :broker, :colisting_agent])
@@ -439,13 +439,13 @@ defmodule MpnetworkWeb.ListingController do
     url =
       case type do
         "broker" ->
-          public_broker_full_url(conn, :broker_full, public_broker_full_code(listing))
+          public_broker_full_url(conn, :broker_full, LinkCodeGen.public_broker_full_code(listing))
 
         "client" ->
-          public_client_full_url(conn, :client_full, public_client_full_code(listing))
+          public_client_full_url(conn, :client_full, LinkCodeGen.public_client_full_code(listing))
 
         "customer" ->
-          public_customer_full_url(conn, :customer_full, public_customer_full_code(listing))
+          public_customer_full_url(conn, :customer_full, LinkCodeGen.public_customer_full_code(listing))
 
         _ ->
           raise "unknown public listing type: #{type}"

@@ -34,7 +34,7 @@
 
   <li>
     <strong>Role:</strong>
-    <%= role_id_to_name(@user.role_id) %>
+    <%= GlobalHelpers.role_id_to_name(@user.role_id) %>
   </li>
 
 </ul>

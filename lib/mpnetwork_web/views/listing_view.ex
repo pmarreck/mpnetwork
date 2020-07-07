@@ -1,8 +1,8 @@
 defmodule MpnetworkWeb.ListingView do
   use MpnetworkWeb, :view
-  import MpnetworkWeb.GlobalHelpers
+  alias MpnetworkWeb.GlobalHelpers
 
-  import Mpnetwork.Listing.LinkCodeGen
+  alias Mpnetwork.Listing.LinkCodeGen
 
   alias Mpnetwork.Permissions
 end

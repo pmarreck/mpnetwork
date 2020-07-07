@@ -16,9 +16,9 @@
     <%= if @listing.listing_status_type not in [:NEW, :FS, :EXT, :UC, :PC] do %>
       <span><%= link "Clone this listing", to: listing_path(@conn, :new, %{clone_id: @listing.id}), class: "btn btn-default btn-xl" %></span>
     <% end %>
-    <span><%= link "View listing sheet (broker full)", to: public_broker_full_path(@conn, :broker_full, public_broker_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
-    <span><%= link "View listing sheet (client full)", to: public_client_full_path(@conn, :client_full, public_client_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
-    <span><%= link "View listing sheet (customer full)", to: public_customer_full_path(@conn, :customer_full, public_customer_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (broker full)", to: public_broker_full_path(@conn, :broker_full, LinkCodeGen.public_broker_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (client full)", to: public_client_full_path(@conn, :client_full, LinkCodeGen.public_client_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
+    <span><%= link "View listing sheet (customer full)", to: public_customer_full_path(@conn, :customer_full, LinkCodeGen.public_customer_full_code(@listing)), class: "btn btn-default btn-xl", target: "_blank" %></span>
     <div><br /></div>
     <div class="row">
       <div class="col-md-6">
@@ -58,7 +58,7 @@
           <!-- 1 -->
           <div class="draft">
             <strong>Draft?</strong>
-            <%= yn(@listing.draft) %>
+            <%= GlobalHelpers.yn(@listing.draft) %>
           </div>
 
           <div class="row form-group">
@@ -66,7 +66,7 @@
               <!-- 2 -->
               <div class="for_sale">
                 <strong>For Sale?</strong>
-                <%= yn(@listing.for_sale) %>
+                <%= GlobalHelpers.yn(@listing.for_sale) %>
               </div>
             </div>
 
@@ -74,7 +74,7 @@
               <!-- 3 -->
               <div class="for_rent">
                 <strong>For Rent?</strong>
-                <%= yn(@listing.for_rent) %>
+                <%= GlobalHelpers.yn(@listing.for_rent) %>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@
             <!-- 5 -->
             <div class="form-group col-xs-6 studio">
               <strong>Studio?</strong>
-              <%= yn(@listing.studio) %>
+              <%= GlobalHelpers.yn(@listing.studio) %>
             </div>
           </div>
 
@@ -150,7 +150,7 @@
           <!-- 18 -->
           <div class="corner">
             <strong>Corner property?</strong>
-            <%= yn(@listing.corner) %>
+            <%= GlobalHelpers.yn(@listing.corner) %>
           </div>
 
           <!-- 19 -->
@@ -162,14 +162,14 @@
           <!-- 20 -->
           <div class="cul_de_sac">
             <strong>Cul-de-sac?</strong>
-            <%= yn(@listing.cul_de_sac) %>
+            <%= GlobalHelpers.yn(@listing.cul_de_sac) %>
           </div>
 
           <div class="row form-group">
           <!-- 21 -->
             <div class="col-xs-6 waterfront">
               <strong>Waterfront?</strong>
-              <%= yn(@listing.waterfront) %>
+              <%= GlobalHelpers.yn(@listing.waterfront) %>
             </div>
 
             <!-- 22 -->
@@ -189,7 +189,7 @@
             <!-- 24 -->
             <div class="col-xs-6 waterview">
               <strong>Waterview?</strong>
-              <%= yn(@listing.waterview) %>
+              <%= GlobalHelpers.yn(@listing.waterview) %>
             </div>
           </div>
 
@@ -197,7 +197,7 @@
             <!-- 25 -->
             <div class="col-xs-6 bulkhead">
               <strong>Bulkhead?</strong>
-              <%= yn(@listing.bulkhead) %>
+              <%= GlobalHelpers.yn(@listing.bulkhead) %>
             </div>
 
             <!-- 26 -->
@@ -211,13 +211,13 @@
             <!-- 27 -->
             <div class="col-xs-6 dock_rights">
               <strong>Dock rights?</strong>
-              <%= yn(@listing.dock_rights) %>
+              <%= GlobalHelpers.yn(@listing.dock_rights) %>
             </div>
 
             <!-- 28 -->
             <div class="col-xs-6 beach_rights">
               <strong>Beach rights?</strong>
-              <%= yn(@listing.beach_rights) %>
+              <%= GlobalHelpers.yn(@listing.beach_rights) %>
             </div>
           </div>
 
@@ -225,13 +225,13 @@
             <!-- 29 -->
             <div class="col-xs-6 adult_comm">
               <strong>Adult community?</strong>
-              <%= yn(@listing.adult_comm) %>
+              <%= GlobalHelpers.yn(@listing.adult_comm) %>
             </div>
 
             <!-- 30 -->
             <div class="col-xs-6 gated_comm">
               <strong>Gated community?</strong>
-              <%= yn(@listing.gated_comm) %>
+              <%= GlobalHelpers.yn(@listing.gated_comm) %>
             </div>
           </div>
 
@@ -256,19 +256,19 @@
           <!-- 32 -->
           <div class="price_usd">
             <strong>Price:</strong>
-            <%= @listing.price_usd |> dollars %>
+            <%= @listing.price_usd |> GlobalHelpers.dollars %>
           </div>
 
           <!-- 33 -->
           <div class="prior_price_usd">
             <strong>Prior price:</strong>
-            <%= @listing.prior_price_usd |> dollars %>
+            <%= @listing.prior_price_usd |> GlobalHelpers.dollars %>
           </div>
 
           <!-- 34 -->
           <div class="original_price_usd">
             <strong>Original price:</strong>
-            <%= @listing.original_price_usd |> dollars %>
+            <%= @listing.original_price_usd |> GlobalHelpers.dollars %>
           </div>
 
           <!-- 35 -->
@@ -280,54 +280,54 @@
           <!-- 36 -->
           <div class="prop_tax_usd">
             <strong>Property taxes (annual):</strong>
-            <%= @listing.prop_tax_usd |> dollars %>
+            <%= @listing.prop_tax_usd |> GlobalHelpers.dollars %>
           </div>
 
           <!-- 37 -->
           <div class="vill_tax_usd">
             <strong>Village taxes (annual):</strong>
-            <%= @listing.vill_tax_usd |> dollars %>
+            <%= @listing.vill_tax_usd |> GlobalHelpers.dollars %>
           </div>
 
           <!-- 38 -->
           <div class="star_deduc_usd">
             <strong>STAR deduction:</strong>
-            <%= @listing.star_deduc_usd |> dollars %>
+            <%= @listing.star_deduc_usd |> GlobalHelpers.dollars %>
           </div>
 
           <div class="form-group row">
             <!-- 39 -->
             <div class="col-xs-6 live_at">
               <strong>Listing went live at:</strong>
-              <%= utc_datetime_to_local_datetime(@listing.live_at) %>
+              <%= GlobalHelpers.utc_datetime_to_local_datetime(@listing.live_at) %>
             </div>
 
             <!-- 40 -->
             <div class="col-xs-6 expires_on">
               <strong>Listing expires on:</strong>
-              <%= utc_date_to_local_date(@listing.expires_on) %>
+              <%= GlobalHelpers.utc_date_to_local_date(@listing.expires_on) %>
             </div>
           </div>
 
           <div class="form-group row">
             <div class="col-xs-6 uc_on">
               <strong>Listing under contract on:</strong>
-              <%= utc_date_to_local_date(@listing.uc_on) %>
+              <%= GlobalHelpers.utc_date_to_local_date(@listing.uc_on) %>
             </div>
             <div class="col-xs-6 prop_closing_on">
               <strong>Listing proposed closing on:</strong>
-              <%= utc_date_to_local_date(@listing.prop_closing_on) %>
+              <%= GlobalHelpers.utc_date_to_local_date(@listing.prop_closing_on) %>
             </div>
           </div>
 
           <div class="form-group row">
             <div class="col-xs-6 closed_on">
               <strong>Listing closed on:</strong>
-              <%= utc_date_to_local_date(@listing.closed_on) %>
+              <%= GlobalHelpers.utc_date_to_local_date(@listing.closed_on) %>
             </div>
             <div class="col-xs-6 closing_price_usd">
               <strong>Listing final sale price:</strong>
-              <%= @listing.closing_price_usd |> dollars %>
+              <%= @listing.closing_price_usd |> GlobalHelpers.dollars %>
             </div>
           </div>
 
@@ -436,7 +436,7 @@
             <!-- 51 -->
             <div class="col-xs-6 eat_in_kitchen">
               <strong>Eat-in kitchen?</strong>
-              <%= yn(@listing.eat_in_kitchen) %>
+              <%= GlobalHelpers.yn(@listing.eat_in_kitchen) %>
             </div>
           </div>
 
@@ -450,26 +450,26 @@
             <!-- 53 -->
             <div class="col-xs-4 den">
               <strong>Den?</strong>
-              <%= yn(@listing.den) %>
+              <%= GlobalHelpers.yn(@listing.den) %>
             </div>
 
             <!-- 54 -->
             <div class="col-xs-4 office">
               <strong>Office?</strong>
-              <%= yn(@listing.office) %>
+              <%= GlobalHelpers.yn(@listing.office) %>
             </div>
 
             <!-- 55 -->
             <div class="col-xs-4 attic">
               <strong>Attic?</strong>
-              <%= yn(@listing.attic) %>
+              <%= GlobalHelpers.yn(@listing.attic) %>
             </div>
           </div>
 
           <!-- 56 -->
           <div class="mbr_first_fl">
             <strong>Master bedroom on 1st floor?</strong>
-            <%= yn(@listing.mbr_first_fl) %>
+            <%= GlobalHelpers.yn(@listing.mbr_first_fl) %>
           </div>
 
           <!-- 57 -->
@@ -481,7 +481,7 @@
           <!-- 58 -->
           <div class="handicap_access">
             <strong>Handicapped access?</strong>
-            <%= yn(@listing.handicap_access) %>
+            <%= GlobalHelpers.yn(@listing.handicap_access) %>
           </div>
 
           <!-- 59 -->
@@ -500,13 +500,13 @@
             <!-- 61 -->
             <div class="col-xs-6 basement">
               <strong>Basement?</strong>
-              <%= yn(@listing.basement) %>
+              <%= GlobalHelpers.yn(@listing.basement) %>
             </div>
 
             <!-- 63 -->
             <div class="col-xs-6 finished_basement">
               <strong>Finished basement?</strong>
-              <%= yn(@listing.finished_basement) %>
+              <%= GlobalHelpers.yn(@listing.finished_basement) %>
             </div>
 
           </div>
@@ -523,13 +523,13 @@
             <!-- 65 -->
             <div class="col-xs-6 w_w_carpet">
               <strong>Wall-to-wall carpet?</strong>
-              <%= yn(@listing.w_w_carpet) %>
+              <%= GlobalHelpers.yn(@listing.w_w_carpet) %>
             </div>
 
             <!-- 66 -->
             <div class="col-xs-6 wood_floors">
               <strong>Wood floors?</strong>
-              <%= yn(@listing.wood_floors) %>
+              <%= GlobalHelpers.yn(@listing.wood_floors) %>
             </div>
           </div>
 
@@ -542,7 +542,7 @@
             <!-- 68 -->
             <div class="col-xs-6 new_construction">
               <strong>New construction?</strong>
-              <%= yn(@listing.new_construction) %>
+              <%= GlobalHelpers.yn(@listing.new_construction) %>
             </div>
           </div>
 
@@ -594,32 +594,32 @@
             <!-- 152 -->
             <div class="col-xs-6 security_system">
               <strong>Security system?</strong>
-              <%= yn(@listing.security_system) %>
+              <%= GlobalHelpers.yn(@listing.security_system) %>
             </div>
 
             <!-- 151 -->
             <div class="col-xs-6 central_vac">
               <strong>Central vac?</strong>
-              <%= yn(@listing.central_vac) %>
+              <%= GlobalHelpers.yn(@listing.central_vac) %>
             </div>
           </div>
 
           <!-- 153 -->
           <div class="fios_available">
             <strong>FIOS available?</strong>
-            <%= yn(@listing.fios_available) %>
+            <%= GlobalHelpers.yn(@listing.fios_available) %>
           </div>
 
           <!-- 154 -->
           <div class="high_speed_internet_available">
             <strong>High speed internet available (including FIOS)?</strong>
-            <%= yn(@listing.high_speed_internet_available) %>
+            <%= GlobalHelpers.yn(@listing.high_speed_internet_available) %>
           </div>
 
           <!-- 155 -->
           <div class="modern_kitchen_countertops">
             <strong>Modern kitchen countertops?</strong>
-            <%= yn(@listing.modern_kitchen_countertops) %>
+            <%= GlobalHelpers.yn(@listing.modern_kitchen_countertops) %>
           </div>
 
           <!-- 156 -->
@@ -674,7 +674,7 @@
           <!-- 79 -->
           <div class="attached_garage">
             <strong>Attached garage?</strong>
-            <%= yn(@listing.attached_garage) %>
+            <%= GlobalHelpers.yn(@listing.attached_garage) %>
           </div>
 
           <!-- 80 -->
@@ -687,7 +687,7 @@
             <!-- 82 -->
             <div class="col-xs-3 deck">
               <strong>Deck?</strong>
-              <%= yn(@listing.deck) %>
+              <%= GlobalHelpers.yn(@listing.deck) %>
             </div>
 
             <!-- 83 -->
@@ -701,7 +701,7 @@
             <!-- 84 -->
             <div class="col-xs-3 patio">
               <strong>Patio?</strong>
-              <%= yn(@listing.patio) %>
+              <%= GlobalHelpers.yn(@listing.patio) %>
             </div>
 
             <!-- 85 -->
@@ -715,7 +715,7 @@
             <!-- 86 -->
             <div class="col-xs-3 porch">
               <strong>Porch?</strong>
-              <%= yn(@listing.porch) %>
+              <%= GlobalHelpers.yn(@listing.porch) %>
             </div>
 
             <!-- 87 -->
@@ -729,7 +729,7 @@
             <!-- 88 -->
             <div class="col-xs-3 pool">
               <strong>Pool?</strong>
-              <%= yn(@listing.pool) %>
+              <%= GlobalHelpers.yn(@listing.pool) %>
             </div>
 
             <!-- 89 -->
@@ -742,19 +742,19 @@
           <!-- 90 -->
           <div class="hot_tub">
             <strong>Hot tub?</strong>
-            <%= yn(@listing.hot_tub) %>
+            <%= GlobalHelpers.yn(@listing.hot_tub) %>
           </div>
 
           <!-- 91 -->
           <div class="ing_sprinks">
             <strong>Inground sprinkler?</strong>
-            <%= yn(@listing.ing_sprinks) %>
+            <%= GlobalHelpers.yn(@listing.ing_sprinks) %>
           </div>
 
           <!-- 92 -->
           <div class="tennis_ct">
             <strong>Tennis court?</strong>
-            <%= yn(@listing.tennis_ct) %>
+            <%= GlobalHelpers.yn(@listing.tennis_ct) %>
           </div>
 
           <!-- 93 -->
@@ -766,7 +766,7 @@
           <!-- 94 -->
           <div class="equestrian">
             <strong>Horse property?</strong>
-            <%= yn(@listing.equestrian) %>
+            <%= GlobalHelpers.yn(@listing.equestrian) %>
           </div>
 
           <!-- 95 -->
@@ -837,7 +837,7 @@
             <!-- 106 -->
             <div class="col-xs-4 central_air">
               <strong>Central air?</strong>
-              <%= yn(@listing.central_air) %>
+              <%= GlobalHelpers.yn(@listing.central_air) %>
             </div>
 
           </div>
@@ -859,7 +859,7 @@
             <!-- 107 -->
             <div class="col-xs-6 sewer">
               <strong>Sewer?</strong>
-              <%= yn(@listing.sewer) %>
+              <%= GlobalHelpers.yn(@listing.sewer) %>
             </div>
 
             <!-- 108 -->
@@ -873,7 +873,7 @@
             <!-- 109 -->
             <div class="col-xs-6 sep_hw_heater">
               <strong>Separate hw heater?</strong>
-              <%= yn(@listing.sep_hw_heater) %>
+              <%= GlobalHelpers.yn(@listing.sep_hw_heater) %>
             </div>
 
             <!-- 110 -->
@@ -906,7 +906,7 @@
           <!-- 113 -->
           <div class="energy_eff">
             <strong>Energy-efficient features?</strong>
-            <%= yn(@listing.energy_eff) %>
+            <%= GlobalHelpers.yn(@listing.energy_eff) %>
           </div>
 
           <div class="list_of_green_features">
@@ -922,7 +922,7 @@
           <!-- 148 -->
           <div class="green_certified">
             <strong>Green-certified?</strong>
-            <%= yn(@listing.green_certified) %>
+            <%= GlobalHelpers.yn(@listing.green_certified) %>
           </div>
 
           <div class="row form-group">
@@ -970,7 +970,7 @@
           <!-- 160 -->
           <div class="broker_agent_owned">
             <strong>Broker/agent-owned?</strong>
-            <%= yn(@listing.broker_agent_owned) %>
+            <%= GlobalHelpers.yn(@listing.broker_agent_owned) %>
           </div>
 
           <!-- 161 -->
@@ -1034,19 +1034,19 @@
             <!-- 165 -->
             <div class="col-xs-4 seller_agency_comp">
               <strong>Seller agency comp:</strong>
-              <%= @listing.seller_agency_comp && basis_points_to_fractional_percent(@listing.seller_agency_comp) %>
+              <%= @listing.seller_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.seller_agency_comp) %>
             </div>
 
             <!-- 166 -->
             <div class="col-xs-4 buyer_agency_comp">
               <strong>Buyer agency comp:</strong>
-              <%= @listing.buyer_agency_comp && basis_points_to_fractional_percent(@listing.buyer_agency_comp) %>
+              <%= @listing.buyer_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.buyer_agency_comp) %>
             </div>
 
             <!-- 167 -->
             <div class="col-xs-4 broker_agency_comp">
               <strong>Broker agency comp:</strong>
-              <%= @listing.broker_agency_comp && basis_points_to_fractional_percent(@listing.broker_agency_comp) %>
+              <%= @listing.broker_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.broker_agency_comp) %>
             </div>
           </div>
 
@@ -1060,13 +1060,13 @@
             <!-- 169 -->
             <div class="col-xs-6 buyer_exclusions">
               <strong>Buyer exclusions?</strong>
-              <%= yn(@listing.buyer_exclusions) %>
+              <%= GlobalHelpers.yn(@listing.buyer_exclusions) %>
             </div>
 
             <!-- 170 -->
             <div class="col-xs-6 negotiate_direct">
               <strong>Negotiate direct?</strong>
-              <%= yn(@listing.negotiate_direct) %>
+              <%= GlobalHelpers.yn(@listing.negotiate_direct) %>
             </div>
           </div>
 
@@ -1079,7 +1079,7 @@
           <!-- 171 -->
           <div class="offers_presentable">
             <strong>Offers presentable?</strong>
-            <%= yn(@listing.offers_presentable) %>
+            <%= GlobalHelpers.yn(@listing.offers_presentable) %>
           </div>
 
           <!-- 172 -->
@@ -1097,13 +1097,13 @@
           <!-- 174 -->
           <div class="lockbox">
             <strong>Lockbox?</strong>
-            <%= yn(@listing.lockbox) %>
+            <%= GlobalHelpers.yn(@listing.lockbox) %>
           </div>
 
           <!-- 175 -->
           <div class="owner_financing">
             <strong>Owner-financed?</strong>
-            <%= yn(@listing.owner_financing) %>
+            <%= GlobalHelpers.yn(@listing.owner_financing) %>
           </div>
 
         </div>
@@ -1150,13 +1150,13 @@
             <!-- 179 -->
             <div class="col-xs-6 rental_income_usd">
               <strong>Rental income:</strong>
-              <%= @listing.rental_income_usd |> dollars %>
+              <%= @listing.rental_income_usd |> GlobalHelpers.dollars %>
             </div>
 
             <!-- 180 -->
             <div class="col-xs-6 also_for_rent">
               <strong>Also for rent?</strong>
-              <%= yn(@listing.also_for_rent) %>
+              <%= GlobalHelpers.yn(@listing.also_for_rent) %>
             </div>
           </div>
 
@@ -1164,18 +1164,18 @@
             <!-- 181 -->
             <div class="col-xs-6 rental_price_usd">
               <strong>Rental price:</strong>
-              <%= @listing.rental_price_usd |> dollars %>
+              <%= @listing.rental_price_usd |> GlobalHelpers.dollars %>
             </div>
           </div>
           <%= if @listing.for_rent || @listing.also_for_rent do %>
             <div class="row form-group">
               <div class="col-xs-6 pets_ok">
                 <strong>Pets OK?</strong>
-                <%= yn(@listing.pets_ok) %>
+                <%= GlobalHelpers.yn(@listing.pets_ok) %>
               </div>
               <div class="col-xs-4 smoking_ok">
                 <strong>Smoking OK?</strong>
-                <%= yn(@listing.smoking_ok) %>
+                <%= GlobalHelpers.yn(@listing.smoking_ok) %>
               </div>
             </div>
           <% end %>
@@ -1190,13 +1190,13 @@
             <!-- 184 -->
             <div class="col-xs-6 reo">
               <strong>REO?</strong>
-              <%= yn(@listing.reo) %>
+              <%= GlobalHelpers.yn(@listing.reo) %>
             </div>
 
             <!-- 185 -->
             <div class="col-xs-6 short_sale">
               <strong>Short sale?</strong>
-              <%= yn(@listing.short_sale) %>
+              <%= GlobalHelpers.yn(@listing.short_sale) %>
             </div>
           </div>
 
@@ -1228,16 +1228,16 @@
             <div class="col-md-6 first_broker_oh_start_at">
               <strong style="display:block">First broker open-house:</strong>
               <%= if @listing.first_broker_oh_start_at do %>
-                <%= @listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
-                <span class="nowrap"><%= (@listing.first_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_broker_oh_start_at |> NaiveDateTime.add(@listing.first_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <%= @listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_broker_oh_start_at |> NaiveDateTime.add(@listing.first_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </div>
             <!-- 188 -->
             <div class="col-md-6 second_broker_oh_start_at">
               <strong style="display:block">Second broker open-house:</strong>
               <%= if @listing.second_broker_oh_start_at do %>
-                <%= @listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
-                <span class="nowrap"><%= (@listing.second_broker_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_broker_oh_start_at |> NaiveDateTime.add(@listing.second_broker_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <%= @listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_broker_oh_start_at |> NaiveDateTime.add(@listing.second_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </div>
           </div>
@@ -1255,16 +1255,16 @@
             <div class="col-md-6 first_cust_oh_start_at">
               <strong style="display:block">First customer open-house:</strong>
               <%= if @listing.first_cust_oh_start_at do %>
-                <%= @listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
-                <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <%= @listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.first_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_cust_oh_start_at |> NaiveDateTime.add(@listing.first_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </div>
             <!-- 191 -->
             <div class="col-md-6 second_cust_oh_start_at">
               <strong style="display:block">Second customer open-house:</strong>
               <%= if @listing.second_cust_oh_start_at do %>
-                <%= @listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%a, %b %e, %Y") %> @
-                <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+                <%= @listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e, %Y") %> @
+                <span class="nowrap"><%= (@listing.second_cust_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_cust_oh_start_at |> NaiveDateTime.add(@listing.second_cust_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
               <% end %>
             </div>
           </div>

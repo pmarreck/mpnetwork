@@ -24,7 +24,7 @@
           <%= if attachment.is_image do %>
             <img style="width:100%;max-width:600px;" src="<%= attachment_path(@conn, :show, attachment) %>" />
           <% else %>
-            <i class="<%= html_icon_class_by_content_type(attachment.content_type) %>"></i>
+            <i class="<%= GlobalHelpers.html_icon_class_by_content_type(attachment.content_type) %>"></i>
             <%= link attachment.original_filename, to: attachment_path(@conn, :show, attachment) %>
           <% end %>
         </td>

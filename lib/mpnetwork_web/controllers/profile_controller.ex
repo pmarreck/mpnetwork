@@ -1,5 +1,6 @@
 defmodule MpnetworkWeb.ProfileController do
   use MpnetworkWeb, :controller
+  alias MpnetworkWeb.GlobalHelpers
 
   alias Mpnetwork.{Realtor, Permissions}
   # alias Mpnetwork.User
@@ -48,9 +49,7 @@ defmodule MpnetworkWeb.ProfileController do
   end
 
   defp filtered_roles(current_user) do
-    import MpnetworkWeb.GlobalHelpers, only: [roles_with_index: 0]
-
-    roles_with_index()
+    GlobalHelpers.roles_with_index()
     |> Enum.filter(fn {_role, role_id} -> role_id >= current_user.role_id end)
   end
 end
