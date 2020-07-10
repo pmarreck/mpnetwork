@@ -81,6 +81,9 @@ defmodule MpnetworkWeb.ListingControllerTest do
                                              %{draft: true},
                                              @create_upcoming_broker_oh_attrs
                                            )
+
+  @create_cs_attrs Enum.into(%{listing_status_type: "CS"}, @create_attrs)
+
   @update_attrs %{
     listing_status_type: "CL",
     schools: "Man",
@@ -420,5 +423,16 @@ defmodule MpnetworkWeb.ListingControllerTest do
     # Mpnetwork.ClientEmail.send_client(
     #   email, name, subject, body, user, listing, url, cc_self
     # )
+  end
+
+  test "can set listing status type to CS", %{conn: conn, user: user} do
+    conn =
+      post(
+        conn,
+        Routes.listing_path(conn, :create),
+        listing: Enum.into(%{user_id: user.id, user: user}, @create_cs_attrs)
+      )
+    # verify redirect to show listing page after post
+    assert html_response(conn, 302) =~ ~r/\/listings\/[0-9]+/
   end
 end

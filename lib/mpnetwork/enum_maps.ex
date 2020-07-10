@@ -24,6 +24,7 @@ defmodule Mpnetwork.EnumMaps do
 
   # Listing Status Types
   @listing_status_types_ext [
+    "Coming Soon",
     "New",
     "For Sale",
     "Extended",
@@ -37,7 +38,7 @@ defmodule Mpnetwork.EnumMaps do
   @listing_status_types_ext_alpha_only Enum.map(@listing_status_types_ext, fn w ->
                                          Regex.replace(~r/[^a-zA-Z ]+/, w, "")
                                        end)
-  @listing_status_types_int ~w[NEW FS EXT UC CL PC WR TOM EXP]a
+  @listing_status_types_int ~w[CS NEW FS EXT UC CL PC WR TOM EXP]a
   @listing_status_types_int_bin Enum.map(@listing_status_types_int, fn atom ->
                                   Atom.to_string(atom)
                                 end)

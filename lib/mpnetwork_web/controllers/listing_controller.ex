@@ -3,7 +3,7 @@ defmodule MpnetworkWeb.ListingController do
 
   require Logger
 
-  alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer, Permissions}
+  alias Mpnetwork.{Realtor, Listing, ClientEmail, Repo, Mailer, Permissions, Search}
   # alias Mpnetwork.Realtor.Office
   alias Mpnetwork.Listing.AttachmentMetadata
 
@@ -52,7 +52,7 @@ defmodule MpnetworkWeb.ListingController do
         n -> unerring_string_to_int(n) || 1000
       end
 
-    {total, listings, errors} = Realtor.query_listings(query, max, current_user(conn))
+    {total, listings, errors} = Search.query_listings(query, max, current_user(conn))
     primaries = Listing.primary_images_for_listings(listings)
 
     render(

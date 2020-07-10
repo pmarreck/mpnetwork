@@ -1,10 +1,3 @@
-# Because it's almost impossible to make sure I recreate this trigger correctly
-# and dropping it is necessary to modify the user_id field of listings,
-# I'm pulling in the relevant function from a previous migration
-# edit: WARNING TO FUTURE PETER: THIS DOES NOT WORK, MIX CONTEXT IS NOT AVAILABLE
-# Please refer to migration_support.ex for search index/trigger/sproc definitions
-# Code.require_file("20190710200023_add_draft_to_fulltext_searchable_fields.exs", "priv/repo/migrations")
-
 defmodule Mpnetwork.CurrentSchemaDef do
 
   # note that if you add to these later or change the ranks, you'll have to rerun a similar migration
@@ -49,7 +42,7 @@ defmodule Mpnetwork.CurrentSchemaDef do
 
   # Computed by calling EnumMaps.listing_status_types_int_bin() at the time this migration is written
   def enum_listing_status_types_int_bin do
-    ["NEW", "FS", "EXT", "UC", "CL", "PC", "WR", "TOM", "EXP"]
+    ["CS", "NEW", "FS", "EXT", "UC", "CL", "PC", "WR", "TOM", "EXP"]
   end
 
   def fulltext_searchable_fields do
@@ -215,6 +208,7 @@ defmodule Mpnetwork.CurrentSchemaDef do
   # at the time this migration is written
   def enum_listing_status_types_for_search do
     [
+      CS: "Coming Soon",
       NEW: "New",
       FS: "For Sale",
       EXT: "Extended",
@@ -231,6 +225,7 @@ defmodule Mpnetwork.CurrentSchemaDef do
   # at the time this migration is written
   def enum_listing_status_types_for_priority_search do
     [
+      CS: "CS lst/CS",
       NEW: "NEW lst/NEW",
       FS: "FS lst/FS",
       EXT: "EXT lst/EXT",
@@ -275,7 +270,8 @@ defmodule Mpnetwork.CurrentSchemaDef do
 
 end
 
-defmodule Mpnetwork.Repo.Migrations.ChangeDeleteAllToNilifyAllOnListingForUserFk do
+defmodule Mpnetwork.Repo.Migrations.Add_CS_ListingStatusTypeToEnum do
+  @disable_ddl_transaction true # altering types cannot be done in a transaction
   use Ecto.Migration
   alias Mpnetwork.Ecto.MigrationSupport, as: MS
   alias Mpnetwork.CurrentSchemaDef, as: Schema
@@ -283,50 +279,50 @@ defmodule Mpnetwork.Repo.Migrations.ChangeDeleteAllToNilifyAllOnListingForUserFk
   # The up state is just the current schema state as defined above this migration
   @up_state Schema.schema_state()
   # The down state is any difference from the current state to the previous state.
-  # In this case we're only modifying on_delete behavior so no changes.
-  @down_state @up_state
+  # In this case we're adding a new listing status "CS" so we have to remove it to get to
+  # the previous schema state.
+  @down_state Schema.schema_state(%{
+    enum_listing_status_types_for_search: Keyword.drop(@up_state.enum_listing_status_types_for_search, [:CS]),
+    enum_listing_status_types_int_bin: (@up_state.enum_listing_status_types_int_bin -- ["CS"]),
+    enum_listing_status_types_for_priority_search: (@up_state.enum_listing_status_types_for_priority_search -- [{:CS, "CS lst/CS"}]),
+  })
 
   def up do
-    drop constraint(:listings, "listings_user_id_fkey")
-
     MS.execute_all([
       # unfortunately we'll have to temporarily drop soft-delete support on listings and then re-enable it
-      # EDIT: Did not realize this sproc also wipes out the deleted_at field. Fuck. Need to rewrite that!
-      # The error that necessitated this was:
-      # 14:53:20.363 [info]  execute "ALTER TABLE listings ALTER COLUMN listing_status_type TYPE listing_status_type_temp USING (listing_status_type::text::listing_status_type_temp)"
-      # ** (Postgrex.Error) ERROR 0A000 (feature_not_supported) cannot alter type of a column used by a view or rule
       MS.undo_softdelete_view_sql(:listings),
-
       # oh god. now I have to drop and recreate the search index updating triggers that depend on user_id
-      MS.undo_search_index_trigger_sql()
-    ])
+      MS.undo_search_index_trigger_sql(),
+      # since we're modifying listing status, have to rebuild the search vector code
+      MS.undo_search_index_function_sql(),
 
-    alter table(:listings, prefix: "public") do
-      modify :user_id, references(:users, on_delete: :nilify_all)
-    end
+      # the meat
+      MS.add_enum_values_and_modify_column_sql("listing_status_type", @up_state.enum_listing_status_types_int_bin, "listings", "listing_status_type"),
 
-    MS.execute_all([
+      MS.search_trigger_function_creation_sql(@up_state),
       MS.redo_search_index_trigger_sql(@up_state),
-      MS.redo_softdelete_view_sql(:listings)
+      MS.redo_softdelete_view_sql(:listings),
+      MS.force_search_reindex_sql(@up_state)
     ])
-
   end
 
   def down do
-    drop constraint(:listings, "listings_user_id_fkey")
-
     MS.execute_all([
+      # unfortunately we'll have to temporarily drop soft-delete support on listings and then re-enable it
       MS.undo_softdelete_view_sql(:listings),
-      MS.undo_search_index_trigger_sql()
-    ])
+      # oh god. now I have to drop and recreate the search index updating triggers that depend on user_id
+      MS.undo_search_index_trigger_sql(),
+      # since we're modifying listing status, have to rebuild the search vector code
+      MS.undo_search_index_function_sql(),
 
-    alter table(:listings, prefix: "public") do
-      modify :user_id, references(:users, on_delete: :delete_all)
-    end
+      # the meat
+      MS.drop_enum_value_and_modify_column_sql("listing_status_type", @down_state.enum_listing_status_types_int_bin, "CS", nil, "listings", "listing_status_type"),
 
-    MS.execute_all([
+      MS.search_trigger_function_creation_sql(@down_state),
       MS.redo_search_index_trigger_sql(@down_state),
-      MS.redo_softdelete_view_sql(:listings)
+      MS.redo_softdelete_view_sql(:listings),
+      MS.force_search_reindex_sql(@down_state)
     ])
   end
+
 end
