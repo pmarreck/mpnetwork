@@ -334,8 +334,9 @@ defmodule Mpnetwork.Realtor do
     Repo.all(
       from(
         l in Listing,
-        where: l.draft == false and l.live_at >= ^day_to_filter_after and l.live_at <= ^today,
-        order_by: [desc: l.live_at],
+        where: l.draft == false and
+          ((l.live_at >= ^day_to_filter_after and l.live_at <= ^today) or l.listing_status_type == "CS"),
+        order_by: [desc: l.live_at, desc: l.updated_at],
         limit: ^limit,
         preload: [:broker, :user]
       )
