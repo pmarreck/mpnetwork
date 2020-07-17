@@ -498,7 +498,7 @@ defmodule Mpnetwork.Repo.Migrations.RemoveStupidStopWords do
 
   def down do
     # this code needs to be idempotent for this trick to work in every migration that changes the search indexing
-    Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings.previous_up_statements
+    Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings.previous_up_statements()
     |> Enum.each(&execute/1)
     additional_down_statements()
     |> Enum.each(&execute/1)

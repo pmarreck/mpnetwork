@@ -7,8 +7,8 @@ defmodule Mpnetwork.Repo.Migrations.AddSoftDeleteSupport do
       """
       DO $$
       BEGIN
-        CREATE SCHEMA without_softdeleted;
-        CREATE FUNCTION "public"."logical_delete"()
+        CREATE SCHEMA IF NOT EXISTS without_softdeleted;
+        CREATE OR REPLACE FUNCTION "public"."logical_delete"()
         RETURNS "pg_catalog"."trigger" AS
         $BODY$
           BEGIN
@@ -18,25 +18,26 @@ defmodule Mpnetwork.Repo.Migrations.AddSoftDeleteSupport do
           END;
         $BODY$
         LANGUAGE plpgsql VOLATILE;
-        CREATE FUNCTION "public"."prepare_table_for_soft_delete"(text)
+        CREATE OR REPLACE FUNCTION "public"."prepare_table_for_soft_delete"(text)
         RETURNS "pg_catalog"."void" AS
         $BODY$
           BEGIN
-            EXECUTE 'ALTER TABLE ' || $1 || ' ADD COLUMN deleted_at timestamptz;';
-            EXECUTE 'CREATE INDEX ' || $1 || '_not_deleted ON ' || $1 || ' (deleted_at) WHERE deleted_at IS NULL;';
+            EXECUTE 'ALTER TABLE ' || $1 || ' ADD COLUMN IF NOT EXISTS deleted_at timestamptz;';
+            EXECUTE 'CREATE INDEX IF NOT EXISTS ' || $1 || '_not_deleted ON ' || $1 || ' (deleted_at) WHERE deleted_at IS NULL;';
+            EXECUTE 'DROP TRIGGER IF EXISTS ' || $1 || '_logical_delete_tg ON ' || $1 || ';';
             EXECUTE 'CREATE TRIGGER ' || $1 || '_logical_delete_tg AFTER DELETE ON ' || $1 || ' FOR EACH ROW EXECUTE PROCEDURE logical_delete();';
-            EXECUTE 'CREATE VIEW without_softdeleted.' || $1 || ' AS SELECT * FROM ' || $1 || ' WHERE deleted_at IS NULL;';
+            EXECUTE 'CREATE OR REPLACE VIEW without_softdeleted.' || $1 || ' AS SELECT * FROM ' || $1 || ' WHERE deleted_at IS NULL;';
           END;
         $BODY$
         LANGUAGE plpgsql VOLATILE;
-        CREATE FUNCTION "public"."reverse_table_soft_delete"(text)
+        CREATE OR REPLACE FUNCTION "public"."reverse_table_soft_delete"(text)
         RETURNS "pg_catalog"."void" AS
         $BODY$
           BEGIN
-            EXECUTE 'DROP VIEW without_softdeleted.' || $1 || ';';
-            EXECUTE 'DROP TRIGGER ' || $1 || '_logical_delete_tg ON ' || $1 || ';';
-            EXECUTE 'DROP INDEX ' || $1 || '_not_deleted;';
-            EXECUTE 'ALTER TABLE ' || $1 || ' DROP COLUMN deleted_at;';
+            EXECUTE 'DROP VIEW IF EXISTS without_softdeleted.' || $1 || ';';
+            EXECUTE 'DROP TRIGGER IF EXISTS ' || $1 || '_logical_delete_tg ON ' || $1 || ';';
+            EXECUTE 'DROP INDEX IF EXISTS ' || $1 || '_not_deleted;';
+            EXECUTE 'ALTER TABLE ' || $1 || ' DROP COLUMN IF EXISTS deleted_at;';
           END;
         $BODY$
         LANGUAGE plpgsql VOLATILE;
@@ -46,10 +47,10 @@ defmodule Mpnetwork.Repo.Migrations.AddSoftDeleteSupport do
       """
       DO $$
       BEGIN
-        DROP FUNCTION logical_delete();
-        DROP FUNCTION prepare_table_for_soft_delete(text);
-        DROP FUNCTION reverse_table_soft_delete(text);
-        DROP SCHEMA without_softdeleted;
+        DROP FUNCTION IF EXISTS logical_delete();
+        DROP FUNCTION IF EXISTS prepare_table_for_soft_delete(text);
+        DROP FUNCTION IF EXISTS reverse_table_soft_delete(text);
+        DROP SCHEMA IF EXISTS without_softdeleted CASCADE;
       END $$
       """
     )

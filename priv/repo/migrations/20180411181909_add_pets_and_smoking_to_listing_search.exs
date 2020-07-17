@@ -6,7 +6,7 @@
 
 # See the module def below this one for the actual migration.
 
-defmodule Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings do
+defmodule Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings1 do
   # use Ecto.Migration # comment this out or running the migration will complain about no up or change function
 
   alias Mpnetwork.EnumMaps
@@ -482,7 +482,7 @@ defmodule Mpnetwork.Repo.Migrations.AddPetsAndSmokingToListingSearch do
 
   def down do
     # this code needs to be idempotent for this trick to work in every migration that changes the search indexing
-    Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings.up_statements
+    Mpnetwork.PreviousMigrations.ModifyListingSearchForExpiredListings1.up_statements()
     |> Enum.each(&execute/1)
   end
 

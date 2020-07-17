@@ -16,7 +16,7 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Listing.Attachment do
       timestamps()
     end
     alter table(:attachments) do
-      modify :listing_id, references(:listings, on_delete: :delete_all)
+      modify :listing_id, references(:listings, on_delete: :delete_all), from: :integer
     end
 
     create index(:attachments, [:listing_id])

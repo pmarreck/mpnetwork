@@ -11,7 +11,7 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Realtor.Broadcast do
     end
 
     alter table(:broadcasts) do
-      modify :user_id, references(:users, on_delete: :delete_all)
+      modify :user_id, references(:users, on_delete: :delete_all), from: :integer
     end
 
   end

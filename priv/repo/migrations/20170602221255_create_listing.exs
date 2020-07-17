@@ -53,7 +53,7 @@ defmodule Mpnetwork.Repo.Migrations.CreateMpnetwork.Realtor.Listing do
     end
 
     alter table(:listings) do
-      modify :user_id, references(:users, on_delete: :delete_all)
+      modify :user_id, references(:users, on_delete: :delete_all), from: :integer
     end
 
     create index(:listings, [:user_id])
