@@ -82,7 +82,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
                                              @create_upcoming_broker_oh_attrs
                                            )
 
-  @create_cs_attrs Enum.into(%{listing_status_type: "CS"}, @create_attrs)
+  @create_cs_attrs Enum.into(%{listing_status_type: "CS", omd_on: Date.add(Date.utc_today(), 2)}, @create_attrs)
 
   @update_attrs %{
     listing_status_type: "CL",

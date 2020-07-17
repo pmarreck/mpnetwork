@@ -34,11 +34,14 @@
                 </div>
                 <div class="group orientation-vertical last-child" style="width: 100px;">
                   <div class="report-field label-visible"><span class="report-label ">LSC:</span><span class="report-value"><%= @listing.listing_status_type %></span></div>
+                  <%= if @listing.listing_status_type == :CS do %>
+                    <div class="report-field label-visible"><span class="report-label">OMD:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.omd_on) %></span></div>
+                  <% end %>
                 </div>
               </div>
             </div>
             <div class="report-literal report-field report-line ">
-              <hr>
+              <hr style="margin-top: 5px">
             </div>
             <div class="group orientation-horizontal  last-child">
               <div class="group orientation-vertical " style="width: 265px;">

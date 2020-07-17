@@ -12,7 +12,8 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  static_url: [scheme: "https", host: "${STATIC_URL}", port: 443],
+  # static_url: [scheme: "https", host: "${STATIC_URL}", port: 443],
+  static_url: [scheme: "http", host: "${STATIC_URL}", port: 4000],
   watchers: [
     node: [
       "node_modules/brunch/bin/brunch",

@@ -460,6 +460,24 @@
             <%= error_tag f, :star_deduc_usd %>
           </div>
 
+          <!-- 38.5 -->
+          <div class="form-group<%= if f.errors[:omd_on], do: " has-error" %>">
+            <%= label f, :omd_on, "On Market Date (OMD)", class: "control-label" %>
+            <%
+              {{year, month, day}, _} = if f.data.omd_on do
+                Timex.to_erl(Timex.now("EDT"))
+              else
+                {{1, 1, 1}, 1}
+              end
+            %>
+            <div class="input-group date">
+              <label class="input-group-addon" for="omd_on">
+                <span class="fa fa-calendar"></span>
+              </label>
+              <%= text_input f, :omd_on, default: "#{year}-#{month}-#{day}", class: "form-control", id: "omd_on" %>
+            </div>
+            <%= error_tag f, :omd_on %>
+          </div>
           <div class="form-group row">
             <!-- 39 -->
             <div class="col-xs-6<%= if f.errors[:live_at], do: " has-error" %>">

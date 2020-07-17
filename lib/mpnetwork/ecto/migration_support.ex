@@ -142,7 +142,7 @@ defmodule Mpnetwork.Ecto.MigrationSupport do
   end
 
   def undo_softdelete_view_sql(table) do
-    ["DROP VIEW without_softdeleted.#{table};"]
+    ["DROP VIEW IF EXISTS without_softdeleted.#{table};"]
   end
 
   def undo_search_index_function_sql() do
@@ -164,7 +164,7 @@ defmodule Mpnetwork.Ecto.MigrationSupport do
 
   def redo_softdelete_view_sql(table) do
     ["""
-      CREATE VIEW without_softdeleted.#{table} AS SELECT * FROM #{table} WHERE deleted_at IS NULL;
+      CREATE OR REPLACE VIEW without_softdeleted.#{table} AS SELECT * FROM #{table} WHERE deleted_at IS NULL;
     """]
   end
 

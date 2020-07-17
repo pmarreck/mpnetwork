@@ -27,7 +27,9 @@ defmodule MpnetworkWeb.SearchControllerTest do
 
   test "search of coming-soon listing status works", %{conn: conn} do
     user = user_fixture()
-    listing = fixture(:listing, user, %{listing_status_type: "CS", address: "#{rand_between(10000,99999)} search lane"})
+    # this should really be the date in EST, not UTC, but it's 2 days away so it won't matter for now
+    day_after_tomorrow = Date.add(Date.utc_today(), 2)
+    listing = fixture(:listing, user, %{listing_status_type: "CS", omd_on: day_after_tomorrow, address: "#{rand_between(10000,99999)} search lane"})
     # sanity check
     :CS = listing.listing_status_type
 

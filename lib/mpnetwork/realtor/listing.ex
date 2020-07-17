@@ -222,6 +222,7 @@ defmodule Mpnetwork.Realtor.Listing do
     field(:moved_from, :string)
     field(:pets_ok, :boolean)
     field(:smoking_ok, :boolean)
+    field(:omd_on, :date)
     # field :search_vector, :tsvector # this won't work. wish I could assert on this!
     # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
     has_many(:attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all)
@@ -243,6 +244,11 @@ defmodule Mpnetwork.Realtor.Listing do
       :expires_on,
       name: "listing_date_earlier_than_expiry_date",
       message: @datetime_order_constraint_violation_message
+    )
+    |> check_constraint(
+      :omd_on,
+      name: "omd_between_now_and_15_days",
+      message: "The On Market Date (OMD) must be between tomorrow and 2 weeks from now, inclusive"
     )
   end
 
@@ -628,6 +634,11 @@ defmodule Mpnetwork.Realtor.Listing do
       {:listing_status_type, "Listing Status", get_field(listing, :listing_status_type),
        :closing_price_usd, "Closing Price", get_field(listing, :closing_price_usd)}
     )
+    |> check_constraint(
+      :omd_on,
+      name: "omd_exists_if_lst_is_cs",
+      message: "On Market Date (OMD) must be present when listing status is CS"
+    )
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:broker_id)
   end
@@ -846,7 +857,8 @@ defmodule Mpnetwork.Realtor.Listing do
       :moved_from,
       :pets_ok,
       :smoking_ok,
-      :deleted_at
+      :deleted_at,
+      :omd_on
     ])
   end
 end
