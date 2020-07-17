@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mix phx.digest && version.bump && git -c http.extraheader="GIGALIXIR-HOT: true" -c http.extraheader="GIGALIXIR-CLEAN: true" push staging master # && staging.migrate
+mix phx.digest && version.bump && git -c http.extraheader="GIGALIXIR-HOT: true" -c http.extraheader="GIGALIXIR-CLEAN: true" push staging yolo # && staging.migrate

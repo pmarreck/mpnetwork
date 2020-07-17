@@ -43,7 +43,7 @@ jobs:
         - git fetch --unshallow origin
         - git remote add production https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME.git
         - git remote add staging https://$GIGALIXIR_EMAIL:$GIGALIXIR_API_KEY@git.gigalixir.com/$GIGALIXIR_APP_NAME-staging.git
-        - git push staging HEAD:refs/heads/master && git push production HEAD:refs/heads/master
+        - git push staging HEAD:refs/heads/yolo && git push production HEAD:refs/heads/yolo
       cache:
         directories:
           - "assets/node_modules"
