@@ -1,5 +1,5 @@
 defmodule Mpnetwork.Jobs do
-  alias Mpnetwork.{Realtor, Cache, Session}
+  alias Mpnetwork.{Realtor, Cache, Session, UserEmail}
 
   def set_expired_listings_to_exp_status() do
     Realtor.update_expired_listings()
@@ -12,4 +12,22 @@ defmodule Mpnetwork.Jobs do
   def delete_old_sessions() do
     Session.delete_old_sessions()
   end
+
+  def set_cs_listings_to_tom() do
+    Realtor.set_cs_listings_to_tom()
+  end
+
+  def notify_realtor_cs_listing_about_to_expire_to_tom() do
+    Realtor.get_cs_listings_with_omd_on_today()
+    |> Enum.each(fn listing ->
+      UserEmail.send_user_regarding_listing(
+        listing.user,
+        listing,
+        "[MPWREB] Warning: A \"Coming Soon\" listing you own (#{listing.address}) has not been moved to NEW or FS and will be automatically TOM at midnight tonight!",
+        "Hello #{listing.user.name}! Please click here and assign this listing a status of either NEW or FS before midnight tonight, or it will be automatically put into Temporarily Off Market (TOM): <a href='@listing_link_placeholder'>@listing_link_placeholder</a>",
+        "notify_user_of_impending_omd_expiry"
+      )
+    end)
+  end
+
 end

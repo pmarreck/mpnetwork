@@ -48,10 +48,13 @@ config :mpnetwork, Mpnetwork.Scheduler,
   # :utc ?
   timezone: "America/New_York",
   jobs: [
-    # Runs every midnight:
+    # Runs every midnight EST:
     {"@daily", {Mpnetwork.Jobs, :set_expired_listings_to_exp_status, []}},
     {"@daily", {Mpnetwork.Jobs, :delete_old_cache_entries, []}},
-    {"@daily", {Mpnetwork.Jobs, :delete_old_sessions, []}}
+    {"@daily", {Mpnetwork.Jobs, :delete_old_sessions, []}},
+    {"@daily", {Mpnetwork.Jobs, :set_cs_listings_to_tom, []}},
+    # Runs at noon EST:
+    {"0 12 * * *", {Mpnetwork.Jobs, :notify_realtor_cs_listing_about_to_expire_to_tom, []}}
   ]
 
 # Configures Elixir's Logger

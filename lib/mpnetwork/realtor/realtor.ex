@@ -363,6 +363,40 @@ defmodule Mpnetwork.Realtor do
     # but DOES update the search index via trigger (which is also good in this case)
   end
 
+  # Updates CS listings with omd_on in the local timezone past to be listing_status_type "TOM"
+  def set_cs_listings_to_tom(delay \\ 1000) do
+    # Just to make sure it's definitely after midnight if this job runs at exactly midnight EST
+    :timer.sleep(delay)
+    local_date_now = Timex.now("America/New_York") |> Timex.to_date()
+    # yesterday = Timex.shift(local_date_now, days: -1)
+
+    from(
+      l in Listing,
+      where: l.omd_on < ^local_date_now,
+      where: l.listing_status_type in ~w[CS],
+      update: [set: [listing_status_type: "TOM"]]
+    )
+    |> Repo.update_all([])
+
+    # NOTE: Does NOT update updated_at (which is good in this case)
+    # but DOES update the search index via trigger (which is also good in this case)
+  end
+
+  # Gets all listings in status CS (Coming Soon) that have an On Market Date (OMD) of today
+  # so the owners can be notified that they need to move to NEW or FS by midnight tonight
+  def get_cs_listings_with_omd_on_today() do
+    local_date_now = Timex.now("America/New_York") |> Timex.to_date()
+    Repo.all(
+      from(
+        l in Listing,
+        where: l.omd_on == ^local_date_now,
+        where: l.listing_status_type in ~w[CS],
+        preload: [:user]
+      )
+    )
+  end
+
+
   @doc """
   Returns the next N listings with upcoming broker open houses.
 
