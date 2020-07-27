@@ -26,9 +26,21 @@ defmodule Mpnetwork.UserEmail do
       |> reply_to(fr)
       |> subject(subject)
       |> html_body(body)
+
+    email_rendered = email
       |> render_body("listing_email.html", %{html_body: body})
 
-    case Mailer.deliver(email) do
+    email_delivered = email_rendered
+      |> deliver_and_log(type, listing, name, email_address)
+
+    # This is sort of the philosophy of "always return some meaningful data from a function even if it's not captured by the caller"
+    {status, results} = email_delivered
+    {status, {email, email_rendered, results}}
+  end
+
+  defp deliver_and_log(email, type, listing, name, email_address) do
+    delivery = Mailer.deliver(email)
+    case delivery do
       {:ok, results} ->
         Logger.info(
           "SUCCESS: Sent listing id #{listing.id} of type #{type} to #{name} at #{email_address}, result: #{inspect(results)}"
@@ -54,6 +66,7 @@ defmodule Mpnetwork.UserEmail do
       unknown ->
         Logger.info("ERROR: Attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address} failed for unknown reasons: #{inspect(unknown)}")
     end
+    delivery
   end
 
   defp interpolate_placeholder_values(body, %{name: name, url: url}, alt_name) do
