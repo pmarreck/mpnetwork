@@ -57,6 +57,12 @@ config :mpnetwork, Mpnetwork.Scheduler,
     {"0 12 * * *", {Mpnetwork.Jobs, :notify_realtor_cs_listing_about_to_expire_to_tom, []}}
   ]
 
+# Configures the Oban job runner
+config :mpnetwork, Oban,
+  repo: Mpnetwork.Repo,
+  queues: [mailers: 10],
+  timezone: "America/New_York"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

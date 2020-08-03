@@ -4,9 +4,11 @@ defmodule Mpnetwork.Realtor do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.{Multi, Changeset}
 
   alias Mpnetwork.Realtor.{Broadcast, Listing, Office}
   alias Mpnetwork.{Repo, User}
+  alias Mpnetwork.Workers.NewListingEmailer
 
   @doc """
   Creates a user.
@@ -98,6 +100,15 @@ defmodule Mpnetwork.Realtor do
         where: u.office_id == ^office.id,
         where: not is_nil(u.locked_at) and u.failed_attempts > 0,
         order_by: [asc: u.name]
+      )
+    )
+  end
+
+  def get_users_who_prefer_new_listing_emails() do
+    Repo.all(
+      from(
+        u in User,
+        where: u.pref_new_listing_email == true
       )
     )
   end
@@ -486,6 +497,16 @@ defmodule Mpnetwork.Realtor do
     )
   end
 
+  # takes a Multi and a Listing and returns a Multi
+  defp add_jobs_to_email_each_user_preferring_notification(%Multi{} = orig_multi, %Listing{} = listing) do
+    get_users_who_prefer_new_listing_emails()
+    |> Enum.reduce(orig_multi, fn user, multi ->
+      job_args = %{listing_id: listing.id, user_id: user.id}
+      multi
+      |> Oban.insert(:notify_new_listing, NewListingEmailer.new(job_args))
+    end)
+  end
+
   @doc """
   Creates a listing.
 
@@ -499,13 +520,34 @@ defmodule Mpnetwork.Realtor do
 
   """
   def create_listing(attrs \\ %{}) do
-    %Listing{}
+    changeset = %Listing{}
     |> Listing.changeset(attrs)
-    |> Repo.insert()
+
+    is_draft_listing = Changeset.get_field(changeset, :draft)
+    lst = Changeset.get_field(changeset, :listing_status_type)
+    is_cs_listing = (lst == :CS)
+    is_new_listing = (lst in [:NEW, :FS])
+    is_notifiable = !is_draft_listing and (is_cs_listing or is_new_listing)
+
+    if is_notifiable do # multi a notification with the insert
+      result = Multi.new()
+      |> Multi.insert(:listing, changeset)
+      |> Multi.merge(fn %{listing: listing} ->
+        Multi.new()
+        |> add_jobs_to_email_each_user_preferring_notification(listing)
+      end)
+      |> Repo.transaction()
+      case result do
+        {status, :listing, changeset, _} -> {status, changeset}
+        {:ok, %{listing: listing}}       -> {:ok, listing}
+      end
+    else # it's either a draft or a non-new listing status; handle extended?
+      Repo.insert(changeset)
+    end
   end
 
   @doc """
-  Updates a listing.
+  Updates a listing. Notifies on status change to NEW, FS or CS.
 
   ## Examples
 
@@ -517,9 +559,39 @@ defmodule Mpnetwork.Realtor do
 
   """
   def update_listing(%Listing{} = listing, attrs) do
-    listing
+    changeset = listing
     |> Listing.changeset(attrs)
-    |> Repo.update()
+
+    # alright we want to not track ALL draft listings
+    # but only those coming OUT of draft.
+    # Note that you do need the false comparison due to Changeset.get_change
+    # possibly returning nil.
+    is_newly_not_draft = (Changeset.get_change(changeset, :draft) == false)
+    wasnt_draft_and_wont_change = (listing.draft == false) and (Changeset.get_change(changeset, :draft) == nil)
+    # So we only want to notify when it CHANGES out of draft and IS one of the following statuses,
+    # or WASN'T draft and BECOMES one of the following statuses, but not every time
+    # the listing is merely updated:
+    new_lst = Changeset.get_change(changeset, :listing_status_type)
+    is_new_lst = new_lst != nil
+    is_lst_changed_to_cs = is_new_lst and (new_lst == :CS)
+    is_lst_changed_to_new = is_new_lst and (new_lst in [:NEW, :FS])
+    is_lst_cs = (Changeset.get_field(changeset, :listing_status_type) == :CS)
+    is_lst_new = (Changeset.get_field(changeset, :listing_status_type) in [:NEW, :FS])
+    is_notifiable = (is_newly_not_draft and (is_lst_cs or is_lst_new)) or
+      (wasnt_draft_and_wont_change and (is_lst_changed_to_cs or is_lst_changed_to_new))
+    # whew...
+    if is_notifiable do
+      result = Multi.new()
+      |> Multi.update(:listing, changeset)
+      |> add_jobs_to_email_each_user_preferring_notification(listing)
+      |> Repo.transaction()
+      case result do
+        {status, :listing, changeset, _} -> {status, changeset}
+        {:ok, %{listing: listing}}       -> {:ok, listing}
+      end
+    else
+      Repo.update(changeset)
+    end
   end
 
   ### Undelete/soft-delete support

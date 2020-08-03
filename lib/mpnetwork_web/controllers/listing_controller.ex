@@ -182,32 +182,6 @@ defmodule MpnetworkWeb.ListingController do
     end
   end
 
-  def create(conn, %{"listing" => listing_params}) do
-    if !Permissions.read_only?(current_user(conn)) do
-      # inject current_user.id and current_office.id (as broker_id)
-      listing_params = Enum.into(%{"broker_id" => conn.assigns.current_office.id}, listing_params)
-      listing_params = filter_empty_ext_urls(listing_params)
-
-      case Realtor.create_listing(listing_params) do
-        {:ok, listing} ->
-          conn
-          |> put_flash(:info, "Listing created successfully.")
-          |> redirect(to: Routes.listing_path(conn, :show, listing))
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(
-            conn,
-            "new.html",
-            changeset: changeset,
-            offices: offices(),
-            users: users(conn.assigns.current_office, conn.assigns.current_user)
-          )
-      end
-    else
-      send_resp(conn, 405, "Not allowed")
-    end
-  end
-
   def show(conn, %{"id" => id}) do
     listing = Realtor.get_listing!(id) |> Repo.preload([:user, :broker, :colisting_agent])
     broker = listing.broker
@@ -252,20 +226,31 @@ defmodule MpnetworkWeb.ListingController do
     end
   end
 
-  # def edit_mls(conn, %{"id" => id}) do
-  #   listing = Realtor.get_listing!(id)
-  #   ensure_owner_or_admin(conn, listing, fn ->
-  #     attachments = Listing.list_attachments(listing.id)
-  #     changeset = Realtor.change_listing(listing)
-  #     render(conn, "edit_mls.html",
-  #       listing: listing,
-  #       attachments: attachments,
-  #       changeset: changeset,
-  #       offices: offices(),
-  #       users: users(conn.assigns.current_office, conn.assigns.current_user)
-  #     )
-  #   end)
-  # end
+  def create(conn, %{"listing" => listing_params}) do
+    if !Permissions.read_only?(current_user(conn)) do
+      # inject current_user.id and current_office.id (as broker_id)
+      listing_params = Enum.into(%{"broker_id" => conn.assigns.current_office.id}, listing_params)
+      listing_params = filter_empty_ext_urls(listing_params)
+
+      case Realtor.create_listing(listing_params) do
+        {:ok, listing} ->
+          conn
+          |> put_flash(:info, "Listing created successfully.")
+          |> redirect(to: Routes.listing_path(conn, :show, listing))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(
+            conn,
+            "new.html",
+            changeset: changeset,
+            offices: offices(),
+            users: users(conn.assigns.current_office, conn.assigns.current_user)
+          )
+      end
+    else
+      send_resp(conn, 405, "Not allowed")
+    end
+  end
 
   def update(conn, %{"id" => id, "listing" => listing_params}) do
     # IO.inspect listing_params, limit: :infinity

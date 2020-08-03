@@ -141,6 +141,7 @@ defmodule MpnetworkWeb.GlobalHelpers do
 
   # convert falsey values to "N", anything else to "Y"
   def yn(bool), do: if(bool, do: "Y", else: "N")
+  def yesno(bool), do: if(bool, do: "Yes", else: "No")
 
   # convert an integer number of dollars to dollar format
   def dollars(val) when is_number(val), do: Number.Currency.number_to_currency(val, precision: 0)

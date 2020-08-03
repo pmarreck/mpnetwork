@@ -37,6 +37,11 @@
     <%= GlobalHelpers.role_id_to_name(@user.role_id) %>
   </li>
 
+  <li>
+    <strong>Prefers emails about new listings:</strong>
+    <%= GlobalHelpers.yesno(@user.pref_new_listing_email) %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.profile_path(@conn, :edit, @user) %></span>

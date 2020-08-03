@@ -101,7 +101,8 @@ defmodule Mpnetwork.Mixfile do
       # @tsloughter not long after said...
       # Suggest using the git master version since it uses the rebar3 plugin that works on OTP-23
       {:telemetry_poller, "~> 0.4"},
-      {:telemetry_metrics, "~> 0.4"}
+      {:telemetry_metrics, "~> 0.4"},
+      {:oban, "~> 2.0"}
     ]
   end
 

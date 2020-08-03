@@ -32,6 +32,7 @@ defmodule Mpnetwork.User do
     # Realtor
     field(:role_id, :integer, default: 3)
     # belongs_to :role, Mpnetwork.Realtor.Role, defaults: %{id: 3}
+    field(:pref_new_listing_email, :boolean)
     has_many(:listings, Mpnetwork.Realtor.Listing)
     has_many(:broadcasts, Mpnetwork.Realtor.Broadcast)
 
@@ -67,7 +68,8 @@ defmodule Mpnetwork.User do
         :office_id,
         :role_id,
         :url,
-        :email_sig
+        :email_sig,
+        :pref_new_listing_email
       ] ++ convert_any_strings_to_atoms(coherence_fields())
     )
     |> validate_required([:username, :email, :office_id])

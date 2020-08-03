@@ -27,3 +27,6 @@ config :coherence, MpnetworkWeb.Coherence.Mailer, adapter: Swoosh.Adapters.Test
 
 # Change password hash algorithm to a no-op to make tests faster
 config :coherence, :password_hashing_alg, Mpnetwork.Utils.NoopHash
+
+# Disable Oban job runners in test
+config :mpnetwork, Oban, crontab: false, queues: false, plugins: false
