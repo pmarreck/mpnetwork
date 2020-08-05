@@ -503,7 +503,7 @@ defmodule Mpnetwork.Realtor do
     |> Enum.reduce(orig_multi, fn user, multi ->
       job_args = %{listing_id: listing.id, user_id: user.id}
       multi
-      |> Oban.insert(:notify_new_listing, NewListingEmailer.new(job_args))
+      |> Oban.insert("notify_#{user.id}_new_listing_#{listing.id}", NewListingEmailer.new(job_args))
     end)
   end
 
