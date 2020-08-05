@@ -2,6 +2,10 @@ defmodule Mpnetwork.Repo.Migrations.AddOnMarketDateToListings do
   use Ecto.Migration
   alias Mpnetwork.Ecto.MigrationSupport, as: MS
 
+  # EDIT: You MUST add data cleanup before instituting the constraint check or the deploy will fail late
+  # due to Postgres not accepting it (it actually checks all the existing data! Good Postgres! :] )
+  # and the gigalixir status will be UNHEALTHY!
+
   defp clean_data_first_sql() do
     "UPDATE listings SET listing_status_type = NULL WHERE listing_status_type = 'CS' AND omd_on IS NULL"
   end
