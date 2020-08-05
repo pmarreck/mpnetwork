@@ -82,8 +82,8 @@
     <%= password_input f, :password_confirmation, class: "form-control" %>
     <%= error_tag f, :password_confirmation %>
   </div>
-
+  <% new_user = (@action == "/users") %>
   <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
+    <%= submit (if new_user, do: "Create", else: "Save"), class: "btn btn-primary" %>
   </div>
 <% end %>

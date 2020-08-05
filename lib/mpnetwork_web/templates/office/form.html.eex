@@ -51,8 +51,8 @@
     <%= text_input f, :url, class: "form-control" %>
     <%= error_tag f, :url %>
   </div>
-
+  <% new_office = (@action == "/offices") %>
   <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
+    <%= submit (if new_office, do: "Create", else: "Save"), class: "btn btn-primary" %>
   </div>
 <% end %>
