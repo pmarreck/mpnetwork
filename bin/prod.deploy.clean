@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mix phx.digest && git -c http.extraheader="GIGALIXIR-CLEAN: true" push gigalixir yolo && sleep 5 && prod.healthcheck
+mix phx.digest && git -c http.extraheader="GIGALIXIR-CLEAN: true" push gigalixir yolo:master && sleep 5 && prod.healthcheck
