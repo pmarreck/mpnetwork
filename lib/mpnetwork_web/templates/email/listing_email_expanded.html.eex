@@ -257,7 +257,7 @@
                                           <div class="contentEditableContainer contentImageEditable">
                                             <div class="contentEditable">
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (primary_photo.sha256_hash |> Base.url_encode64), w: 560, h: 244) %>"
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (primary_photo.sha256_hash |> Base.url_encode64), w: 560, h: 244) %>"
                                                 alt="featured image" data-default="placeholder" data-max-width="560"
                                                 width='560' height='244' border="0">
                                             </div>
@@ -343,7 +343,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
@@ -354,7 +354,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
@@ -365,7 +365,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
@@ -378,7 +378,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
@@ -389,7 +389,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
@@ -400,7 +400,7 @@
                                               <% {photo, other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
-                                                src="<%= Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
+                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
                                               <% end %>
                                             </div>
                                           </div>
