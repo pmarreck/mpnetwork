@@ -23,7 +23,7 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
   def perform(%Oban.Job{args: %{"listing_id" => listing_id, "user_id" => user_id}} = _oban_job) do
     user = Repo.get!(User, user_id)
     name = user.name
-    listing = Repo.get!(Listing, listing_id)
+    listing = Repo.get!(Listing, listing_id) |> Repo.preload([:attachments, :broker, :user, :colisting_agent])
     subject_tag = "[MPWREB]"
     announce = case listing.listing_status_type do
       :NEW -> "NEW! "
@@ -33,11 +33,13 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
       :PC  -> "PRICE CHANGE! "
       _    -> ""
     end
+    body_preamble = "Hello #{name}! Please click here to check it out: "
     {status, {_email, _email_rendered, results}} = UserEmail.send_user_regarding_listing(
       user,
       listing,
       "#{subject_tag} #{announce}#{listing.address}",
-      "Hello #{name}! Please click here to check it out: <a href='@listing_link_placeholder'>@listing_link_placeholder</a>",
+      "<html><body>" <> body_preamble <> "<a href='@listing_link_placeholder'>@listing_link_placeholder</a>" <> "</body></html>",
+      body_preamble <> "@listing_link_placeholder",
       "new_listing_notif"
     )
     {status, results}

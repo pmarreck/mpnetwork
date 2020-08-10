@@ -20,11 +20,13 @@ defmodule Mpnetwork.Jobs do
   def notify_realtor_cs_listing_about_to_expire_to_tom() do
     Realtor.get_cs_listings_with_omd_on_today()
     |> Enum.each(fn listing ->
+      body_preamble = "Hello #{listing.user.name}! Please click here and assign this listing a status of either NEW or FS before midnight tonight, or it will be automatically put into Temporarily Off Market (TOM): "
       UserEmail.send_user_regarding_listing(
         listing.user,
         listing,
         "[MPWREB] Warning: A \"Coming Soon\" listing you own (#{listing.address}) has not been moved to NEW or FS and will be automatically TOM at midnight tonight!",
-        "Hello #{listing.user.name}! Please click here and assign this listing a status of either NEW or FS before midnight tonight, or it will be automatically put into Temporarily Off Market (TOM): <a href='@listing_link_placeholder'>@listing_link_placeholder</a>",
+        "<html><body>" <> body_preamble <> "<a href='@listing_link_placeholder'>@listing_link_placeholder</a>" <> "</body></html>",
+        body_preamble <> "@listing_link_placeholder",
         "notify_user_of_impending_omd_expiry"
       )
     end)

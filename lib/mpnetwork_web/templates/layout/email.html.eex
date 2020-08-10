@@ -1,14 +1,1 @@
-<html>
-  <head>
-    <title><%= @email.subject %></title>
-    <style>
-      p {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <%= @inner_content %>
-  </body>
-</html>
+<%= raw(@inner_content) %>

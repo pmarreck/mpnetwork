@@ -11,11 +11,12 @@ defmodule Mpnetwork.UserEmail do
   require Logger
 
 
-  def send_user_regarding_listing(user, listing, subject, body, type \\ "notify_user_of_impending_omd_expiry") do
+  def send_user_regarding_listing(user, listing, subject, htmlbody, textbody, type \\ "notify_user_of_impending_omd_expiry") do
     name = user.name
     email_address = user.email
     url = Routes.listing_url(Endpoint, :show, listing)
-    body = interpolate_placeholder_values(body, %{name: name, url: url}, "User")
+    htmlbody = interpolate_placeholder_values(htmlbody, %{name: name, url: url}, "User")
+    textbody = interpolate_placeholder_values(textbody, %{name: name, url: url}, "User")
 
     fr = from_email()
 
@@ -25,10 +26,15 @@ defmodule Mpnetwork.UserEmail do
       |> to({name, email_address})
       |> reply_to(fr)
       |> subject(subject)
-      |> html_body(body)
+    email = if htmlbody, do: html_body(email, htmlbody), else: email
+    email = if textbody, do: text_body(email, textbody), else: email
 
-    email_rendered = email
-      |> render_body("listing_email.html", %{html_body: body})
+    email_rendered = case type do
+      "new_listing_notif" ->
+        render_body(email, "listing_email_expanded.html", %{listing_url: url, listing: listing, attachments: listing.attachments, broker: listing.broker, agent: listing.user, co_agent: listing.colisting_agent})
+      _ ->
+        render_body(email, "listing_email.html", %{html_body: htmlbody})
+    end
 
     email_delivered = email_rendered
       |> deliver_and_log(type, listing, name, email_address)
@@ -69,11 +75,12 @@ defmodule Mpnetwork.UserEmail do
     delivery
   end
 
-  defp interpolate_placeholder_values(body, %{name: name, url: url}, alt_name) do
+  defp interpolate_placeholder_values(nil, _, _), do: nil
+  defp interpolate_placeholder_values(body, %{name: name, url: url}, default_name) do
     name =
       case name do
-        "" -> alt_name
-        nil -> alt_name
+        "" -> default_name
+        nil -> default_name
         _ -> name
       end
 
