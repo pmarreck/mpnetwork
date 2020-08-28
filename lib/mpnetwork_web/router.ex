@@ -32,9 +32,13 @@ defmodule MpnetworkWeb.Router do
     )
   end
 
-  defp create_office_context(conn, _) do
+  defp create_session_contexts(conn, _) do
+    # create "office" context
     u = conn.assigns.current_user |> Repo.preload(:broker)
-    Plug.Conn.assign(conn, :current_office, u.broker)
+    conn = Plug.Conn.assign(conn, :current_office, u.broker)
+    # create logflare user context
+    LogflareLogger.context(user: %{id: u.id})
+    conn
   end
 
   pipeline :protected do
@@ -51,8 +55,7 @@ defmodule MpnetworkWeb.Router do
       id_key: @id_key
     )
 
-    plug(:create_office_context)
-    # plug(:create_timber_user_context)
+    plug(:create_session_contexts)
   end
 
   defp admin_check(conn, _) do

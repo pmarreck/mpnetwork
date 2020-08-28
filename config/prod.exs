@@ -31,8 +31,19 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: "${SECRET_KEY_BASE}"
 
-# Do not print debug messages in production
-config :logger, level: :info
+# Do not print debug messages in production.
+# Point to Logflare.
+config :logger, level: :info, backends: [LogflareLogger.HttpBackend]
+
+# Logflare config
+config :logflare_logger_backend,
+  url: "https://api.logflare.app", # https://api.logflare.app is configured by default and you can set your own url
+  level: :info, # Default LogflareLogger level is :info. Note that log messages are filtered by the :logger application first
+  api_key: "bTydtgMfXAcj",
+  source_id: "a59afa68-67a7-42a5-8738-b081bc00f85b",
+  flush_interval: 1_000, # minimum time in ms before a log batch is sent to the server ",
+  max_batch_size: 50 # maximum number of events before a log batch is sent to the server
+
 # config :logger, :console, format: "[$level] $message\n"
 
 # ## SSL Support
