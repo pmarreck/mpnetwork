@@ -40,7 +40,7 @@ config :logflare_logger_backend,
   url: "https://api.logflare.app", # https://api.logflare.app is configured by default and you can set your own url
   level: :info, # Default LogflareLogger level is :info. Note that log messages are filtered by the :logger application first
   api_key: System.fetch_env!("LOGFLARE_API_KEY"),
-  source_id: "a59afa68-67a7-42a5-8738-b081bc00f85b",
+  source_id: System.fetch_env!("LOGFLARE_DRAIN_ID"),
   flush_interval: 1_000, # minimum time in ms before a log batch is sent to the server ",
   max_batch_size: 50 # maximum number of events before a log batch is sent to the server
 
