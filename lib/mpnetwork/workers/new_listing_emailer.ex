@@ -33,11 +33,18 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
       :PC  -> "PRICE CHANGE! "
       _    -> ""
     end
+    subject_address = listing.address
+    subject_address = if listing.city do
+      subject_address <> ", #{listing.city}"
+    else
+      subject_address
+    end
+    subject = "#{subject_tag} #{announce}#{subject_address}"
     body_preamble = "Hello #{name}! Please click here to check it out: "
     {status, {_email, _email_rendered, results}} = UserEmail.send_user_regarding_listing(
       user,
       listing,
-      "#{subject_tag} #{announce}#{listing.address}",
+      subject,
       "<html><body>" <> body_preamble <> "<a href='@listing_link_placeholder'>@listing_link_placeholder</a>" <> "</body></html>",
       body_preamble <> "@listing_link_placeholder",
       "new_listing_notif"
