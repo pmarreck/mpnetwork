@@ -104,6 +104,7 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_metrics, "~> 0.4"},
       {:oban, "~> 2.0"},
       {:logflare_logger_backend, "~> 0.7.5"},
+      {:remote_ip, "~> 0.2.1"},
     ]
   end
 

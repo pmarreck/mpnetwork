@@ -3,6 +3,7 @@ defmodule MpnetworkWeb.Router do
   use Coherence.Router
   import Phoenix.LiveDashboard.Router
   alias Mpnetwork.Repo
+  require Logger
 
   # def create_timber_user_context(conn, _opts) do
   #   if conn.assigns[:current_user] do
@@ -18,7 +19,19 @@ defmodule MpnetworkWeb.Router do
   @user_schema Application.get_env(:coherence, :user_schema)
   @id_key Application.get_env(:coherence, :schema_key)
 
+  defp collect_request_data_for_logging(conn, _) do
+    # IO.inspect(conn, limit: :infinity, printable_limit: :infinity, pretty: true)
+    user_agent = case get_req_header(conn, "user-agent") do
+      [user_agent] -> user_agent
+      _ -> nil
+    end
+    Logger.info([when: DateTime.utc_now(), method: conn.method, path: conn.request_path, params: conn.params, from: conn.remote_ip, user_agent: user_agent])
+    conn
+  end
+
   pipeline :browser do
+    plug(RemoteIp)
+    plug(:collect_request_data_for_logging)
     plug(:accepts, ["html"])
     plug(:fetch_session)
     plug(:fetch_flash)
@@ -37,11 +50,12 @@ defmodule MpnetworkWeb.Router do
     u = conn.assigns.current_user |> Repo.preload(:broker)
     conn = Plug.Conn.assign(conn, :current_office, u.broker)
     # create logflare user context
-    LogflareLogger.context(user: %{id: u.id})
+    LogflareLogger.context(user: %{id: u.id}, office: %{id: u.broker.id})
     conn
   end
 
   pipeline :protected do
+    plug(RemoteIp)
     plug(:accepts, ["html", "json"])
     plug(:fetch_session)
     plug(:fetch_flash)
@@ -56,6 +70,7 @@ defmodule MpnetworkWeb.Router do
     )
 
     plug(:create_session_contexts)
+    plug(:collect_request_data_for_logging)
   end
 
   defp admin_check(conn, _) do
