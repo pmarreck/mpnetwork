@@ -105,6 +105,7 @@ defmodule Mpnetwork.Mixfile do
       {:oban, "~> 2.0"},
       {:logflare_logger_backend, "~> 0.7.5"},
       {:remote_ip, "~> 0.2.1"},
+      {:ua_inspector, "~> 2.0"},
     ]
   end
 

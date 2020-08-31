@@ -44,6 +44,9 @@ config :logflare_logger_backend,
   flush_interval: 1_000, # minimum time in ms before a log batch is sent to the server ",
   max_batch_size: 50 # maximum number of events before a log batch is sent to the server
 
+# Disable Phoenix logger in prod
+config :phoenix, :logger, false
+
 # config :logger, :console, format: "[$level] $message\n"
 
 # ## SSL Support

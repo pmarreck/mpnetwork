@@ -4,6 +4,8 @@ defmodule MpnetworkWeb.Router do
   import Phoenix.LiveDashboard.Router
   alias Mpnetwork.Repo
   require Logger
+  require Phoenix.Logger
+  require UAInspector
 
   # def create_timber_user_context(conn, _opts) do
   #   if conn.assigns[:current_user] do
@@ -20,13 +22,24 @@ defmodule MpnetworkWeb.Router do
   @id_key Application.get_env(:coherence, :schema_key)
 
   defp collect_request_data_for_logging(conn, _) do
-    # IO.inspect(conn, limit: :infinity, printable_limit: :infinity, pretty: true)
-    user_agent = case get_req_header(conn, "user-agent") do
-      [user_agent] -> user_agent
-      _ -> nil
-    end
-    Logger.info([when: DateTime.utc_now(), method: conn.method, path: conn.request_path, params: conn.params, from: conn.remote_ip, user_agent: user_agent])
-    conn
+    Plug.Conn.register_before_send(conn, fn conn ->
+      user_agent = case get_req_header(conn, "user-agent") do
+        [user_agent] -> UAInspector.parse(user_agent)
+        _ -> nil
+      end
+      user_agent = case user_agent do
+        %UAInspector.Result{} -> %{bot: false, client: user_agent.client, device: user_agent.device, OS: user_agent.os}
+        %UAInspector.Result.Bot{} -> %{bot: true, category: user_agent.category, name: user_agent.name, producer: user_agent.producer, url: user_agent.url}
+        _ -> user_agent
+      end
+      LogflareLogger.context(response: %{status_code: conn.status}, user_agent: user_agent)
+      # IO.inspect(conn, limit: :infinity, printable_limit: :infinity, pretty: true)
+      if Mix.env() == :dev do
+        Logger.debug(context: LogflareLogger.context())
+      end
+      Logger.info([method: conn.method, path: conn.request_path, params: Phoenix.Logger.filter_values(conn.params), from: conn.remote_ip])
+      conn
+    end)
   end
 
   pipeline :browser do

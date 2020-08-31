@@ -68,6 +68,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Remove verbose debug messages from remote_ip
+config :logger, compile_time_purge_matching: [[application: :remote_ip]]
+
 # %% Coherence Configuration %%   Don't remove this line
 config :coherence,
   user_schema: Mpnetwork.User,

@@ -40,6 +40,9 @@ defmodule Mpnetwork.Application do
       {Oban, oban_config()}
     ]
 
+    # Download the latest ua_inspector DB
+    UAInspector.Downloader.download()
+
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Mpnetwork.Supervisor]
