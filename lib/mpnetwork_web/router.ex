@@ -28,9 +28,9 @@ defmodule MpnetworkWeb.Router do
         _ -> nil
       end
       user_agent = case user_agent do
-        %UAInspector.Result{} -> %{bot: false, client: user_agent.client, device: user_agent.device, OS: user_agent.os}
-        %UAInspector.Result.Bot{} -> %{bot: true, category: user_agent.category, name: user_agent.name, producer: user_agent.producer, url: user_agent.url}
-        _ -> user_agent
+        %UAInspector.Result{} -> %{human: %{client: Map.from_struct(user_agent.client), device: Map.from_struct(user_agent.device), OS: Map.from_struct(user_agent.os)}, bot: %{}}
+        %UAInspector.Result.Bot{} -> %{human: %{}, bot: %{category: user_agent.category, name: user_agent.name, producer: Map.from_struct(user_agent.producer), url: user_agent.url}}
+        _ -> %{human: %{}, bot: %{}}
       end
       LogflareLogger.context(response: %{status_code: conn.status}, user_agent: user_agent)
       # IO.inspect(conn, limit: :infinity, printable_limit: :infinity, pretty: true)

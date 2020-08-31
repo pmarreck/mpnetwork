@@ -59,10 +59,6 @@ defmodule Mpnetwork.Mixfile do
       # https://github.com/bitwalker/timex/commit/f59156b59552ca113c3d4b978d3773997971c67c
       # {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
       {:number, "~> 1.0"},
-      # {:timber_ecto, "~> 2.0"},
-      # {:timber_plug, "~> 1.0"},
-      # {:timber_phoenix, "~> 1.0"},
-      # {:timber, "~> 3.1"},
       {:ex_image_info, "~> 0.2"},
       # provides `mix eliver.bump` for hot prod upgrades
       {:eliver, "~> 2.0"},
