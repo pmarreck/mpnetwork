@@ -217,7 +217,7 @@
                                                         <div class="contentEditableContainer contentImageEditable">
                                                           <div class="contentEditable" data-default="placeholder"
                                                             data-max-width="400" width='81' height='27' border="0">
-                                                            <h2><%= @listing.address %></h2>
+                                                            <h2><%= fsofr = for_sale_or_for_rent_string(@listing) %><%= if fsofr do %>: <% end %><%= @listing.address %></h2>
                                                           </div>
                                                         </div>
                                                       </td>
@@ -242,9 +242,9 @@
                                         </tr>
                                       </tbody>
                                     </table>
-                                    <% {photo_attachments, _other_attachments} = Enum.split_with(@attachments, &(&1.is_image)) %>
-                                    <% primary_photo = Enum.find(photo_attachments, List.first(photo_attachments), &(&1.primary)) %>
-                                    <% other_photos = photo_attachments -- [primary_photo] %>
+                                    <%
+                                      {primary_photo, other_photos} = select_photos_from_attachments_and_put_primary_photo_first(@attachments)
+                                    %>
                                   </div>
                                   <div class="movableContent"
                                     style="border: 0px; padding-top: 0px; position: relative;">
@@ -256,10 +256,12 @@
                                         <td>
                                           <div class="contentEditableContainer contentImageEditable">
                                             <div class="contentEditable">
-                                              <img class="banner"
-                                                src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (primary_photo.sha256_hash |> Base.url_encode64), w: 560, h: 244) %>"
-                                                alt="featured image" data-default="placeholder" data-max-width="560"
-                                                width='560' height='244' border="0">
+                                              <%= if primary_photo do %>
+                                                <img class="banner"
+                                                  src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (primary_photo.sha256_hash |> Base.url_encode64), w: 560, h: 244) %>"
+                                                  alt="featured image" data-default="placeholder" data-max-width="560"
+                                                  width='560' height='244' border="0">
+                                              <% end %>
                                             </div>
                                           </div>
                                         </td>
@@ -397,7 +399,7 @@
                                         <td valign='top'>
                                           <div class="contentEditableContainer contentImageEditable">
                                             <div class="contentEditable">
-                                              <% {photo, other_photos} = nextphoto(other_photos) %>
+                                              <% {photo, _other_photos} = nextphoto(other_photos) %>
                                               <%= if photo do %>
                                               <img class="banner"
                                                 src="<%= Routes.attachment_url(MpnetworkWeb.Endpoint, :show_public, (photo.sha256_hash |> Base.url_encode64), w: 179, h: 112) %>">
@@ -408,441 +410,441 @@
                                       </tr>
                                     </table>
                                   </div>
-<!--
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td height='40'>&nbsp;</td>
-                                      </tr>
-                                      <tr>
-                                        <td
-                                          style='border:1px solid #333333;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;'>
-                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            <tr>
-                                              <td height='25' colspan='3'></td>
-                                            </tr>
-                                            <tr>
-                                              <td width='30'></td>
-                                              <td width='503' align='left' valign='top'>
-                                                <div class="contentEditableContainer contentTextEditable">
-                                                  <div class="contentEditable">
-                                                    <h2>On the runways</h2>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='25'></td>
-                                            </tr>
-                                            <tr>
-                                              <td height='8' colspan='3'></td>
-                                            </tr>
-                                            <tr>
-                                              <td width='30'></td>
-                                              <td width='503' align='left' valign='top'>
-                                                <div class="contentEditableContainer contentTextEditable">
-                                                  <div class="contentEditable">
-                                                    <p style='font-size:13px;'>Have lots of pictures of upcoming
-                                                      fashions? Recently went to an event? Love a pinterest board? Hint
-                                                      with a few teaser pics up top, and get them to see more on your
-                                                      landing page</p>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='25'></td>
-                                            </tr>
-                                            <tr>
-                                              <td height='25' colspan='3'>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                              <td width='30'></td>
-                                              <td width='503' align='right' valign='top'>
-                                                <div class="contentEditableContainer contentTextEditable">
-                                                  <div class="contentEditable">
-                                                    <a target='_blank' href="" class='link2'>Learn more</a>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='25'></td>
-                                            </tr>
-                                            <tr>
-                                              <td height='25' colspan='3'></td>
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
-                                      <tbody>
-                                        <tr>
-                                          <td height='40' colspan='2'></td>
-                                        </tr>
-                                        <tr>
-                                          <td>
-                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                              <tbody>
-                                                <tr>
-                                                  <td width='274' valign='top' align='left' class="specbundle">
-                                                    <div class="contentEditableContainer contentImageEditable">
-                                                      <div class="contentEditable">
-                                                        <img class="banner" src="images/leftMedImg.jpg"
-                                                          alt='featured image' data-default="placeholder"
-                                                          data-max-width="400" height='348' width='274'>
-                                                      </div>
-                                                    </div>
-                                                  </td>
-                                                  <td valign="top" width="12" class="specbundle">&nbsp;</td>
-                                                  <td width='274' valign='top' align='right' class="specbundle">
-                                                    <div class="contentEditableContainer contentImageEditable">
-                                                      <div class="contentEditable">
-                                                        <img class="banner" src="images/rightMedImg.jpg"
-                                                          alt='featured image' data-default="placeholder"
-                                                          data-max-width="400" height='348' width='274'>
-                                                      </div>
-                                                    </div>
-                                                  </td>
-                                                </tr>
-                                              </tbody>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
+<%
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td height='40'>&nbsp;</td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td
+                                  #         style='border:1px solid #333333;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;'>
+                                  #         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #           <tr>
+                                  #             <td height='25' colspan='3'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td width='30'></td>
+                                  #             <td width='503' align='left' valign='top'>
+                                  #               <div class="contentEditableContainer contentTextEditable">
+                                  #                 <div class="contentEditable">
+                                  #                   <h2>On the runways</h2>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='25'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td height='8' colspan='3'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td width='30'></td>
+                                  #             <td width='503' align='left' valign='top'>
+                                  #               <div class="contentEditableContainer contentTextEditable">
+                                  #                 <div class="contentEditable">
+                                  #                   <p style='font-size:13px;'>Have lots of pictures of upcoming
+                                  #                     fashions? Recently went to an event? Love a pinterest board? Hint
+                                  #                     with a few teaser pics up top, and get them to see more on your
+                                  #                     landing page</p>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='25'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td height='25' colspan='3'>&nbsp;</td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td width='30'></td>
+                                  #             <td width='503' align='right' valign='top'>
+                                  #               <div class="contentEditableContainer contentTextEditable">
+                                  #                 <div class="contentEditable">
+                                  #                   <a target='_blank' href="" class='link2'>Learn more</a>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='25'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td height='25' colspan='3'></td>
+                                  #           </tr>
+                                  #         </table>
+                                  #       </td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+                                  #     <tbody>
+                                  #       <tr>
+                                  #         <td height='40' colspan='2'></td>
+                                  #       </tr>
+                                  #       <tr>
+                                  #         <td>
+                                  #           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  #             <tbody>
+                                  #               <tr>
+                                  #                 <td width='274' valign='top' align='left' class="specbundle">
+                                  #                   <div class="contentEditableContainer contentImageEditable">
+                                  #                     <div class="contentEditable">
+                                  #                       <img class="banner" src="images/leftMedImg.jpg"
+                                  #                         alt='featured image' data-default="placeholder"
+                                  #                         data-max-width="400" height='348' width='274'>
+                                  #                     </div>
+                                  #                   </div>
+                                  #                 </td>
+                                  #                 <td valign="top" width="12" class="specbundle">&nbsp;</td>
+                                  #                 <td width='274' valign='top' align='right' class="specbundle">
+                                  #                   <div class="contentEditableContainer contentImageEditable">
+                                  #                     <div class="contentEditable">
+                                  #                       <img class="banner" src="images/rightMedImg.jpg"
+                                  #                         alt='featured image' data-default="placeholder"
+                                  #                         data-max-width="400" height='348' width='274'>
+                                  #                     </div>
+                                  #                   </div>
+                                  #                 </td>
+                                  #               </tr>
+                                  #             </tbody>
+                                  #           </table>
+                                  #         </td>
+                                  #       </tr>
+                                  #     </tbody>
+                                  #   </table>
 
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                      <tbody>
-                                        <tr>
-                                          <td height='40'></td>
-                                        </tr>
-                                        <tr>
-                                          <td>
-                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                              <tbody>
-                                                <tr>
-                                                  <td valign="top" width="280" class="specbundle2">
-                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                      <tbody>
-                                                        <tr>
-                                                          <td valign="top" width="25">&nbsp;</td>
-                                                          <td>
-                                                            <table width="100%" border="0" cellspacing="0"
-                                                              cellpadding="0" align="center">
-                                                              <tr>
-                                                                <td valign='top'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <h2>Tip of the week</h2>
-                                                                    </div>
-                                                                  </div>
-                                                                </td>
-                                                              </tr>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  #     <tbody>
+                                  #       <tr>
+                                  #         <td height='40'></td>
+                                  #       </tr>
+                                  #       <tr>
+                                  #         <td>
+                                  #           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  #             <tbody>
+                                  #               <tr>
+                                  #                 <td valign="top" width="280" class="specbundle2">
+                                  #                   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  #                     <tbody>
+                                  #                       <tr>
+                                  #                         <td valign="top" width="25">&nbsp;</td>
+                                  #                         <td>
+                                  #                           <table width="100%" border="0" cellspacing="0"
+                                  #                             cellpadding="0" align="center">
+                                  #                             <tr>
+                                  #                               <td valign='top'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <h2>Tip of the week</h2>
+                                  #                                   </div>
+                                  #                                 </div>
+                                  #                               </td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td height='12'></td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td height='12'></td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td valign='top' style='padding-right:30px;'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <p style='font-size:13px;line-height: 20px;'>
-                                                                        Showcase with picture. Whet their appetite with
-                                                                        a short text. Get them to visit your website for
-                                                                        more information.</p>
-                                                                    </div>
-                                                                  </div>
-                                                                </td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td valign='top' style='padding-right:30px;'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <p style='font-size:13px;line-height: 20px;'>
+                                  #                                       Showcase with picture. Whet their appetite with
+                                  #                                       a short text. Get them to visit your website for
+                                  #                                       more information.</p>
+                                  #                                   </div>
+                                  #                                 </div>
+                                  #                               </td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td height='25'></td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td height='25'></td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td valign='top'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <a target='_blank' href="" class='link1'>Read
-                                                                        More</a>
-                                                                    </div>
-                                                                  </div>
-                                                                </td>
-                                                              </tr>
-                                                            </table>
-                                                          </td>
-                                                        </tr>
-                                                      </tbody>
-                                                    </table>
-                                                  </td>
-                                                  <td valign="top" width="280" class="specbundle2">
-                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                      <tbody>
-                                                        <tr>
-                                                          <td valign="top" width="25">&nbsp;</td>
-                                                          <td valign="top">
-                                                            <table width="100%" border="0" cellspacing="0"
-                                                              cellpadding="0" align="center">
-                                                              <tr>
-                                                                <td valign='top'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <h2>How to of the week</h2>
-                                                                    </div>
-                                                                  </div>
-                                                                </td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td valign='top'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <a target='_blank' href="" class='link1'>Read
+                                  #                                       More</a>
+                                  #                                   </div>
+                                  #                                 </div>
+                                  #                               </td>
+                                  #                             </tr>
+                                  #                           </table>
+                                  #                         </td>
+                                  #                       </tr>
+                                  #                     </tbody>
+                                  #                   </table>
+                                  #                 </td>
+                                  #                 <td valign="top" width="280" class="specbundle2">
+                                  #                   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  #                     <tbody>
+                                  #                       <tr>
+                                  #                         <td valign="top" width="25">&nbsp;</td>
+                                  #                         <td valign="top">
+                                  #                           <table width="100%" border="0" cellspacing="0"
+                                  #                             cellpadding="0" align="center">
+                                  #                             <tr>
+                                  #                               <td valign='top'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <h2>How to of the week</h2>
+                                  #                                   </div>
+                                  #                                 </div>
+                                  #                               </td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td height='12'></td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td height='12'></td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td valign='top' style='padding-right:30px;'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <ul style='padding-left: 20px;'>
-                                                                        <li style='font-size:13px;line-height:19px;'>
-                                                                          Proven data and analysis
-                                                                        </li>
-                                                                        <li style='font-size:13px;line-height:19px;'>
-                                                                          Can help people make
-                                                                        </li>
-                                                                        <li style='font-size:13px;line-height:19px;'>
-                                                                          Rational decisions
-                                                                        </li>
-                                                                      </ul>
-                                                                    </div>
-                                                                </td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td valign='top' style='padding-right:30px;'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <ul style='padding-left: 20px;'>
+                                  #                                       <li style='font-size:13px;line-height:19px;'>
+                                  #                                         Proven data and analysis
+                                  #                                       </li>
+                                  #                                       <li style='font-size:13px;line-height:19px;'>
+                                  #                                         Can help people make
+                                  #                                       </li>
+                                  #                                       <li style='font-size:13px;line-height:19px;'>
+                                  #                                         Rational decisions
+                                  #                                       </li>
+                                  #                                     </ul>
+                                  #                                   </div>
+                                  #                               </td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td height='25'></td>
-                                                              </tr>
+                                  #                             <tr>
+                                  #                               <td height='25'></td>
+                                  #                             </tr>
 
-                                                              <tr>
-                                                                <td valign='top'>
-                                                                  <div
-                                                                    class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable">
-                                                                      <a target='_blank' href="" class='link1'>Read
-                                                                        More</a>
-                                                                    </div>
-                                                                  </div>
-                                                                </td>
-                                                              </tr>
-                                                            </table>
-                                                          </td>
-                                                        </tr>
-                                                      </tbody>
-                                                    </table>
-                                                  </td>
-                                                </tr>
-                                              </tbody>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
+                                  #                             <tr>
+                                  #                               <td valign='top'>
+                                  #                                 <div
+                                  #                                   class="contentEditableContainer contentTextEditable">
+                                  #                                   <div class="contentEditable">
+                                  #                                     <a target='_blank' href="" class='link1'>Read
+                                  #                                       More</a>
+                                  #                                   </div>
+                                  #                                 </div>
+                                  #                               </td>
+                                  #                             </tr>
+                                  #                           </table>
+                                  #                         </td>
+                                  #                       </tr>
+                                  #                     </tbody>
+                                  #                   </table>
+                                  #                 </td>
+                                  #               </tr>
+                                  #             </tbody>
+                                  #           </table>
+                                  #         </td>
+                                  #       </tr>
+                                  #     </tbody>
+                                  #   </table>
 
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
 
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td height='35'>&nbsp;</td>
-                                      </tr>
-                                      <tr>
-                                        <td><img class="banner" src="images/line.png" alt='featured image'
-                                            data-default="placeholder" data-max-width="560" height='23' width='560'>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td height='25'>&nbsp;</td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td height='10'>&nbsp;</td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <div class="contentEditableContainer contentImageEditable">
-                                            <div class="contentEditable">
-                                              <img class="banner" src="images/otherBigImg.jpg" alt='featured image'
-                                                data-default="placeholder" data-max-width="560" height='350' width='560'
-                                                border="0">
-                                            </div>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            <tr>
-                                              <td height='12' colspan='3'></td>
-                                            </tr>
-                                            <tr>
-                                              <td width='40'></td>
-                                              <td width='480' align='center' valign='top'>
-                                                <div class="contentEditableContainer contentTextEditable">
-                                                  <div class="contentEditable">
-                                                    <h2>Don’t forget to add a link to your website</h2>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='40'></td>
-                                            </tr>
-                                            <tr>
-                                              <td height='12' colspan='3'></td>
-                                            </tr>
-                                            <tr>
-                                              <td width='40'></td>
-                                              <td width='480' align='center' valign='top'>
-                                                <div class="contentEditableContainer contentTextEditable">
-                                                  <div class="contentEditable">
-                                                    <p style='font-size:13px;'>Use this space to give a bit of
-                                                      information about yourself. Don’t forget to add your logo, and
-                                                      links back to your website.</p>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='40'></td>
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td height='25'>&nbsp;</td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td>
-                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            <tr>
-                                              <td height='35'>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                              <td><img class="banner" src="images/line.png" alt='featured image'
-                                                  data-default="placeholder" data-max-width="560" height='23'
-                                                  width='560'></td>
-                                            </tr>
-                                            <tr>
-                                              <td height='25'>&nbsp;</td>
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td>
-                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            <tr>
-                                              <td width='205'></td>
-                                              <td width='75' align='center'>
-                                                <div class='contentEditableContainer contentFacebookEditable'>
-                                                  <div class="contentEditable">
-                                                    <a target='_blank' href="#"><img src="images/facebook.png"
-                                                        alt='facebook link' data-default="placeholder"
-                                                        data-max-width="60" width='60' height='60'
-                                                        data-customIcon="true"></a>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='75' align='center'>
-                                                <div class='contentEditableContainer contentTwitterEditable'>
-                                                  <div class="contentEditable">
-                                                    <a target='_blank' href="#"><img src="images/twitter.png"
-                                                        alt='twitter link' data-default="placeholder"
-                                                        data-max-width='60' data-customIcon="true" width='60'
-                                                        height='60'></a>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                              <td width='205'></td>
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td height='28'></td>
-                                      </tr>
-                                      <tr>
-                                        <td valign='top' align='center'>
-                                          <div class="contentEditableContainer contentTextEditable">
-                                            <div class="contentEditable">
-                                              <p style='color:#A8B0B6; font-size:13px;line-height: 16px;'>This email was
-                                                sent to [email] when you signed up on [CLIENTS.WEBSITE] Please add us to
-                                                your contacts to ensure the newsletters land in your inbox.
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                  <div class="movableContent"
-                                    style="border: 0px; padding-top: 0px; position: relative;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                      <tr>
-                                        <td height='28'></td>
-                                      </tr>
-                                      <tr>
-                                        <td valign='top' align='center'>
-                                          <div class="contentEditableContainer contentTextEditable">
-                                            <div class="contentEditable">
-                                              <p
-                                                style='color:#CCCCCC; font-weight:bold;font-size:13px;line-height: 30px;font-style:italic;'>
-                                                [CLIENTS.COMPANY_NAME]</p>
-                                            </div>
-                                          </div>
-                                          <div class="contentEditableContainer contentTextEditable">
-                                            <div class="contentEditable">
-                                              <p
-                                                style='color:#CCCCCC;font-size:13px;line-height: 15px;font-style:italic;'>
-                                                [CLIENTS.ADDRESS]</p>
-                                            </div>
-                                          </div>
-                                          <div class="contentEditableContainer contentTextEditable">
-                                            <div class="contentEditable">
-                                              <a target='_blank' href="[FORWARD]"
-                                                style='color:#CCCCCC; font-size:13px;line-height: 20px;font-style:italic;'>Forward
-                                                to a friend</a><br />
-                                              <a target='_blank' href='[UNSUBSCRIBE]'
-                                                style='color:#CCCCCC; font-size:13px;line-height: 20px;font-style:italic;'>Unsubscribe</a>
-                                            </div>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
--->
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td height='35'>&nbsp;</td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td><img class="banner" src="images/line.png" alt='featured image'
+                                  #           data-default="placeholder" data-max-width="560" height='23' width='560'>
+                                  #       </td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td height='25'>&nbsp;</td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td height='10'>&nbsp;</td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td>
+                                  #         <div class="contentEditableContainer contentImageEditable">
+                                  #           <div class="contentEditable">
+                                  #             <img class="banner" src="images/otherBigImg.jpg" alt='featured image'
+                                  #               data-default="placeholder" data-max-width="560" height='350' width='560'
+                                  #               border="0">
+                                  #           </div>
+                                  #         </div>
+                                  #       </td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td>
+                                  #         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #           <tr>
+                                  #             <td height='12' colspan='3'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td width='40'></td>
+                                  #             <td width='480' align='center' valign='top'>
+                                  #               <div class="contentEditableContainer contentTextEditable">
+                                  #                 <div class="contentEditable">
+                                  #                   <h2>Don’t forget to add a link to your website</h2>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='40'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td height='12' colspan='3'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td width='40'></td>
+                                  #             <td width='480' align='center' valign='top'>
+                                  #               <div class="contentEditableContainer contentTextEditable">
+                                  #                 <div class="contentEditable">
+                                  #                   <p style='font-size:13px;'>Use this space to give a bit of
+                                  #                     information about yourself. Don’t forget to add your logo, and
+                                  #                     links back to your website.</p>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='40'></td>
+                                  #           </tr>
+                                  #         </table>
+                                  #       </td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td height='25'>&nbsp;</td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td>
+                                  #         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #           <tr>
+                                  #             <td height='35'>&nbsp;</td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td><img class="banner" src="images/line.png" alt='featured image'
+                                  #                 data-default="placeholder" data-max-width="560" height='23'
+                                  #                 width='560'></td>
+                                  #           </tr>
+                                  #           <tr>
+                                  #             <td height='25'>&nbsp;</td>
+                                  #           </tr>
+                                  #         </table>
+                                  #       </td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td>
+                                  #         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #           <tr>
+                                  #             <td width='205'></td>
+                                  #             <td width='75' align='center'>
+                                  #               <div class='contentEditableContainer contentFacebookEditable'>
+                                  #                 <div class="contentEditable">
+                                  #                   <a target='_blank' href="#"><img src="images/facebook.png"
+                                  #                       alt='facebook link' data-default="placeholder"
+                                  #                       data-max-width="60" width='60' height='60'
+                                  #                       data-customIcon="true"></a>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='75' align='center'>
+                                  #               <div class='contentEditableContainer contentTwitterEditable'>
+                                  #                 <div class="contentEditable">
+                                  #                   <a target='_blank' href="#"><img src="images/twitter.png"
+                                  #                       alt='twitter link' data-default="placeholder"
+                                  #                       data-max-width='60' data-customIcon="true" width='60'
+                                  #                       height='60'></a>
+                                  #                 </div>
+                                  #               </div>
+                                  #             </td>
+                                  #             <td width='205'></td>
+                                  #           </tr>
+                                  #         </table>
+                                  #       </td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td height='28'></td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td valign='top' align='center'>
+                                  #         <div class="contentEditableContainer contentTextEditable">
+                                  #           <div class="contentEditable">
+                                  #             <p style='color:#A8B0B6; font-size:13px;line-height: 16px;'>This email was
+                                  #               sent to [email] when you signed up on [CLIENTS.WEBSITE] Please add us to
+                                  #               your contacts to ensure the newsletters land in your inbox.
+                                  #             </p>
+                                  #           </div>
+                                  #         </div>
+                                  #       </td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+                                  # <div class="movableContent"
+                                  #   style="border: 0px; padding-top: 0px; position: relative;">
+                                  #   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                  #     <tr>
+                                  #       <td height='28'></td>
+                                  #     </tr>
+                                  #     <tr>
+                                  #       <td valign='top' align='center'>
+                                  #         <div class="contentEditableContainer contentTextEditable">
+                                  #           <div class="contentEditable">
+                                  #             <p
+                                  #               style='color:#CCCCCC; font-weight:bold;font-size:13px;line-height: 30px;font-style:italic;'>
+                                  #               [CLIENTS.COMPANY_NAME]</p>
+                                  #           </div>
+                                  #         </div>
+                                  #         <div class="contentEditableContainer contentTextEditable">
+                                  #           <div class="contentEditable">
+                                  #             <p
+                                  #               style='color:#CCCCCC;font-size:13px;line-height: 15px;font-style:italic;'>
+                                  #               [CLIENTS.ADDRESS]</p>
+                                  #           </div>
+                                  #         </div>
+                                  #         <div class="contentEditableContainer contentTextEditable">
+                                  #           <div class="contentEditable">
+                                  #             <a target='_blank' href="[FORWARD]"
+                                  #               style='color:#CCCCCC; font-size:13px;line-height: 20px;font-style:italic;'>Forward
+                                  #               to a friend</a><br />
+                                  #             <a target='_blank' href='[UNSUBSCRIBE]'
+                                  #               style='color:#CCCCCC; font-size:13px;line-height: 20px;font-style:italic;'>Unsubscribe</a>
+                                  #           </div>
+                                  #         </div>
+                                  #       </td>
+                                  #     </tr>
+                                  #   </table>
+                                  # </div>
+%>
                                   <div class="movableContent"
                                     style="border: 0px; padding-top: 0px; position: relative;">
                               <tr>
