@@ -21,6 +21,13 @@ defmodule MpnetworkWeb.Router do
   @user_schema Application.get_env(:coherence, :user_schema)
   @id_key Application.get_env(:coherence, :schema_key)
 
+  defp safe_map_from_struct(nil), do: %{}
+  defp safe_map_from_struct(:unknown), do: %{}
+  defp safe_map_from_struct(struct) when is_map(struct) do
+    Map.from_struct(struct)
+  end
+  defp safe_map_from_struct(_), do: %{}
+
   defp collect_request_data_for_logging(conn, _) do
     Plug.Conn.register_before_send(conn, fn conn ->
       user_agent = case get_req_header(conn, "user-agent") do
@@ -28,8 +35,8 @@ defmodule MpnetworkWeb.Router do
         _ -> nil
       end
       user_agent = case user_agent do
-        %UAInspector.Result{} -> %{human: %{client: Map.from_struct(user_agent.client), device: Map.from_struct(user_agent.device), OS: Map.from_struct(user_agent.os)}, bot: %{}}
-        %UAInspector.Result.Bot{} -> %{human: %{}, bot: %{category: user_agent.category, name: user_agent.name, producer: Map.from_struct(user_agent.producer), url: user_agent.url}}
+        %UAInspector.Result{} -> %{human: %{client: safe_map_from_struct(user_agent.client), device: safe_map_from_struct(user_agent.device), OS: safe_map_from_struct(user_agent.os)}, bot: %{}}
+        %UAInspector.Result.Bot{} -> %{human: %{}, bot: %{category: user_agent.category, name: user_agent.name, producer: safe_map_from_struct(user_agent.producer), url: user_agent.url}}
         _ -> %{human: %{}, bot: %{}}
       end
       LogflareLogger.context(response: %{status_code: conn.status}, user_agent: user_agent)
