@@ -45,7 +45,7 @@ config :logflare_logger_backend,
   max_batch_size: 50 # maximum number of events before a log batch is sent to the server
 
 # Disable Phoenix logger in prod
-config :phoenix, :logger, false
+# config :phoenix, :logger, false
 
 # config :logger, :console, format: "[$level] $message\n"
 
