@@ -54,6 +54,16 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
+config :logflare_logger_backend,
+  url: "https://api.logflare.app", # https://api.logflare.app is configured by default and you can set your own url
+  level: :debug, # Default LogflareLogger level is :info. Note that log messages are filtered by the :logger application first
+  api_key: System.fetch_env!("LOGFLARE_API_KEY"),
+  source_id: System.fetch_env!("LOGFLARE_DRAIN_ID"),
+  flush_interval: 1_000, # minimum time in ms before a log batch is sent to the server ",
+  max_batch_size: 50 # maximum number of events before a log batch is sent to the server
+
+config :logger, level: :debug, backends: [:console, LogflareLogger.HttpBackend]
+
 # Configure the mailer to deliver to a local server for development
 # which can be seen at /mailbox (per the route set up)
 config :mpnetwork, Mpnetwork.Mailer, adapter: Swoosh.Adapters.Local

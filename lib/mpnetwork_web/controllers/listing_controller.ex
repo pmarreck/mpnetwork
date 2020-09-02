@@ -492,12 +492,12 @@ defmodule MpnetworkWeb.ListingController do
               )
 
             {false, :timeout, ^name, ^email} ->
-              Logger.info(
+              Logger.error(
                 "TIMED OUT emailing listing id #{id} of type #{type} to #{name} at #{email}"
               )
 
             {false, reason, ^name, ^email} ->
-              Logger.info(
+              Logger.error(
                 "Error emailing listing id #{id} of type #{type} to #{name} at #{email}, reason given: #{
                   inspect(reason)
                 }"

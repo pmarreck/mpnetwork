@@ -4,6 +4,8 @@ defmodule Mpnetwork.Application do
 
   alias Mpnetwork.{Repo, Scheduler}
   alias MpnetworkWeb.{Telemetry, Endpoint}
+  require UAInspector
+  require Logger
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -43,7 +45,20 @@ defmodule Mpnetwork.Application do
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Mpnetwork.Supervisor]
-    Supervisor.start_link(children, opts)
+
+    sl_return = Supervisor.start_link(children, opts)
+    # try to ensure the UAInspector parser is ready to go
+    if UAInspector.ready? do
+      Logger.info("UAInspector is ready to parse user-agents!")
+      sl_return
+    else
+      Logger.error("UAInspector was NOT ready to parse user-agents!")
+      UAInspector.Downloader.download()
+      UAInspector.reload(async: false)
+      true = UAInspector.ready?
+      Logger.info("UAInspector is once again ready to parse user-agents.")
+      sl_return
+    end
   end
 
   # Conditionally disable crontab, queues, or plugins here.

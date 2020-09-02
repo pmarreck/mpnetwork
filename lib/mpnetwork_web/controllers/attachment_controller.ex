@@ -54,7 +54,7 @@ defmodule MpnetworkWeb.AttachmentController do
     attachment =
       case Cache.fetch(key, &Listing.get_attachment!/1) do
         {:ok, val} ->
-          Logger.info(
+          Logger.debug(
             "Retrieved attachment from app cache key #{inspect(key)}: id:#{val.id} '#{
               val.original_filename
             }' (#{val.content_type}) listing_id:#{val.listing_id}"
@@ -63,7 +63,7 @@ defmodule MpnetworkWeb.AttachmentController do
           val
 
         {:loaded, val} ->
-          Logger.info(
+          Logger.debug(
             "Retrieved attachment from DB, caching with key #{inspect(key)}: id:#{val.id} '#{
               val.original_filename
             }' (#{val.content_type}) listing_id:#{val.listing_id}"
@@ -236,7 +236,7 @@ defmodule MpnetworkWeb.AttachmentController do
     actual_hash = Base.encode16(attachment.sha256_hash)
 
     if Enum.member?(expected_hash, actual_hash) do
-      Logger.info(
+      Logger.debug(
         "Sending 304 Not Modified for attachment id:#{attachment.id} w:#{width} h:#{height} '#{
           attachment.original_filename
         }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
@@ -245,7 +245,7 @@ defmodule MpnetworkWeb.AttachmentController do
       conn
       |> send_resp(304, "")
     else
-      Logger.info(
+      Logger.debug(
         "Sending attachment id:#{attachment.id} w:#{width} h:#{height} '#{
           attachment.original_filename
         }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"

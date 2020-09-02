@@ -33,7 +33,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
 
 # Do not print debug messages in production.
 # Point to Logflare.
-config :logger, level: :info, backends: [LogflareLogger.HttpBackend]
+config :logger, level: :info, backends: [:console, LogflareLogger.HttpBackend]
 
 # Logflare config
 config :logflare_logger_backend,

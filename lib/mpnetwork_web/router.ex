@@ -41,9 +41,9 @@ defmodule MpnetworkWeb.Router do
       end
       LogflareLogger.context(response: %{status_code: conn.status}, user_agent: user_agent)
       # IO.inspect(conn, limit: :infinity, printable_limit: :infinity, pretty: true)
-      if Mix.env() == :dev do
-        Logger.debug(context: LogflareLogger.context())
-      end
+      # if Mix.env() == :dev do
+      #   Logger.debug(context: LogflareLogger.context())
+      # end
       Logger.info([method: conn.method, path: conn.request_path, params: Phoenix.Logger.filter_values(conn.params), from: conn.remote_ip])
       conn
     end)

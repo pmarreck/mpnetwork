@@ -53,13 +53,13 @@ defmodule Mpnetwork.UserEmail do
         )
 
       {:error, :timeout} ->
-        Logger.info(
+        Logger.error(
           "ERROR: TIMED OUT emailing listing id #{listing.id} of type #{type} to #{name} at #{email_address}"
         )
 
       {:error, {httpcode, %{"errors" => errors}}}
       when is_integer(httpcode) and is_list(errors) ->
-        Logger.info("ERROR: HTTP error #{httpcode} when attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address}. Errors: " <>
+        Logger.error("ERROR: HTTP error #{httpcode} when attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address}. Errors: " <>
          (errors |> Enum.map(fn %{"code" => code, "message" => message} ->
            "Error code #{code}: #{message}"
          end)
@@ -67,10 +67,10 @@ defmodule Mpnetwork.UserEmail do
         )
 
       {:error, reason} ->
-        Logger.info("ERROR: when attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address}. Reason: #{inspect(reason)}")
+        Logger.error("ERROR: when attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address}. Reason: #{inspect(reason)}")
 
       unknown ->
-        Logger.info("ERROR: Attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address} failed for unknown reasons: #{inspect(unknown)}")
+        Logger.error("ERROR: Attempting to email listing id #{listing.id} of type #{type} to #{name} at #{email_address} failed for unknown reasons: #{inspect(unknown)}")
     end
     delivery
   end
