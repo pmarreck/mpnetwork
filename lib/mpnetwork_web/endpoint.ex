@@ -73,13 +73,13 @@ defmodule MpnetworkWeb.Endpoint do
       # raise "expected the PORT environment variable to be set"
       port = System.get_env("PORT") || 4000
       config = Keyword.put(config, :http, [:inet6, port: port])
-      static_host = System.get_env("STATIC_URL") || "localhost"
-      static_url = Keyword.get(config, :static_url)
+      static_host = System.get_env("STATIC_URL") || System.get_env("FQDN") || "localhost"
+      static_url = Keyword.get(config, :static_url) || static_host
       # scheme = (Keyword.get(static_url, :scheme) || "https")
       # port = (Keyword.get(static_url, :port) || "443")
-      static_url = Keyword.put(static_url, :host, static_host)
+      config = Keyword.put(config, :host, static_host)
       config = Keyword.put(config, :static_url, static_url)
-      {:ok, config}
+      {:ok, config |> IO.inspect}
     else
       {:ok, config}
     end

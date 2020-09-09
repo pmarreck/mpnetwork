@@ -2,7 +2,8 @@ Code.ensure_loaded(Phoenix.Swoosh)
 
 defmodule Mpnetwork.UserEmail do
   @moduledoc false
-  use Phoenix.Swoosh, view: Mpnetwork.EmailView, layout: {MpnetworkWeb.LayoutView, :email}
+  use Phoenix.Swoosh, view: Mpnetwork.EmailView, layout: {MpnetworkWeb.EmailView, :email}
+  # alias MpnetworkWeb.EmailView
   import Swoosh.Email
   alias Swoosh.Email
   alias Mpnetwork.Mailer
@@ -10,7 +11,9 @@ defmodule Mpnetwork.UserEmail do
   alias MpnetworkWeb.Router.Helpers, as: Routes
   require Logger
 
-
+  # note: should be tested. and the data composition/preparation should be separated from the actual delivery.
+  # I should know better, but there's an outstanding bug and I'm low on time
+  # If this is future-me reading this, just do it, sincerely, past-me
   def send_user_regarding_listing(user, listing, subject, htmlbody, textbody, type \\ "notify_user_of_impending_omd_expiry") do
     name = user.name
     email_address = user.email
@@ -26,14 +29,22 @@ defmodule Mpnetwork.UserEmail do
       |> to({name, email_address})
       |> reply_to(fr)
       |> subject(subject)
-    email = if htmlbody, do: html_body(email, htmlbody), else: email
-    email = if textbody, do: text_body(email, textbody), else: email
+    email = if htmlbody do
+      html_body(email, htmlbody)
+    else
+      email
+    end
+    email = if textbody do
+      text_body(email, textbody)
+    else
+      email
+    end
 
     email_rendered = case type do
       "new_listing_notif" ->
         render_body(email, "listing_email_expanded.html", %{listing_url: url, listing: listing, attachments: listing.attachments, broker: listing.broker, agent: listing.user, co_agent: listing.colisting_agent})
       _ ->
-        render_body(email, "listing_email.html", %{html_body: htmlbody})
+        render_body(email, :listing_email)
     end
 
     email_delivered = email_rendered

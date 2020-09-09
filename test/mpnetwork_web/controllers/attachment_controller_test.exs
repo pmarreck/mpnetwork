@@ -3,8 +3,9 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   import Ecto.Query, warn: false
 
-  alias Mpnetwork.{Listing, Upload, Repo}
-  alias Listing.Attachment
+  alias Mpnetwork.Realtor.Listing
+  alias Mpnetwork.{Upload, Repo}
+  alias Mpnetwork.Listing.Attachment
   import Mpnetwork.Test.Support.Utilities
 
   # supposedly a png of a red dot
@@ -52,7 +53,7 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   def attachment_fixture(:listing, user \\ user_fixture()) do
     listing = fixture(:listing, user)
-    {listing, fixture(:attachment, %{listing_id: listing.id, listing: listing})}
+    {%Listing{}, %Attachment{}} = {listing, fixture(:attachment, %{listing_id: listing.id, listing: listing})}
   end
 
   test "lists all entries on index", %{conn: conn} do
@@ -149,9 +150,12 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     end)
   end
 
-  test "shows attachment based on base64-encoded sha256 hash of attachment", %{conn: conn} do
+  test "show and show_public actions shows attachment based on base64-encoded sha256 hash of attachment", %{conn: conn} do
     {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
-    conn = get(conn, Routes.attachment_path(conn, :show, attachment.sha256_hash |> Base.url_encode64()))
-    assert response(conn, 200) == @test_attachment_binary_data
+    base64sha = attachment.sha256_hash |> Base.url_encode64()
+    conn1 = get(conn, Routes.attachment_path(conn, :show, base64sha))
+    conn2 = get(conn, Routes.attachment_path(conn, :show_public, base64sha))
+    assert response(conn1, 200) == @test_attachment_binary_data
+    assert response(conn2, 200) == @test_attachment_binary_data
   end
 end

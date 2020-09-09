@@ -74,7 +74,7 @@ defmodule Mpnetwork.Mixfile do
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.10"},
-      {:ecto_sql, "~> 3.3"},
+      {:ecto_sql, "~> 3.4.5"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
       # {:ecto_enum, "~> 1.4"},
@@ -99,7 +99,7 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_poller, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
       {:oban, "~> 2.0"},
-      {:logflare_logger_backend, "~> 0.7.5"},
+      {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.0"},
     ]

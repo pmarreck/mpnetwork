@@ -35,24 +35,10 @@ defmodule Mpnetwork.Listing do
   """
   def list_attachments(listing_id, attachment_schema \\ Attachment)
 
-  def list_attachments(listing_id, AttachmentMetadata) do
+  def list_attachments(listing_id, attachment_schema) when attachment_schema in [Attachment, AttachmentMetadata] do
     Repo.all(
       from(
-        attachment in AttachmentMetadata,
-        where: attachment.listing_id == ^listing_id,
-        order_by: [
-          desc: attachment.is_image,
-          desc: attachment.primary,
-          asc: attachment.inserted_at
-        ]
-      )
-    )
-  end
-
-  def list_attachments(listing_id, Attachment) do
-    Repo.all(
-      from(
-        attachment in Attachment,
+        attachment in attachment_schema,
         where: attachment.listing_id == ^listing_id,
         order_by: [
           desc: attachment.is_image,
@@ -74,22 +60,10 @@ defmodule Mpnetwork.Listing do
   """
   def find_primary_image(listing_id, attachment_schema \\ Attachment)
 
-  def find_primary_image(listing_id, Attachment) do
+  def find_primary_image(listing_id, attachment_schema) when attachment_schema in [Attachment, AttachmentMetadata] do
     Repo.one(
       from(
-        attachment in Attachment,
-        where: attachment.listing_id == ^listing_id,
-        where: attachment.is_image == true,
-        order_by: [desc: attachment.primary],
-        limit: 1
-      )
-    )
-  end
-
-  def find_primary_image(listing_id, AttachmentMetadata) do
-    Repo.one(
-      from(
-        attachment in AttachmentMetadata,
+        attachment in attachment_schema,
         where: attachment.listing_id == ^listing_id,
         where: attachment.is_image == true,
         order_by: [desc: attachment.primary],
@@ -115,6 +89,7 @@ defmodule Mpnetwork.Listing do
     end)
   end
 
+  defp do_rotate_attachment(_degrees, nil), do: nil
   defp do_rotate_attachment(degrees, attachment) when degrees in [-90, 90] do
     import Mogrify
     use Mogrify.Options
@@ -150,6 +125,7 @@ defmodule Mpnetwork.Listing do
     })
   end
 
+  def rotate_attachment_left_90!(nil), do: nil
   def rotate_attachment_left_90!(%Attachment{} = attachment) do
     do_rotate_attachment(-90, attachment)
   end
@@ -164,6 +140,7 @@ defmodule Mpnetwork.Listing do
     do_rotate_attachment(90, attachment)
   end
 
+  def rotate_attachment_right_90!(nil), do: nil
   def rotate_attachment_right_90!(id) when is_integer(id) or is_binary(id) do
     # retrieve image from cache
     get_attachment!(id)
@@ -199,18 +176,39 @@ defmodule Mpnetwork.Listing do
   end
 
   def get_attachment!({id, width, height}) when is_binary(id) do
-    # first we will get the original attachment from the DB BY SHA256, filtering on images-only
-    Repo.one!(
-      from(
-        attachment in Attachment,
-        where: attachment.sha256_hash == ^id,
-        where: attachment.is_image == true,
-        limit: 1
-      )
-    )
+    # first we will get the original attachment from the DB by SHA256
+    handle_same_hash_for_multiple_possible_attachments(id)
     |> do_get_attachment(width, height)
   end
 
+  # @filter_nonbase64ish ~r/[^0-9A-Za-z\+\/\=\-%_]+/
+  # defp clean_hash(hash) when is_binary(hash) do
+  #   # remove trailing double quotes, spaces, etc
+  #   Regex.replace(@filter_nonbase64ish, hash, "")
+  # end
+
+  # Note that the hash here is a binary hash, not a base64-encoded hash, at this point
+  defp handle_same_hash_for_multiple_possible_attachments(hash, attachment_schema \\ Attachment) when is_binary(hash) do
+    # Note that duplicate image uploads are allowed currently, in which the SHA will be the same
+    # sooooo... we select the most recently inserted one.
+    # What could possibly go wrong?!?!
+    # I mean, this will work... MOST of the time.
+    # Until you try to rotate an old image that has a newer duplicate.
+    # Need to still handle that case.
+    case Repo.all(
+      from(
+        attachment in attachment_schema,
+        where: attachment.sha256_hash == ^hash,
+        order_by: [desc: attachment.inserted_at],
+        limit: 1
+      )
+    ) do
+      [] -> nil
+      [first | _rest] -> first
+    end
+  end
+
+  defp do_get_attachment(nil, _width, _height), do: nil
   defp do_get_attachment(attachment, width, height) do
     # We need to rate-limit mogrify to avoid server memory spikes
     case ExRated.inspect_bucket(
@@ -278,8 +276,10 @@ defmodule Mpnetwork.Listing do
   def get_attachment!(id, attachment_schema) when is_integer(id),
     do: Repo.get!(attachment_schema, id)
 
-  def get_attachment!(id, attachment_schema) when is_binary(id),
-    do: Repo.get_by!(attachment_schema, sha256_hash: id)
+  def get_attachment!(id, attachment_schema) when is_binary(id) do
+    # dupe image uploads have the same SHA. Oops.
+    handle_same_hash_for_multiple_possible_attachments(id, attachment_schema)
+  end
 
   @doc """
   Creates a attachment.

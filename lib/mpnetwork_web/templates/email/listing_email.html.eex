@@ -9,6 +9,6 @@
     </style>
   </head>
   <body>
-    <%= @html_body %>
+    <%= raw(@html_body) %>
   </body>
 </html>

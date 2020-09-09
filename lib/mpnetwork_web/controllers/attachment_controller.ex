@@ -231,35 +231,39 @@ defmodule MpnetworkWeb.AttachmentController do
   # note: this actually delivers the binary data, not an HTML view
   def show(conn, %{"id" => id, "w" => width, "h" => height}) do
     attachment = get_cached(id, width, height)
-    # obey the If-None-Match header and send a Not Modified if they're the same
-    expected_hash = get_req_header(conn, "if-none-match")
-    actual_hash = Base.encode16(attachment.sha256_hash)
+    if attachment do
+      # obey the If-None-Match header and send a Not Modified if they're the same
+      expected_hash = get_req_header(conn, "if-none-match")
+      actual_hash = Base.encode16(attachment.sha256_hash)
 
-    if Enum.member?(expected_hash, actual_hash) do
-      Logger.debug(
-        "Sending 304 Not Modified for attachment id:#{attachment.id} w:#{width} h:#{height} '#{
-          attachment.original_filename
-        }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
-      )
+      if Enum.member?(expected_hash, actual_hash) do
+        Logger.debug(
+          "Sending 304 Not Modified for attachment id:#{attachment.id} w:#{width} h:#{height} '#{
+            attachment.original_filename
+          }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
+        )
 
-      conn
-      |> send_resp(304, "")
+        conn
+        |> send_resp(304, "")
+      else
+        Logger.debug(
+          "Sending attachment id:#{attachment.id} w:#{width} h:#{height} '#{
+            attachment.original_filename
+          }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
+        )
+
+        # |> delete_resp_header("set-cookie") # don't need to send cookie data with files
+        # Can't seem to delete the set-cookie response header being sent with attachments.
+        # Tabling for now. Probably has to do with the secure routes, but I did try
+        # piping just the show action through an empty pipeline.
+        conn
+        |> put_resp_header("content-type", attachment.content_type)
+        |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
+        |> put_resp_header("etag", Base.encode16(attachment.sha256_hash))
+        |> send_resp(200, attachment.data)
+      end
     else
-      Logger.debug(
-        "Sending attachment id:#{attachment.id} w:#{width} h:#{height} '#{
-          attachment.original_filename
-        }' (#{attachment.content_type}) listing_id:#{attachment.listing_id}"
-      )
-
-      # |> delete_resp_header("set-cookie") # don't need to send cookie data with files
-      # Can't seem to delete the set-cookie response header being sent with attachments.
-      # Tabling for now. Probably has to do with the secure routes, but I did try
-      # piping just the show action through an empty pipeline.
-      conn
-      |> put_resp_header("content-type", attachment.content_type)
-      |> put_resp_header("content-disposition", "filename=\"#{attachment.original_filename}\"")
-      |> put_resp_header("etag", Base.encode16(attachment.sha256_hash))
-      |> send_resp(200, attachment.data)
+      send_resp(conn, 404, "Attachment Not Found")
     end
   end
 

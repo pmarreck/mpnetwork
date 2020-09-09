@@ -304,16 +304,22 @@ defmodule MpnetworkWeb.ListingController do
     end
   end
 
+  @filter_nonbase64ish ~r/[^0-9A-Za-z\+\/\=\-%_]+/
+  defp clean_hash(hash) when is_binary(hash) do
+    # remove trailing double quotes, spaces, etc
+    Regex.replace(@filter_nonbase64ish, hash, "")
+  end
+
   def broker_full(conn, %{"id" => signature}) do
-    _do_public_listing(conn, signature, :broker)
+    _do_public_listing(conn, clean_hash(signature), :broker)
   end
 
   def client_full(conn, %{"id" => signature}) do
-    _do_public_listing(conn, signature, :client)
+    _do_public_listing(conn, clean_hash(signature), :client)
   end
 
   def customer_full(conn, %{"id" => signature}) do
-    _do_public_listing(conn, signature, :customer)
+    _do_public_listing(conn, clean_hash(signature), :customer)
   end
 
   defp _do_public_listing(conn, signature, type_of_listing) do
