@@ -1,9 +1,8 @@
 # "system" means use whatever system-installed version there is
 # (mine are usually the most current)
-erlang 23.0.3
-elixir 1.10.4
+erlang 23.1.1
+elixir 1.11.1
 # elixir master
 postgres 9.6.18
 nodejs 12.4.0
 ruby system
-
