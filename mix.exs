@@ -26,7 +26,7 @@ defmodule Mpnetwork.Mixfile do
     [
       # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated, :os_mon]
+      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated, :os_mon, :telemetry]
     ]
   end
 
@@ -48,7 +48,7 @@ defmodule Mpnetwork.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.2"},
+      {:phoenix_live_dashboard, "~> 0.3"},
       {:gettext, "~> 0.13"},
       # {:coherence, "~> 0.5.2"},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
@@ -63,18 +63,19 @@ defmodule Mpnetwork.Mixfile do
       # provides `mix eliver.bump` for hot prod upgrades
       {:eliver, "~> 2.0"},
       # {:cachex, "~> 2.1"},
-      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
-      {:swoosh, "~> 0.25.4"},
-      {:phoenix_swoosh, "~> 0.2"},
+      {:swoosh, "~> 1.0"},
+      {:phoenix_swoosh, "~> 0.3"},
       # want to replace with another solution asap lol. https://imagetragick.com/
-      {:mogrify, "~> 0.7.2"},
+      {:mogrify, "~> 0.8"},
       # replacement for the above, hopefully!
       # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       {:ex_crypto, "~> 0.10"},
-      {:ecto_sql, "~> 3.4.5"},
+      {:ecto_sql, "~> 3.5"},
+      {:ecto_psql_extras, "~> 0.2"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
       # {:ecto_enum, "~> 1.4"},
@@ -83,9 +84,9 @@ defmodule Mpnetwork.Mixfile do
        git: "https://github.com/gjaldon/ecto_enum.git",
        commit: "ab13face20729deb0cb2f325dc052fd6fd05c26a"},
       {:html_sanitize_ex, "~> 1.4"},
-      {:dialyxir, "~> 0.5.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:quantum, ">= 2.2.5"},
-      {:ex_rated, "~> 1.3"},
+      {:ex_rated, "~> 1.3"}, # this is now 2.0 and API may have changed, but it has good improvements
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       # note: may not build on OTP23:
       {:lz4, "~> 0.2.2", hex: :lz4_erl},
