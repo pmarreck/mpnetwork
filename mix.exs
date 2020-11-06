@@ -103,6 +103,7 @@ defmodule Mpnetwork.Mixfile do
       {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
+      {:enquirer, "~> 0.1.0"},
     ]
   end
 
