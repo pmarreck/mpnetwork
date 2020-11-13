@@ -99,6 +99,8 @@ defmodule Mpnetwork.Mixfile do
       # Suggest using the git master version since it uses the rebar3 plugin that works on OTP-23
       {:telemetry_poller, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
+      # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
+      # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
       {:oban, "~> 2.0"},
       {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
