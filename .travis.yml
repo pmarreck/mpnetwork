@@ -5,8 +5,8 @@ jobs:
   include:
     - stage: test
       language: elixir
-      elixir: 1.10.3
-      otp_release: 22.3.4
+      elixir: 1.11.1
+      otp_release: 23.1.1
       services:
         - postgresql
       before_install:
@@ -14,6 +14,7 @@ jobs:
         # - bash install_vips.sh
       before_script:
         - PGPASSWORD=postgres psql -c 'create database mpnetwork_test;' -U postgres
+        - ./bin/predeps
         - mix deps.get
       script:
         - mix test
@@ -22,7 +23,7 @@ jobs:
           - "deps"
     - stage: test
       language: node_js
-      node_js: 14.2.0
+      node_js: 14.14.0
       env:
         global:
           - NODE_ENV=test
@@ -35,9 +36,10 @@ jobs:
           - "assets/node_modules"
     - stage: deploy
       language: elixir
-      elixir: 1.10.3
-      otp_release: 22.3.4
-      before_script: skip
+      elixir: 1.11.1
+      otp_release: 23.1.1
+      before_script:
+        - ./bin/predeps
       install: skip
       script:
         - git fetch --unshallow origin
