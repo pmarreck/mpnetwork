@@ -61,6 +61,10 @@ config :mpnetwork, Mpnetwork.Scheduler,
 config :mpnetwork, Oban,
   repo: Mpnetwork.Repo,
   queues: [mailers: 10],
+  plugins: [
+    Oban.Pro.Plugins.Lifeline,
+    Oban.Web.Plugins.Stats
+  ],
   timezone: "America/New_York"
 
 # Configures Elixir's Logger

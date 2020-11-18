@@ -2,6 +2,7 @@ defmodule MpnetworkWeb.Router do
   use MpnetworkWeb, :router
   use Coherence.Router
   import Phoenix.LiveDashboard.Router
+  import Oban.Web.Router
   alias Mpnetwork.Repo
   require Logger
   require Phoenix.Logger
@@ -127,6 +128,7 @@ defmodule MpnetworkWeb.Router do
     post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
     live_dashboard("/dashboard", metrics: MpnetworkWeb.Telemetry, env_keys: ["SOURCE_VERSION"], ecto_repos: [Mpnetwork.Repo], allow_destructive_actions: true)
+    oban_dashboard "/jobs"
   end
 
   scope "/", MpnetworkWeb do
