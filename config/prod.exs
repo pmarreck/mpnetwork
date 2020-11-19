@@ -102,7 +102,10 @@ config :mpnetwork, Mpnetwork.Repo,
   url: System.fetch_env!("DATABASE_URL"),
   # limit in google cloud postgres is 100. Note that I got a "too many connections error" at 60.
   # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
-  pool_size: 9,
+  pool_size: 28,
+  # https://hexdocs.pm/db_connection/DBConnection.html#start_link/2
+  queue_target: 300,
+  queue_interval: 2000,
   ssl: true
 
 # Guardian
