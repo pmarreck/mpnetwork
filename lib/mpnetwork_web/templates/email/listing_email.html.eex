@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title><%= @email.subject %></title>
+    <title><%= raw(@email.subject) %></title>
     <style>
       p {
         margin: 0;
@@ -9,6 +9,6 @@
     </style>
   </head>
   <body>
-    <%= raw(@html_body) %>
+    <%= raw(@email.html_body) %>
   </body>
 </html>

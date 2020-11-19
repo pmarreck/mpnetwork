@@ -2,7 +2,7 @@ Code.ensure_loaded(Phoenix.Swoosh)
 
 defmodule Mpnetwork.UserEmail do
   @moduledoc false
-  use Phoenix.Swoosh, view: Mpnetwork.EmailView, layout: {MpnetworkWeb.EmailView, :email}
+  use Phoenix.Swoosh, view: Mpnetwork.EmailView #, layout: {MpnetworkWeb.NonexistentEmailLayout, :email}
   # alias MpnetworkWeb.EmailView
   import Swoosh.Email
   alias Swoosh.Email
@@ -47,12 +47,13 @@ defmodule Mpnetwork.UserEmail do
         render_body(email, :listing_email)
     end
 
-    email_delivered = email_rendered
+    _email_delivered = email_rendered
       |> deliver_and_log(type, listing, name, email_address)
 
     # This is sort of the philosophy of "always return some meaningful data from a function even if it's not captured by the caller"
-    {status, results} = email_delivered
-    {status, {email, email_rendered, results}}
+    # {status, results} = email_delivered
+    # {status, {email, email_rendered, results}}
+    email_rendered
   end
 
   defp deliver_and_log(email, type, listing, name, email_address) do
