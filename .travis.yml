@@ -5,8 +5,8 @@ stages:
 jobs:
   include:
     - stage: test
-      language: elixir
-      elixir: 1.11.1
+      # language: elixir
+      # elixir: 1.11.1
       # otp_release: 23.1.1
       services:
         - postgresql
@@ -36,8 +36,8 @@ jobs:
         directories:
           - "assets/node_modules"
     - stage: deploy
-      language: elixir
-      elixir: 1.11.1
+      # language: elixir
+      # elixir: 1.11.1
       # otp_release: 23.1.1
       before_script:
         - ./bin/predeps
