@@ -41,7 +41,7 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
     end
     subject = "#{subject_tag} #{announce}#{subject_address}"
     body_preamble = "Hello #{name}! Please click here to check it out: "
-    {status, {_email, _email_rendered, results}} = UserEmail.send_user_regarding_listing(
+    sent_email = UserEmail.send_user_regarding_listing(
       user,
       listing,
       subject,
@@ -49,6 +49,6 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
       body_preamble <> "@listing_link_placeholder",
       "new_listing_notif"
     )
-    {status, results}
+    sent_email
   end
 end
