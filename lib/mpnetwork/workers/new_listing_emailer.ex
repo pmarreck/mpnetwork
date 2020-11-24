@@ -49,6 +49,6 @@ defmodule Mpnetwork.Workers.NewListingEmailer do
       body_preamble <> "@listing_link_placeholder",
       "new_listing_notif"
     )
-    sent_email
+    {:ok, sent_email}
   end
 end
