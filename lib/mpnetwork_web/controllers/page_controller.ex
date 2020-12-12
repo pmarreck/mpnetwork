@@ -40,6 +40,17 @@ defmodule MpnetworkWeb.PageController do
     )
   end
 
+  def downtime(conn, _params) do
+    [datetime, tz] = String.split(System.get_env("DOWNTIME_END_AT"))
+    render(
+      conn,
+      "downtime.html",
+      layout: {MpnetworkWeb.LayoutView, "system_basic.html"},
+      datetime: datetime,
+      tz: tz
+    )
+  end
+
   def bare_session_redirect(conn, _params) do
     redirect(conn, to: Routes.page_path(conn, :index))
   end

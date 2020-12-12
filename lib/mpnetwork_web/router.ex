@@ -29,6 +29,10 @@ defmodule MpnetworkWeb.Router do
   end
   defp safe_map_from_struct(_), do: %{}
 
+  defp blank_is_nil(""), do: nil
+  defp blank_is_nil(nil), do: nil
+  defp blank_is_nil(anything_else), do: anything_else
+
   defp collect_request_data_for_logging(conn, _) do
     Plug.Conn.register_before_send(conn, fn conn ->
       user_agent = case get_req_header(conn, "user-agent") do
@@ -50,10 +54,24 @@ defmodule MpnetworkWeb.Router do
     end)
   end
 
+  defp ensure_not_downtime(conn, _) do
+    # example system env var to set:
+    # DOWNTIME_END_AT="2020-12-12T01:30 America/New_York"
+    # Note that this value MUST have ONLY ONE space in it, separating the datetime from the timezone, both ISO 8601.
+    if blank_is_nil(System.get_env("DOWNTIME_END_AT")) && conn.path_info() != ["downtime"] do
+      conn
+      |> Plug.Conn.resp(:found, "")
+      |> Plug.Conn.put_resp_header("location", "/downtime")
+    else
+      conn
+    end
+  end
+
   pipeline :browser do
     plug(RemoteIp)
     plug(:collect_request_data_for_logging)
     plug(:accepts, ["html"])
+    plug(:ensure_not_downtime)
     plug(:fetch_session)
     plug(:fetch_flash)
     plug(:protect_from_forgery)
@@ -77,7 +95,9 @@ defmodule MpnetworkWeb.Router do
 
   pipeline :protected do
     plug(RemoteIp)
+    plug(:collect_request_data_for_logging)
     plug(:accepts, ["html", "json"])
+    plug(:ensure_not_downtime)
     plug(:fetch_session)
     plug(:fetch_flash)
     plug(:protect_from_forgery)
@@ -163,6 +183,7 @@ defmodule MpnetworkWeb.Router do
     get("/broker_full/:id", ListingController, :broker_full, as: :public_broker_full)
     get("/customer_full/:id", ListingController, :customer_full, as: :public_customer_full)
     get("/attachments/show_public/:id", AttachmentController, :show_public)
+    get("/downtime", PageController, :downtime)
   end
 
   # custom dev-only route to view local mailbox

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<%#     <meta name="description" content="">
+    <meta name="author" content=""> %>
+
+    <title><%= page_title(@conn) %></title>
+    <!--<link rel="stylesheet" href="/css/app.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone-with-data-2012-2022.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.js"></script>
+    <style type="text/css">
+      // downtime clock styling
+        .countdownclock {
+          width: 650px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%);
+        }
+
+    </style>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        item = $(".countdownclock");
+        var dt = $(item).attr("dt");
+        var tz = $(item).attr("tz");
+        var clock;
+
+        // Grab the current date
+        var currentDate = new Date();
+
+        // Target future date/24 hour time/Timezone
+        var targetDate = moment.tz(dt, tz);
+
+        // Calculate the difference in seconds between the future and current date
+        var diff = targetDate / 1000 - currentDate.getTime() / 1000;
+
+        if (diff <= 0) {
+          // If remaining countdown is 0
+          clock = item.FlipClock(0, {
+            clockFace: "DailyCounter",
+            countdown: true,
+            autostart: false
+          });
+          console.log("Date has already passed!")
+
+        } else {
+          // Run countdown timer
+          clock = item.FlipClock(diff, {
+            clockFace: "DailyCounter",
+            countdown: true,
+            callbacks: {
+              stop: function() {
+                console.log("Timer has ended!")
+              }
+            }
+          });
+
+          // Check when timer reaches 0, then stop at 0
+          setTimeout(function() {
+            checktime();
+          }, 1000);
+
+          function checktime() {
+            t = clock.getTime();
+            if (t <= 0) {
+              clock.setTime(0);
+            }
+            setTimeout(function() {
+              checktime();
+            }, 1000);
+          }
+        }
+      });
+
+    </script>
+  </head>
+  <body>
+     <%= @inner_content %>
+     <!--<script src="/js/app.js"></script>-->
+  </body>
+</html>

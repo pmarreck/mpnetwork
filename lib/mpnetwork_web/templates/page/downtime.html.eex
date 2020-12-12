@@ -1,0 +1,6 @@
+<h1>MPNetwork is down for database maintenance.</h1>
+<h2>The projected time until it's back up is:</h2>
+<br />
+<div class="countdownclock" dt="<%= @datetime %>" tz="<%= @tz %>"></div>
+<br />
+<a href="/">Click here to try again and see if it's up. If you end up back on this page, then it's not.</a>

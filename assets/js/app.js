@@ -14,6 +14,8 @@
 
 //"JavaScript Next"-style
 
+import $ from 'jquery'
+
 import "phoenix"
 import "phoenix_html"
 
@@ -55,8 +57,8 @@ var mpnetwork = {
   }
 }
 
-function ConvertFromUTCToLocalDatetime(utc_dt, tz = mpnetwork.config.tz){
-  switch(utc_dt) {
+function ConvertFromUTCToLocalDatetime(utc_dt, tz = mpnetwork.config.tz) {
+  switch (utc_dt) {
     case "":
       return "";
     default:
@@ -68,8 +70,8 @@ function ConvertFromUTCToLocalDatetime(utc_dt, tz = mpnetwork.config.tz){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromUTCToLocalDatetime = ConvertFromUTCToLocalDatetime;
 
-function ConvertFromUTCToLocalDate(utc_d){
-  switch(utc_d) {
+function ConvertFromUTCToLocalDate(utc_d) {
+  switch (utc_d) {
     case "":
       return "";
     default:
@@ -81,8 +83,8 @@ function ConvertFromUTCToLocalDate(utc_d){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromUTCToLocalDate = ConvertFromUTCToLocalDate;
 
-function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
-  switch(local_dt) {
+function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz) {
+  switch (local_dt) {
     case "":
       return "";
     default:
@@ -96,8 +98,8 @@ function ConvertFromFriendlyToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromFriendlyToUTCDatetime = ConvertFromFriendlyToUTCDatetime;
 
-function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
-  switch(local_dt) {
+function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz) {
+  switch (local_dt) {
     case "":
       return "";
     default:
@@ -113,8 +115,8 @@ function ConvertFromLocalToUTCDatetime(local_dt, tz = mpnetwork.config.tz){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromLocalToUTCDatetime = ConvertFromLocalToUTCDatetime;
 
-function ConvertFromLocalToUTCDate(local_d){
-  switch(local_d) {
+function ConvertFromLocalToUTCDate(local_d) {
+  switch (local_d) {
     case "":
       return "";
     default:
@@ -124,15 +126,15 @@ function ConvertFromLocalToUTCDate(local_d){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.ConvertFromLocalToUTCDate = ConvertFromLocalToUTCDate;
 
-function IsNonblankString(maybe_str){
+function IsNonblankString(maybe_str) {
   return ((typeof maybe_str === 'string' || maybe_str instanceof String) && (maybe_str.trim() !== ""));
 }
 // "export" this so it can be accessed from bootstrap-table config and console
 window.IsNonblankString = IsNonblankString;
 
-function USDatetimeSorter(a, b){
-  if(!IsNonblankString(a)) return -1;
-  if(!IsNonblankString(b)) return 1;
+function USDatetimeSorter(a, b) {
+  if (!IsNonblankString(a)) return -1;
+  if (!IsNonblankString(b)) return 1;
   a = ConvertFromLocalToUTCDatetime(a);
   b = ConvertFromLocalToUTCDatetime(b);
   if (a > b) return 1;
@@ -142,9 +144,9 @@ function USDatetimeSorter(a, b){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.USDatetimeSorter = USDatetimeSorter;
 
-function PriceSorter(a, b){
-  if(!IsNonblankString(a)) return -1;
-  if(!IsNonblankString(b)) return 1;
+function PriceSorter(a, b) {
+  if (!IsNonblankString(a)) return -1;
+  if (!IsNonblankString(b)) return 1;
   a = parseInt(a.replace(/[\$\,\.]/g, ""));
   b = parseInt(b.replace(/[\$\,\.]/g, ""));
   if (a > b) return 1;
@@ -154,15 +156,15 @@ function PriceSorter(a, b){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.PriceSorter = PriceSorter;
 
-function StripTags(str){
-  return str.replace(/(<([^>]+)>)/ig,"").replace(/\s+/g," ").trim();
+function StripTags(str) {
+  return str.replace(/(<([^>]+)>)/ig, "").replace(/\s+/g, " ").trim();
 }
 // "export" this so it can be accessed from bootstrap-table config and console
 window.StripTags = StripTags;
 
-function OpenHouseSorter(a, b){
-  if(!IsNonblankString(a)) return -1;
-  if(!IsNonblankString(b)) return 1;
+function OpenHouseSorter(a, b) {
+  if (!IsNonblankString(a)) return -1;
+  if (!IsNonblankString(b)) return 1;
   a = ConvertFromFriendlyToUTCDatetime(StripTags(a));
   b = ConvertFromFriendlyToUTCDatetime(StripTags(b));
   if (a > b) return 1;
@@ -172,9 +174,9 @@ function OpenHouseSorter(a, b){
 // "export" this so it can be accessed from bootstrap-table config and console
 window.OpenHouseSorter = OpenHouseSorter;
 
-function AddressWithLinksSorter(a, b){
-  if(!IsNonblankString(a)) return -1;
-  if(!IsNonblankString(b)) return 1;
+function AddressWithLinksSorter(a, b) {
+  if (!IsNonblankString(a)) return -1;
+  if (!IsNonblankString(b)) return 1;
   a = StripTags(a);
   b = StripTags(b);
   if (a > b) return 1;
@@ -186,9 +188,9 @@ window.AddressWithLinksSorter = AddressWithLinksSorter;
 // ondocumentload functionality
 $.when($.ready).then(function() {
   // trim spaces before form submission (such as logins)
-  $(".strip-before-submission").each(function(_i, formfield){
+  $(".strip-before-submission").each(function(_i, formfield) {
     var form = $(formfield.form);
-    form.submit(function(f){
+    form.submit(function(f) {
       formfield.value = formfield.value.trim();
     })
   });
@@ -200,23 +202,23 @@ $.when($.ready).then(function() {
   });
 
   // convert UTC datetime values to local TZ after page load for pages with these elements
-  $('div.datetime input.form-control').each(function(_i, dt){
+  $('div.datetime input.form-control').each(function(_i, dt) {
     $(dt).val(ConvertFromUTCToLocalDatetime(dt.value));
   });
 
   // convert UTC date values to localized dates after page load for pages with these elements
-  $('div.date input.form-control').each(function(_i, d){
+  $('div.date input.form-control').each(function(_i, d) {
     $(d).val(ConvertFromUTCToLocalDate(d.value));
   });
 
   // set up post hook to convert local TZ datetimes back to UTC just before form post
-  $('form.contains-datetimes').submit(function(){
+  $('form.contains-datetimes').submit(function() {
     var datetimes = $(this).find('div.datetime input.form-control');
-    datetimes.each(function(_i, dt){
+    datetimes.each(function(_i, dt) {
       $(dt).val(ConvertFromLocalToUTCDatetime(dt.value));
     });
     var dates = $(this).find('div.date input.form-control');
-    dates.each(function(_i, d){
+    dates.each(function(_i, d) {
       $(d).val(ConvertFromLocalToUTCDate(d.value));
     });
     return true;
@@ -268,7 +270,7 @@ $.when($.ready).then(function() {
   // FontAttributor.whitelist = [
   //   'helvetica', 'sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'
   // ];
-  if($('#rte_container').length) {
+  if ($('#rte_container').length) {
     var SizeStyle = Quill.import('attributors/style/size');
     SizeStyle.whitelist = ['10px', '18px', '24px'];
     Quill.register(SizeStyle, true);
@@ -276,7 +278,7 @@ $.when($.ready).then(function() {
       modules: {
         toolbar: [
           ['bold', 'italic', 'underline'],
-          [{'font': []}, {'color': []}, 'link'],
+          [{ 'font': [] }, { 'color': [] }, 'link'],
           // Took out indenting since it was class-based and thus incompatible with html email
           // (customizing to style-based is a pain, see below)
           // and nobody would probably use it. Left in as an example for posterity.
@@ -289,13 +291,13 @@ $.when($.ready).then(function() {
         ]
       },
       placeholder: 'Email signature...',
-      theme: 'snow'  // or 'bubble'
+      theme: 'snow' // or 'bubble'
     });
   };
   // for config inspection:
   // console.log(Quill.imports);
   // set up post hook to copy contenteditable div content to hidden form element before form post
-  $('form.contains-richtexteditor').submit(function(){
+  $('form.contains-richtexteditor').submit(function() {
     $('.rte-target').val($('#rte_container div.ql-editor').html());
     return true;
   })
