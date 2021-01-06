@@ -56,7 +56,9 @@ defmodule MpnetworkWeb.Router do
 
   defp ensure_not_downtime(conn, _) do
     # example system env var to set:
-    # DOWNTIME_END_AT="2021-01-06T01:30 America/New_York"
+    # DOWNTIME_END_AT="2021-01-06T02:30 America/New_York"
+    # gigalixir example: gigalixir config:set DOWNTIME_END_AT="2021-01-06T02:30 America/New_York"
+    # then, gigalixir config:unset DOWNTIME_END_AT, when finished
     # Note that this value MUST have ONLY ONE space in it, separating the datetime from the timezone, both ISO 8601.
     if blank_is_nil(System.get_env("DOWNTIME_END_AT")) && conn.path_info() != ["downtime"] do
       conn
