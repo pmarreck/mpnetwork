@@ -3,6 +3,6 @@
 erlang 23.1.1
 elixir 1.11.3-otp-23
 # elixir master
-postgres 9.6.18
+postgres 13.1
 nodejs 12.4.0
 ruby system
