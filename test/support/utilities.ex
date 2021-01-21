@@ -256,7 +256,9 @@ defmodule Mpnetwork.Test.Support.Utilities do
     num_garages: 42,
     num_baths: 42,
     central_vac: true,
-    eef_led_lighting: true
+    eef_led_lighting: true,
+    sec_dep: "1000",
+    commission_paid_by: "renter"
   }
 
   # supposedly a png of a red dot

@@ -27,7 +27,7 @@ defmodule MpnetworkWeb.ListingControllerTest do
     num_skylights: 42,
     lot_size: "420x240",
     attached_garage: true,
-    for_rent: true,
+    for_rent: false,
     zip: "11050",
     ext_urls: ["http://www.yahoo.com"],
     city: "some city",

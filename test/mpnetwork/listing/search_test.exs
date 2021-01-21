@@ -23,7 +23,7 @@ defmodule Mpnetwork.SearchTest do
       num_skylights: 42,
       lot_size: "42x42",
       attached_garage: true,
-      for_rent: true,
+      for_rent: false,
       zip: "11050",
       ext_urls: ["http://www.yahoo.com"],
       city: "New York",

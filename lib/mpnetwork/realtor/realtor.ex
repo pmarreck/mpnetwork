@@ -244,8 +244,6 @@ defmodule Mpnetwork.Realtor do
     list_latest_listings(realtor, limit)
   end
 
-  def list_latest_listings(who, limit \\ 5)
-
   @doc """
   Returns the latest non-draft listings by everyone
 
@@ -255,6 +253,7 @@ defmodule Mpnetwork.Realtor do
       [%Listing{}, ...]
 
   """
+  def list_latest_listings(who, limit \\ 5)
   def list_latest_listings(nil, limit) do
     Repo.all(
       from(
@@ -267,15 +266,13 @@ defmodule Mpnetwork.Realtor do
     )
   end
 
-  @doc """
-  Returns the latest non-draft listings, including this user's draft listings
+  ## Returns the latest non-draft listings, including this user's draft listings
 
   ## Examples
 
-      iex> list_latest_listings()
-      [%Listing{}, ...]
+  # iex> list_latest_listings()
+  # [%Listing{}, ...]
 
-  """
   def list_latest_listings(%User{} = current_user, limit) do
     Repo.all(
       from(

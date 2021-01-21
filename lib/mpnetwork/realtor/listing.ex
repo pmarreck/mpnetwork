@@ -4,230 +4,248 @@ defmodule Mpnetwork.Realtor.Listing do
 
   @timestamps_opts [type: :utc_datetime_usec]
 
-  schema "listings" do
-    field(:draft, :boolean)
-    field(:for_sale, :boolean)
-    field(:for_rent, :boolean)
-    field(:class_type, ClassTypeEnum)
-    field(:studio, :boolean)
-    field(:address, :string)
-    field(:city, :string)
-    field(:state, :string)
-    field(:zip, :string)
-    field(:district, :string)
-    field(:section_num, :string)
-    field(:block_num, :string)
-    field(:lot_num, :string)
-    field(:association, :string)
-    field(:neighborhood, :string)
-    field(:schools, :string)
-    field(:zoning, :string)
-    field(:corner, :boolean)
-    field(:cross_street, :string)
-    field(:cul_de_sac, :boolean)
-    field(:waterfront, :boolean)
-    field(:water_frontage_ft, :integer)
-    field(:bulkhead_ft, :integer)
-    field(:waterfront_type, WaterfrontTypeEnum)
-    field(:waterview, :boolean)
-    field(:bulkhead, :boolean)
-    field(:dock_rights, :boolean)
-    field(:beach_rights, :boolean)
-    field(:adult_comm, :boolean)
-    field(:gated_comm, :boolean)
-    field(:front_exposure_type, CompassPointEnum)
-    field(:price_usd, :integer)
-    field(:prior_price_usd, :integer)
-    field(:original_price_usd, :integer)
-    field(:tax_rate_code_area, :integer)
-    field(:prop_tax_usd, :integer)
-    field(:vill_tax_usd, :integer)
-    field(:live_at, :naive_datetime)
-    field(:star_deduc_usd, :integer)
-    field(:expires_on, :date)
-    field(:listing_status_type, ListingStatusTypeEnum)
-    field(:style_type, StyleTypeEnum)
-    field(:stories, :integer)
-    field(:num_rooms, :integer)
-    field(:num_bedrooms, :integer)
-    field(:num_baths, :integer)
-    field(:num_half_baths, :integer)
-    field(:num_families, :integer)
-    field(:att_type, AttachmentTypeEnum)
-    field(:num_kitchens, :integer)
-    field(:eat_in_kitchen, :boolean)
-    field(:dining_room_type, DiningRoomTypeEnum)
-    field(:den, :boolean)
-    field(:office, :boolean)
-    field(:attic, :boolean)
-    field(:mbr_first_fl, :boolean)
-    field(:permit, :string)
-    field(:handicap_access, :boolean)
-    field(:handicap_access_desc, :string)
-    field(:sq_ft, :integer)
-    field(:basement, :boolean)
-    field(:basement_type, BasementTypeEnum)
-    field(:finished_basement, :boolean)
-    field(:num_fireplaces, :integer)
-    field(:w_w_carpet, :boolean)
-    field(:wood_floors, :boolean)
-    field(:year_built, :integer)
-    field(:new_construction, :boolean)
-    field(:num_skylights, :integer)
-    field(:appearance, :string)
-    field(:basement_desc, :string)
-    field(:first_fl_desc, :string)
-    field(:second_fl_desc, :string)
-    field(:third_fl_desc, :string)
-    field(:siding_desc, :string)
-    field(:construction, :string)
-    field(:num_garages, :integer)
-    field(:num_half_garages, :integer)
-    field(:attached_garage, :boolean)
-    field(:driveway, :string)
-    field(:parking_spaces, :integer)
-    field(:deck, :boolean)
-    field(:deck_type, DeckTypeEnum)
-    field(:patio, :boolean)
-    field(:patio_type, PatioTypeEnum)
-    field(:porch, :boolean)
-    field(:porch_type, PorchTypeEnum)
-    field(:pool, :boolean)
-    field(:pool_type, PoolTypeEnum)
-    field(:hot_tub, :boolean)
-    field(:ing_sprinks, :boolean)
-    field(:tennis_ct, :boolean)
-    field(:tennis_ct_desc, :string)
-    field(:equestrian, :boolean)
-    field(:lot_size, :string)
-    field(:lot_sqft, :integer)
-    field(:building_size_sqft, :integer)
-    field(:num_stoves, :integer)
-    field(:num_refrigs, :integer)
-    field(:num_washers, :integer)
-    field(:num_dryers, :integer)
-    field(:num_dishwashers, :integer)
-    field(:fuel_type, FuelTypeEnum)
-    field(:heating_type, HeatingTypeEnum)
-    field(:heat_num_zones, :integer)
-    field(:central_air, :boolean)
-    field(:sewer, :boolean)
-    field(:sewage_type, SewageTypeEnum)
-    field(:sep_hw_heater, :boolean)
-    field(:sep_hw_heater_type, SepHwHeaterTypeEnum)
-    field(:ac_num_zones, :integer)
-    field(:water_type, WaterTypeEnum)
-    field(:energy_eff, :boolean)
-    field(:eef_led_lighting, :boolean)
-    field(:eef_energy_star_stove, :boolean)
-    field(:eef_energy_star_refrigerator, :boolean)
-    field(:eef_energy_star_dishwasher, :boolean)
-    field(:eef_energy_star_washer, :boolean)
-    field(:eef_energy_star_dryer, :boolean)
-    field(:eef_energy_star_water_heater, :boolean)
-    field(:eef_geothermal_water_heater, :boolean)
-    field(:eef_solar_water_heater, :boolean)
-    field(:eef_tankless_water_heater, :boolean)
-    field(:eef_double_pane_windows, :boolean)
-    field(:eef_insulated_windows, :boolean)
-    field(:eef_tinted_windows, :boolean)
-    field(:eef_triple_pane_windows, :boolean)
-    field(:eef_energy_star_windows, :boolean)
-    field(:eef_storm_doors, :boolean)
-    field(:eef_insulated_doors, :boolean)
-    field(:eef_energy_star_doors, :boolean)
-    field(:eef_foam_insulation, :boolean)
-    field(:eef_cellulose_insulation, :boolean)
-    field(:eef_blown_insulation, :boolean)
-    field(:eef_programmable_thermostat, :boolean)
-    field(:eef_low_flow_showers_fixtures, :boolean)
-    field(:eef_low_flow_dual_flush_toilet, :boolean)
-    field(:eef_gray_water_system, :boolean)
-    field(:eef_energy_star_furnace, :boolean)
-    field(:eef_geothermal_heating, :boolean)
-    field(:eef_energy_star_ac, :boolean)
-    field(:eef_energy_star_cac, :boolean)
-    field(:eef_geothermal_ac, :boolean)
-    field(:eef_solar_ac, :boolean)
-    field(:eef_solar_panels, :boolean)
-    field(:eef_solar_pool_cover, :boolean)
-    field(:eef_windmill, :boolean)
-    field(:green_certified, :boolean)
-    field(:green_cert_type, GreenCertTypeEnum)
-    field(:green_cert_year, :integer)
-    field(:central_vac, :boolean)
-    field(:security_system, :boolean)
-    field(:fios_available, :boolean)
-    field(:high_speed_internet_available, :boolean)
-    field(:modern_kitchen_countertops, :boolean)
-    field(:cellular_coverage_quality, :integer)
-    field(:owner_name, :string)
-    field(:status_showing_phone, :string)
-    belongs_to(:broker, Mpnetwork.Realtor.Office, foreign_key: :broker_id)
-    field(:broker_agent_owned, :boolean)
-    belongs_to(:user, Mpnetwork.User)
-    field(:listing_agent_phone, :string)
-    belongs_to(:colisting_agent, Mpnetwork.User)
-    field(:colisting_agent_phone, :string)
-    field(:seller_agency_comp, :integer)
-    field(:buyer_agency_comp, :integer)
-    field(:broker_agency_comp, :integer)
-    field(:listing_broker_comp_rental, :string)
-    field(:buyer_exclusions, :boolean)
-    field(:negotiate_direct, :boolean)
-    field(:offers_presentable, :boolean)
-    field(:occupancy, :string)
-    field(:show_instr, :string)
-    field(:lockbox, :boolean)
-    field(:owner_financing, :boolean)
+  @listing_data_fields [
+    draft: :boolean,
+    for_sale: :boolean,
+    for_rent: :boolean,
+    class_type: ClassTypeEnum,
+    studio: :boolean,
+    address: :string,
+    city: :string,
+    state: :string,
+    zip: :string,
+    district: :string,
+    section_num: :string,
+    block_num: :string,
+    lot_num: :string,
+    association: :string,
+    neighborhood: :string,
+    schools: :string,
+    zoning: :string,
+    corner: :boolean,
+    cross_street: :string,
+    cul_de_sac: :boolean,
+    waterfront: :boolean,
+    water_frontage_ft: :integer,
+    bulkhead_ft: :integer,
+    waterfront_type: WaterfrontTypeEnum,
+    waterview: :boolean,
+    bulkhead: :boolean,
+    dock_rights: :boolean,
+    beach_rights: :boolean,
+    adult_comm: :boolean,
+    gated_comm: :boolean,
+    front_exposure_type: CompassPointEnum,
+    price_usd: :integer,
+    prior_price_usd: :integer,
+    original_price_usd: :integer,
+    tax_rate_code_area: :integer,
+    prop_tax_usd: :integer,
+    vill_tax_usd: :integer,
+    live_at: :naive_datetime,
+    star_deduc_usd: :integer,
+    expires_on: :date,
+    listing_status_type: ListingStatusTypeEnum,
+    style_type: StyleTypeEnum,
+    stories: :integer,
+    num_rooms: :integer,
+    num_bedrooms: :integer,
+    num_baths: :integer,
+    num_half_baths: :integer,
+    num_families: :integer,
+    att_type: AttachmentTypeEnum,
+    num_kitchens: :integer,
+    eat_in_kitchen: :boolean,
+    dining_room_type: DiningRoomTypeEnum,
+    den: :boolean,
+    office: :boolean,
+    attic: :boolean,
+    mbr_first_fl: :boolean,
+    permit: :string,
+    handicap_access: :boolean,
+    handicap_access_desc: :string,
+    sq_ft: :integer,
+    basement: :boolean,
+    basement_type: BasementTypeEnum,
+    finished_basement: :boolean,
+    num_fireplaces: :integer,
+    w_w_carpet: :boolean,
+    wood_floors: :boolean,
+    year_built: :integer,
+    new_construction: :boolean,
+    num_skylights: :integer,
+    appearance: :string,
+    basement_desc: :string,
+    first_fl_desc: :string,
+    second_fl_desc: :string,
+    third_fl_desc: :string,
+    siding_desc: :string,
+    construction: :string,
+    num_garages: :integer,
+    num_half_garages: :integer,
+    attached_garage: :boolean,
+    driveway: :string,
+    parking_spaces: :integer,
+    deck: :boolean,
+    deck_type: DeckTypeEnum,
+    patio: :boolean,
+    patio_type: PatioTypeEnum,
+    porch: :boolean,
+    porch_type: PorchTypeEnum,
+    pool: :boolean,
+    pool_type: PoolTypeEnum,
+    hot_tub: :boolean,
+    ing_sprinks: :boolean,
+    tennis_ct: :boolean,
+    tennis_ct_desc: :string,
+    equestrian: :boolean,
+    lot_size: :string,
+    lot_sqft: :integer,
+    building_size_sqft: :integer,
+    num_stoves: :integer,
+    num_refrigs: :integer,
+    num_washers: :integer,
+    num_dryers: :integer,
+    num_dishwashers: :integer,
+    fuel_type: FuelTypeEnum,
+    heating_type: HeatingTypeEnum,
+    heat_num_zones: :integer,
+    central_air: :boolean,
+    sewer: :boolean,
+    sewage_type: SewageTypeEnum,
+    sep_hw_heater: :boolean,
+    sep_hw_heater_type: SepHwHeaterTypeEnum,
+    ac_num_zones: :integer,
+    water_type: WaterTypeEnum,
+    energy_eff: :boolean,
+    eef_led_lighting: :boolean,
+    eef_energy_star_stove: :boolean,
+    eef_energy_star_refrigerator: :boolean,
+    eef_energy_star_dishwasher: :boolean,
+    eef_energy_star_washer: :boolean,
+    eef_energy_star_dryer: :boolean,
+    eef_energy_star_water_heater: :boolean,
+    eef_geothermal_water_heater: :boolean,
+    eef_solar_water_heater: :boolean,
+    eef_tankless_water_heater: :boolean,
+    eef_double_pane_windows: :boolean,
+    eef_insulated_windows: :boolean,
+    eef_tinted_windows: :boolean,
+    eef_triple_pane_windows: :boolean,
+    eef_energy_star_windows: :boolean,
+    eef_storm_doors: :boolean,
+    eef_insulated_doors: :boolean,
+    eef_energy_star_doors: :boolean,
+    eef_foam_insulation: :boolean,
+    eef_cellulose_insulation: :boolean,
+    eef_blown_insulation: :boolean,
+    eef_programmable_thermostat: :boolean,
+    eef_low_flow_showers_fixtures: :boolean,
+    eef_low_flow_dual_flush_toilet: :boolean,
+    eef_gray_water_system: :boolean,
+    eef_energy_star_furnace: :boolean,
+    eef_geothermal_heating: :boolean,
+    eef_energy_star_ac: :boolean,
+    eef_energy_star_cac: :boolean,
+    eef_geothermal_ac: :boolean,
+    eef_solar_ac: :boolean,
+    eef_solar_panels: :boolean,
+    eef_solar_pool_cover: :boolean,
+    eef_windmill: :boolean,
+    green_certified: :boolean,
+    green_cert_type: GreenCertTypeEnum,
+    green_cert_year: :integer,
+    central_vac: :boolean,
+    security_system: :boolean,
+    fios_available: :boolean,
+    high_speed_internet_available: :boolean,
+    modern_kitchen_countertops: :boolean,
+    cellular_coverage_quality: :integer,
+    owner_name: :string,
+    status_showing_phone: :string,
+    broker_agent_owned: :boolean,
+    listing_agent_phone: :string,
+    colisting_agent_phone: :string,
+    seller_agency_comp: :integer,
+    buyer_agency_comp: :integer,
+    broker_agency_comp: :integer,
+    listing_broker_comp_rental: :string,
+    buyer_exclusions: :boolean,
+    negotiate_direct: :boolean,
+    offers_presentable: :boolean,
+    occupancy: :string,
+    show_instr: :string,
+    lockbox: :boolean,
+    owner_financing: :boolean,
     # actually :text
-    field(:realtor_remarks, :string)
+    realtor_remarks: :string,
     # actually :text
-    field(:round_robin_remarks, :string)
+    round_robin_remarks: :string,
     # actually :text
-    field(:directions, :string)
+    directions: :string,
     # actually :text
-    field(:description, :string)
-    field(:rental_income_usd, :integer)
-    field(:also_for_rent, :boolean)
-    field(:rental_price_usd, :integer)
-    field(:personal_prop_exclusions, :string)
-    field(:mls_source_id, :integer)
-    field(:reo, :boolean)
-    field(:short_sale, :boolean)
-    field(:ext_urls, {:array, :string})
-    field(:first_broker_oh_start_at, :naive_datetime)
-    field(:first_broker_oh_mins, :integer)
-    field(:second_broker_oh_start_at, :naive_datetime)
-    field(:second_broker_oh_mins, :integer)
+    description: :string,
+    rental_income_usd: :integer,
+    also_for_rent: :boolean,
+    rental_price_usd: :integer,
+    personal_prop_exclusions: :string,
+    mls_source_id: :integer,
+    reo: :boolean,
+    short_sale: :boolean,
+    ext_urls: {:array, :string},
+    first_broker_oh_start_at: :naive_datetime,
+    first_broker_oh_mins: :integer,
+    second_broker_oh_start_at: :naive_datetime,
+    second_broker_oh_mins: :integer,
     # actually :text
-    field(:next_broker_oh_note, :string)
-    field(:first_cust_oh_start_at, :naive_datetime)
-    field(:first_cust_oh_mins, :integer)
-    field(:second_cust_oh_start_at, :naive_datetime)
-    field(:second_cust_oh_mins, :integer)
+    next_broker_oh_note: :string,
+    first_cust_oh_start_at: :naive_datetime,
+    first_cust_oh_mins: :integer,
+    second_cust_oh_start_at: :naive_datetime,
+    second_cust_oh_mins: :integer,
     # actually :text
-    field(:next_cust_oh_note, :string)
-    field(:selling_agent_name, :string)
-    field(:selling_agent_phone, :string)
-    field(:selling_broker_name, :string)
-    field(:addl_listing_agent_name, :string)
-    field(:addl_listing_agent_phone, :string)
-    field(:addl_listing_broker_name, :string)
-    field(:uc_on, :date)
-    field(:prop_closing_on, :date)
-    field(:closed_on, :date)
-    field(:closing_price_usd, :integer)
-    field(:purchaser, :string)
-    field(:moved_from, :string)
-    field(:pets_ok, :boolean)
-    field(:smoking_ok, :boolean)
-    field(:omd_on, :date)
-    # field :search_vector, :tsvector # this won't work. wish I could assert on this!
-    # has_many :price_history, Mpnetwork.Listing.PriceHistory, on_delete: :delete_all
-    has_many(:attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all)
+    next_cust_oh_note: :string,
+    selling_agent_name: :string,
+    selling_agent_phone: :string,
+    selling_broker_name: :string,
+    addl_listing_agent_name: :string,
+    addl_listing_agent_phone: :string,
+    addl_listing_broker_name: :string,
+    uc_on: :date,
+    prop_closing_on: :date,
+    closed_on: :date,
+    closing_price_usd: :integer,
+    purchaser: :string,
+    moved_from: :string,
+    pets_ok: :boolean,
+    smoking_ok: :boolean,
+    omd_on: :date,
+    commission_paid_by: :string,
+    sec_dep: :string,
+    deleted_at: :utc_datetime_usec,
+  ]
 
-    field(:deleted_at, :utc_datetime_usec)
+  @listing_belongs_to_fk_fields [
+    broker_id: {:broker, Mpnetwork.Realtor.Office, foreign_key: :broker_id},
+    user_id: {:user, Mpnetwork.User, []},
+    colisting_agent_id: {:colisting_agent, Mpnetwork.User, []}
+  ]
+
+  @listing_fields Enum.map(@listing_data_fields, fn {field, _type} -> field end)
+                  ++ Enum.map(@listing_belongs_to_fk_fields, fn {field, _btattribs} -> field end)
+
+  schema "listings" do
+    @listing_data_fields
+    |> Enum.each(fn {fieldname, fieldtype} ->
+      field(fieldname, fieldtype)
+    end)
+
+    @listing_belongs_to_fk_fields
+    |> Enum.each(fn {_fieldname, {canonical, fieldtype, btargs}} ->
+      belongs_to(canonical, fieldtype, btargs)
+    end)
+
+    has_many(:attachments, Mpnetwork.Listing.Attachment, on_delete: :delete_all)
 
     timestamps()
   end
@@ -364,7 +382,28 @@ defmodule Mpnetwork.Realtor.Listing do
 
   defp is_not_blank(val), do: val != nil && val != ""
 
-  defp validate_required_unless_field_is_value(changeset, fields, field, value) do
+  defp validate_required_if_field_is_value(changeset, fields, field, value, if_error_str) do
+    if get_field(changeset, field) == value do
+      Enum.reduce(fields, changeset, fn field, changeset ->
+        if is_not_blank(get_field(changeset, field)) do
+          changeset
+        else
+          humanized_field = Regex.replace(~r/num_/, "#{field}", "# ")
+          humanized_field = Regex.replace(~r/_/, humanized_field, " ")
+
+          add_error(
+            changeset,
+            field,
+            "#{humanized_field} must have a value if #{if_error_str}"
+          )
+        end
+      end)
+    else
+      changeset
+    end
+  end
+
+  defp validate_required_unless_field_is_value(changeset, fields, field, value, unless_error_str) do
     unless get_field(changeset, field) == value do
       Enum.reduce(fields, changeset, fn field, changeset ->
         if is_not_blank(get_field(changeset, field)) do
@@ -376,7 +415,7 @@ defmodule Mpnetwork.Realtor.Listing do
           add_error(
             changeset,
             field,
-            "#{humanized_field} must have a value unless the property class is \"Land\""
+            "#{humanized_field} must have a value unless #{unless_error_str}"
           )
         end
       end)
@@ -435,14 +474,30 @@ defmodule Mpnetwork.Realtor.Listing do
       :state,
       :zip,
       :price_usd,
-      :schools,
-      :prop_tax_usd,
-      :vill_tax_usd,
-      :section_num,
-      :block_num,
-      :lot_num,
       :expires_on
     ])
+    |> validate_required_if_field_is_value(
+      [
+        :schools,
+        :prop_tax_usd,
+        :vill_tax_usd,
+        :section_num,
+        :block_num,
+        :lot_num,
+      ],
+      :for_sale,
+      true,
+      "the property is For Sale"
+    )
+    |> validate_required_if_field_is_value(
+      [
+        :sec_dep,
+        :commission_paid_by,
+      ],
+      :for_rent,
+      true,
+      "the property is For Rent"
+    )
     |> validate_required_unless_field_is_value(
       [
         :num_bedrooms,
@@ -450,7 +505,8 @@ defmodule Mpnetwork.Realtor.Listing do
         :num_half_baths
       ],
       :class_type,
-      :land
+      :land,
+      "the property class is \"Land\""
     )
     |> listing_constraints
   end
@@ -606,6 +662,8 @@ defmodule Mpnetwork.Realtor.Listing do
     |> validate_length(:selling_broker_name, max: 400, count: :codepoints)
     |> validate_length(:addl_listing_agent_name, max: 400, count: :codepoints)
     |> validate_length(:addl_listing_broker_name, max: 400, count: :codepoints)
+    |> validate_length(:commission_paid_by, max: 30, count: :codepoints)
+    |> validate_length(:sec_dep, max: 30, count: :codepoints)
     |> validate_required_duration_when_datetime_val_present(
       {:first_broker_oh_start_at, get_field(listing, :first_broker_oh_start_at),
        :first_broker_oh_mins, get_field(listing, :first_broker_oh_mins)}
@@ -645,220 +703,6 @@ defmodule Mpnetwork.Realtor.Listing do
 
   defp casts(%Listing{} = listing, attrs) do
     listing
-    |> cast(attrs, [
-      :draft,
-      :for_sale,
-      :for_rent,
-      :class_type,
-      :studio,
-      :address,
-      :city,
-      :state,
-      :zip,
-      :district,
-      :section_num,
-      :block_num,
-      :lot_num,
-      :association,
-      :neighborhood,
-      :schools,
-      :zoning,
-      :corner,
-      :cross_street,
-      :cul_de_sac,
-      :waterfront,
-      :water_frontage_ft,
-      :bulkhead_ft,
-      :waterfront_type,
-      :waterview,
-      :bulkhead,
-      :dock_rights,
-      :beach_rights,
-      :adult_comm,
-      :gated_comm,
-      :front_exposure_type,
-      :price_usd,
-      :prior_price_usd,
-      :original_price_usd,
-      :tax_rate_code_area,
-      :prop_tax_usd,
-      :vill_tax_usd,
-      :live_at,
-      :star_deduc_usd,
-      :expires_on,
-      :listing_status_type,
-      :style_type,
-      :stories,
-      :num_rooms,
-      :num_bedrooms,
-      :num_baths,
-      :num_half_baths,
-      :num_families,
-      :att_type,
-      :num_kitchens,
-      :eat_in_kitchen,
-      :dining_room_type,
-      :den,
-      :office,
-      :attic,
-      :mbr_first_fl,
-      :permit,
-      :handicap_access,
-      :handicap_access_desc,
-      :sq_ft,
-      :basement,
-      :basement_type,
-      :finished_basement,
-      :num_fireplaces,
-      :w_w_carpet,
-      :wood_floors,
-      :year_built,
-      :new_construction,
-      :num_skylights,
-      :appearance,
-      :basement_desc,
-      :first_fl_desc,
-      :second_fl_desc,
-      :third_fl_desc,
-      :siding_desc,
-      :construction,
-      :num_garages,
-      :num_half_garages,
-      :attached_garage,
-      :driveway,
-      :parking_spaces,
-      :deck,
-      :deck_type,
-      :patio,
-      :patio_type,
-      :porch,
-      :porch_type,
-      :pool,
-      :pool_type,
-      :hot_tub,
-      :ing_sprinks,
-      :tennis_ct,
-      :tennis_ct_desc,
-      :equestrian,
-      :lot_size,
-      :lot_sqft,
-      :building_size_sqft,
-      :num_stoves,
-      :num_refrigs,
-      :num_washers,
-      :num_dryers,
-      :num_dishwashers,
-      :fuel_type,
-      :heating_type,
-      :heat_num_zones,
-      :central_air,
-      :sewer,
-      :sewage_type,
-      :sep_hw_heater,
-      :sep_hw_heater_type,
-      :ac_num_zones,
-      :water_type,
-      :energy_eff,
-      :eef_led_lighting,
-      :eef_energy_star_stove,
-      :eef_energy_star_refrigerator,
-      :eef_energy_star_dishwasher,
-      :eef_energy_star_washer,
-      :eef_energy_star_dryer,
-      :eef_energy_star_water_heater,
-      :eef_geothermal_water_heater,
-      :eef_solar_water_heater,
-      :eef_tankless_water_heater,
-      :eef_double_pane_windows,
-      :eef_insulated_windows,
-      :eef_tinted_windows,
-      :eef_triple_pane_windows,
-      :eef_energy_star_windows,
-      :eef_storm_doors,
-      :eef_insulated_doors,
-      :eef_energy_star_doors,
-      :eef_foam_insulation,
-      :eef_cellulose_insulation,
-      :eef_blown_insulation,
-      :eef_programmable_thermostat,
-      :eef_low_flow_showers_fixtures,
-      :eef_low_flow_dual_flush_toilet,
-      :eef_gray_water_system,
-      :eef_energy_star_furnace,
-      :eef_geothermal_heating,
-      :eef_energy_star_ac,
-      :eef_energy_star_cac,
-      :eef_geothermal_ac,
-      :eef_solar_ac,
-      :eef_solar_panels,
-      :eef_solar_pool_cover,
-      :eef_windmill,
-      :green_certified,
-      :green_cert_type,
-      :green_cert_year,
-      :central_vac,
-      :security_system,
-      :fios_available,
-      :high_speed_internet_available,
-      :modern_kitchen_countertops,
-      :cellular_coverage_quality,
-      :owner_name,
-      :status_showing_phone,
-      :broker_id,
-      :broker_agent_owned,
-      :user_id,
-      :listing_agent_phone,
-      :colisting_agent_id,
-      :colisting_agent_phone,
-      :seller_agency_comp,
-      :buyer_agency_comp,
-      :broker_agency_comp,
-      :listing_broker_comp_rental,
-      :buyer_exclusions,
-      :negotiate_direct,
-      :offers_presentable,
-      :occupancy,
-      :show_instr,
-      :lockbox,
-      :owner_financing,
-      :realtor_remarks,
-      :round_robin_remarks,
-      :directions,
-      :description,
-      :rental_income_usd,
-      :also_for_rent,
-      :rental_price_usd,
-      :personal_prop_exclusions,
-      :mls_source_id,
-      :reo,
-      :short_sale,
-      :ext_urls,
-      :first_broker_oh_start_at,
-      :first_broker_oh_mins,
-      :second_broker_oh_start_at,
-      :second_broker_oh_mins,
-      :next_broker_oh_note,
-      :first_cust_oh_start_at,
-      :first_cust_oh_mins,
-      :second_cust_oh_start_at,
-      :second_cust_oh_mins,
-      :next_cust_oh_note,
-      :selling_agent_name,
-      :selling_agent_phone,
-      :selling_broker_name,
-      :addl_listing_agent_name,
-      :addl_listing_agent_phone,
-      :addl_listing_broker_name,
-      :uc_on,
-      :prop_closing_on,
-      :closed_on,
-      :closing_price_usd,
-      :purchaser,
-      :moved_from,
-      :pets_ok,
-      :smoking_ok,
-      :deleted_at,
-      :omd_on
-    ])
+    |> cast(attrs, @listing_fields)
   end
 end

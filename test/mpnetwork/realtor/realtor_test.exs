@@ -84,7 +84,7 @@ defmodule Mpnetwork.RealtorTest do
       num_skylights: 42,
       lot_size: "42x42",
       attached_garage: true,
-      for_rent: true,
+      for_rent: false,
       zip: "11050",
       ext_urls: ["http://www.yahoo.com"],
       city: "New York",
@@ -116,8 +116,14 @@ defmodule Mpnetwork.RealtorTest do
       num_garages: 4,
       num_baths: 5,
       central_vac: true,
-      eef_led_lighting: true
+      eef_led_lighting: true,
+      sec_dep: nil,
+      commission_paid_by: nil
     }
+
+    @valid_rental_attrs %{@valid_attrs | listing_status_type: "NEW", for_sale: false, for_rent: true, prop_tax_usd: nil, vill_tax_usd: nil, section_num: nil, block_num: nil, lot_num: nil,
+      sec_dep: "1/2 rent", commission_paid_by: "L"}
+
     @update_attrs %{
       listing_status_type: "NEW",
       schools: "Man",
@@ -276,7 +282,7 @@ defmodule Mpnetwork.RealtorTest do
       assert listing.num_skylights == 42
       assert listing.lot_size == "42x42"
       assert listing.attached_garage == true
-      assert listing.for_rent == true
+      assert listing.for_rent == false
       assert listing.zip == "11050"
       assert listing.ext_urls == ["http://www.yahoo.com"]
       assert listing.live_at == ~N[2017-04-17 12:00:00]
@@ -314,6 +320,27 @@ defmodule Mpnetwork.RealtorTest do
 
     test "create_listing/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Realtor.create_listing(@invalid_attrs)
+    end
+
+    test "create_listing/1 with valid rental data creates a listing" do
+      user = user_fixture()
+      office = office_fixture()
+
+      valid_attrs_with_user_id_and_broker_id =
+        Enum.into(%{user_id: user.id, broker_id: office.id}, @valid_rental_attrs)
+
+      assert {:ok, %Listing{} = listing} =
+               Realtor.create_listing(valid_attrs_with_user_id_and_broker_id)
+
+      assert listing.for_rent == true
+      assert listing.for_sale == false
+      assert listing.prop_tax_usd == nil
+      assert listing.vill_tax_usd == nil
+      assert listing.section_num == nil
+      assert listing.block_num == nil
+      assert listing.lot_num == nil
+      assert listing.sec_dep == "1/2 rent"
+      assert listing.commission_paid_by == "L"
     end
 
     test "update_listing/2 with valid data updates the listing" do

@@ -603,6 +603,19 @@
             </div>
           </div>
 
+          <div class="row form-group">
+            <div class="col-xs-6<%= if f.errors[:commission_paid_by], do: " has-error" %>">
+              <%= label f, :commission_paid_by, class: "control-label" %>
+              <%= text_input f, :commission_paid_by, class: "form-control" %>
+              <%= error_tag f, :commission_paid_by %>
+            </div>
+            <div class="col-xs-6<%= if f.errors[:sec_dep], do: " has-error" %>">
+              <%= label f, :sec_dep, "Security deposit", class: "control-label" %>
+              <%= text_input f, :sec_dep, class: "form-control" %>
+              <%= error_tag f, :sec_dep %>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
