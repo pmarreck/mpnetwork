@@ -303,6 +303,14 @@
             </div>
           </div>
 
+          <!-- 38.75 -->
+          <div class="form-group row">
+            <div class="col-xs-6 omd_on">
+              <strong>Rental Available On:</strong>
+              <%= GlobalHelpers.utc_date_to_local_date(@listing.rental_available_on) %>
+            </div>
+          </div>
+
           <div class="form-group row">
             <!-- 39 -->
             <div class="col-xs-6 live_at">

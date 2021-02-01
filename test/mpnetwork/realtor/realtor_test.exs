@@ -118,11 +118,12 @@ defmodule Mpnetwork.RealtorTest do
       central_vac: true,
       eef_led_lighting: true,
       sec_dep: nil,
-      commission_paid_by: nil
+      commission_paid_by: nil,
+      rental_available_on: nil,
     }
 
     @valid_rental_attrs %{@valid_attrs | listing_status_type: "NEW", for_sale: false, for_rent: true, prop_tax_usd: nil, vill_tax_usd: nil, section_num: nil, block_num: nil, lot_num: nil,
-      sec_dep: "1/2 rent", commission_paid_by: "L"}
+      sec_dep: "1/2 rent", commission_paid_by: "L", rental_available_on: ~D[2018-04-01]}
 
     @update_attrs %{
       listing_status_type: "NEW",

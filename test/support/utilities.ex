@@ -258,7 +258,8 @@ defmodule Mpnetwork.Test.Support.Utilities do
     central_vac: true,
     eef_led_lighting: true,
     sec_dep: "1000",
-    commission_paid_by: "renter"
+    commission_paid_by: "renter",
+    rental_available_on: ~D[2018-03-01],
   }
 
   # supposedly a png of a red dot

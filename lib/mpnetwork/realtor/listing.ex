@@ -223,6 +223,7 @@ defmodule Mpnetwork.Realtor.Listing do
     commission_paid_by: :string,
     sec_dep: :string,
     deleted_at: :utc_datetime_usec,
+    rental_available_on: :date,
   ]
 
   @listing_belongs_to_fk_fields [
@@ -493,6 +494,7 @@ defmodule Mpnetwork.Realtor.Listing do
       [
         :sec_dep,
         :commission_paid_by,
+        :rental_available_on,
       ],
       :for_rent,
       true,
