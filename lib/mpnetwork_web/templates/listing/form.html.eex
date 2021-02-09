@@ -460,6 +460,18 @@
             <%= error_tag f, :star_deduc_usd %>
           </div>
 
+          <!-- 38.25 -->
+          <div class="form-group<%= if f.errors[:maintenance_usd], do: " has-error" %>">
+            <%= label f, :maintenance_usd, "Maintenance", class: "control-label" %>
+            <div class="input-group col-xs-6">
+              <div class="input-group-addon">
+                $
+              </div>
+              <%= number_input f, :maintenance_usd, class: "form-control" %>
+            </div>
+            <%= error_tag f, :maintenance_usd %>
+          </div>
+
           <!-- 38.5 -->
           <div class="form-group<%= if f.errors[:omd_on], do: " has-error" %>">
             <%= label f, :omd_on, "On Market Date (OMD)", class: "control-label" %>

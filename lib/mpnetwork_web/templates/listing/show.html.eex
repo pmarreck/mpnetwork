@@ -295,6 +295,12 @@
             <%= @listing.star_deduc_usd |> GlobalHelpers.dollars %>
           </div>
 
+          <!-- 38.25 -->
+          <div class="maintenance_usd">
+            <strong>Maintenance:</strong>
+            <%= @listing.maintenance_usd |> GlobalHelpers.dollars %>
+          </div>
+
           <!-- 38.5 -->
           <div class="form-group row">
             <div class="col-xs-6 omd_on">

@@ -224,6 +224,7 @@ defmodule Mpnetwork.Realtor.Listing do
     sec_dep: :string,
     deleted_at: :utc_datetime_usec,
     rental_available_on: :date,
+    maintenance_usd: :integer,
   ]
 
   @listing_belongs_to_fk_fields [
@@ -509,6 +510,22 @@ defmodule Mpnetwork.Realtor.Listing do
       :class_type,
       :land,
       "the property class is \"Land\""
+    )
+    |> validate_required_if_field_is_value(
+      [
+        :maintenance_usd
+      ],
+      :class_type,
+      :condo,
+      "the property class is \"Condo\""
+    )
+    |> validate_required_if_field_is_value(
+      [
+        :maintenance_usd
+      ],
+      :class_type,
+      :co_op,
+      "the property class is \"Co-op\""
     )
     |> listing_constraints
   end

@@ -120,6 +120,7 @@ defmodule Mpnetwork.RealtorTest do
       sec_dep: nil,
       commission_paid_by: nil,
       rental_available_on: nil,
+      maintenance_usd: 1000,
     }
 
     @valid_rental_attrs %{@valid_attrs | listing_status_type: "NEW", for_sale: false, for_rent: true, prop_tax_usd: nil, vill_tax_usd: nil, section_num: nil, block_num: nil, lot_num: nil,
@@ -421,6 +422,11 @@ defmodule Mpnetwork.RealtorTest do
     test "saving a listing with a class of Land is successful if beds/baths missing" do
       # this will just blow up if it's invalid
       listing_fixture(%{class_type: :land, num_bedrooms: nil, num_baths: nil, num_half_baths: nil})
+    end
+
+    test "saving a condo or co-op listing without providing the maintenance_usd fee fails validation" do
+      assert_raise MatchError, fn -> listing_fixture(%{class_type: :condo, maintenance_usd: nil}) end
+      assert_raise MatchError, fn -> listing_fixture(%{class_type: :co_op, maintenance_usd: nil}) end
     end
 
     # undelete tests
