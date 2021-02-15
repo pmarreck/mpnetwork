@@ -14,13 +14,20 @@
 
 ## Enable kernel poll and a few async threads
 ##+K true
++K true
 ##+A 5
+## Bumped to 96 per advising by https://www.cogini.com/files/elixir-performance.pdf
+## to set to at least 12 threads per core on which your node is deployed on
+## +A 96
 ## For OTP21+, the +A flag is not used anymore,
 ## +SDio replace it to use dirty schedulers
 ##+SDio 5
++SDio 96
 
 ## Increase number of concurrent ports/sockets
 ##-env ERL_MAX_PORTS 4096
+## OTP21+ version:
++Q 65536
 
 ## Tweak GC to run more often
 ##-env ERL_FULLSWEEP_AFTER 10
