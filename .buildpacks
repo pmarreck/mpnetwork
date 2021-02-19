@@ -1,4 +1,5 @@
 https://github.com/gigalixir/gigalixir-buildpack-clean-cache
+https://github.com/emk/heroku-buildpack-rust
 https://github.com/alex88/heroku-buildpack-vips
 https://github.com/HashNuke/heroku-buildpack-elixir
 https://github.com/gjaldon/heroku-buildpack-phoenix-static

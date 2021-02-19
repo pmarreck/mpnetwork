@@ -21,15 +21,16 @@ defmodule Mpnetwork.Upload do
     # note that these are all (and the only, currently) image types that ExImageInfo recognizes
     case content_type do
       "image/jpeg" -> true
-      "image/gif" -> true
-      "image/png" -> true
-      "image/bmp" -> true
-      "image/psd" -> true
+      "image/gif"  -> true
+      "image/png"  -> true
+      "image/bmp"  -> true
+      "image/psd"  -> true
       "image/tiff" -> true
       "image/webp" -> true
       "image/heic" -> true
       "image/heif" -> true
-      "image/jp2" -> true
+      "image/jp2"  -> true
+      # "image/jpxl" -> true # jpeg-xl is coming. here for future support
       _ -> false
     end
   end
@@ -41,6 +42,12 @@ defmodule Mpnetwork.Upload do
   def extract_meta_from_binary_data(binary_data, claimed_content_type) do
     case ExImageInfo.info(binary_data) do
       nil -> {claimed_content_type, nil, nil}
+      {a, b, c, _} -> {a, b, c}
+    end
+  end
+  def extract_meta_from_binary_data!(binary_data) do
+    case ExImageInfo.info(binary_data) do
+      nil -> raise "ExImageInfo found no information about image"
       {a, b, c, _} -> {a, b, c}
     end
   end

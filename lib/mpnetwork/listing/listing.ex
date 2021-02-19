@@ -6,6 +6,10 @@ defmodule Mpnetwork.Listing do
   import Ecto.Query, warn: false
   alias Mpnetwork.Repo
   alias Briefly, as: Temp
+  alias Mogrify, as: SlowImage
+  use Mogrify.Options # this is ugly, want to remove it someday
+  alias Elxvips, as: FastImage
+  alias Elxvips.ImageBytes
   require Mpnetwork.Upload
   alias Mpnetwork.Upload
 
@@ -91,8 +95,6 @@ defmodule Mpnetwork.Listing do
 
   defp do_rotate_attachment(_degrees, nil), do: nil
   defp do_rotate_attachment(degrees, attachment) when degrees in [-90, 90] do
-    import Mogrify
-    use Mogrify.Options
 
     # write temp file to disk
     {:ok, tempfile} = Temp.create()
@@ -100,7 +102,7 @@ defmodule Mpnetwork.Listing do
     File.write!(tempfile, attachment.data)
     # do rotation on disk
     rotated_image =
-      open(tempfile) |> add_option(option_rotate("#{degrees}")) |> quality("85") |> save
+      SlowImage.open(tempfile) |> SlowImage.add_option(option_rotate("#{degrees}")) |> SlowImage.quality("85") |> SlowImage.save
 
     # read new file off disk into memory
     rotated_image_data = File.read!(rotated_image.path)
@@ -209,7 +211,7 @@ defmodule Mpnetwork.Listing do
   end
 
   defp do_get_attachment(nil, _width, _height), do: nil
-  defp do_get_attachment(attachment, width, height) do
+  defp do_get_attachment(attachment, width, height) when is_integer(width) and is_integer(height) do
     # We need to rate-limit mogrify to avoid server memory spikes
     case ExRated.inspect_bucket(
            :mogrify_rate_limiter,
@@ -218,21 +220,22 @@ defmodule Mpnetwork.Listing do
          ) do
       {_count, count_remaining, _ms_to_next_bucket, _created_at, _updated_at}
       when count_remaining > 0 ->
-        import Mogrify
         # then we will write its binary data to a local tempfile
-        {:ok, path} = Temp.create()
+        # {:ok, path} = Temp.create()
         # should close file automatically
-        File.write!(path, attachment.data)
+        # File.write!(path, attachment.data)
         # then we will resize it
-        image = open(path) |> resize("#{width}x#{height}>") |> save
+        # image = SlowImage.open(path) |> SlowImage.resize_to_limit("#{width}x#{height}") |> SlowImage.save
+        {:ok, %ImageBytes{bytes: new_image_data}} = FastImage.from_bytes(attachment.data) |> FastImage.resize(width: width, height: height) |> FastImage.to_bytes()
+        new_image_data = :binary.list_to_bin(new_image_data)
         # then we will reread the new file's binary data
-        new_image_data = File.read!(image.path)
+        # new_image_data = File.read!(image.path)
         # then we will parse the new file's actual dimensions
         {binary_data_content_type, width_pixels, height_pixels} =
-          Upload.extract_meta_from_binary_data(new_image_data, attachment.content_type)
+          Upload.extract_meta_from_binary_data!(new_image_data)
 
         # clean up the non-tempfile
-        File.rm!(image.path)
+        # File.rm!(image.path)
         # then we will return this (which currently gets stored in the app cache)
         # applies WITHOUT saving, FYI! DO NOT SAVE THIS :O
         attachment

@@ -136,14 +136,23 @@ defmodule Mpnetwork.Cache do
   def purge(), do: purge(Config.get(:cache_name))
   def purge(cache_name), do: purge(cache_name, Config.get(:default_cache_expiry))
 
+  def purge(_cache_name, :now) do
+    from(c in Cache, select: c.id) |> Repo.delete_all()
+  end
+
   def purge(_cache_name, opts) do
     ago = NaiveDateTime.utc_now() |> Timex.shift(opts)
     # select all keys whose updated_at is older than the configured duration
     from(
       c in Cache,
-      where: c.updated_at < ^ago
+      where: c.updated_at < ^ago,
+      select: c.id
     )
     |> Repo.delete_all()
+  end
+
+  def purge_default_cache_now() do
+    purge(Config.get(:cache_name), :now)
   end
 
   # def dump(cache_name, path, opts \\ [])

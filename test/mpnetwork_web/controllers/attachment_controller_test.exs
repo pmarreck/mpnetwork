@@ -158,4 +158,22 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     assert response(conn1, 200) == @test_attachment_binary_data
     assert response(conn2, 200) == @test_attachment_binary_data
   end
+
+  test "actually resizes images on request", %{conn: conn} do
+    {_listing, attachment} = attachment_fixture(:listing, conn.assigns.current_user)
+    assert Routes.attachment_path(conn, :show, attachment.id, w: 3, h: 3) == "/attachments/#{attachment.id}?w=3&h=3"
+    {binary_data_content_type, width_pixels, height_pixels} =
+          Upload.extract_meta_from_binary_data(@test_attachment_binary_data, attachment.content_type)
+    assert binary_data_content_type == "image/png"
+    assert width_pixels == 5
+    assert height_pixels == 5
+    conn1 = get(conn, Routes.attachment_path(conn, :show, attachment.id, w: 3, h: 3))
+    assert (data = response(conn1, 200))
+    assert Base.encode64(data) != @test_attachment_binary_data_base64
+    {binary_data_content_type, width_pixels, height_pixels} =
+          Upload.extract_meta_from_binary_data(data, attachment.content_type)
+    assert width_pixels == 3
+    assert height_pixels == 3
+    assert binary_data_content_type == "image/png"
+  end
 end

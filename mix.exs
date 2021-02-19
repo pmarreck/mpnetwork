@@ -5,9 +5,17 @@ defmodule Mpnetwork.Mixfile do
     [
       app: :mpnetwork,
       version: String.trim(File.read!("VERSION")),
-      elixir: "~> 1.8",
+      elixir: "~> 1.11.3",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      # compilers: [:rustler, :phoenix, :gettext] ++ Mix.compilers(),
+      # rustler_crates: [
+      #   lvips: [
+      #     path: "native/lvips",
+      #     mode: (if Mix.env() == :prod, do: :release, else: :debug)
+      #   ]
+      # ],
+      xref: [exclude: [EEx, Toml]],
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -101,13 +109,18 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_metrics, "~> 0.4"},
       # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
-      {:oban, "~> 2.0"},
+      {:oban, "~> 2.4"},
       # for-pay deps:
-      {:oban_web, "~> 2.1", organization: "oban"},
+      {:oban_web, "~> 2.5", organization: "oban"},
+      {:oban_pro, "~> 0.6", organization: "oban"},
       {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
       {:enquirer, "~> 0.1.0"},
+      # running hog-wild with rust here, since it's still quite a moving target
+      # ... hey, my test suite includes image manips, so...!
+      # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
+      {:elxvips, "~> 0.0.9"},
     ]
   end
 
