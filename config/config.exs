@@ -145,9 +145,10 @@ config :mpnetwork, Mpnetwork.Repo,
 
 # Configures ex_rated (rate limiter) used in image conversion
 # Current limit is 4 images a second
+# EDIT: bumped to 20 images a second since resizing handled by libvips now :)
 config :ex_rated,
   bucket_time: 1_000,
-  bucket_limit: 4
+  bucket_limit: 20
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

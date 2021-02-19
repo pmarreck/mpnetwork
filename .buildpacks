@@ -1,6 +1,6 @@
 https://github.com/gigalixir/gigalixir-buildpack-clean-cache
 https://github.com/emk/heroku-buildpack-rust
-https://github.com/alex88/heroku-buildpack-vips
+https://github.com/jcupitt/heroku-buildpack-vips/tree/add-heif-webp
 https://github.com/HashNuke/heroku-buildpack-elixir
 https://github.com/gjaldon/heroku-buildpack-phoenix-static
 https://github.com/gigalixir/gigalixir-buildpack-mix
