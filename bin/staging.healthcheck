@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+proj=${PWD##*/}
+health=$(gigalixir ps -a $proj-staging | jq .pods[0].status)
+if [ $health == "\"Healthy\"" ]
+then
+  echo "Health check: SUCCESS"
+  exit 0
+else
+  echo "Failed health check :("
+  echo "Expected value: 'Healthy'"
+  echo "Got value: $health"
+  exit 1
+fi

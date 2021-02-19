@@ -8,6 +8,7 @@ defmodule Mpnetwork.Listing do
   alias Briefly, as: Temp
   alias Mogrify, as: SlowImage
   use Mogrify.Options # this is ugly, want to remove it someday
+  require Elxvips
   alias Elxvips, as: FastImage
   alias Elxvips.ImageBytes
   require Mpnetwork.Upload
