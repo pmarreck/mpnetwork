@@ -27,4 +27,4 @@ libcfitsio-dev
 libopenexr-dev
 libopenslide-dev
 # and last but certainly not least...
-libvips
+libvips-dev
