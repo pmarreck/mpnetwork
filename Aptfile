@@ -1,0 +1,30 @@
+# This is the config file for the heroku/heroku-buildpack-apt buildpack.
+# You can list packages
+# libexample-dev
+# or include links to specific .deb files
+# https://downloads.example.com/example.deb
+# or add custom apt repos (only required if using packages outside of the standard Ubuntu APT repositories)
+# :repo:deb https://apt.example.com/ example-distro main
+# The following are mostly libraries that libvips either needs or will use if present,
+# taken from https://libvips.github.io/libvips/install.html
+libglib2.0-dev
+libexpat1-dev
+liborc-0.4-dev
+libjpeg-turbo8-dev
+libpng-dev
+pngquant
+libgif-dev
+librsvg2-dev
+libexif-dev
+libheif-dev
+libwebp-dev
+libpoppler-glib-dev
+libtiff-dev
+libfftw3-3
+libmatio-dev
+libpangoft2-1.0-0
+libcfitsio-dev
+libopenexr-dev
+libopenslide-dev
+# and last but certainly not least...
+libvips-dev
