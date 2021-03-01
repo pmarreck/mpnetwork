@@ -1,7 +1,7 @@
 https://github.com/gigalixir/gigalixir-buildpack-clean-cache.git#71396eb20aa807984b63f713923bdbf8faa11b65
 https://github.com/emk/heroku-buildpack-rust.git#cfa0f0621411f0dbb46df9d4740e119b7a459ccc
 https://github.com/heroku/heroku-buildpack-apt.git#a338a17d1fc5dc444162939630e0c46f368ce787
-https://github.com/pmarreck/heroku-buildpack-vips.git#cb69667b691daff6b0fe647a5c6cc3d97e55e822
+https://github.com/pmarreck/heroku-buildpack-vips.git
 https://github.com/HashNuke/heroku-buildpack-elixir.git#b9092d471ebb0163dbf1bf733b719cf1e31c8f64
 https://github.com/gjaldon/heroku-buildpack-phoenix-static.git#b44e094c9da48483af5e221ff11f954a8b85479b
 https://github.com/gigalixir/gigalixir-buildpack-mix.git#815fac4aea7fcea369489f57621fca278f69a454
