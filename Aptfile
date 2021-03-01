@@ -7,6 +7,20 @@
 # :repo:deb https://apt.example.com/ example-distro main
 # The following are mostly libraries that libvips either needs or will use if present,
 # taken from https://libvips.github.io/libvips/install.html
+build-essential
+autoconf
+automake
+libtool
+intltool
+gobject-introspection
+gtk-doc-tools
+unzip
+wget
+git
+pkg-config
+libclang-dev
+libreadline-dev
+libglib2.0-0
 libglib2.0-dev
 libexpat1-dev
 liborc-0.4-dev
@@ -20,6 +34,9 @@ libheif-dev
 libwebp-dev
 libpoppler-glib-dev
 libtiff-dev
+libtiff5-dev
+liblcms2-dev
+libxml2-dev
 libfftw3-3
 libmatio-dev
 libpangoft2-1.0-0
@@ -27,4 +44,5 @@ libcfitsio-dev
 libopenexr-dev
 libopenslide-dev
 # and last but certainly not least...
-libvips-dev
+# NOTE: may still need to compile locally because otherwise the vips.h headers still aren't found :/
+# libvips-dev

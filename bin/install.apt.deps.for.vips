@@ -1,0 +1,2 @@
+# apt install everything in the Aptfile, filtering out comments and :repo:'s
+cat Aptfile | grep -v -s -e '^#' | grep -v -s -e "^:repo:" | xargs sudo apt install -y
