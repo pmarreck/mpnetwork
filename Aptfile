@@ -24,6 +24,7 @@ libreadline-dev
 libglib2.0-0
 libglib2.0-dev
 libexpat1-dev
+libgsf-1-dev
 liborc-0.4-dev
 libjpeg-turbo8-dev
 libpng-dev
@@ -46,4 +47,4 @@ libopenexr-dev
 libopenslide-dev
 # and last but certainly not least...
 # NOTE: may still need to compile locally because otherwise the vips.h headers still aren't found :/
-# libvips-dev
+libvips-tools
