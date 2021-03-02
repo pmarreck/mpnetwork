@@ -12,6 +12,7 @@ autoconf
 automake
 libtool
 intltool
+libgirepository1.0-dev
 gobject-introspection
 gtk-doc-tools
 unzip
