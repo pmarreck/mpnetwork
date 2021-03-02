@@ -7,42 +7,44 @@
 # :repo:deb https://apt.example.com/ example-distro main
 # The following are mostly libraries that libvips either needs or will use if present,
 # taken from https://libvips.github.io/libvips/install.html
+# and from the travis config file for elxvips
+# And sorted alphabetically
 build-essential
-autoconf
-automake
-libtool
-intltool
+clang
+curl
+gettext
+git
 gobject-introspection
 gtk-doc-tools
-unzip
-wget
-git
-pkg-config
-libclang-dev
-libreadline-dev
-libglib2.0-0
-libglib2.0-dev
-libexpat1-dev
-liborc-0.4-dev
-libjpeg-turbo8-dev
-libpng-dev
-pngquant
-libgif-dev
-librsvg2-dev
-libexif-dev
-libheif-dev
-libwebp-dev
-libpoppler-glib-dev
-libtiff-dev
-libtiff5-dev
-liblcms2-dev
-libxml2-dev
-libfftw3-3
-libmatio-dev
-libpangoft2-1.0-0
 libcfitsio-dev
+libclang-dev
+libexif-dev
+libfftw3-3
+libfftw3-dev
+libgif-dev
+libglib2.0-dev
+libgsf-1-dev
+libgtk2.0-dev
+libheif-dev
+libjpeg-turbo8-dev
+libmagickwand-dev
+libmatio-dev
 libopenexr-dev
 libopenslide-dev
+liborc-0.4-0
+liborc-0.4-dev
+libpangoft2-1.0-0
+libpng-dev
+libpoppler-cpp-dev
+librsvg2-dev
+libtiff5-dev
+libtool
+libwebp-dev
+libxml2-dev
+llvm
+pngquant
+swig
+wget
 # and last but certainly not least...
 # NOTE: may still need to compile locally because otherwise the vips.h headers still aren't found :/
 # libvips-dev
