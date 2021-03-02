@@ -47,4 +47,4 @@ swig
 wget
 # and last but certainly not least...
 # NOTE: may still need to compile locally because otherwise the vips.h headers still aren't found :/
-# libvips-dev
+# libvips-tools
