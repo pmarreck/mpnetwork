@@ -33,7 +33,7 @@ librsvg2-dev
 libexif-dev
 libheif-dev
 libwebp-dev
-libpoppler-glib-dev
+libpoppler-cpp-dev
 libtiff-dev
 libtiff5-dev
 liblcms2-dev
