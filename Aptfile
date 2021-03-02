@@ -9,6 +9,9 @@
 # taken from https://libvips.github.io/libvips/install.html
 # and from the travis config file for elxvips
 # And sorted alphabetically
+autoconf
+autogen
+automake
 build-essential
 clang
 curl
@@ -21,6 +24,7 @@ libclang-dev
 libexif-dev
 libfftw3-3
 libfftw3-dev
+libfm4
 libgif-dev
 libglib2.0-dev
 libgsf-1-dev
@@ -42,6 +46,7 @@ libtool
 libwebp-dev
 libxml2-dev
 llvm
+pkg-config
 pngquant
 swig
 wget
