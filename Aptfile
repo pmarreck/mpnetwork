@@ -12,6 +12,7 @@ autoconf
 automake
 libtool
 intltool
+llvm-11-dev
 libgirepository1.0-dev
 gobject-introspection
 gtk-doc-tools
@@ -19,7 +20,7 @@ unzip
 wget
 git
 pkg-config
-libclang-dev
+# libclang-dev
 libreadline-dev
 libglib2.0-0
 libglib2.0-dev
