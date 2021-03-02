@@ -1,3 +1,13 @@
 #!/bin/bash
 
 mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
+
+# Can probably be done better using `which`, but this finds executables
+# that aren't even on the PATH for some reason.
+find_fucking_executable() {
+  return $(find / -name $1 -executable -print -quit 2>/dev/null || : )
+}
+
+export LLVM_CONFIG_PATH=$(find_fucking_executable "llvm-config")
+
+echo "For the record, llvm-config exists at: $LLVM_CONFIG_PATH"
