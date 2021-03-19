@@ -1,6 +1,24 @@
+# syntax=docker/dockerfile:latest
+
 FROM alpine:latest AS build
 
-# syntax=docker/dockerfile:latest
+# Set app name
+ENV APP_NAME="mpnetwork"
+
+# Set build ENV
+ARG MIX_ENV=prod
+ENV MIX_ENV=${MIX_ENV}
+
+# first configure locale, which is a mess and defaults to latin1, which is just... NO
+# Taken from https://grrr.tech/posts/2020/add-locales-to-alpine-linux-docker-image/
+ENV LANG=en_US.UTF-8 MUSL_LOCALE_DEPS="cmake make musl-dev gcc gettext-dev libintl" MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+RUN apk add --no-cache \
+    $MUSL_LOCALE_DEPS \
+    && wget https://gitlab.com/rilian-la-te/musl-locales/-/archive/master/musl-locales-master.zip \
+    && unzip musl-locales-master.zip \
+      && cd musl-locales-master \
+      && cmake -DLOCALE_PROFILE=OFF -D CMAKE_INSTALL_PREFIX:PATH=/usr . && make && make install \
+      && cd .. && rm -r musl-locales-master
 
 # ARG VIPS_VERSION=8.10.5
 # ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
@@ -54,7 +72,7 @@ RUN set -x -o pipefail \
 # So apparently dynamically-linked crates won't compile correctly on musl toolchains (as in alpine)
 # so we will force static compilation
 ENV RUSTFLAGS="-C target-feature=-crt-static"
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain nightly
 ENV PATH=/root/.cargo/bin:$PATH
 
 # Install Elixir, Erlang and npm
@@ -115,8 +133,8 @@ RUN apk add --no-cache elixir npm
 # Prepare build dir
 WORKDIR /app
 
-# Set build ENV
-ENV MIX_ENV=prod
+# Install Trivy vulnerability scanner
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
 # Build javascript assets
 # I run this before the mix deps install because it changes less frequently in this project,
@@ -137,28 +155,73 @@ COPY mix.exs mix.lock ./
 COPY config config
 COPY VERSION VERSION
 
+# assuming these are all already in your ENV of your project directory, perhaps via direnv and an .envrc file...
+# docker build --rm --build-arg SECRET_KEY_BASE --build-arg LIVE_VIEW_SIGNING_SALT --build-arg SPARKPOST_API_KEY --build-arg FQDN --build-arg STATIC_URL --build-arg LOGFLARE_API_KEY --build-arg LOGFLARE_DRAIN_ID --build-arg DATABASE_URL --build-arg TEST_DATABASE_URL --build-arg OBAN_WEB_LICENSE_KEY .
 ARG SECRET_KEY_BASE
+ENV SECRET_KEY_BASE=${SECRET_KEY_BASE}
 ARG LIVE_VIEW_SIGNING_SALT
+ENV LIVE_VIEW_SIGNING_SALT=${LIVE_VIEW_SIGNING_SALT}
 ARG SPARKPOST_API_KEY
+ENV SPARKPOST_API_KEY=${SPARKPOST_API_KEY}
 ARG FQDN
+ENV FQDN=${FQDN}
 ARG STATIC_URL
+ENV STATIC_URL=${STATIC_URL}
 ARG LOGFLARE_API_KEY
+ENV LOGFLARE_API_KEY=${LOGFLARE_API_KEY}
 ARG LOGFLARE_DRAIN_ID
+ENV LOGFLARE_DRAIN_ID=${LOGFLARE_DRAIN_ID}
 ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+ARG TEST_DATABASE_URL
+ENV TEST_DATABASE_URL=${TEST_DATABASE_URL}
 ARG OBAN_WEB_LICENSE_KEY
+ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY}
 RUN mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
 RUN mix do deps.get, deps.compile
 RUN mix phx.digest
+
+# Scan for local vulnerabilities with Trivy
+# I can't seem to echo or cat the stdout of this command, so commenting out for now
+# RUN echo $(trivy fs /)
 
 # compile and build release
 COPY lib lib
 # uncomment COPY if rel/ exists... may not need anyway?
 COPY rel rel
+# run the test suite first to make sure things are up to snuff
+# separate out the compilation in case it is successful but the test fails,
+# so that you don't need to keep recompiling just to rerun the test.
+# RUN MIX_ENV=test mix do deps.compile, compile
+# RUN echo $TEST_DATABASE_URL
+# RUN mix test
 RUN mix do compile, release
+
+# test target
+FROM build AS test
+
+COPY . .
+
+WORKDIR /app
+
+CMD ["mix", "test"]
+
+# dev target
+FROM build AS dev
+
+RUN apk add zsh
+
+COPY . .
+
+WORKDIR /app
+
+CMD ["zsh"]
 
 # prepare release image
 FROM alpine:latest AS app
 RUN apk add --no-cache openssl ncurses-libs
+
+ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
 
 WORKDIR /app
 
@@ -166,11 +229,17 @@ RUN chown nobody:nobody /app
 
 USER nobody:nobody
 
-COPY --from=build /usr/local /usr/local
+COPY --from=build /usr /usr
 
-COPY --from=build /usr/include /usr/include
+# COPY --from=build /usr/local /usr/local
 
-ENV APP_NAME="mpnetwork"
+# COPY --from=build /usr/bin /usr/bin
+
+# COPY --from=build /usr/lib /usr/lib
+
+# COPY --from=build /usr/include /usr/include
+
+# COPY --from=build /usr/share /usr/share
 
 COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
 
