@@ -1,0 +1,63 @@
+version: '3.2'
+services:
+  db:
+    image: pg13
+    environment:
+      # Set user/password for Postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # Set a path where Postgres should store the data
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file: 
+      - .env
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+      target: dev
+      args:
+        - APP_NAME
+        - USER
+        - MIX_ENV
+        - SECRET_KEY_BASE
+        - LIVE_VIEW_SIGNING_SALT
+        - SPARKPOST_API_KEY
+        - FQDN
+        - STATIC_URL
+        - LOGFLARE_API_KEY
+        - LOGFLARE_DRAIN_ID
+        - POSTGRES_PASSWORD
+        - DATABASE_URL
+        - TEST_DATABASE_URL
+        - OBAN_WEB_LICENSE_KEY
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+      - type: bind
+        source: /home/${USER}
+        target: /home/${USER}
+    ports:
+      - "4000:4000"
+    environment:
+      # Variables to connect to our Postgres server
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: ${APP_NAME}_dev
+      PGPORT: 5432
+      # Hostname of our Postgres container
+      PGHOST: db
+    env_file: 
+      - .env
+    depends_on:
+      - db
+    command:
+      - ./run.docker-compose.sh
+# Define the volumes
+volumes:
+  pgdata:

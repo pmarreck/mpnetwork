@@ -34,7 +34,7 @@ npm-debug.log
 /config/*.secret.exs
 
 # direnv config
-.envrc
+.env*
 
 # postgres logfiles
 logfile

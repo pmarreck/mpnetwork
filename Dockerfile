@@ -6,10 +6,70 @@ FROM alpine:latest AS build
 ENV APP_NAME="mpnetwork"
 
 # Set build ENV
-ARG MIX_ENV=prod
-ENV MIX_ENV=${MIX_ENV}
+ARG MIX_ENV
+ENV MIX_ENV=${MIX_ENV:-test}
+# assuming these are all already in your ENV of your project directory, perhaps via direnv and an .envrc file...
+# you can rebuild everything with this:
+# docker build --no-cache --progress=plain -t mpnetwork \
+  # --target=$MIX_ENV \
+  # --build-arg USER \
+  # --build-arg APP_NAME \
+  # --build-arg MIX_ENV \
+  # --build-arg SECRET_KEY_BASE \
+  # --build-arg LIVE_VIEW_SIGNING_SALT \
+  # --build-arg SPARKPOST_API_KEY \
+  # --build-arg FQDN \
+  # --build-arg STATIC_URL \
+  # --build-arg LOGFLARE_API_KEY \
+  # --build-arg LOGFLARE_DRAIN_ID \
+  # --build-arg POSTGRES_PASSWORD \
+  # --build-arg DATABASE_URL \
+  # --build-arg TEST_DATABASE_URL \
+  # --build-arg OBAN_WEB_LICENSE_KEY \
+  # .
+ARG APP_NAME
+ENV APP_NAME=${APP_NAME:-mpnetwork}
+ARG MIX_ENV
+ENV MIX_ENV=${MIX_ENV:-dev}
+ARG SECRET_KEY_BASE
+ENV SECRET_KEY_BASE=${SECRET_KEY_BASE:-0000000000000000000000000000000000000000000000000000000000000000}
+ARG LIVE_VIEW_SIGNING_SALT
+ENV LIVE_VIEW_SIGNING_SALT=${LIVE_VIEW_SIGNING_SALT:-000000000000000000000000000000}
+ARG SPARKPOST_API_KEY
+ENV SPARKPOST_API_KEY=${SPARKPOST_API_KEY:-0000000000000000000000000000000000000000}
+ARG FQDN
+ENV FQDN=${FQDN:-localhost}
+ARG STATIC_URL
+ENV STATIC_URL=${STATIC_URL:-localhost}
+ARG LOGFLARE_API_KEY
+ENV LOGFLARE_API_KEY=${LOGFLARE_API_KEY:-000000000000}
+ARG LOGFLARE_DRAIN_ID
+ENV LOGFLARE_DRAIN_ID=${LOGFLARE_DRAIN_ID:-00000000-0000-0000-0000-000000000000}
+ARG POSTGRES_PASSWORD
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@localhost:5432/${APP_NAME}_dev}
+ARG TEST_DATABASE_URL
+ENV TEST_DATABASE_URL=${TEST_DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@localhost:5432/${APP_NAME}_test}
+ARG OBAN_WEB_LICENSE_KEY
+ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY:-00000000000000000000000000000000}
 
-# first configure locale, which is a mess and defaults to latin1, which is just... NO
+# Add underprivileged non-root user to run the app or log in as.
+# I set the uid and gid to the same as my $USER's in my current host (WSL2)
+# This will at least solve the most typical permissions issues you'd get with bind-mounted volumes (-v arg to the "docker run" command)
+# You may want to get more sophisticated with this in the future:
+# https://docs.docker.com/engine/security/userns-remap/
+# In the test and dev targets, this user will be added to the sudo group and given a password
+# but ONLY in those targets
+ARG USER
+ENV USER=${USER:-elixirdev}
+ENV UID=1000
+ENV GID=1000
+RUN addgroup -S -g ${GID} ${USER} && \
+    adduser --disabled-password --home /home/${USER} -S -G ${USER} -s /bin/zsh -u ${UID} ${USER}
+
+# USER root
+# Configure locale, which is a mess and defaults to latin1, which is just... NO
 # Taken from https://grrr.tech/posts/2020/add-locales-to-alpine-linux-docker-image/
 ENV LANG=en_US.UTF-8 MUSL_LOCALE_DEPS="cmake make musl-dev gcc gettext-dev libintl" MUSL_LOCPATH="/usr/share/i18n/locales/musl"
 RUN apk add --no-cache \
@@ -53,13 +113,22 @@ RUN apk add --no-cache \
 
 # add vips-dev and deps
 RUN set -x -o pipefail \
- && apk add --update --no-cache alpine-sdk \
- && apk add \
+ && apk add --no-cache alpine-sdk \
+ && apk add --no-cache \
     git curl build-base clang zlib libxml2 glib gobject-introspection \
     libjpeg-turbo libexif lcms2 fftw giflib libpng \
     libwebp orc tiff poppler-glib librsvg libgsf openexr \
     libheif libimagequant pango \
- && apk add --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
+ && apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
+
+# Install Elixir, Erlang, node, npm, psql
+RUN apk add --no-cache elixir nodejs npm postgresql-client
+
+# make sure psql is there
+RUN psql --version
+
+# Create mountpoint (or future app dir if prod)
+RUN mkdir /app
 
 # Install Rust
 # RUN apk add --no-cache rust cargo
@@ -70,13 +139,19 @@ RUN set -x -o pipefail \
 
 # Add Rust and configure
 # So apparently dynamically-linked crates won't compile correctly on musl toolchains (as in alpine)
-# so we will force static compilation
+# so we will force static compilation.
+# Additionally, we will do this as the underprivileged user
+USER ${USER}:${USER}
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain nightly
-ENV PATH=/root/.cargo/bin:$PATH
+# Rustup should hopefully modify PATH appropriately, otherwise: EDIT Aaaaand nope, it didn't, so
+ENV PATH=/home/$USER/.cargo/bin:$PATH
+RUN mkdir /home/${USER}/bin
+# add home/bin to PATH... but add it at the end so this user can't override any builtins
+ENV PATH=$PATH:/home/${USER}/bin
 
-# Install Elixir, Erlang and npm
-RUN apk add --no-cache elixir npm
+# Install Trivy vulnerability scanner
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /home/${USER}/bin
 
 # RUN apk add --no-cache \
 #         gcc \
@@ -130,11 +205,89 @@ RUN apk add --no-cache elixir npm
 #  && mkdir build \
 #  && tar czf build/libvips.tar.gz bin include lib
 
-# Prepare build dir
+##### TEST TARGET #####
+FROM build AS test
+
+# don't need to copy anything, working directory bind-mounted
+# COPY . .
+
+# bind mount will be to /app from cwd
 WORKDIR /app
 
-# Install Trivy vulnerability scanner
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+CMD ["mix", "test"]
+
+##### DEV TARGET #####
+FROM build AS dev
+
+USER root
+
+# the port we serve from
+EXPOSE 4000
+
+RUN chown ${USER}:${USER} /app
+
+RUN apk add --no-cache git curl zsh
+
+# Install python/pip
+# EDIT: Nope, removed. Python sucks anyway. (So does Go, but... yeah...)
+# ENV PYTHONUNBUFFERED=1
+# RUN apk add --no-cache python3 && ln -sf python3 /usr/bin/python
+# RUN python3 -m ensurepip
+# RUN pip3 install --no-cache --upgrade pip setuptools
+# # the above leaves a bunch of shite in tmp that I don't want to make part of my image
+# RUN rm -rf /tmp/*
+# # yeah, I have no idea which version this actually installs so...
+# ENV PYTHONPATH=/usr/lib/python3.7/site-packages:/usr/lib/python3.8/site-packages:/usr/lib/python3.9/site-packages
+
+USER ${USER}:${USER}
+ENV SHELL=/bin/zsh
+
+WORKDIR /home/${USER}
+
+# Install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Add zsh because it's about time and it's awesome
+# RUN apk add --no-cache zsh # Nope, let's use prezto's method:
+# EDIT: Commented all this out and just bind-mounted my WSL2 home directory to the container's home directory instead
+# RUN git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto
+# RUN setopt EXTENDED_GLOB && \
+#     for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do \
+#       ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"; \
+#     done
+# we will mount the working directory to /app
+# WORKDIR /app
+
+# needed to prevent zsh from firing up an intro wizard Every. Single. Time.
+# edit: not anymore
+# RUN echo "#placeholder" > .zshrc
+
+CMD ["zsh"]
+
+# prepare release image
+##### PROD TARGET #####
+FROM alpine:latest AS prod
+
+EXPOSE 80 443
+
+RUN apk add --no-cache openssl ncurses-libs
+
+# Copy system binaries from build that we need to run npm and other things
+COPY --from=build --chown=nobody:nobody /usr /usr
+
+# COPY --from=build /usr/local /usr/local
+
+# COPY --from=build /usr/bin /usr/bin
+
+# COPY --from=build /usr/lib /usr/lib
+
+# COPY --from=build /usr/include /usr/include
+
+# COPY --from=build /usr/share /usr/share
+
+# Prepare build dir
+WORKDIR /app
 
 # Build javascript assets
 # I run this before the mix deps install because it changes less frequently in this project,
@@ -155,29 +308,7 @@ COPY mix.exs mix.lock ./
 COPY config config
 COPY VERSION VERSION
 
-# assuming these are all already in your ENV of your project directory, perhaps via direnv and an .envrc file...
-# docker build --rm --build-arg SECRET_KEY_BASE --build-arg LIVE_VIEW_SIGNING_SALT --build-arg SPARKPOST_API_KEY --build-arg FQDN --build-arg STATIC_URL --build-arg LOGFLARE_API_KEY --build-arg LOGFLARE_DRAIN_ID --build-arg DATABASE_URL --build-arg TEST_DATABASE_URL --build-arg OBAN_WEB_LICENSE_KEY .
-ARG SECRET_KEY_BASE
-ENV SECRET_KEY_BASE=${SECRET_KEY_BASE}
-ARG LIVE_VIEW_SIGNING_SALT
-ENV LIVE_VIEW_SIGNING_SALT=${LIVE_VIEW_SIGNING_SALT}
-ARG SPARKPOST_API_KEY
-ENV SPARKPOST_API_KEY=${SPARKPOST_API_KEY}
-ARG FQDN
-ENV FQDN=${FQDN}
-ARG STATIC_URL
-ENV STATIC_URL=${STATIC_URL}
-ARG LOGFLARE_API_KEY
-ENV LOGFLARE_API_KEY=${LOGFLARE_API_KEY}
-ARG LOGFLARE_DRAIN_ID
-ENV LOGFLARE_DRAIN_ID=${LOGFLARE_DRAIN_ID}
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-ARG TEST_DATABASE_URL
-ENV TEST_DATABASE_URL=${TEST_DATABASE_URL}
-ARG OBAN_WEB_LICENSE_KEY
-ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY}
-RUN mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
+RUN mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
 RUN mix do deps.get, deps.compile
 RUN mix phx.digest
 
@@ -197,49 +328,9 @@ COPY rel rel
 # RUN mix test
 RUN mix do compile, release
 
-# test target
-FROM build AS test
-
-COPY . .
-
-WORKDIR /app
-
-CMD ["mix", "test"]
-
-# dev target
-FROM build AS dev
-
-RUN apk add zsh
-
-COPY . .
-
-WORKDIR /app
-
-CMD ["zsh"]
-
-# prepare release image
-FROM alpine:latest AS app
-RUN apk add --no-cache openssl ncurses-libs
-
-ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
-
-WORKDIR /app
-
 RUN chown nobody:nobody /app
 
 USER nobody:nobody
-
-COPY --from=build /usr /usr
-
-# COPY --from=build /usr/local /usr/local
-
-# COPY --from=build /usr/bin /usr/bin
-
-# COPY --from=build /usr/lib /usr/lib
-
-# COPY --from=build /usr/include /usr/include
-
-# COPY --from=build /usr/share /usr/share
 
 COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
 

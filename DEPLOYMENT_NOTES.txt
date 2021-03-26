@@ -6,3 +6,23 @@ NOTES ON DOWNGRADING
 Make sure to rm -rf BOTH the deps AND _build dirs.
 If you are using apt to manage the dep and want to hold it, use `sudo apt-mark [un]hold esl-erlang`
 and to look at held packages use `apt-mark showhold`
+
+Docker build command:
+docker build -t mpnetwork \
+--target=$MIX_ENV \
+--build-arg APP_NAME_ARG=$APP_NAME \
+--build-arg MIX_ENV_ARG=$MIX_ENV \
+--build-arg SECRET_KEY_BASE_ARG=$SECRET_KEY_BASE \
+--build-arg LIVE_VIEW_SIGNING_SALT_ARG=$LIVE_VIEW_SIGNING_SALT \
+--build-arg SPARKPOST_API_KEY_ARG=$SPARKPOST_API_KEY \
+--build-arg FQDN_ARG=$FQDN \
+--build-arg STATIC_URL_ARG=$STATIC_URL \
+--build-arg LOGFLARE_API_KEY_ARG=$LOGFLARE_API_KEY \
+--build-arg LOGFLARE_DRAIN_ID_ARG=$LOGFLARE_DRAIN_ID \
+--build-arg DATABASE_URL_ARG=$DATABASE_URL \
+--build-arg TEST_DATABASE_URL_ARG=$TEST_DATABASE_URL \
+--build-arg OBAN_WEB_LICENSE_KEY_ARG=$OBAN_WEB_LICENSE_KEY \
+.
+
+Docker run command (name must be unique among running containers, if not kill the previous one):
+docker run -it --name=mpnetwork_web --env-file=.env --network=host -p 4000:4000 -v $PWD:/app mpnetwork
