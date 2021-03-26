@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 mix deps.get
 mix compile
 export SECRET_KEY_BASE="$(mix phx.gen.secret)"

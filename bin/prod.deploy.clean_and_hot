@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 mix phx.digest && version.bump && git -c http.extraheader="GIGALIXIR-HOT: true" -c http.extraheader="GIGALIXIR-CLEAN: true" push production yolo:master && sleep 5 && prod.healthcheck

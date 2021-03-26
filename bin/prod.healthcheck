@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 proj=${PWD##*/}
 health=$(gigalixir ps -a $proj | jq .pods[0].status)
 if [ $health == "\"Healthy\"" ]

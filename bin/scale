@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 proj=${PWD##*/}
 args=("$@")
 gigalixir ps:scale -s ${args[0]} -a $proj

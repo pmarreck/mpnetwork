@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 time $(mix phx.digest && git -c http.extraheader="GIGALIXIR-CLEAN: true" push staging yolo:master) # && staging.migrate

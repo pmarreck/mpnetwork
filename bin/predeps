@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
 
