@@ -24,15 +24,15 @@ mix deps.get
 # npm install --prefix=assets
 
 # DEBUGGING MISSING PSQL
-ls -al /usr/local/bin
-ls -al /usr/bin
-uname -a
+# ls -al /usr/local/bin
+# ls -al /usr/bin
+# uname -a
 
 # Wait for Postgres to become available.
-DBHOST=localhost:5432
+# DBHOST=localhost:5432
 # until psql -h $DBHOST -U postgres -c '\q' 2>/dev/null; do
 # do not mute psql errors for now:
-until psql -h $DBHOST -U postgres -c '\q' ; do
+until psql -h db -U postgres -c '\q' ; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done

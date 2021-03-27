@@ -9,24 +9,24 @@ ENV APP_NAME="mpnetwork"
 ARG MIX_ENV
 ENV MIX_ENV=${MIX_ENV:-test}
 # assuming these are all already in your ENV of your project directory, perhaps via direnv and an .envrc file...
-# you can rebuild everything with this:
-# docker build --no-cache --progress=plain -t mpnetwork \
-  # --target=$MIX_ENV \
-  # --build-arg USER \
-  # --build-arg APP_NAME \
-  # --build-arg MIX_ENV \
-  # --build-arg SECRET_KEY_BASE \
-  # --build-arg LIVE_VIEW_SIGNING_SALT \
-  # --build-arg SPARKPOST_API_KEY \
-  # --build-arg FQDN \
-  # --build-arg STATIC_URL \
-  # --build-arg LOGFLARE_API_KEY \
-  # --build-arg LOGFLARE_DRAIN_ID \
-  # --build-arg POSTGRES_PASSWORD \
-  # --build-arg DATABASE_URL \
-  # --build-arg TEST_DATABASE_URL \
-  # --build-arg OBAN_WEB_LICENSE_KEY \
-  # .
+# you can rebuild everything with this: (add --no-cache if you want a full rebuild)
+# docker build --progress=plain -t mpnetwork \
+#   --target=$MIX_ENV \
+#   --build-arg USER \
+#   --build-arg APP_NAME \
+#   --build-arg MIX_ENV \
+#   --build-arg SECRET_KEY_BASE \
+#   --build-arg LIVE_VIEW_SIGNING_SALT \
+#   --build-arg SPARKPOST_API_KEY \
+#   --build-arg FQDN \
+#   --build-arg STATIC_URL \
+#   --build-arg LOGFLARE_API_KEY \
+#   --build-arg LOGFLARE_DRAIN_ID \
+#   --build-arg POSTGRES_PASSWORD \
+#   --build-arg DATABASE_URL \
+#   --build-arg TEST_DATABASE_URL \
+#   --build-arg OBAN_WEB_LICENSE_KEY \
+#   .
 ARG APP_NAME
 ENV APP_NAME=${APP_NAME:-mpnetwork}
 ARG MIX_ENV
@@ -140,7 +140,8 @@ RUN mkdir /app
 # Add Rust and configure
 # So apparently dynamically-linked crates won't compile correctly on musl toolchains (as in alpine)
 # so we will force static compilation.
-# Additionally, we will do this as the underprivileged user
+# Additionally, we will do this as the underprivileged user,
+# otherwise elixir/erlang have issues compiling lvips in userspace
 USER ${USER}:${USER}
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain nightly
@@ -214,19 +215,29 @@ FROM build AS test
 # bind mount will be to /app from cwd
 WORKDIR /app
 
-CMD ["mix", "test"]
+COPY --chown=$USER:$USER . .
+
+RUN mix local.hex --force && \
+  mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY} && \
+  mix deps.get --force && \
+  mix local.rebar --force && \
+  mix deps.compile
+
+RUN mix test
 
 ##### DEV TARGET #####
 FROM build AS dev
 
-USER root
+USER root:root
 
 # the port we serve from
 EXPOSE 4000
 
 RUN chown ${USER}:${USER} /app
 
-RUN apk add --no-cache git curl zsh
+# add common dev-only tooling
+RUN apk add --no-cache git curl zsh bash
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing direnv
 
 # Install python/pip
 # EDIT: Nope, removed. Python sucks anyway. (So does Go, but... yeah...)
@@ -263,7 +274,9 @@ RUN mix local.hex --force && \
 # edit: not anymore
 # RUN echo "#placeholder" > .zshrc
 
-CMD ["zsh"]
+# CMD ["zsh"]
+
+WORKDIR /app
 
 # prepare release image
 ##### PROD TARGET #####
@@ -332,7 +345,7 @@ RUN chown nobody:nobody /app
 
 USER nobody:nobody
 
-COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
+COPY --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
 
 ENV HOME=/app
 

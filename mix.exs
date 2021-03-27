@@ -120,7 +120,8 @@ defmodule Mpnetwork.Mixfile do
       # running hog-wild with rust here, since it's still quite a moving target
       # ... hey, my test suite includes image manips, so...!
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
-      {:elxvips, "~> 0.0.9"},
+      # {:rustler, "~> 0.22.0-rc.0", override: true},
+      {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
     ]
   end
 

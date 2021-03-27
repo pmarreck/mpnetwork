@@ -52,10 +52,12 @@ services:
       PGPORT: 5432
       # Hostname of our Postgres container
       PGHOST: db
+      MIX_ENV: test
     env_file: 
       - .env
     depends_on:
       - db
+    working_dir: /app
     command:
       - ./run.docker-compose.sh
 # Define the volumes
