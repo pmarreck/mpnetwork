@@ -34,7 +34,10 @@ npm-debug.log
 /config/*.secret.exs
 
 # direnv config
-.env*
+# It is suggested to encrypt these and then check into source control.
+# My dotfiles repo has simple symmetric encrypt/decrypt functions.
+.env
+.envrc
 
 # postgres logfiles
 logfile
