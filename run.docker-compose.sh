@@ -4,7 +4,10 @@
 
 set -e
 
+echo "MIX_ENV=$MIX_ENV"
 # Ensure any app auth prereqs are installed
+mix local.hex --force
+mix local.rebar --force
 mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
 
 # Ensure the app's dependencies are installed
@@ -28,16 +31,20 @@ mix deps.get
 # ls -al /usr/bin
 # uname -a
 
+# Potentially Set up the database
+mix ecto.create
+mix ecto.migrate
+
 # Wait for Postgres to become available.
 # DBHOST=localhost:5432
 # until psql -h $DBHOST -U postgres -c '\q' 2>/dev/null; do
 # do not mute psql errors for now:
-until psql -h db -U postgres -c '\q' ; do
+until psql -h localhost -U postgres -c '\q' ; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done
 
-echo "\nPostgres is available: continuing with database setup..."
+echo "Postgres is available: continuing with database setup..."
 
 #Analysis style code
 # Prepare Credo if the project has Credo start code analyze
@@ -49,14 +56,14 @@ echo "\nPostgres is available: continuing with database setup..."
 #   echo "\nNo Credo config: Skipping code analyze..."
 # fi
 
-# Potentially Set up the database
-mix ecto.create
-mix ecto.migrate
-
-echo "\nTesting the installation..."
+echo "Testing the installation..."
 # "Prove" that install was successful by running the tests
-mix test
+MIX_ENV=test mix test
 
-echo "\n Launching Phoenix web server..."
+echo "Compiling js assets..."
+cd assets; npm install; cd ..
+
+echo "Launching Phoenix web server..."
 # Start the phoenix web server
 mix phx.server
+curl localhost:4000

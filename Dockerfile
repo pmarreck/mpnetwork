@@ -236,7 +236,7 @@ EXPOSE 4000
 RUN chown ${USER}:${USER} /app
 
 # add common dev-only tooling
-RUN apk add --no-cache git curl zsh bash
+RUN apk add --no-cache git curl zsh bash inotify-tools
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing direnv
 
 # Install python/pip
