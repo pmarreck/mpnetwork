@@ -284,6 +284,8 @@ FROM alpine:latest AS prod
 
 EXPOSE 80 443
 
+ENV APP_NAME="mpnetwork"
+
 RUN apk add --no-cache openssl ncurses-libs
 
 # Copy system binaries from build that we need to run npm and other things
@@ -345,8 +347,8 @@ RUN chown nobody:nobody /app
 
 USER nobody:nobody
 
-# COPY --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
-COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
+COPY --chown=nobody:nobody /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
+# COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
 ENV HOME=/app
 
