@@ -345,7 +345,8 @@ RUN chown nobody:nobody /app
 
 USER nobody:nobody
 
-COPY --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
+# COPY --chown=nobody:nobody /app/_build/prod/rel/$APP_NAME ./
+COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
 ENV HOME=/app
 

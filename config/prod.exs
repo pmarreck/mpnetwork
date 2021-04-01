@@ -106,7 +106,7 @@ config :mpnetwork, Mpnetwork.Repo,
   # https://hexdocs.pm/db_connection/DBConnection.html#start_link/2
   queue_target: 300,
   queue_interval: 2000,
-  ssl: true
+  ssl: (System.get_env("SSL_TO_DB")=="true") # should default to off unless env SSL_TO_DB=true
 
 # Guardian
 # config :guardian, Guardian,
