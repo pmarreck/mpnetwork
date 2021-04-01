@@ -341,16 +341,14 @@ COPY rel rel
 # RUN MIX_ENV=test mix do deps.compile, compile
 # RUN echo $TEST_DATABASE_URL
 # RUN mix test
-RUN mix do compile, release
+RUN mix do compile, release --overwrite
+
+COPY --chown=nobody:nobody /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
+# COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
 RUN chown nobody:nobody /app
 
 USER nobody:nobody
-
-RUN pwd; ls -al
-
-COPY --chown=nobody:nobody /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
-# COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
 ENV HOME=/app
 
