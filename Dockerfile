@@ -347,6 +347,8 @@ RUN chown nobody:nobody /app
 
 USER nobody:nobody
 
+RUN pwd; ls -al
+
 COPY --chown=nobody:nobody /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
 # COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
