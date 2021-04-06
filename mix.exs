@@ -50,7 +50,7 @@ defmodule Mpnetwork.Mixfile do
       # {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.2"},
-      {:phoenix, "~> 1.5.1"},
+      {:phoenix, "~> 1.5"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
@@ -73,7 +73,7 @@ defmodule Mpnetwork.Mixfile do
       # {:cachex, "~> 2.1"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
-      {:swoosh, "~> 1.0"},
+      {:swoosh, "~> 1.3.4"},
       {:phoenix_swoosh, "~> 0.3"},
       # want to replace with another solution asap lol. https://imagetragick.com/
       {:mogrify, "~> 0.8"},
@@ -81,7 +81,7 @@ defmodule Mpnetwork.Mixfile do
       # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
-      {:ex_crypto, "~> 0.10"},
+      # {:ex_crypto, "~> 0.10"}, # removed because not being updated yet for OTP24
       {:ecto_sql, "~> 3.5"},
       {:ecto_psql_extras, "~> 0.2"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:

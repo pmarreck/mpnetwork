@@ -43,7 +43,7 @@ defmodule MpnetworkWeb.Endpoint do
     Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Poison,
+    json_decoder: Jason,
     length: Application.get_env(:mpnetwork, :max_attachment_size),
     read_length: Application.get_env(:mpnetwork, :attachment_chunk_size),
     read_timeout: Application.get_env(:mpnetwork, :attachment_chunk_timeout)
