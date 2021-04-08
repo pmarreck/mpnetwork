@@ -67,6 +67,7 @@ ENV UID=1000
 ENV GID=1000
 RUN addgroup -S -g ${GID} ${USER} && \
     adduser --disabled-password --home /home/${USER} -S -G ${USER} -s /bin/zsh -u ${UID} ${USER}
+ENV HOME=/home/${USER}
 
 # USER root
 # Configure locale, which is a mess and defaults to latin1, which is just... NO
@@ -121,11 +122,30 @@ RUN set -x -o pipefail \
     libheif libimagequant pango \
  && apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
 
-# Install Elixir, Erlang, node, npm, psql
-RUN apk add --no-cache elixir nodejs npm postgresql-client
+# Install psql and bash via apk
+# perl, autoconf needed to compile erlang for some reason
+RUN apk add --no-cache postgresql-client bash perl autoconf gnupg
 
-# make sure psql is there
+# make sure psql is there (sanity check)
 RUN psql --version
+
+# do the rest as unprivileged user
+USER ${USER}:${USER}
+
+# install asdf in order to get elixir/erlang/nodejs lined up with .tool-versions
+RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf
+RUN echo -e '\nsource $HOME/.asdf/asdf.sh' >> $HOME/.zshrc
+ENV PATH=$HOME/.asdf/bin:$PATH
+
+WORKDIR ${HOME}
+
+# now install asdf plugins and deps (note: make sure postgres is NOT included here!)
+COPY --chown=${USER}:${USER} bin/asdf-install-plugins ${HOME}/
+COPY --chown=${USER}:${USER} bin/asdf-install-versions ${HOME}/
+COPY --chown=${USER}:${USER} .tool-versions ${HOME}/
+RUN ls -al
+RUN ["bash", "asdf-install-plugins"]
+RUN ["bash", "asdf-install-versions"]
 
 # Create mountpoint (or future app dir if prod)
 RUN mkdir /app
@@ -142,7 +162,6 @@ RUN mkdir /app
 # so we will force static compilation.
 # Additionally, we will do this as the underprivileged user,
 # otherwise elixir/erlang have issues compiling lvips in userspace
-USER ${USER}:${USER}
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain nightly
 # Rustup should hopefully modify PATH appropriately, otherwise: EDIT Aaaaand nope, it didn't, so
@@ -223,7 +242,7 @@ RUN mix local.hex --force && \
   mix local.rebar --force && \
   mix deps.compile
 
-RUN mix test
+CMD ["mix", "test"]
 
 ##### DEV TARGET #####
 FROM build AS dev
@@ -268,15 +287,13 @@ RUN mix local.hex --force && \
 #       ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"; \
 #     done
 # we will mount the working directory to /app
-# WORKDIR /app
+WORKDIR /app
 
 # needed to prevent zsh from firing up an intro wizard Every. Single. Time.
 # edit: not anymore
 # RUN echo "#placeholder" > .zshrc
 
-# CMD ["zsh"]
-
-WORKDIR /app
+CMD ["zsh"]
 
 # prepare release image
 ##### PROD TARGET #####

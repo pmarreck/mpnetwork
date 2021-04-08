@@ -34,7 +34,7 @@ defmodule Mpnetwork.Mixfile do
     [
       # applications: [:coherence],
       mod: {Mpnetwork.Application, []},
-      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated, :os_mon, :telemetry]
+      extra_applications: [:coherence, :logger, :runtime_tools, :ex_rated, :os_mon, :telemetry, :crypto]
     ]
   end
 

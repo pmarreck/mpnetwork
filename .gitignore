@@ -16,6 +16,7 @@ npm-debug.log
 
 # any dev logs
 /logs
+*.log
 
 # Static artifacts
 /assets/node_modules
