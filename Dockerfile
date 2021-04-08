@@ -124,7 +124,7 @@ RUN set -x -o pipefail \
 
 # Install psql and bash via apk
 # perl, autoconf needed to compile erlang for some reason
-RUN apk add --no-cache postgresql-client bash perl autoconf gnupg
+RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-terminfo m4 
 
 # make sure psql is there (sanity check)
 RUN psql --version
