@@ -10,8 +10,9 @@ ARG MIX_ENV
 ENV MIX_ENV=${MIX_ENV:-test}
 # assuming these are all already in your ENV of your project directory, perhaps via direnv and an .envrc file...
 # you can rebuild everything with this: (add --no-cache if you want a full rebuild)
-# docker build --progress=plain -t mpnetwork \
+# docker build --progress=plain -t mpnetwork-test \
 #   --target=$MIX_ENV \
+#   --build-arg BUILDKIT_INLINE_CACHE=1 \
 #   --build-arg USER \
 #   --build-arg APP_NAME \
 #   --build-arg MIX_ENV \
@@ -54,6 +55,10 @@ ENV TEST_DATABASE_URL=${TEST_DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@
 ARG OBAN_WEB_LICENSE_KEY
 ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY:-00000000000000000000000000000000}
 
+
+# Add shells necessary to get later shell scripting to work
+RUN apk add --no-cache zsh bash
+
 # Add underprivileged non-root user to run the app or log in as.
 # I set the uid and gid to the same as my $USER's in my current host (WSL2)
 # This will at least solve the most typical permissions issues you'd get with bind-mounted volumes (-v arg to the "docker run" command)
@@ -65,8 +70,14 @@ ARG USER
 ENV USER=${USER:-elixirdev}
 ENV UID=1000
 ENV GID=1000
-RUN addgroup -S -g ${GID} ${USER} && \
-    adduser --disabled-password --home /home/${USER} -S -G ${USER} -s /bin/zsh -u ${UID} ${USER}
+RUN addgroup -g ${GID} ${USER}
+RUN adduser --disabled-password --home /home/${USER} -S --ingroup ${USER} -s /bin/zsh -u ${UID} ${USER}
+# for some FUCKING reason, this still leaves /etc/password with user as primary group "Linux User". Bad Alpine!
+# first delete that line and rewrite the file
+RUN cat /etc/passwd | grep -Evse "^$USER.*" > /etc/passwd
+# then add the proper line to the file
+RUN echo "${USER}:x:1000:1000:${USER},,,:/home/${USER}:/bin/zsh" >> /etc/passwd
+
 ENV HOME=/home/${USER}
 
 # USER root
@@ -124,31 +135,52 @@ RUN set -x -o pipefail \
 
 # Install psql and bash via apk
 # perl, autoconf needed to compile erlang for some reason
-RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl m4 
+RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl-dev openssl m4 
 
 # make sure psql is there (sanity check)
 RUN psql --version
 
+# make sure an openssl lib is there (sanity check)
+RUN find / -name openssl
+
+# Install shadow to get usermod (for easier user-edit compatibility with other linux distros)
+RUN apk add --no-cache shadow
+
+# Create mountpoint (or future app dir if prod)
+RUN mkdir /app
+
 # do the rest as unprivileged user
+# but first, make sure root's and the app user's shell are zsh too
+# RUN find / -name zsh
+RUN usermod --shell /bin/zsh root
+# RUN usermod --shell /bin/zsh -g ${USER} ${USER} 
+RUN cat /etc/passwd
 USER ${USER}:${USER}
 
 # install asdf in order to get elixir/erlang/nodejs lined up with .tool-versions
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf
 RUN echo -e '\nsource $HOME/.asdf/asdf.sh' >> $HOME/.zshrc
-ENV PATH=$HOME/.asdf/bin:$PATH
+ENV PATH=$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH
 
 WORKDIR ${HOME}
 
 # now install asdf plugins and deps (note: make sure postgres is NOT included here!)
 COPY --chown=${USER}:${USER} bin/asdf-install-plugins ${HOME}/
-COPY --chown=${USER}:${USER} bin/asdf-install-versions ${HOME}/
+# COPY --chown=${USER}:${USER} bin/asdf-install-versions ${HOME}/
 COPY --chown=${USER}:${USER} .tool-versions ${HOME}/
-RUN ls -al
-RUN ["bash", "asdf-install-plugins"]
-RUN ["bash", "asdf-install-versions"]
+# RUN ls -al
+# Need to set up openssl env path so kerl (via asdf) compiles erlang with openssl properly
 
-# Create mountpoint (or future app dir if prod)
-RUN mkdir /app
+ENV KERL_CONFIGURE_OPTIONS="--with-ssl=/usr/include/openssl"
+RUN ["bash", "asdf-install-plugins"]
+# RUN ["bash", "asdf-install-versions"]
+RUN asdf install
+
+# sanity checks
+RUN whoami
+RUN which mix
+RUN ls -al ${HOME}/.asdf/shims
+RUN ["mix", "--version"]
 
 # Install Rust
 # RUN apk add --no-cache rust cargo
@@ -228,13 +260,20 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 ##### TEST TARGET #####
 FROM build AS test
 
-# don't need to copy anything, working directory bind-mounted
-# COPY . .
+USER root:root
 
 # bind mount will be to /app from cwd
 WORKDIR /app
 
+RUN chown -R ${USER}:${USER} /app
+
 COPY --chown=$USER:$USER . .
+
+USER $USER:$USER
+
+# sanity checks
+RUN echo ${PATH}
+RUN which mix
 
 RUN mix local.hex --force && \
   mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY} && \
@@ -255,7 +294,7 @@ EXPOSE 4000
 RUN chown ${USER}:${USER} /app
 
 # add common dev-only tooling
-RUN apk add --no-cache git curl zsh bash inotify-tools
+RUN apk add --no-cache git curl inotify-tools
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing direnv
 
 # Install python/pip
