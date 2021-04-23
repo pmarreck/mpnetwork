@@ -122,6 +122,7 @@ defmodule Mpnetwork.Mixfile do
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
       # {:rustler, "~> 0.22.0-rc.0", override: true},
       {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
+      {:ex_png, "~> 1.0.0", only: :test},
     ]
   end
 

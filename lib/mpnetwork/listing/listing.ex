@@ -103,7 +103,11 @@ defmodule Mpnetwork.Listing do
     File.write!(tempfile, attachment.data)
     # do rotation on disk
     rotated_image =
-      SlowImage.open(tempfile) |> SlowImage.add_option(option_rotate("#{degrees}")) |> SlowImage.quality("85") |> SlowImage.save
+      SlowImage.open(tempfile)
+      |> SlowImage.add_option(option_rotate("#{degrees}"))
+      # |> SlowImage.add_option(option_define("png:color-type=3"))
+      |> SlowImage.quality("85")
+      |> SlowImage.save
 
     # read new file off disk into memory
     rotated_image_data = File.read!(rotated_image.path)

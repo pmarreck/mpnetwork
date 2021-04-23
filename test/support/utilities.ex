@@ -280,6 +280,25 @@ defmodule Mpnetwork.Test.Support.Utilities do
   @attachment_create_attrs Map.merge(@post_attachment_create_attrs, %{
                              data: @test_attachment_binary_data
                            })
+  def post_attachment_create_attrs(binary_data, content_type) do
+    [_type, ext] = String.split(content_type, "/")
+    random_identifier = random_uniquifying_string()
+    %{
+      sha256_hash: Upload.sha256_hash(binary_data),
+      content_type: content_type,
+      data: %Upload{
+        content_type: content_type,
+        filename: "test#{random_identifier}.#{ext}",
+        binary: @test_attachment_binary_data
+      },
+      original_filename: "some_original_filename#{random_identifier}.png",
+      is_image: true,
+      primary: false
+    }
+  end
+  def attachment_create_attrs(binary_data, content_type) do
+    Map.merge(post_attachment_create_attrs(binary_data, content_type), %{data: binary_data})
+  end
 
   def fixture(:listing, user, attrs) do
     {:ok, listing} =
@@ -315,6 +334,13 @@ defmodule Mpnetwork.Test.Support.Utilities do
   def fixture(:attachment, extra_attrs) do
     {:ok, attachment} =
       Listing.create_attachment(Map.merge(@attachment_create_attrs, extra_attrs))
+
+    attachment
+  end
+
+  def fixture(:attachment, binary_data, content_type, extra_attrs) do
+    {:ok, attachment} =
+      Listing.create_attachment(Map.merge(attachment_create_attrs(binary_data, content_type), extra_attrs))
 
     attachment
   end
