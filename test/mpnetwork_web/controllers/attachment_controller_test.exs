@@ -6,7 +6,8 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
   alias Mpnetwork.Realtor.Listing
   alias Mpnetwork.{Upload, Repo}
   alias Mpnetwork.Listing.Attachment
-  alias Briefly, as: Temp
+  # alias Briefly, as: Temp
+  alias ExPng.Image, as: PngImage
   import Mpnetwork.Test.Support.Utilities
 
   # supposedly a png of a red dot
@@ -185,6 +186,9 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
 
   @test_image_png File.read!("test/support/images/test_image.png")
   # @test_image_jpg File.read!("test/support/images/test_image_qual_100.jpg")
+  @blue_rgba <<0, 0, 255, 255>>
+  @red_rgba <<255, 0, 0, 255>>
+  @orange_rgba <<255, 151, 0, 255>>
   test "rotates png image 90 deg left", %{conn: conn} do
     {_listing, attachment} = attachment_fixture(:listing, @test_image_png, "image/png", conn.assigns.current_user)
     {binary_data_content_type, width_pixels, height_pixels} =
@@ -192,6 +196,11 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     assert binary_data_content_type == "image/png" # sanity checks
     assert width_pixels == 8
     assert height_pixels == 4
+    {:ok, png_image_struct} = PngImage.from_binary(@test_image_png)
+    top_left_pixel = PngImage.at(png_image_struct, {0,0})
+    top_right_pixel = PngImage.at(png_image_struct, {7,0})
+    assert top_left_pixel == @red_rgba
+    assert top_right_pixel == @blue_rgba
     conn1 = post(conn, Routes.attachment_path(conn, :rotate_left, attachment.id))
     assert response(conn1, 302)
     conn2 = get(conn, Routes.attachment_path(conn, :show, attachment.id))
@@ -202,14 +211,15 @@ defmodule MpnetworkWeb.AttachmentControllerTest do
     assert width_pixels == 4
     assert height_pixels == 8
     # ugh, have to use temp files again because the ExPng lib doesn't seem to be able to create a struct from memory
-    {:ok, tempfile} = Temp.create()
-    File.write!(tempfile, data)
-    {:ok, png_image_struct} = ExPng.Image.from_file(tempfile)
-    top_left_pixel = ExPng.Image.at(png_image_struct, {0,0})
-    top_right_pixel = ExPng.Image.at(png_image_struct, {3,0})
+    # EDIT: Nope, I forked it and added it. Touch the disk as little as possible in tests!
+    # {:ok, tempfile} = Temp.create()
+    # File.write!(tempfile, data)
+    {:ok, png_image_struct} = PngImage.from_binary(data)
+    top_left_pixel = PngImage.at(png_image_struct, {0,0})
+    top_right_pixel = PngImage.at(png_image_struct, {3,0})
     # after a 90 deg rotation to left, top left pixel should be blue, top right orange
     # RGBA
-    assert top_left_pixel == <<0, 0, 255, 255>>
-    assert top_right_pixel == <<255, 151, 0, 255>>
+    assert top_left_pixel == @blue_rgba
+    assert top_right_pixel == @orange_rgba
   end
 end

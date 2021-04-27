@@ -122,7 +122,9 @@ defmodule Mpnetwork.Mixfile do
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
       # {:rustler, "~> 0.22.0-rc.0", override: true},
       {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
-      {:ex_png, "~> 1.0.0", only: :test},
+      # I forked this and added a way to work directly with png binary data instead of only through files.
+      # As of today (4/27/2021) he hasn't accepted the PR yet...
+      {:ex_png, git: "https://github.com/pmarreck/ex_png.git", branch: "main", only: :test},
     ]
   end
 
