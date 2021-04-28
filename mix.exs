@@ -97,7 +97,12 @@ defmodule Mpnetwork.Mixfile do
       {:ex_rated, "~> 1.3"}, # this is now 2.0 and API may have changed, but it has good improvements
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       # note: may not build on OTP23:
-      {:lz4, "~> 0.2.4", hex: :lz4_erl},
+      # second note: had a bitch-ass time trying to get lz4_erl to build on my Docker image and failed,
+      # so I ripped it out since it was currently only being used for session data.
+      # Perhaps revisit CompressedTerm with a different library in the future, perhaps zstd, but
+      # definitely something that uses Rust preferably (via Rustler) as the NIF code.
+      # LASTLY: I've since learned that Postgres already does some lz4 compression of binary data if it's above a certain size
+      # {:lz4, "~> 0.2.4", hex: :lz4_erl},
       # @vanvoljg on Elixir Slack #general channel @ 5/27/20 8:21 PM:
       # As an update on my end, I was able to get erlang_lz4 to compile with OTP23 by modifying the makefile.
       # Removing -lerl_interface (which was deprecated in OTP23) from the libs allows it to compile.
