@@ -1,6 +1,7 @@
 defmodule Mpnetwork.Ecto.CompressedTerm do
   @behaviour Ecto.Type
   alias :lz4, as: LZ4
+  require Logger
 
   # The functionality below depends on the lz4_erl module.
   # Note that pack/unpack stores the decompressed data length as the first 4 bytes
@@ -17,8 +18,21 @@ defmodule Mpnetwork.Ecto.CompressedTerm do
   end
 
   defp decompress(<<1, bin::binary>>) when is_binary(bin) do
-    {:ok, decomp} = LZ4.unpack(bin)
-    decomp
+    case LZ4.unpack(bin) do
+      {:ok, decomp} -> decomp
+      # So on error here we don't throw because this is run during database accesses and that would be bad,
+      # especially considering this is currently only used on *session data*.
+      # For now, we just return an empty string.
+      # But we DO log it.
+      # And we only log a code in case this is happening thousands of times a second.
+      # If you searched the code for that... code, then you should be reading this!
+      {:error, :uncompress_failed} -> 
+        Logger.error("CT_error_69") # Corrupt data in a v1 CompressedTerm field resulted in a failed decompression
+        :erlang.term_to_binary("")
+      {:error, reason} ->
+        Logger.error("CT_error_70: #{inspect reason}") # Decompression of a CompressedTerm failed for unknown reasons
+        :erlang.term_to_binary("")
+    end
   end
 
   defp decompress(<<_bin::binary>>), do: raise("Unsupported compression version")
