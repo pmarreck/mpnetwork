@@ -6,11 +6,14 @@ defmodule Mpnetwork.Listing do
   import Ecto.Query, warn: false
   alias Mpnetwork.Repo
   alias Briefly, as: Temp
-  alias Mogrify, as: SlowImage
-  use Mogrify.Options # this is ugly, want to remove it someday
+  # alias Mogrify, as: SlowImage
+  # use Mogrify.Options # this is ugly, want to remove it someday EDIT: I'VE ACHIEVED THE DREAM, IT'S FINALLY FUCKING GONE
   require Elxvips
   alias Elxvips, as: FastImage
   alias Elxvips.ImageBytes
+  # require Vix
+  alias Vix.Vips.Image
+  alias Vix.Vips.Operation, as: ImageOperation
   require Mpnetwork.Upload
   alias Mpnetwork.Upload
 
@@ -97,27 +100,76 @@ defmodule Mpnetwork.Listing do
   defp do_rotate_attachment(_degrees, nil), do: nil
   defp do_rotate_attachment(degrees, attachment) when degrees in [-90, 90] do
 
+    # get extension from mimetype
+    extname = "." <> Upload.map_img_content_type_to_file_ext(attachment.content_type)
     # write temp file to disk
-    {:ok, tempfile} = Temp.create()
+    {:ok, in_tempfile} = Temp.create()
+    {:ok, out_tempfile} = Temp.create(extname: extname)
     # should close file handle
-    File.write!(tempfile, attachment.data)
+    File.write!(in_tempfile, attachment.data)
     # do rotation on disk
-    rotated_image =
-      SlowImage.open(tempfile)
-      |> SlowImage.add_option(option_rotate("#{degrees}"))
-      # |> SlowImage.add_option(option_define("png:color-type=3"))
-      |> SlowImage.quality("85")
-      |> SlowImage.save
+    {:ok, im} = Image.new_from_file(in_tempfile)
+# import Mpnetwork.Utils.Debugging
+# i(Vix.Nif.nif_vips_operation_list()) # full output:
+# ["globalbalance", "match", "matrixinvert", "mosaic1", "mosaic", "merge",
+#  "draw_smudge", "draw_image", "draw_flood", "draw_circle", "draw_line",
+#  "draw_mask", "draw_rect", "fill_nearest", "labelregions", "countlines", "rank",
+#  "morph", "phasecor", "spectrum", "freqmult", "invfft", "fwfft", "sobel",
+#  "canny", "gaussblur", "sharpen", "spcor", "fastcor", "convasep", "convsep",
+#  "compass", "convi", "convf", "conva", "conv", "hist_entropy",
+#  "hist_ismonotonic", "hist_local", "hist_plot", "hist_equal", "hist_norm",
+#  "hist_match", "hist_cum", "stdif", "percent", "case", "maplut", "profile_load",
+#  "XYZ2CMYK", "CMYK2XYZ", "scRGB2sRGB", "scRGB2BW", "sRGB2scRGB", "dECMC",
+#  "dE00", "dE76", "icc_transform", "icc_export", "icc_import", "HSV2sRGB",
+#  "sRGB2HSV", "LabQ2sRGB", "float2rad", "rad2float", "Lab2LabS", "LabS2Lab",
+#  "LabS2LabQ", "LabQ2LabS", "Lab2LabQ", "LabQ2Lab", "XYZ2scRGB", "scRGB2XYZ",
+#  "Yxy2XYZ", "XYZ2Yxy", "CMC2LCh", "LCh2CMC", "LCh2Lab", "Lab2LCh", "XYZ2Lab",
+#  "Lab2XYZ", "colourspace", "resize", "rotate", "similarity", "affine",
+#  "quadratic", "reduce", "reducev", "reduceh", "shrinkv", "shrinkh", "shrink",
+#  "mapim", "thumbnail_source", "thumbnail_image", "thumbnail_buffer",
+#  "thumbnail", "switch", "perlin", "worley", "fractsurf", "identity", "tonelut",
+#  "invertlut", "buildlut", "mask_fractal", "mask_gaussian_band",
+#  "mask_gaussian_ring", "mask_gaussian", "mask_butterworth_band",
+#  "mask_butterworth_ring", "mask_butterworth", "mask_ideal_band",
+#  "mask_ideal_ring", "mask_ideal", "sines", "zone", "grey", "eye", "logmat",
+#  "gaussmat", "xyz", "text", "gaussnoise", "black", "composite2", "composite",
+#  "gamma", "falsecolour", "byteswap", "msb", "subsample", "zoom", "wrap",
+#  "scale", "transpose3d", "grid", "unpremultiply", "premultiply", "flatten",
+#  "bandunfold", "bandfold", "recomb", "ifthenelse", "autorot", "rot45", "rot",
+#  "cast", "replicate", "bandbool", "bandmean", "bandrank", "bandjoin_const",
+#  "bandjoin", "extract_band", "smartcrop", "extract_area", "extract_area",
+#  "arrayjoin", "join", "insert", "flip", "gravity", "embed", "cache",
+#  "sequential", "linecache", "tilecache", "copy", "find_trim", "getpoint",
+#  "measure", "profile", "project", "hough_circle", "hough_line",
+#  "hist_find_indexed", "hist_find_ndim", "hist_find", "stats", "deviate", "max",
+#  "min", "avg", "complexget", "complex", "math2_const", "boolean_const",
+#  "remainder_const", "relational_const", "round", "sign", "abs", "math",
+#  "linear", "invert", "sum", "complexform", "complex2", "math2", "boolean",
+#  "remainder", "relational", "divide", "multiply", "subtract", "add", "system"]
+
+    # note: left mogrify code in here in case it's ever needed again
+    # rotated_image =
+    #   SlowImage.open(tempfile)
+    #   |> SlowImage.add_option(option_rotate("#{degrees}"))
+    #   # |> SlowImage.add_option(option_define("png:color-type=3"))
+    #   |> SlowImage.quality("85")
+    #   |> SlowImage.save
+    degrees_vips = case degrees do
+      90 -> :VIPS_ANGLE_D90
+      -90 -> :VIPS_ANGLE_D270
+    end
+    {:ok, new_im} = ImageOperation.rot(im, degrees_vips)
+    :ok = Image.write_to_file(new_im, out_tempfile)
 
     # read new file off disk into memory
-    rotated_image_data = File.read!(rotated_image.path)
+    # rotated_image_data = File.read!(rotated_image.path)
+    rotated_image_data = File.read!(out_tempfile)
+
     # parse new file's dimensions
     {binary_data_content_type, width_pixels, height_pixels} =
       Upload.extract_meta_from_binary_data(rotated_image_data, attachment.content_type)
 
     new_sha256_hash = :crypto.hash(:sha256, rotated_image_data)
-    # clean up rotated file
-    File.rm!(rotated_image.path)
 
     # return the modified attachment changeset (not saved yet)
     attachment
@@ -230,8 +282,12 @@ defmodule Mpnetwork.Listing do
         # should close file automatically
         # File.write!(path, attachment.data)
         # then we will resize it
+        # image = Image.new_from_file(path)
+        
         # image = SlowImage.open(path) |> SlowImage.resize_to_limit("#{width}x#{height}") |> SlowImage.save
+
         {:ok, %ImageBytes{bytes: new_image_data}} = FastImage.from_bytes(attachment.data) |> FastImage.resize(width: width, height: height) |> FastImage.to_bytes()
+
         new_image_data = :binary.list_to_bin(new_image_data)
         # then we will reread the new file's binary data
         # new_image_data = File.read!(image.path)

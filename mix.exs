@@ -76,7 +76,7 @@ defmodule Mpnetwork.Mixfile do
       {:swoosh, "~> 1.3.4"},
       {:phoenix_swoosh, "~> 0.3"},
       # want to replace with another solution asap lol. https://imagetragick.com/
-      {:mogrify, "~> 0.8"},
+      # {:mogrify, "~> 0.8"}, # BITCH, BEGONE
       # replacement for the above, hopefully!
       # {:resamplex, "~> 0.1.0"},
       # for easily working with tempfiles
@@ -127,6 +127,9 @@ defmodule Mpnetwork.Mixfile do
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
       # {:rustler, "~> 0.22.0-rc.0", override: true},
       {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
+      # elxvips' ENTIRE CODEBASE basically assumes you are only resizing, so adding rotation from vips was unnecessarily difficult
+      # So now I'm using (dun dun dunnnn)...
+      {:vix, "~> 0.2.1"}, # which doesn't let you work directly with binary data... YET. Sigh. Tempfiles it is.
       # I forked this and added a way to work directly with png binary data instead of only through files.
       # As of today (4/27/2021) he hasn't accepted the PR yet...
       {:ex_png, git: "https://github.com/pmarreck/ex_png.git", branch: "main", only: :test},

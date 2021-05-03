@@ -4,6 +4,7 @@ services:
     image: postgres:13.2
     environment:
       # Set user/password for Postgres
+      PGUSER: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       # Set a path where Postgres should store the data
@@ -13,16 +14,16 @@ services:
       - pgdata:/var/lib/postgresql/data
     env_file: 
       - .env
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     network_mode: host
 
   web:
     build:
       context: .
-      target: dev
+      target: prod_build
       args:
-        - APP_NAME
+        - BUILDKIT_INLINE_CACHE
         - USER
         - MIX_ENV
         - SECRET_KEY_BASE
@@ -36,10 +37,10 @@ services:
         - DATABASE_URL
         - TEST_DATABASE_URL
         - OBAN_WEB_LICENSE_KEY
-    volumes:
-      - type: bind
-        source: .
-        target: /app
+    # volumes:
+    #   - type: bind
+    #     source: .
+    #     target: /app
       # - type: bind
       #   source: /home/${USER}
       #   target: /home/${USER}
@@ -47,14 +48,16 @@ services:
     #   - "4000:4000"
     network_mode: host
     environment:
+      MIX_ENV: test
       # Variables to connect to our Postgres server
       PGUSER: postgres
+      POSTGRES_USER: postgres
       PGPASSWORD: postgres
-      PGDATABASE: ${APP_NAME}_dev
+      POSTGRES_PASSWORD: postgres
+      PGDATABASE: ${APP_NAME}_${MIX_ENV}
       PGPORT: 5432
       # Hostname of our Postgres container
       PGHOST: localhost
-      MIX_ENV: dev
       PORT: 4000
     env_file: 
       - .env
@@ -62,7 +65,8 @@ services:
       - db
     working_dir: /app
     command:
-      - ./run.docker-compose.sh
+      - MIX_ENV=test mix do ecto.create, ecto.migrate, test
+      # - ./run.docker-compose.sh
 # Define the volumes
 volumes:
   pgdata:

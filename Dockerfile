@@ -2,8 +2,16 @@
 
 FROM alpine:latest AS build
 
+
+# Add shells necessary to get later shell scripting to work
+# And then set the shell here because otherwise the env gets reset
+RUN apk add --no-cache zsh bash
+SHELL ["/bin/zsh", "-c"]
+
 # Set app name
 ENV APP_NAME="mpnetwork"
+
+USER root:root
 
 # Set build ENV
 ARG MIX_ENV
@@ -13,7 +21,7 @@ ENV MIX_ENV=${MIX_ENV:-test}
 # docker build --progress=plain -t mpnetwork-test \
 #   --target=$MIX_ENV \
 #   --build-arg BUILDKIT_INLINE_CACHE=1 \
-#   --build-arg USER \
+#   --build-arg APP_USER \
 #   --build-arg APP_NAME \
 #   --build-arg MIX_ENV \
 #   --build-arg SECRET_KEY_BASE \
@@ -28,10 +36,7 @@ ENV MIX_ENV=${MIX_ENV:-test}
 #   --build-arg TEST_DATABASE_URL \
 #   --build-arg OBAN_WEB_LICENSE_KEY \
 #   .
-ARG APP_NAME
-ENV APP_NAME=${APP_NAME:-mpnetwork}
-ARG MIX_ENV
-ENV MIX_ENV=${MIX_ENV:-dev}
+
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=${SECRET_KEY_BASE:-0000000000000000000000000000000000000000000000000000000000000000}
 ARG LIVE_VIEW_SIGNING_SALT
@@ -55,37 +60,44 @@ ENV TEST_DATABASE_URL=${TEST_DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@
 ARG OBAN_WEB_LICENSE_KEY
 ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY:-00000000000000000000000000000000}
 
-
-# Add shells necessary to get later shell scripting to work
-RUN apk add --no-cache zsh bash
-
 # Add underprivileged non-root user to run the app or log in as.
-# I set the uid and gid to the same as my $USER's in my current host (WSL2)
+# I set the uid and gid to the same as my $APP_USER's in my current host (WSL2)
 # This will at least solve the most typical permissions issues you'd get with bind-mounted volumes (-v arg to the "docker run" command)
 # You may want to get more sophisticated with this in the future:
 # https://docs.docker.com/engine/security/userns-remap/
-# In the test and dev targets, this user will be added to the sudo group and given a password
-# but ONLY in those targets
-ARG USER
-ENV USER=${USER:-elixirdev}
-ENV UID=1000
-ENV GID=1000
-RUN addgroup -g ${GID} ${USER}
-RUN adduser --disabled-password --home /home/${USER} -S --ingroup ${USER} -s /bin/zsh -u ${UID} ${USER}
-# for some FUCKING reason, this still leaves /etc/password with user as primary group "Linux User". Bad Alpine!
-# first delete that line and rewrite the file
-RUN cat /etc/passwd | grep -Evse "^$USER.*" > /etc/passwd
-# then add the proper line to the file
-RUN echo "${USER}:x:1000:1000:${USER},,,:/home/${USER}:/bin/zsh" >> /etc/passwd
 
-ENV HOME=/home/${USER}
+ENV APP_USER="app"
+ENV APP_GROUP="${APP_USER}"
+ENV APP_UID="1000"
+ENV APP_GID="1000"
+ENV SHELL="/bin/zsh"
+ENV HOME="/${APP_USER}"
 
-# USER root
+RUN mkdir -p "${HOME}"
+
+# The following addgroup/adduser commands should work across both alpine and ubuntu
+# Create the app group
+RUN addgroup --gid ${APP_GID} ${APP_GROUP}
+# Add the app user
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "${HOME}" \
+    --ingroup "$APP_GROUP" \
+    --no-create-home \
+    --uid "$APP_UID" \
+    --shell "$SHELL" \
+    "$APP_USER"
+
+# User is still root
+# Cause cmake to statically link
+ENV CMAKE_EXE_LINKER_FLAGS="-static"
 # Configure locale, which is a mess and defaults to latin1, which is just... NO
+# Also add build tooling
 # Taken from https://grrr.tech/posts/2020/add-locales-to-alpine-linux-docker-image/
-ENV LANG=en_US.UTF-8 MUSL_LOCALE_DEPS="cmake make musl-dev gcc gettext-dev libintl" MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+ENV LANG=en_US.UTF-8 MUSL_LOCPATH="/usr/share/i18n/locales/musl"
 RUN apk add --no-cache \
-    $MUSL_LOCALE_DEPS \
+    cmake make musl-dev gcc libgcc g++ gettext-dev libintl \
     && wget https://gitlab.com/rilian-la-te/musl-locales/-/archive/master/musl-locales-master.zip \
     && unzip musl-locales-master.zip \
       && cd musl-locales-master \
@@ -130,56 +142,69 @@ RUN set -x -o pipefail \
     git curl build-base clang zlib libxml2 glib gobject-introspection \
     libjpeg-turbo libexif lcms2 fftw giflib libpng \
     libwebp orc tiff poppler-glib librsvg libgsf openexr \
-    libheif libimagequant pango \
+    libheif libimagequant pango-dev \
  && apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
 
 # Install psql and bash via apk
 # perl, autoconf needed to compile erlang for some reason
-RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl-dev openssl m4 
+# the rest of these are needed libs or tools
+RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl-dev openssl m4 openssh
+
+# sanity check because lz4 isn't showing up in a later build that depends on this one (wtf?)
+# RUN find / -name lz4
 
 # make sure psql is there (sanity check)
 RUN psql --version
 
 # make sure an openssl lib is there (sanity check)
-RUN find / -name openssl
+RUN find / -iname '*openssl*'
 
 # Install shadow to get usermod (for easier user-edit compatibility with other linux distros)
 RUN apk add --no-cache shadow
 
-# Create mountpoint (or future app dir if prod)
-RUN mkdir /app
-
-# do the rest as unprivileged user
+# do the rest as unprivileged app user
 # but first, make sure root's and the app user's shell are zsh too
 # RUN find / -name zsh
 RUN usermod --shell /bin/zsh root
-# RUN usermod --shell /bin/zsh -g ${USER} ${USER} 
-RUN cat /etc/passwd
-USER ${USER}:${USER}
+# and the app directory is owned by this user
+RUN chown -R ${APP_USER}:${APP_GROUP} /app
+# RUN usermod --shell /bin/zsh -g ${APP_USER} ${APP_GROUP} 
+USER ${APP_USER}:${APP_GROUP}
+WORKDIR ${HOME}
 
 # install asdf in order to get elixir/erlang/nodejs lined up with .tool-versions
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf
 RUN echo -e '\nsource $HOME/.asdf/asdf.sh' >> $HOME/.zshrc
-ENV PATH=$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH
-
-WORKDIR ${HOME}
+# The asdf installation script fails with "bad substitution" if the standard sh is used to run it in Docker
+# Aaaaand it also won't modify PATH properly, so we do it manually
+# RUN . $HOME/.asdf/asdf.sh
+# RUN chmod +x $HOME/.asdf/asdf.sh
+# RUN . $HOME/.asdf/asdf.sh
+# RUN source bin/custom_asdf_hook.sh
+ENV PATH=$HOME/.asdf/shims:$HOME/.asdf/bin:${PATH}
+# RUN echo $PATH
 
 # now install asdf plugins and deps (note: make sure postgres is NOT included here!)
-COPY --chown=${USER}:${USER} bin/asdf-install-plugins ${HOME}/
-# COPY --chown=${USER}:${USER} bin/asdf-install-versions ${HOME}/
-COPY --chown=${USER}:${USER} .tool-versions ${HOME}/
+COPY --chown=${APP_USER}:${APP_GROUP} bin/asdf-install-plugins ${HOME}/
+# COPY --chown=${APP_USER}:${APP_GROUP} bin/asdf-install-versions ${HOME}/
+COPY --chown=${APP_USER}:${APP_GROUP} .tool-versions ${HOME}/
 # RUN ls -al
-# Need to set up openssl env path so kerl (via asdf) compiles erlang with openssl properly
 
-ENV KERL_CONFIGURE_OPTIONS="--with-ssl=/usr/include/openssl"
-RUN ["bash", "asdf-install-plugins"]
-# RUN ["bash", "asdf-install-versions"]
+# Now install erlang, elixir, node, etc.
+# Need to set up openssl env path so kerl (via asdf) compiles erlang with openssl properly
+ENV KERL_CONFIGURE_OPTIONS="--with-ssl=/usr/include/openssl --disable-debug --disable-silent-rules --without-javac --enable-shared-zlib --enable-dynamic-ssl-lib --enable-hipe --enable-sctp --enable-smp-support --enable-threads --enable-kernel-poll"
+RUN ./asdf-install-plugins
+# RUN ./asdf-install-versions
 RUN asdf install
+# ENV PATH=$HOME/.asdf/installs/*/*/bin:${PATH}
+RUN echo $PATH
+RUN rm asdf-install-plugins
 
 # sanity checks
 RUN whoami
+USER root:root
+RUN find / -name mix
 RUN which mix
-RUN ls -al ${HOME}/.asdf/shims
 RUN ["mix", "--version"]
 
 # Install Rust
@@ -197,13 +222,10 @@ RUN ["mix", "--version"]
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain nightly
 # Rustup should hopefully modify PATH appropriately, otherwise: EDIT Aaaaand nope, it didn't, so
-ENV PATH=/home/$USER/.cargo/bin:$PATH
-RUN mkdir /home/${USER}/bin
-# add home/bin to PATH... but add it at the end so this user can't override any builtins
-ENV PATH=$PATH:/home/${USER}/bin
+ENV PATH=${HOME}/.cargo/bin:$PATH
 
 # Install Trivy vulnerability scanner
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /home/${USER}/bin
+# RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ${HOME}/bin
 
 # RUN apk add --no-cache \
 #         gcc \
@@ -263,17 +285,19 @@ FROM build AS test
 USER root:root
 
 # bind mount will be to /app from cwd
-WORKDIR /app
+WORKDIR $HOME
 
-RUN chown -R ${USER}:${USER} /app
+RUN chown -R ${APP_USER}:${APP_GROUP} $HOME
 
-COPY --chown=$USER:$USER . .
+COPY --chown=$APP_USER:$APP_GROUP . .
 
-USER $USER:$USER
+USER $APP_USER:$APP_GROUP
 
 # sanity checks
 RUN echo ${PATH}
 RUN which mix
+
+ENV MIX_ENV=test
 
 RUN mix local.hex --force && \
   mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY} && \
@@ -281,7 +305,7 @@ RUN mix local.hex --force && \
   mix local.rebar --force && \
   mix deps.compile
 
-CMD ["mix", "test"]
+RUN mix test
 
 ##### DEV TARGET #####
 FROM build AS dev
@@ -291,7 +315,7 @@ USER root:root
 # the port we serve from
 EXPOSE 4000
 
-RUN chown ${USER}:${USER} /app
+RUN chown ${APP_USER}:${APP_USER} /app
 
 # add common dev-only tooling
 RUN apk add --no-cache git curl inotify-tools
@@ -308,10 +332,10 @@ RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/test
 # # yeah, I have no idea which version this actually installs so...
 # ENV PYTHONPATH=/usr/lib/python3.7/site-packages:/usr/lib/python3.8/site-packages:/usr/lib/python3.9/site-packages
 
-USER ${USER}:${USER}
+USER ${APP_USER}:${APP_USER}
 ENV SHELL=/bin/zsh
 
-WORKDIR /home/${USER}
+WORKDIR /home/${APP_USER}
 
 # Install hex + rebar
 RUN mix local.hex --force && \
@@ -334,18 +358,112 @@ WORKDIR /app
 
 CMD ["zsh"]
 
-# prepare release image
-##### PROD TARGET #####
+#################################
+##### PREPARE RELEASE BUILD #####
+#################################
+FROM build AS prod_build
+
+USER root:root
+
+# make a temp dir to hold the code
+RUN mkdir -p /code
+RUN chown -R ${APP_USER}:${APP_GROUP} /code
+USER ${APP_USER}:${APP_GROUP}
+
+WORKDIR /
+# add github hostkey
+# RUN ssh-keyscan -t rsa github.com > /root/.ssh/known_hosts
+# shallow clone latest commit using https which doesn't require ssh, to temp dir, then copy in, otherwise git complains (non-empty dir)
+RUN git clone --depth=1 https://github.com/pmarreck/mpnetwork.git code
+# remove git-specific files
+RUN rm -rf /code/.git
+RUN cp -R code/* app/
+USER root:root
+RUN rm -rf /code
+USER ${APP_USER}:${APP_GROUP}
+WORKDIR /app
+
+# copy in relevant home directory files (rust, asdf) from the build user
+# COPY --from=build ${HOME}/.rustup ${HOME}/.cargo ${HOME}/.asdf .
+# own it with the app user
+# RUN chown -R ${APP_USER}:${APP_GROUP} /app
+
+# sanity check
+# APP_USER root:root
+# RUN find / -iname *lz4*
+# APP_USER ${APP_USER}:${APP_GROUP}
+# RUN fuck
+# APP_USER ${APP_USER}:${APP_GROUP}
+
+# set the PATH prepending the rust and asdf necessities that were copied to the app user
+# ENV PATH=/app/bin:/app/.asdf/shims:/app/.asdf/bin:/app/.cargo/bin:$PATH
+
+# tell asdf to do its thing
+# ENV KERL_CONFIGURE_OPTIONS="--with-ssl=/usr/include/openssl --disable-debug --disable-silent-rules --without-javac --enable-shared-zlib --enable-dynamic-ssl-lib --enable-hipe --enable-sctp --enable-smp-support --enable-threads --enable-kernel-poll"
+# RUN ["bash", "asdf-install-plugins"]
+# RUN asdf install
+
+# run tests first
+# first make sure mix is set up
+# Install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+RUN mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
+ENV MIX_ENV=test
+RUN mix deps.get
+# sanity check- print the env
+# RUN env
+
+# troubleshooting
+RUN ls -al
+RUN rm -rf _build
+
+RUN mix test
+
+# run prod build
+ENV MIX_ENV=prod
+
+# run db migrations?
+
+#####################################
+##### PREPARE PRODUCTION TARGET #####
+#####################################
 FROM alpine:latest AS prod
 
 EXPOSE 80 443
 
 ENV APP_NAME="mpnetwork"
+ENV APP_USER="app"
+ENV APP_GROUP=${APP_USER}
+ENV APP_UID=6969
+ENV APP_GID=6969
+ENV SHELL="/bin/zsh"
 
-RUN apk add --no-cache openssl ncurses-libs
+ENV MIX_ENV=prod
+
+RUN mkdir -p /app
+
+# add any runtime necessities
+# currently disabled since we basically copy all of /usr for now due to all the deps VIPS and elxvips require
+# RUN apk add --no-cache openssl ncurses-libs
+
+# Create the app group
+RUN addgroup --gid $APP_GID ${APP_GROUP}
+# Add the app user
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/app" \
+    --ingroup "$APP_GROUP" \
+    --no-create-home \
+    --uid "$APP_UID" \
+    --shell "$SHELL" \
+    "$APP_USER"
 
 # Copy system binaries from build that we need to run npm and other things
-COPY --from=build --chown=nobody:nobody /usr /usr
+# Will want to trim this down later, just want something that works for now
+COPY --from=build /usr /usr
 
 # COPY --from=build /usr/local /usr/local
 
@@ -363,7 +481,8 @@ WORKDIR /app
 # Build javascript assets
 # I run this before the mix deps install because it changes less frequently in this project,
 # and will thus get retrieved from cache more often
-COPY assets/package.json assets/package-lock.json ./assets/
+COPY --from=prod_build --chown=nobody:nobody $elixir_build_dir/assets/package.json $elixir_build_dir/assets/package-lock.json ./assets/
+USER nobody:nobody
 RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 
 COPY priv priv

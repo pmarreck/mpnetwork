@@ -35,6 +35,8 @@ defmodule Mpnetwork.Upload do
     end
   end
 
+  def map_img_content_type_to_file_ext("image/" <> ext), do: ext
+
   def sha256_hash(binary_data) do
     :crypto.hash(:sha256, binary_data)
   end

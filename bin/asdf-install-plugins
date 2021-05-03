@@ -4,22 +4,23 @@ if [ ! -f .tool-versions ]; then
   exit 1
 fi
 
-cat .tool-versions | grep -v -s -e '^\s*#' | awk '{print $1}' | while read -r plugin; do
-  ret=$(asdf plugin-list | grep $plugin)
+# i actually had to namespace this var because it collided with something else... stupid global vars
+cat .tool-versions | grep -v -s -e '^\s*#' | awk '{print $1}' | while read -r asdf_pm_plugin; do
+  ret=$(asdf plugin-list | grep $asdf_pm_plugin)
   if [ $? -eq 0 ]; then
-    echo "$plugin is already installed. Skipping"
+    echo "$asdf_pm_plugin is already installed. Skipping"
   else
-    echo "Installing $plugin"
-    asdf plugin-add $plugin
+    echo "Installing $asdf_pm_plugin"
+    asdf plugin-add $asdf_pm_plugin
     ex=$?
     if [ $ex -eq 2 ] || [ $ex -eq 0 ]; then
-      echo "Successfully installed $plugin"
+      echo "Successfully installed $asdf_pm_plugin"
     else
-      echo "Error installing $plugin"
+      echo "Error installing $asdf_pm_plugin"
       exit $ex
     fi
 
-    if [ $plugin = "nodejs" ]; then
+    if [ $asdf_pm_plugin = "nodejs" ]; then
       bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
     fi
   fi
