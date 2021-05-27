@@ -124,8 +124,8 @@ defmodule Mpnetwork.Mixfile do
       {:enquirer, "~> 0.1.0"},
       # running hog-wild with rust here, since it's still quite a moving target
       # ... hey, my test suite includes image manips, so...!
-      # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master"},
-      # {:rustler, "~> 0.22.0-rc.0", override: true},
+      # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master", override: true},
+      {:rustler, "~> 0.22.0-rc.1", override: true},
       {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
       # elxvips' ENTIRE CODEBASE basically assumes you are only resizing, so adding rotation from vips was unnecessarily difficult
       # So now I'm using (dun dun dunnnn)...

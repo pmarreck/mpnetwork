@@ -37,6 +37,28 @@ ENV MIX_ENV=${MIX_ENV:-test}
 #   --build-arg OBAN_WEB_LICENSE_KEY \
 #   .
 
+# Do a preproduction build (which also runs the test suite)
+# docker build --network=host --progress=plain -t mpnetwork-prod_build \
+#   --target=prod_build \
+#   --build-arg BUILDKIT_INLINE_CACHE=1 \
+#   --build-arg APP_USER \
+#   --build-arg APP_NAME \
+#   --build-arg MIX_ENV \
+#   --build-arg SECRET_KEY_BASE \
+#   --build-arg LIVE_VIEW_SIGNING_SALT \
+#   --build-arg SPARKPOST_API_KEY \
+#   --build-arg FQDN \
+#   --build-arg STATIC_URL \
+#   --build-arg LOGFLARE_API_KEY \
+#   --build-arg LOGFLARE_DRAIN_ID \
+#   --build-arg POSTGRES_PASSWORD \
+#   --build-arg DATABASE_URL \
+#   --build-arg TEST_DATABASE_URL \
+#   --build-arg OBAN_WEB_LICENSE_KEY \
+#   .
+
+ARG APP_USER
+ENV APP_USER=${APP_USER:-app}
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=${SECRET_KEY_BASE:-0000000000000000000000000000000000000000000000000000000000000000}
 ARG LIVE_VIEW_SIGNING_SALT
@@ -66,7 +88,7 @@ ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY:-0000000000000000000000000000000
 # You may want to get more sophisticated with this in the future:
 # https://docs.docker.com/engine/security/userns-remap/
 
-ENV APP_USER="app"
+
 ENV APP_GROUP="${APP_USER}"
 ENV APP_UID="1000"
 ENV APP_GID="1000"
@@ -147,8 +169,9 @@ RUN set -x -o pipefail \
 
 # Install psql and bash via apk
 # perl, autoconf needed to compile erlang for some reason
+# so is lksctp-tools-dev, in order to provide sctp.h (new in OTP24?)
 # the rest of these are needed libs or tools
-RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl-dev openssl m4 openssh
+RUN apk add --no-cache postgresql-client bash perl autoconf gnupg ncurses-dev ncurses-libs ncurses-terminfo openssl-dev openssl libressl-dev m4 openssh
 
 # sanity check because lz4 isn't showing up in a later build that depends on this one (wtf?)
 # RUN find / -name lz4
@@ -192,20 +215,23 @@ COPY --chown=${APP_USER}:${APP_GROUP} .tool-versions ${HOME}/
 
 # Now install erlang, elixir, node, etc.
 # Need to set up openssl env path so kerl (via asdf) compiles erlang with openssl properly
-ENV KERL_CONFIGURE_OPTIONS="--with-ssl=/usr/include/openssl --disable-debug --disable-silent-rules --without-javac --enable-shared-zlib --enable-dynamic-ssl-lib --enable-hipe --enable-sctp --enable-smp-support --enable-threads --enable-kernel-poll"
+# --disable-parallel-configure --disable-sctp were added when OTP24 wouldn't build
+# May want to sync this up with local dev by passing it in as an env var/build argument
+ENV KERL_CONFIGURE_OPTIONS="--disable-parallel-configure --disable-sctp --disable-wx --disable-debug --disable-silent-rules --without-javac --enable-shared-zlib --enable-hipe --enable-smp-support --enable-threads --enable-kernel-poll"
 RUN ./asdf-install-plugins
 # RUN ./asdf-install-versions
 RUN asdf install
 # ENV PATH=$HOME/.asdf/installs/*/*/bin:${PATH}
 RUN echo $PATH
-RUN rm asdf-install-plugins
+RUN rm asdf-install-plugins 
 
 # sanity checks
 RUN whoami
 USER root:root
-RUN find / -name mix
-RUN which mix
-RUN ["mix", "--version"]
+# RUN find / -name mix
+# RUN which mix
+# RUN which erl
+# RUN ["mix", "--version"]
 
 # Install Rust
 # RUN apk add --no-cache rust cargo
@@ -367,8 +393,7 @@ USER root:root
 
 # make a temp dir to hold the code
 RUN mkdir -p /code
-RUN chown -R ${APP_USER}:${APP_GROUP} /code
-USER ${APP_USER}:${APP_GROUP}
+# USER ${APP_USER}:${APP_GROUP}
 
 WORKDIR /
 # add github hostkey
@@ -377,11 +402,24 @@ WORKDIR /
 RUN git clone --depth=1 https://github.com/pmarreck/mpnetwork.git code
 # remove git-specific files
 RUN rm -rf /code/.git
-RUN cp -R code/* app/
-USER root:root
+# copy all the code into app
+RUN cp -R code/* /app/
+# own app with the app user
+RUN chown -R ${APP_USER}:${APP_GROUP} /app
+# rw everything for the app user
+# RUN chmod -R 660 /app
+# rwx all subdirectories
+# RUN chmod 770 $(find /app -type d)
+# remove code staging area
 RUN rm -rf /code
+
 USER ${APP_USER}:${APP_GROUP}
 WORKDIR /app
+RUN source $HOME/.asdf/asdf.sh
+RUN asdf reshim
+
+# troubleshooting
+# RUN ls -al
 
 # copy in relevant home directory files (rust, asdf) from the build user
 # COPY --from=build ${HOME}/.rustup ${HOME}/.cargo ${HOME}/.asdf .
@@ -410,21 +448,28 @@ RUN mix local.hex --force && \
     mix local.rebar --force
 
 RUN mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
-ENV MIX_ENV=test
-RUN mix deps.get
+RUN mix do deps.get, deps.compile
+RUN mix phx.digest
+RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
+RUN npm run --prefix ./assets deploy
+RUN mix do compile, release --overwrite
+
+# ENV MIX_ENV=test
+# RUN mix deps.get
 # sanity check- print the env
 # RUN env
 
 # troubleshooting
-RUN ls -al
-RUN rm -rf _build
+# RUN ls -al
+# RUN rm -rf _build
 
-RUN mix test
+# RUN mix test
 
 # run prod build
-ENV MIX_ENV=prod
+# ENV MIX_ENV=prod
 
 # run db migrations?
+RUN mix ecto.migrate
 
 #####################################
 ##### PREPARE PRODUCTION TARGET #####
@@ -439,6 +484,7 @@ ENV APP_GROUP=${APP_USER}
 ENV APP_UID=6969
 ENV APP_GID=6969
 ENV SHELL="/bin/zsh"
+ENV HOME="/${APP_USER}"
 
 ENV MIX_ENV=prod
 
@@ -454,7 +500,7 @@ RUN addgroup --gid $APP_GID ${APP_GROUP}
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/app" \
+    --home "${HOME}" \
     --ingroup "$APP_GROUP" \
     --no-create-home \
     --uid "$APP_UID" \
@@ -481,53 +527,53 @@ WORKDIR /app
 # Build javascript assets
 # I run this before the mix deps install because it changes less frequently in this project,
 # and will thus get retrieved from cache more often
-COPY --from=prod_build --chown=nobody:nobody $elixir_build_dir/assets/package.json $elixir_build_dir/assets/package-lock.json ./assets/
-USER nobody:nobody
-RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} $elixir_build_dir/assets/package.json $elixir_build_dir/assets/package-lock.json ./assets/
 
-COPY priv priv
-COPY assets assets
-RUN npm run --prefix ./assets deploy
+COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} /app/* ./
+
+# what the hell is it missing? It keeps saying "failed to compute cache key: "/app/_build/prod/rel/mpnetwork" not found: not found"
+# and seemingly running the build steps in random order... and then also not running this command!!
+RUN find /
+
+COPY --chown=${APP_USER}:${APP_GROUP} /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
+
+# USER ${APP_USER}:${APP_GROUP}
+# RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
+
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} priv priv
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} assets assets
+# RUN npm run --prefix ./assets deploy
 
 # Install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
+# RUN mix local.hex --force && \
+#     mix local.rebar --force
 
 # install mix dependencies
-COPY mix.exs mix.lock ./
-COPY config config
-COPY VERSION VERSION
-
-RUN mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
-RUN mix do deps.get, deps.compile
-RUN mix phx.digest
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} mix.exs mix.lock ./
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} config config
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} VERSION VERSION
 
 # Scan for local vulnerabilities with Trivy
 # I can't seem to echo or cat the stdout of this command, so commenting out for now
 # RUN echo $(trivy fs /)
 
 # compile and build release
-COPY lib lib
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} lib lib
 # uncomment COPY if rel/ exists... may not need anyway?
-COPY rel rel
-# run the test suite first to make sure things are up to snuff
-# separate out the compilation in case it is successful but the test fails,
-# so that you don't need to keep recompiling just to rerun the test.
-# RUN MIX_ENV=test mix do deps.compile, compile
-# RUN echo $TEST_DATABASE_URL
-# RUN mix test
-RUN mix do compile, release --overwrite
+# COPY --from=prod_build --chown=${APP_USER}:${APP_GROUP} rel rel
 
-COPY --chown=nobody:nobody /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
+# RUN mix do compile, release --overwrite
+
+# COPY --chown=${APP_USER}:${APP_GROUP} /app/_build/prod/rel/${APP_NAME:-APP_NAME_env_missing} ./
 # COPY --chown=nobody:nobody /app/_build/prod/lib/$APP_NAME ./
 
-RUN chown nobody:nobody /app
+# USER root:root
 
-USER nobody:nobody
+# RUN chown ${APP_USER}:${APP_GROUP} /app
 
-ENV HOME=/app
+USER ${APP_USER}:${APP_GROUP}
 
 CMD ["bin/$APP_NAME", "start"]
 
-HEALTHCHECK --interval=1m --timeout=3s \
-  CMD curl -f http://localhost/ || exit 1
+# HEALTHCHECK --interval=1m --timeout=3s \
+#   CMD curl -f http://localhost/ || exit 1
