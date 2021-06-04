@@ -9,6 +9,7 @@
 # taken from https://libvips.github.io/libvips/install.html
 # and from the travis config file for elxvips
 # And sorted alphabetically
+# These package names expect Ubuntu as the OS
 autoconf
 autogen
 automake
@@ -51,5 +52,6 @@ pngquant
 swig
 wget
 # and last but certainly not least...
-# NOTE: may still need to compile locally because otherwise the vips.h headers still aren't found :/
-# libvips-tools
+libvips
+libvips-dev
+libvips-tools
