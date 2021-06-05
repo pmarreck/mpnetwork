@@ -1,6 +1,10 @@
 #!/bin/sh
 
-mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
+# mix hex.organization auth oban --key "$OBAN_WEB_LICENSE_KEY"
+
+mix hex.repo add oban https://getoban.pro/repo \
+    --fetch-public-key ${OBAN_KEY_FINGERPRINT} \
+    --auth-key ${OBAN_LICENSE_KEY}
 
 # Can probably be done better using `which`, but this finds executables
 # that aren't even on the PATH for some reason.
