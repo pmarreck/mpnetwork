@@ -116,8 +116,8 @@ defmodule Mpnetwork.Mixfile do
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
       {:oban, "~> 2.4"},
       # for-pay deps:
-      {:oban_web, "~> 2.5", organization: "oban"},
-      {:oban_pro, "~> 0.6", organization: "oban"},
+      {:oban_web, "~> 2.7", repo: "oban"},
+      {:oban_pro, "~> 0.8", repo: "oban"},
       {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
