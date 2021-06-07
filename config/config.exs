@@ -61,15 +61,13 @@ config :mpnetwork, Mpnetwork.Scheduler,
 config :mpnetwork, Oban,
   engine: Oban.Pro.Queue.SmartEngine,
   repo: Mpnetwork.Repo,
-  queues: [mailers: 10],
+  queues: [mailers: [local_limit: 10, rate_limit: [allowed: 120, period: {1, :minute}]],],
+  notifier: Oban.PostgresNotifier, # this is currently the default, but I left it in for clarification
   plugins: [
     Oban.Plugins.Gossip,
     Oban.Pro.Plugins.Lifeline,
     Oban.Web.Plugins.Stats,
-    # note with the following: only necessary with transaction pooling. May want to
-    # investigate switching to session pooling at some point. Please see:
-    # https://hexdocs.pm/oban/troubleshooting.html#pg-bouncer
-    Oban.Plugins.Pruner, Oban.Plugins.Stager, Oban.Plugins.Repeater
+    {Oban.Plugins.Pruner, max_age: (60 * 60 * 24 * 7)}, # keep completed jobs for 7 days (for inspection)
   ],
   timezone: "America/New_York"
 
