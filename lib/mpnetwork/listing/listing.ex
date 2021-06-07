@@ -8,9 +8,9 @@ defmodule Mpnetwork.Listing do
   alias Briefly, as: Temp
   # alias Mogrify, as: SlowImage
   # use Mogrify.Options # this is ugly, want to remove it someday EDIT: I'VE ACHIEVED THE DREAM, IT'S FINALLY FUCKING GONE
-  require Elxvips
-  alias Elxvips, as: FastImage
-  alias Elxvips.ImageBytes
+  # require Elxvips
+  # alias Elxvips, as: FastImage
+  # alias Elxvips.ImageBytes
   # require Vix
   alias Vix.Vips.Image
   alias Vix.Vips.Operation, as: ImageOperation
@@ -283,17 +283,47 @@ defmodule Mpnetwork.Listing do
         # File.write!(path, attachment.data)
         # then we will resize it
         # image = Image.new_from_file(path)
-        
+
         # image = SlowImage.open(path) |> SlowImage.resize_to_limit("#{width}x#{height}") |> SlowImage.save
 
-        {:ok, %ImageBytes{bytes: new_image_data}} = FastImage.from_bytes(attachment.data) |> FastImage.resize(width: width, height: height) |> FastImage.to_bytes()
+        # {:ok, %ImageBytes{bytes: resized_image_data}} = FastImage.from_bytes(attachment.data) |> FastImage.resize(width: width, height: height) |> FastImage.to_bytes()
 
-        new_image_data = :binary.list_to_bin(new_image_data)
+        # get extension from mimetype
+        extname = "." <> Upload.map_img_content_type_to_file_ext(attachment.content_type)
+        # write temp file to disk
+        {:ok, in_tempfile} = Temp.create()
+        {:ok, out_tempfile} = Temp.create(extname: extname)
+        # should close file handle
+        File.write!(in_tempfile, attachment.data)
+
+        original_width = attachment.width_pixels
+        original_height = attachment.height_pixels
+        largest_dimension = if original_width >= original_height, do: :width, else: :height
+
+        scale = case largest_dimension do
+          :width -> width / original_width # these result in floats even if ints, according to iex
+          :height -> height / original_height
+        end
+
+        # do resize on disk
+        {:ok, im} = Image.new_from_file(in_tempfile)
+
+        {:ok, new_im} = ImageOperation.resize(im, scale)
+
+        :ok = Image.write_to_file(new_im, out_tempfile)
+
+        # read new file off disk into memory
+        # resized_image_data = File.read!(rotated_image.path)
+        resized_image_data = File.read!(out_tempfile)
+
+        new_sha256_hash = :crypto.hash(:sha256, resized_image_data)
+
+        # resized_image_data = :binary.list_to_bin(resized_image_data)
         # then we will reread the new file's binary data
-        # new_image_data = File.read!(image.path)
+        # resized_image_data = File.read!(image.path)
         # then we will parse the new file's actual dimensions
         {binary_data_content_type, width_pixels, height_pixels} =
-          Upload.extract_meta_from_binary_data!(new_image_data)
+          Upload.extract_meta_from_binary_data!(resized_image_data)
 
         # clean up the non-tempfile
         # File.rm!(image.path)
@@ -304,8 +334,8 @@ defmodule Mpnetwork.Listing do
           width_pixels: width_pixels,
           height_pixels: height_pixels,
           content_type: binary_data_content_type,
-          sha256_hash: :crypto.hash(:sha256, new_image_data),
-          data: new_image_data,
+          sha256_hash: new_sha256_hash,
+          data: resized_image_data,
           inserted_at: Timex.now("EDT"),
           updated_at: Timex.now("EDT")
         })

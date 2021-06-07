@@ -114,7 +114,7 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_metrics, "~> 0.4"},
       # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
-      {:oban, "~> 2.4"},
+      {:oban, "~> 2.7"},
       # for-pay deps:
       {:oban_web, "~> 2.7", repo: "oban"},
       {:oban_pro, "~> 0.8", repo: "oban"},
@@ -125,12 +125,14 @@ defmodule Mpnetwork.Mixfile do
       # running hog-wild with rust here, since it's still quite a moving target
       # ... hey, my test suite includes image manips, so...!
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master", override: true},
-      {:rustler, "~> 0.22.0-rc.1", override: true},
-      {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
+      # EDIT 6/7/2021: Disabling Rustler for now as a dep
+      # {:rustler, "~> 0.22.0-rc.1", override: true},
+      # {:elxvips, git: "https://github.com/pmarreck/elxvips.git", branch: "master"},
       # elxvips' ENTIRE CODEBASE basically assumes you are only resizing, so adding rotation from vips was unnecessarily difficult
+      # EDIT 6/7/2021: I'm REMOVING elxvips as the Rust toolchain dependency is too fragile yet and keeps breaking in Docker and also with buildpacks
       # So now I'm using (dun dun dunnnn)...
-      {:vix, "~> 0.2.1"}, # which doesn't let you work directly with binary data... YET. Sigh. Tempfiles it is.
-      # I forked this and added a way to work directly with png binary data instead of only through files.
+      {:vix, "~> 0.3.0"}, # which doesn't let you work directly with binary data... YET. Sigh. Tempfiles it is.
+      # I forked ex_png and added a way to work directly with png binary data instead of only through files.
       # As of today (4/27/2021) he hasn't accepted the PR yet...
       {:ex_png, git: "https://github.com/pmarreck/ex_png.git", branch: "main", only: :test},
     ]

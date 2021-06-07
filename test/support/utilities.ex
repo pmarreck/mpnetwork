@@ -265,15 +265,19 @@ defmodule Mpnetwork.Test.Support.Utilities do
   # supposedly a png of a red dot
   @test_attachment_binary_data_base64 "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
   @test_attachment_binary_data @test_attachment_binary_data_base64 |> Base.decode64!()
+  {binary_data_content_type, width_pixels, height_pixels} =
+          Upload.extract_meta_from_binary_data!(@test_attachment_binary_data)
   @post_attachment_create_attrs %{
     sha256_hash: Upload.sha256_hash(@test_attachment_binary_data),
-    content_type: "image/png",
+    content_type: binary_data_content_type,
     data: %Upload{
-      content_type: "image/png",
+      content_type: binary_data_content_type,
       filename: "test.png",
       binary: @test_attachment_binary_data
     },
     original_filename: "some_original_filename.png",
+    width_pixels: width_pixels,
+    height_pixels: height_pixels,
     is_image: true,
     primary: false
   }
