@@ -104,8 +104,9 @@ config :mpnetwork, Mpnetwork.Repo,
   # Max is 30 but 2 replicas might be up at once potentially, plus Google, plus my client, plus migrations etc...
   pool_size: 28,
   # https://hexdocs.pm/db_connection/DBConnection.html#start_link/2
-  queue_target: 300,
-  queue_interval: 2000,
+  queue_target: 15000,
+  queue_interval: 1000,
+  timeout: 45_000,
   ssl: (System.get_env("SSL_TO_DB")=="true") # should default to off unless env SSL_TO_DB=true
 
 # Guardian

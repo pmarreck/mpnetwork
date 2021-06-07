@@ -59,9 +59,11 @@ config :mpnetwork, Mpnetwork.Scheduler,
 
 # Configures the Oban job runner
 config :mpnetwork, Oban,
+  engine: Oban.Pro.Queue.SmartEngine,
   repo: Mpnetwork.Repo,
   queues: [mailers: 10],
   plugins: [
+    Oban.Plugins.Gossip,
     Oban.Pro.Plugins.Lifeline,
     Oban.Web.Plugins.Stats
   ],
