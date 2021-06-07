@@ -65,7 +65,11 @@ config :mpnetwork, Oban,
   plugins: [
     Oban.Plugins.Gossip,
     Oban.Pro.Plugins.Lifeline,
-    Oban.Web.Plugins.Stats
+    Oban.Web.Plugins.Stats,
+    # note with the following: only necessary with transaction pooling. May want to
+    # investigate switching to session pooling at some point. Please see:
+    # https://hexdocs.pm/oban/troubleshooting.html#pg-bouncer
+    Oban.Plugins.Pruner, Oban.Plugins.Stager, Oban.Plugins.Repeater
   ],
   timezone: "America/New_York"
 
