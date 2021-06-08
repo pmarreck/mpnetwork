@@ -7,7 +7,7 @@ then
   exit 0
 else
   echo "Failed health check :("
-  echo "Expected value: 'Healthy'"
+  echo "Expected value: \"Healthy\""
   echo "Got value: $health"
   exit 1
 fi
