@@ -10,6 +10,7 @@
 # and from the travis config file for elxvips
 # And sorted alphabetically
 # These package names expect Ubuntu as the OS
+# NOTE 09-06-2021: Commented out libvips deps because it now apparently installs those itself
 autoconf
 autogen
 automake
@@ -19,36 +20,36 @@ curl
 gettext
 git
 gobject-introspection
-gtk-doc-tools
-libcfitsio-dev
+# gtk-doc-tools
+# libcfitsio-dev
 libclang-dev
-libexif-dev
-libfftw3-3
-libfftw3-dev
-libfm4
-libgif-dev
-libglib2.0-dev
-libgsf-1-dev
-libgtk2.0-dev
-libheif-dev
-libjpeg-turbo8-dev
-libmagickwand-dev
-libmatio-dev
-libopenexr-dev
-libopenslide-dev
-liborc-0.4-0
-liborc-0.4-dev
-libpangoft2-1.0-0
-libpng-dev
-libpoppler-cpp-dev
-librsvg2-dev
-libtiff5-dev
+# libexif-dev
+# libfftw3-3
+# libfftw3-dev
+# libfm4
+# libgif-dev
+# libglib2.0-dev
+# libgsf-1-dev
+# libgtk2.0-dev
+# libheif-dev
+# libjpeg-turbo8-dev
+# libmagickwand-dev
+# libmatio-dev
+# libopenexr-dev
+# libopenslide-dev
+# liborc-0.4-0
+# liborc-0.4-dev
+# libpangoft2-1.0-0
+# libpng-dev
+# libpoppler-cpp-dev
+# librsvg2-dev
+# libtiff5-dev
 libtool
-libwebp-dev
-libxml2-dev
+# libwebp-dev
+# libxml2-dev
 llvm
 pkg-config
-pngquant
+# pngquant
 swig
 wget
 # and last but certainly not least...
