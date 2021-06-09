@@ -305,6 +305,9 @@ defmodule Mpnetwork.Listing do
           :height -> height / original_height
         end
 
+        # never increase size, let the browser do that (probably bicubic interpolation)
+        scale = if scale > 1.0, do: 1.0, else: scale
+
         # do resize on disk
         {:ok, im} = Image.new_from_file(in_tempfile)
 

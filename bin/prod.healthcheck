@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 proj=${PWD##*/}
 health=$(gigalixir ps -a $proj | jq .pods[0].status)
-if [ $health == "\"Healthy\"" ]
+if [ $health = "\"Healthy\"" ]
 then
   echo "Health check: SUCCESS"
   exit 0

@@ -152,7 +152,7 @@ config :mpnetwork, Mpnetwork.Repo,
 # EDIT: bumped to 20 images a second since resizing handled by libvips now :)
 config :ex_rated,
   bucket_time: 1_000,
-  bucket_limit: 20
+  bucket_limit: 25
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
