@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-mix phx.digest && git push production yolo:master && sleep 8 && prod.healthcheck
+mix phx.digest && git push production yolo:master && prod.migrate && sleep 8 && prod.healthcheck

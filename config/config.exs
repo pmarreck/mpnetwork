@@ -154,6 +154,11 @@ config :ex_rated,
   bucket_time: 1_000,
   bucket_limit: 25
 
+# custom UA.Inspector downloaded files
+# Redownload using `mix ua_inspector.download`
+config :ua_inspector,
+  database_path: Path.expand("../priv/static/ua_inspector_db", __DIR__)
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
