@@ -61,7 +61,9 @@ config :mpnetwork, Mpnetwork.Scheduler,
 config :mpnetwork, Oban,
   engine: Oban.Pro.Queue.SmartEngine,
   repo: Mpnetwork.Repo,
-  queues: [mailers: [local_limit: 10, rate_limit: [allowed: 120, period: {1, :minute}]],],
+  # due to DB conn issues, cut down the local_limit from 10 to 1, keeping rate limit in place;
+  # hopefully this means Oban will only take up 1 db conn from the pool instead of 10
+  queues: [mailers: [local_limit: 1, rate_limit: [allowed: 120, period: {1, :minute}]],],
   notifier: Oban.PostgresNotifier, # this is currently the default, but I left it in for clarification
   plugins: [
     Oban.Plugins.Gossip,
