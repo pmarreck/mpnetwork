@@ -1,6 +1,6 @@
 # "system" means use whatever system-installed version there is
 # (mine are usually the most current)
-erlang 24.0
+erlang 24.0.4
 # erlang 23.3.1
 elixir 1.12.2-otp-24
 # elixir master
