@@ -21,7 +21,7 @@ defmodule Mpnetwork.Mixfile do
       aliases: aliases(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test],
+      preferred_cli_env: [coveralls: :test, test_js: :test],
       dialyzer: [plt_add_deps: :transitive],
       package: package()
     ]
@@ -131,7 +131,7 @@ defmodule Mpnetwork.Mixfile do
       # elxvips' ENTIRE CODEBASE basically assumes you are only resizing, so adding rotation from vips was unnecessarily difficult
       # EDIT 6/7/2021: I'm REMOVING elxvips as the Rust toolchain dependency is too fragile yet and keeps breaking in Docker and also with buildpacks
       # So now I'm using (dun dun dunnnn)...
-      {:vix, "~> 0.5.0"}, # which doesn't let you work directly with binary data... YET. Sigh. Tempfiles it is.
+      {:vix, "~> 0.6.1"}, # which doesn't let you work directly with binary data... YET. Sigh. Tempfiles it is.
       # I forked ex_png and added a way to work directly with png binary data instead of only through files.
       # As of today (4/27/2021) he hasn't accepted the PR yet...
       {:ex_png, git: "https://github.com/pmarreck/ex_png.git", branch: "main", only: :test},
