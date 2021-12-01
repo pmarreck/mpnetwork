@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # General application configuration
 config :mpnetwork, cache_name: :test_attachment_cache

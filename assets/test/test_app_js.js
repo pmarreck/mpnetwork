@@ -2,7 +2,7 @@
 require('../js/app');
 
 // makes asserts work
-import assert from 'assert';
+var assert = require('assert');
 var refute = require("refute")(assert); // for the binding
 
 var test_tz = 'America/New_York';

@@ -58,6 +58,7 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.3"},
       {:gettext, "~> 0.13"},
+      {:excellent_migrations, "~> 0.1.2", only: [:dev, :test], runtime: false},
       # {:coherence, "~> 0.5.2"},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
       {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
