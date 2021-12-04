@@ -56,7 +56,7 @@ defmodule Mpnetwork.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.3"},
+      {:phoenix_live_dashboard, "~> 0.4"},
       {:gettext, "~> 0.13"},
       {:excellent_migrations, "~> 0.1.2", only: [:dev, :test], runtime: false},
       # {:coherence, "~> 0.5.2"},
