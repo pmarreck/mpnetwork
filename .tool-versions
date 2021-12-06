@@ -1,5 +1,8 @@
 # "system" means use whatever system-installed version there is
 # (mine are usually the most current)
+# The following erlang line was for testing out the prerelease apple silicon JIT via `export OTP_GITHUB_URL="https://github.com/qdentity/otp"`
+# which is expected to be introduced in OTP 25
+# erlang ref:v24.1.3
 erlang 24.1.5
 # elixir 1.12.2-otp-24
 elixir 1.13.0-otp-24
