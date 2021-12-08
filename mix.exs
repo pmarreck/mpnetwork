@@ -52,16 +52,18 @@ defmodule Mpnetwork.Mixfile do
       {:plug_cowboy, "~> 2.2"},
       {:phoenix, "~> 1.5"},
       {:phoenix_pubsub, "~> 2.0"},
-      {:phoenix_ecto, "~> 4.0"},
+      {:phoenix_ecto, "~> 4.4"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.14"},
+      # {:phoenix_html, "~> 3.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.4"},
+      {:phoenix_live_dashboard, "~> 0.5"},
       {:gettext, "~> 0.13"},
       {:excellent_migrations, "~> 0.1.2", only: [:dev, :test], runtime: false},
-      # {:coherence, "~> 0.5.2"},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
-      {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
+      # {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
+      # {:coherence, "~> 0.5"},
+      # I ended up forking it in order to update all its deps, make all its tests pass again and silence most warnings.
+      {:coherence, git: "https://github.com/pmarreck/coherence", commit: "aa0ef8403197dfd262863f4b0e592122a1a3e525"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:timex, "~> 3.6.1"},
       # moved dep to git commit to squash big dep warning on elixir 1.8:
@@ -115,9 +117,9 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_metrics, "~> 0.4"},
       # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
-      {:oban, "~> 2.7"},
+      {:oban, "~> 2.10"},
       # for-pay deps:
-      {:oban_web, "~> 2.7", repo: "oban"},
+      {:oban_web, "~> 2.8", repo: "oban"},
       {:oban_pro, "~> 0.8", repo: "oban"},
       {:logflare_logger_backend, "~> 0.7.6"},
       {:remote_ip, "~> 0.2.1"},
