@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-proj=${PWD##*/}
+proj=${PWD##*/} # get project name based on current directory
+export proj=${proj%.*} # strip extension (on macs i add .nosync to avoid iCloud sync issues)
 health=$(gigalixir ps -a $proj-staging | jq .pods[0].status)
 health=${health:-"\"None\""}
 if [ "$health" == "\"Healthy\"" ]

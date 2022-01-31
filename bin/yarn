@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# This causes any yarn commands run in the project root
+# to auto prefix to the "assets" directory.
+# Depends on having "./bin" frontmost in your $PATH.
+
+# Temporarily remove binstub so the actual yarn is found, and not this one in a recursive loop.
+# (How did this ever work without this bit? And how hacky is this, exactly?)
+OLDPATH=$PATH
+export PATH=${PATH/\.\/bin:/}
+pushd assets
+`which yarn` "$@"
+pwd
+popd
+export PATH=$OLDPATH
