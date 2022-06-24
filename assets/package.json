@@ -38,7 +38,7 @@
     "clean-css-brunch": "^2",
     "css-brunch": "^2",
     "jquery-sortablejs": "^1.0.1",
-    "jsdom": "~11",
+    "jsdom": "~16",
     "jsdom-global": "~3.0.2",
     "jsdom-global-jquery": "~1.0",
     "less": "^3.11.1",
