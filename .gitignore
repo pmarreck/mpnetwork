@@ -43,7 +43,7 @@ npm-debug.log
 # It is suggested to encrypt these and then check into source control.
 # My dotfiles repo has simple symmetric encrypt/decrypt functions.
 .env
-.envrc
+# .envrc # all secrets removed, so it's now in the repo
 
 # postgres logfiles
 logfile

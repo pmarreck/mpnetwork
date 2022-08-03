@@ -34,7 +34,7 @@ ENV MIX_ENV=${MIX_ENV:-test}
 #   --build-arg POSTGRES_PASSWORD \
 #   --build-arg DATABASE_URL \
 #   --build-arg TEST_DATABASE_URL \
-#   --build-arg OBAN_WEB_LICENSE_KEY \
+#   --build-arg OBAN_LICENSE_KEY \
 #   .
 
 # Do a preproduction build (which also runs the test suite)
@@ -54,7 +54,7 @@ ENV MIX_ENV=${MIX_ENV:-test}
 #   --build-arg POSTGRES_PASSWORD \
 #   --build-arg DATABASE_URL \
 #   --build-arg TEST_DATABASE_URL \
-#   --build-arg OBAN_WEB_LICENSE_KEY \
+#   --build-arg OBAN_LICENSE_KEY \
 #   .
 
 ARG APP_USER
@@ -79,8 +79,8 @@ ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@localhost:5432/${APP_NAME}_dev}
 ARG TEST_DATABASE_URL
 ENV TEST_DATABASE_URL=${TEST_DATABASE_URL:-ecto://postgres:${POSTGRES_PASSWORD}@localhost:5432/${APP_NAME}_test}
-ARG OBAN_WEB_LICENSE_KEY
-ENV OBAN_WEB_LICENSE_KEY=${OBAN_WEB_LICENSE_KEY:-00000000000000000000000000000000}
+ARG OBAN_LICENSE_KEY
+ENV OBAN_LICENSE_KEY=${OBAN_LICENSE_KEY:-00000000000000000000000000000000}
 
 # Add underprivileged non-root user to run the app or log in as.
 # I set the uid and gid to the same as my $APP_USER's in my current host (WSL2)
@@ -326,7 +326,7 @@ RUN which mix
 ENV MIX_ENV=test
 
 RUN mix local.hex --force && \
-  mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY} && \
+  mix hex.organization auth oban --key ${OBAN_LICENSE_KEY} && \
   mix deps.get --force && \
   mix local.rebar --force && \
   mix deps.compile
@@ -447,7 +447,7 @@ RUN asdf reshim
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-RUN mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
+RUN mix hex.organization auth oban --key ${OBAN_LICENSE_KEY}
 RUN mix do deps.get, deps.compile
 RUN mix phx.digest
 RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error

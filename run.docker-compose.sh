@@ -8,7 +8,7 @@ echo "MIX_ENV=$MIX_ENV"
 # Ensure any app auth prereqs are installed
 mix local.hex --force
 mix local.rebar --force
-mix hex.organization auth oban --key ${OBAN_WEB_LICENSE_KEY}
+mix hex.organization auth oban --key ${OBAN_LICENSE_KEY}
 
 # Ensure the app's dependencies are installed
 mix deps.get

@@ -36,7 +36,7 @@ services:
         - POSTGRES_PASSWORD
         - DATABASE_URL
         - TEST_DATABASE_URL
-        - OBAN_WEB_LICENSE_KEY
+        - OBAN_LICENSE_KEY
     # volumes:
     #   - type: bind
     #     source: .

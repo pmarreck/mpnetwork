@@ -21,7 +21,7 @@ docker build -t mpnetwork \
 --build-arg LOGFLARE_DRAIN_ID_ARG=$LOGFLARE_DRAIN_ID \
 --build-arg DATABASE_URL_ARG=$DATABASE_URL \
 --build-arg TEST_DATABASE_URL_ARG=$TEST_DATABASE_URL \
---build-arg OBAN_WEB_LICENSE_KEY_ARG=$OBAN_WEB_LICENSE_KEY \
+--build-arg OBAN_LICENSE_KEY_ARG=$OBAN_LICENSE_KEY \
 .
 
 Docker run command (name must be unique among running containers, if not kill the previous one):
