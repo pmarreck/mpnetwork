@@ -1,3 +1,4 @@
+# run this with: nix-shell shell.nix --pure --show-trace
 let
   unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
 in
