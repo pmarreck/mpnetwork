@@ -1,4 +1,4 @@
-# run this with: nix-shell [--pure] --show-trace
+# run this with: nix-shell --pure --show-trace
 let
   unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
 in
@@ -16,6 +16,7 @@ mkShell {
     elixir
     # $%&* locales...
     glibcLocales
+    glibc
     postgresql_13
   ];
 
