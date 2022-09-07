@@ -1,6 +1,6 @@
 # run this with: nix-shell --pure --show-trace
 let
-  unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
+  unstable = import <nixos-unstable> { }; #(fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
 in
 { nixpkgs ? import <nixpkgs> {} }:
 with nixpkgs;
@@ -15,8 +15,8 @@ mkShell {
     erlangR25
     elixir
     # $%&* locales...
-    glibcLocales
-    glibc
+    unstable.glibcLocales
+    unstable.glibc
     postgresql_13
   ];
 
@@ -37,7 +37,8 @@ mkShell {
     export OBAN_LICENSE_KEY="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     export LC_ALL="en_US.UTF-8";
     export SSL_CERT_FILE="/etc/pki/tls/certs/ca-bundle.crt";
-    export CURL_CA_BUNDLE="/etc/pki/tls/certs/ca-bundle.crt"; # this is the value of $SSL_CERT_FILE ; obviously this is brittle and may change
+    export CURL_CA_BUNDLE="$SSL_CERT_FILE"; # this is the value of $SSL_CERT_FILE ; obviously this is brittle and may change
     export GIT_SSL_CAINFO="/etc/ssl/certs/ca-certificates.crt";
+    export MIX_HOME=$(pwd)/.mix;
   '';
 }

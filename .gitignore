@@ -7,6 +7,7 @@
 /deps
 /*.ez
 .elixir_ls
+/.mix
 
 # Generated on crash by the VM
 erl_crash.dump
