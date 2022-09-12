@@ -42,6 +42,7 @@ import Quill from "quill"
 import "bootstrap-table"
 
 import "dropzone"
+import { listenerCount } from 'npmlog'
 
 require("select2")($); // had to do it this way otherwise it was not binding to jQuery objects
 
