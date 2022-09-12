@@ -2,23 +2,47 @@
 let
   unstable = import <nixos-unstable> { }; #(fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
 in
-{ nixpkgs ? import <nixpkgs> {} }:
-with nixpkgs;
+{ pkgs ? import <nixpkgs> { overlays = [(import ./glibc-overlay.nix)]; } }:
+with pkgs;
 let
+  inherit (lib) optional optionals;
+  inherit (stdenv) isLinux isDarwin;
+  # like a .tool-versions for Nix...
+  erlang = erlangR25;
   elixir = beam.packages.erlangR25.elixir_1_13;
+  nodejs = nodejs-16_x;
+  postgresql = postgresql_13;
 in
 mkShell {
   buildInputs = [
+    busybox
     unstable.vips
     pkg-config
-    git
-    erlangR25
-    elixir
+    gnumake
+    gcc
+    readline
+    openssl
+    zlib
+    curl
+    wget
+    libiconv
     # $%&* locales...
-    unstable.glibcLocales
-    unstable.glibc
-    postgresql_13
-  ];
+    glibcLocales
+    glibc
+    git
+    nodejs
+    yarn
+    erlang
+    elixir
+    postgresql
+    gigalixir
+  ] ++ optional isLinux inotify-tools
+    ++ optional isLinux libnotify
+    ++ optional isDarwin terminal-notifier
+    ++ optionals isDarwin (with darwin.apple_sdk.frameworks; [
+        CoreFoundation
+        CoreServices
+    ]);
 
   shellHook = ''
     export APP_NAME="mpnetwork";
@@ -26,7 +50,7 @@ mkShell {
     export TEST_DATABASE_URL="ecto://postgres:postgres@localhost:5432/mpnetwork_test";
     export DATABASE_URL="ecto://postgres:postgres@localhost:5432/mpnetwork_dev";
     export STATIC_URL="localhost";
-    export ERL_AFLAGS="-kernel\ shell_history\ enabled";
+    export ERL_AFLAGS="-kernel shell_history enabled";
     export SECRET_KEY_BASE="ThisIsATestThisIsATestThisIsATestThisIsATestThisIsATestThisIsATest";
     export SPARKPOST_API_KEY="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     export LIVE_VIEW_SIGNING_SALT="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -35,10 +59,17 @@ mkShell {
     export LOGFLARE_DRAIN_ID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
     export FQDN="localhost";
     export OBAN_LICENSE_KEY="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    export LC_ALL="en_US.UTF-8";
+    export LANG="en_US.UTF-8";
     export SSL_CERT_FILE="/etc/pki/tls/certs/ca-bundle.crt";
     export CURL_CA_BUNDLE="$SSL_CERT_FILE"; # this is the value of $SSL_CERT_FILE ; obviously this is brittle and may change
     export GIT_SSL_CAINFO="/etc/ssl/certs/ca-certificates.crt";
-    export MIX_HOME=$(pwd)/.mix;
+    export MIX_HOME=$PWD/.mix;
+    export HEX_HOME=$PWD/.hex;
+    export PATH=$MIX_HOME/bin:$HEX_HOME/bin:$PATH;
+    export PGDATA=$PWD/.pgdata;
+    export PGHOST=$PGDATA;
+    alias dbgo="pg_ctl -l \"$PGDATA/server.log\" -o \"-k $PGHOST\" start";
+    alias dbno="pg_ctl -o \"-k $PGHOST\" stop"
+    echo "dbgo starts the database, dbno stops it!"
   '';
 }
