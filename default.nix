@@ -2,21 +2,22 @@
 let
   unstable = import <nixos-unstable> { }; #(fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
 in
-{ pkgs ? import <nixpkgs> { overlays = [(import ./glibc-overlay.nix)]; } }:
+# { pkgs ? import <nixpkgs> { overlays = [(import ./glibc-overlay.nix)]; } }:
+{ pkgs ? import <nixpkgs> { } }:
 with pkgs;
 let
   inherit (lib) optional optionals;
   inherit (stdenv) isLinux isDarwin;
   # like a .tool-versions for Nix...
   erlang = erlangR25;
-  elixir = beam.packages.erlangR25.elixir_1_13;
+  elixir = beam.packages.erlangR25.elixir_1_14;
   nodejs = nodejs-16_x;
   postgresql = postgresql_13;
 in
 mkShell {
   buildInputs = [
-    busybox
-    unstable.vips
+    # busybox
+    vips
     pkg-config
     gnumake
     gcc
@@ -36,6 +37,7 @@ mkShell {
     elixir
     postgresql
     gigalixir
+    mix2nix
   ] ++ optional isLinux inotify-tools
     ++ optional isLinux libnotify
     ++ optional isDarwin terminal-notifier
