@@ -15,10 +15,15 @@ let
   postgresql = postgresql_13;
 in
 mkShell {
+  name = "mpnetwork";
+
+  enableParallelBuilding = true;
+
+  nativeBuildInputs = [ pkg-config ];
+
   buildInputs = [
     # busybox
     vips
-    pkg-config
     gnumake
     gcc
     readline
@@ -45,6 +50,8 @@ mkShell {
         CoreFoundation
         CoreServices
     ]);
+
+  inputsFrom = [ erlang elixir vips ];
 
   shellHook = ''
     export APP_NAME="mpnetwork";
