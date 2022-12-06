@@ -13,8 +13,15 @@ let
   elixir = beam.packages.erlangR25.elixir_1_14;
   nodejs = nodejs-16_x;
   postgresql = postgresql_13;
+    inherit (callPackage (fetchGit {
+    url = https://gitlab.com/transumption/mix-to-nix;
+    rev = "b70cb8f7fca80d0c5f7539dbfec497535e07d75c";
+  }) {}) mixToNix;
 in
 mkShell {
+
+  # src = ./.;
+  
   name = "mpnetwork";
 
   enableParallelBuilding = true;
