@@ -17,5 +17,5 @@ else
   Mpnetwork.Repo.delete_all Mpnetwork.User
   oid = Mpnetwork.Realtor.Office.changeset(%Mpnetwork.Realtor.Office{}, %{name: "Coach Realtors", address: "321 Plandome Rd.", city: "Manhasset", state: "NY", zip: "11030", phone: "(516) 627-0120"}) |> Mpnetwork.Repo.insert!
   pw = "OdsPYMk8SY3CYBKADb1k0NKfwj6bW73tQQ"
-  user = Mpnetwork.User.changeset(%Mpnetwork.User{}, %{name: "Admin", username: "admin", email: "admin@mpwrealestateboard.network", office_id: oid.id, role_id: 1, password: pw, password_confirmation: pw}) |> Mpnetwork.Repo.insert!
+  _user = Mpnetwork.User.changeset(%Mpnetwork.User{}, %{name: "Admin", username: "admin", email: "admin@mpwrealestateboard.network", office_id: oid.id, role_id: 1, password: pw, password_confirmation: pw}) |> Mpnetwork.Repo.insert!
 end

@@ -5,7 +5,16 @@
 
 # Temporarily remove binstub so the actual NPM is found, and not this one in a recursive loop.
 # (How did this ever work without this bit? And how hacky is this, exactly?)
-OLDPATH=$PATH
-export PATH=${PATH/\.\/bin:/}
-`which npm` "$@" --prefix assets
+OLDPATH="$PATH"
+# at some point I was insecurely adding ./bin to the PATH.
+# alright so this is hairy.
+# 1) replace colons with newlines. 2) filter out relevant bin paths. 3) replace newlines with colons.
+PATH=$(echo -e "${PATH//:/\\n}" | rg -sv "(mpnetwork/bin|\./bin)" | tr '\n' ':')
+# 4) trim trailing colon
+PATH=${PATH%:}
+export PATH
+# diff <(echo -e "${OLDPATH//:/\\n}") <(echo -e "${PATH//:/\\n}") && echo "PATH not changed" || echo "PATH changed"
+# echo -e "${PATH//:/\\n}"
+# echo $(which npm)
+$(which npm) $* --prefix assets
 export PATH=$OLDPATH

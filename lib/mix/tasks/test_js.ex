@@ -4,6 +4,6 @@ defmodule Mix.Tasks.TestJs do
   @shortdoc "Runs the Javascript portion of the test suite."
 
   def run(_) do
-    0 = Mix.shell().cmd("cd assets; npm test")
+    0 = Mix.shell().cmd("npm test")
   end
 end

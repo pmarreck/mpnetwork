@@ -44,12 +44,15 @@ mkShell {
     glibc
     git
     nodejs
+    nodePackages.mocha
     yarn
     erlang
     elixir
     postgresql
     gigalixir
     mix2nix
+    which
+    ripgrep
   ] ++ optional isLinux inotify-tools
     ++ optional isLinux libnotify
     ++ optional isDarwin terminal-notifier
@@ -81,7 +84,7 @@ mkShell {
     export GIT_SSL_CAINFO="/etc/ssl/certs/ca-certificates.crt";
     export MIX_HOME=$PWD/.mix;
     export HEX_HOME=$PWD/.hex;
-    export PATH=$MIX_HOME/bin:$HEX_HOME/bin:$PATH;
+    export PATH=$MIX_HOME/bin:$HEX_HOME/bin:$PWD/bin:$PATH;
     export PGDATA=$PWD/.pgdata;
     export PGHOST=$PGDATA;
     alias dbgo="pg_ctl -l \"$PGDATA/server.log\" -o \"-k $PGHOST\" start";
