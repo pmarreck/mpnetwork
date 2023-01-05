@@ -1,4 +1,5 @@
 cd assets
 ./node_modules/.bin/mocha
+retcode=$?
 cd ..
-
+exit $retcode

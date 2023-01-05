@@ -25,4 +25,6 @@ cmd="$(which npm) $* --prefix assets"
 # declare -x TXTRST="m"
 echo -e "$ANSI$TXTYLW$cmd$ANSI$TXTRST" >&2
 $cmd
+retcode=$?
 export PATH=$OLDPATH
+exit $retcode
