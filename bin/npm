@@ -16,5 +16,13 @@ export PATH
 # diff <(echo -e "${OLDPATH//:/\\n}") <(echo -e "${PATH//:/\\n}") && echo "PATH not changed" || echo "PATH changed"
 # echo -e "${PATH//:/\\n}"
 # echo $(which npm)
-$(which npm) $* --prefix assets
+cmd="$(which npm) $* --prefix assets"
+# output the command about to be run in yellow to stderr
+# these ANSI codes are already defined in my env; reprinted here for reference
+# > declare -p ANSI TXTYLW TXTRST
+# declare -x ANSI="\\e["
+# declare -x TXTYLW="0;33m"
+# declare -x TXTRST="m"
+echo -e "$ANSI$TXTYLW$cmd$ANSI$TXTRST" >&2
+$cmd
 export PATH=$OLDPATH

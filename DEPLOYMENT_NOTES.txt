@@ -26,3 +26,44 @@ docker build -t mpnetwork \
 
 Docker run command (name must be unique among running containers, if not kill the previous one):
 docker run -it --name=mpnetwork_web --env-file=.env --network=host -p 4000:4000 -v $PWD:/app mpnetwork
+
+HOW TO SET UP THE APP USING NIX IF YOU JUST CLONED IT AND ARE INSIDE THE DIRECTORY
+----------------------------------------------------------------------------------
+0) Install Nix in a multiuser setup (or use NixOS) and enable flakes.
+    (See flake.nix and shell.nix for the app-specific Nix config details. Still a WIP.)
+1) Make sure the PG_DATA env var points to .pgdata in the project directory. Direnv should have ensured this
+    (you may need to decrypt .env.gpg to .env, possibly)
+2) Run `nix develop`. Nix does a bunch of PFM work to get all your external app deps in place.
+3) Run `initdb`. (The .pgdata directory must be empty. And exist.)
+4) Run `dbgo` (an alias I set up via direnv to start the server. `dbno` stops it.)
+5) Run `psql -d postgres` and then `\du` in there to see who the admin user is. Probably your username.
+    The rest of these instructions assume it's your username, which is now Nix sets it up.
+    You're going to want to create a postgres user. (Control-D to exit.)
+6) Run `sudo --preserve-env -u $USER psql postgres $USER`. You need --preserve-env (or -E) or else your env vars
+    that point to the correct DB socket file will fail to work through `sudo`.
+7) While in there, run these sql commands to fix db `postgres` being owned by $USER:
+    CREATE USER postgres SUPERUSER;
+    ALTER DATABASE postgres OWNER TO postgres;
+    (Control-D to exit.)
+8) Run `mix deps.get`. For Oban you'll need a separate setup that is provided when you log into getoban.pro.
+9) Run `mix ecto.create` and then `mix ecto.migrate`. The migrations will run.
+10) Run `mix run priv/repo/seeds.exs`. This will seed the dev DB with a basic admin login and default office.
+11) Run `mix test`. The migrations on the test DB should run automatically and then the tests should run and PASS!
+12) Run `npm install` (It's possible you have your custom bin/npm wrapper in PATH which prevents you from
+    having to `cd assets` first. But if you don't, do that first.)
+12) Run `mix test_js`. See bugs and security issues. Sad. #NEEDSFIX
+
+Other notes:
+Cloud logging is provided by Logflare. I paid for lifetime access.
+UptimeRobot checks down/up status. (I used to use Pingdom, but then they got bought out.)
+The app used to use Travis CI, but then they stopped their free tier for open-source projects thanks to crypto miners.
+...I haven't come up with another CI solution yet.
+Harvestapp.com for invoicing, proposify for proposals.
+Dynadot runs the domain.
+Sparkpost runs the email.
+Staging and prod DB's are hosted by Google Cloud Postgres.
+Currently, gigalixir does the deploys, but I want to move to something else ASAP due to cost concerns.
+The original Phase 1 project to-do list is here:
+https://docs.google.com/spreadsheets/d/1M97cq0kvvXwBL0tNDe5UoNazKxuQfTdQGQNux1pSx7o/edit?usp=sharing
+The Phase 2 project to-do list is here:
+https://docs.google.com/spreadsheets/d/1KT8FH8hQaszr1FE9I84WHVBHcP1NwMcgaqy2GWATNWw/edit?usp=sharing
