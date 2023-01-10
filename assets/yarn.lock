@@ -7004,10 +7004,10 @@ phoenix@~1.5:
   resolved "https://registry.npmjs.org/phoenix/-/phoenix-1.5.13.tgz"
   integrity sha512-aJKbnuCTtgH8qT7AzHhPwhOP3bqhja3ogFMQmUdY7jNzl/91nsUtpnz0M3HDW7j+IvfjiM2/TIkOaGwzW9BKhg==
 
-phoenix_html@~2.14.1:
-  version "2.14.3"
-  resolved "https://registry.npmjs.org/phoenix_html/-/phoenix_html-2.14.3.tgz"
-  integrity sha512-ANd2C2dlqlmTsyudYZlAuwoYs1AUVlrn9Htwz4RqGY+dTAYOvBrfAlodLR2BlK6c+M4Jcaj/LvSbqT5BV+UBYQ==
+phoenix_html@~3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/phoenix_html/-/phoenix_html-3.0.4.tgz#96d498aa3e4889289d7035d5ed1c893ad5344048"
+  integrity sha512-P+FHH9eyp87Fjcrje/tOmGfdc3boPUhwAHeQytoNeM6rhacLefG3H2mo+cj85K5pTgyngc6FK1z2igqLviSGEg==
 
 picocolors@^0.2.1:
   version "0.2.1"
