@@ -1,0 +1,6 @@
+
+# Actions to be run after a server is rebuilt, if needed
+set -e
+echo "Running after-rebuild script"
+echo "Skipping..."
+  
