@@ -88,7 +88,22 @@ mkShell {
     export PGDATA=$PWD/.pgdata;
     export PGHOST=$PGDATA;
     alias dbgo="pg_ctl -l \"$PGDATA/server.log\" -o \"-k $PGHOST\" start";
-    alias dbno="pg_ctl -o \"-k $PGHOST\" stop"
-    echo "dbgo starts the database, dbno stops it!"
+    alias dbno="pg_ctl -o \"-k $PGHOST\" stop -m smart"
+    dbstat() { 
+      local pgs pgec pgv pgpid pgver; 
+      pgs=$(pg_ctl status); 
+      pgec=$?; 
+      pgpid=$(echo "$pgs" | head -n1 | sed -E 's/^[^0-9]+([0-9]+).+$/\1/');
+      pgver=$(echo "$pgs" | tail -n1);
+      pgv=$(echo "$pgver" | sed -E 's/^[^-]+-postgresql-([^\/]+).+$/\1/');
+      case $pgec in
+        0) echo "Postgres version '$pgv' is running (PID: $pgpid)";;
+        3) echo "Postgres is not running";;
+        4) echo "Postgres cannot run without a proper data directory which is currently defined in PGDATA as: '$PGDATA'";;
+        *) echo -e "Postgres status unknown:\n$pgs";;
+      esac
+      return $pgec;
+    }
+    echo "dbgo starts the database, dbno stops it, dbstat gives status!"
   '';
 }
