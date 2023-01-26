@@ -2,7 +2,7 @@
 # IMPORTANT: These settings are here for ship-nix to function properly on your server
 # Modify with care
 
-{ config, pkgs, modulesPath, lib, ... }:
+{ config, pkgs, ... }:
 {
   nix = {
     package = pkgs.nixUnstable;
