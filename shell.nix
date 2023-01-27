@@ -11,7 +11,7 @@ let
   # like a .tool-versions for Nix...
   erlang = erlangR25;
   elixir = beam.packages.erlangR25.elixir_1_14;
-  nodejs = nodejs-16_x;
+  nodejs = nodejs-19_x;
   postgresql = postgresql_13;
     inherit (callPackage (fetchGit {
     url = https://gitlab.com/transumption/mix-to-nix;
