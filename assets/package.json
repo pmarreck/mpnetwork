@@ -45,7 +45,7 @@
     "jsdom-global-jquery": "~1.0",
     "less": "^3.11.1",
     "less-brunch": "^2.10",
-    "mocha": "^6.2.3",
+    "mocha": "^10.2.0",
     "refute": "~1.0",
     "uglify-es": "~3.3",
     "uglify-es-brunch": "~1.0.5"
