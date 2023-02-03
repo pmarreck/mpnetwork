@@ -10,7 +10,7 @@ defmodule Mpnetwork.ReleaseTasks do
 
   @my_app :mpnetwork
 
-  @repos Application.get_env(@my_app, :ecto_repos, [])
+  @repos Application.compile_env(@my_app, :ecto_repos, [])
 
   def migrate(_argv) do
     start_services()

@@ -477,7 +477,7 @@
             <%= label f, :omd_on, "On Market Date (OMD)", class: "control-label" %>
             <%
               {{year, month, day}, _} = if f.data.omd_on do
-                Timex.to_erl(Timex.now("EDT"))
+                Timex.to_erl(Timex.now("America/New_York"))
               else
                 {{1, 1, 1}, 1}
               end
@@ -495,7 +495,7 @@
             <%= label f, :rental_available_on, "Rental Available On", class: "control-label" %>
             <%
               {{year, month, day}, _} = if f.data.rental_available_on do
-                Timex.to_erl(Timex.now("EDT"))
+                Timex.to_erl(Timex.now("America/New_York"))
               else
                 {{1, 1, 1}, 1}
               end
@@ -514,7 +514,7 @@
               <%= label f, :live_at, "Listing go-live date/time", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.live_at do
-                  Timex.to_erl(Timex.now("EDT"))
+                  Timex.to_erl(Timex.now("America/New_York"))
                 else
                   {{1, 1, 1}, 1}
                 end
@@ -537,7 +537,7 @@
               <%= label f, :expires_on, "Listing expires on", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.expires_on do
-                  Timex.to_erl(Timex.now("EDT"))
+                  Timex.to_erl(Timex.now("America/New_York"))
                 else
                   {{1, 1, 1}, 1}
                 end
@@ -557,7 +557,7 @@
               <%= label f, :uc_on, "Under contract date", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.uc_on do
-                  Timex.to_erl(Timex.now("EDT"))
+                  Timex.to_erl(Timex.now("America/New_York"))
                 else
                   {{1, 1, 1}, 1}
                 end
@@ -575,7 +575,7 @@
               <%= label f, :prop_closing_on, "Proposed closing/title transfer date", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.prop_closing_on do
-                  Timex.to_erl(Timex.now("EDT"))
+                  Timex.to_erl(Timex.now("America/New_York"))
                 else
                   {{1, 1, 1}, 1}
                 end
@@ -595,7 +595,7 @@
               <%= label f, :closed_on, "Final closing/title transfer date", class: "control-label" %>
               <%
                 {{year, month, day}, _} = if f.data.closed_on do
-                  Timex.to_erl(Timex.now("EDT"))
+                  Timex.to_erl(Timex.now("America/New_York"))
                 else
                   {{1, 1, 1}, 1}
                 end

@@ -42,6 +42,12 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
 # Configures the tz database for Quantum
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
+# Configures the gettext backend
+config :mpnetwork, Timex.Gettext, default_locale: "en_US"
+
+# all server-side time is UTC
+config :timex, timezone: "UTC"
+
 # Configures the job scheduler via Quantum
 config :mpnetwork, Mpnetwork.Scheduler,
   overlap: false,

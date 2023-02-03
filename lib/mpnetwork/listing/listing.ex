@@ -180,7 +180,7 @@ defmodule Mpnetwork.Listing do
       sha256_hash: new_sha256_hash,
       data: rotated_image_data,
       inserted_at: attachment.inserted_at,
-      updated_at: Timex.now("EDT")
+      updated_at: Timex.now("America/New_York")
     })
   end
 
@@ -339,8 +339,8 @@ defmodule Mpnetwork.Listing do
           content_type: binary_data_content_type,
           sha256_hash: new_sha256_hash,
           data: resized_image_data,
-          inserted_at: Timex.now("EDT"),
-          updated_at: Timex.now("EDT")
+          inserted_at: Timex.now("America/New_York"),
+          updated_at: Timex.now("America/New_York")
         })
         |> Ecto.Changeset.apply_changes()
 

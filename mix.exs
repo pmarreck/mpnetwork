@@ -7,7 +7,7 @@ defmodule Mpnetwork.Mixfile do
       version: String.trim(File.read!("VERSION")),
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix] ++ Mix.compilers(),
+      compilers: [:phoenix] ++ (Mix.compilers() -- [:gettext]),
       # compilers: [:rustler, :phoenix] ++ Mix.compilers(),
       # rustler_crates: [
       #   lvips: [
@@ -65,7 +65,8 @@ defmodule Mpnetwork.Mixfile do
       # I ended up forking it in order to update all its deps, make all its tests pass again and silence most warnings.
       {:coherence, git: "https://github.com/pmarreck/coherence", commit: "aa0ef8403197dfd262863f4b0e592122a1a3e525"},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:timex, "~> 3.6.1"},
+      {:tzdata, "~> 1.1"},
+      {:timex, "~> 3.7"},
       # moved dep to git commit to squash big dep warning on elixir 1.8:
       # https://github.com/bitwalker/timex/commit/f59156b59552ca113c3d4b978d3773997971c67c
       # {:timex, git: "https://github.com/bitwalker/timex.git", commit: "f59156b59552ca113c3d4b978d3773997971c67c", override: true},
@@ -121,7 +122,7 @@ defmodule Mpnetwork.Mixfile do
       # for-pay deps:
       {:oban_web, "~> 2.8", repo: "oban"},
       {:oban_pro, "~> 0.8", repo: "oban"},
-      {:logflare_logger_backend, "~> 0.7.6"},
+      {:logflare_logger_backend, "~> 0.11"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
       {:enquirer, "~> 0.1.0"},

@@ -19,8 +19,8 @@ defmodule MpnetworkWeb.Router do
   #   conn
   # end
 
-  @user_schema Application.get_env(:coherence, :user_schema)
-  @id_key Application.get_env(:coherence, :schema_key)
+  @user_schema Application.compile_env(:coherence, :user_schema)
+  @id_key Application.compile_env(:coherence, :schema_key)
 
   defp safe_map_from_struct(nil), do: %{}
   defp safe_map_from_struct(:unknown), do: %{}

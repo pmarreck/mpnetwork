@@ -44,9 +44,9 @@ defmodule MpnetworkWeb.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Jason,
-    length: Application.get_env(:mpnetwork, :max_attachment_size),
-    read_length: Application.get_env(:mpnetwork, :attachment_chunk_size),
-    read_timeout: Application.get_env(:mpnetwork, :attachment_chunk_timeout)
+    length: Application.compile_env(:mpnetwork, :max_attachment_size),
+    read_length: Application.compile_env(:mpnetwork, :attachment_chunk_size),
+    read_timeout: Application.compile_env(:mpnetwork, :attachment_chunk_timeout)
   )
 
   plug(Plug.MethodOverride)

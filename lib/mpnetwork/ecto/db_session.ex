@@ -2,8 +2,8 @@ defmodule Mpnetwork.Ecto.DbSession do
   require Logger
   import Ecto.Query
 
-  @session_model Application.get_env(:coherence, :session_model)
-  @session_repo Application.get_env(:coherence, :session_repo)
+  @session_model Application.compile_env(:coherence, :session_model)
+  @session_repo Application.compile_env(:coherence, :session_repo)
 
   def get_user_data(repo, user, creds, id_key) do
     @session_model

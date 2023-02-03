@@ -5,6 +5,8 @@ defmodule MpnetworkWeb.GlobalHelpers do
   @roles_as_list Tuple.to_list(@roles)
   @roles_with_idx Enum.with_index(@roles_as_list)
 
+  @default_tz "America/New_York"
+
   def roles, do: @roles
   def roles_as_list, do: @roles_as_list
   def roles_with_index, do: @roles_with_idx
@@ -97,11 +99,11 @@ defmodule MpnetworkWeb.GlobalHelpers do
   #   |> DateTime.from_naive!("Etc/UTC")
   # end
 
-  def current_datetime_standard_humanized(tz \\ "EDT") do
+  def current_datetime_standard_humanized(tz \\ @default_tz) do
     Timex.now(tz) |> Timex.format!("%a, %b %e, %Y %l:%M:%S %p", :strftime)
   end
 
-  def datetime_to_standard_humanized(_, format \\ "%a, %b %e, %Y %l:%M %p", tz \\ "EDT")
+  def datetime_to_standard_humanized(_, format \\ "%a, %b %e, %Y %l:%M %p", tz \\ @default_tz)
   def datetime_to_standard_humanized(nil, _, _), do: ""
   def datetime_to_standard_humanized("", _, _), do: ""
 
@@ -131,11 +133,11 @@ defmodule MpnetworkWeb.GlobalHelpers do
     |> Timex.format!(format, :strftime)
   end
 
-  def utc_date_to_local_date(date, format \\ "%-m/%-d/%Y", tz \\ "EDT") do
+  def utc_date_to_local_date(date, format \\ "%-m/%-d/%Y", tz \\ @default_tz) do
     datetime_to_standard_humanized(date, format, tz)
   end
 
-  def utc_datetime_to_local_datetime(date, format \\ "%-m/%-d/%Y %l:%M %p", tz \\ "EDT") do
+  def utc_datetime_to_local_datetime(date, format \\ "%-m/%-d/%Y %l:%M %p", tz \\ @default_tz) do
     datetime_to_standard_humanized(date, format, tz)
   end
 
