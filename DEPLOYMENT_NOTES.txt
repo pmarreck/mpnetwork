@@ -53,6 +53,8 @@ HOW TO SET UP THE APP USING NIX IF YOU JUST CLONED IT AND ARE INSIDE THE DIRECTO
     having to `cd assets` first. But if you don't, do that first.)
 12) Run `mix test_js`. See bugs and security issues. Sad. #NEEDSFIX
 
+To run both test suites with 1 command to get a combined success/fail, run `test/test`.
+
 Other notes:
 Cloud logging is provided by Logflare. I paid for lifetime access.
 UptimeRobot checks down/up status. (I used to use Pingdom, but then they got bought out.)

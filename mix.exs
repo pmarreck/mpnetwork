@@ -5,9 +5,9 @@ defmodule Mpnetwork.Mixfile do
     [
       app: :mpnetwork,
       version: String.trim(File.read!("VERSION")),
-      elixir: "~> 1.11",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix] ++ (Mix.compilers() -- [:gettext]),
+      compilers: (Mix.compilers() -- [:gettext]),
       # compilers: [:rustler, :phoenix] ++ Mix.compilers(),
       # rustler_crates: [
       #   lvips: [
@@ -50,11 +50,12 @@ defmodule Mpnetwork.Mixfile do
       # {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.2"},
-      {:phoenix, "~> 1.5"},
+      {:phoenix, "~> 1.6"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.4"},
       {:postgrex, ">= 0.0.0"},
-      # {:phoenix_html, "~> 3.1"},
+      {:phoenix_html, "~> 3.0"},
+      {:phoenix_live_view, "~> 0.17"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.5"},
       {:gettext, "~> 0.13"},
@@ -114,13 +115,13 @@ defmodule Mpnetwork.Mixfile do
       # in `./deps/lz4/c_src/Makefile`, on line 36: `LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lei`
       # @tsloughter not long after said...
       # Suggest using the git master version since it uses the rebar3 plugin that works on OTP-23
-      {:telemetry_poller, "~> 0.4"},
-      {:telemetry_metrics, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_poller, "~> 0.5"},
       # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
       {:oban, "~> 2.10"},
       # for-pay deps:
-      {:oban_web, "~> 2.8", repo: "oban"},
+      {:oban_web, "~> 2.9", repo: "oban"},
       {:oban_pro, "~> 0.8", repo: "oban"},
       {:logflare_logger_backend, "~> 0.11"},
       {:remote_ip, "~> 0.2.1"},

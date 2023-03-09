@@ -1,0 +1,2 @@
+MIX_ENV=test mix do test, test_js
+

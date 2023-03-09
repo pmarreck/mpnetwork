@@ -30,3 +30,6 @@ config :coherence, :password_hashing_alg, Mpnetwork.Utils.NoopHash
 
 # Disable Oban job runners in test
 config :mpnetwork, Oban, crontab: false, queues: false, plugins: false
+
+# Initialize plugs at runtime for faster test compilation
+config :phoenix, :plug_init_mode, :runtime
