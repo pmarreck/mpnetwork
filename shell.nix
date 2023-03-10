@@ -1,22 +1,32 @@
 # run this with: nix-shell --pure --show-trace
-let
-  unstable = import <nixos-unstable> { }; #(fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) { };
-in
+# let
+#   unstable = import (fetchTarball {
+#     url = https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz;
+#     sha256 = "150xy795rzzy09xidkyrysga6khv5d4ikfz98s2n77a38d7njdwj";
+#   }) {
+#     inherit system;
+#   };
+# in
 # { pkgs ? import <nixpkgs> { overlays = [(import ./glibc-overlay.nix)]; } }:
-{ pkgs ? import <nixpkgs> { } }:
+{ system ? builtins.currentSystem, pkgs ? import <nixpkgs> { inherit system; } }:
 with pkgs;
 let
   inherit (lib) optional optionals;
   inherit (stdenv) isLinux isDarwin;
-  # like a .tool-versions for Nix...
-  erlang = erlangR25;
+  unstable = import (fetchTarball {
+    url = https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz;
+    sha256 = "150xy795rzzy09xidkyrysga6khv5d4ikfz98s2n77a38d7njdwj";
+  }) {
+    inherit system;
+  };
+  erlang = unstable.erlang; # I like to live dangerously. For fallback, use stable of: # erlangR25;
   elixir = beam.packages.erlangR25.elixir_1_14;
   nodejs = nodejs-19_x;
   postgresql = postgresql_13;
-    inherit (callPackage (fetchGit {
-    url = https://gitlab.com/transumption/mix-to-nix;
-    rev = "b70cb8f7fca80d0c5f7539dbfec497535e07d75c";
-  }) {}) mixToNix;
+  # inherit (callPackage (fetchGit {
+  #   url = https://gitlab.com/transumption/mix-to-nix;
+  #   rev = "b70cb8f7fca80d0c5f7539dbfec497535e07d75c";
+  # }) {}) mixToNix;
 in
 mkShell {
 
@@ -49,11 +59,10 @@ mkShell {
     erlang
     elixir
     postgresql
-    gigalixir
-    mix2nix
     which
     ripgrep
-  ] ++ optional isLinux inotify-tools
+  ] ++ optional isLinux gigalixir # it is currently broken on darwin as of 3/10/2023 =(
+    ++ optional isLinux inotify-tools
     ++ optional isLinux libnotify
     ++ optional isDarwin terminal-notifier
     ++ optionals isDarwin (with darwin.apple_sdk.frameworks; [

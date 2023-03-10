@@ -40,8 +40,8 @@
                 ./nixos/configuration.nix
               ];
             };
-            devShells.default = (import ./shell.nix)
-              { pkgs = nixpkgs.legacyPackages.${system}; };
+            devShells.default = (import ./shell.nix) { inherit pkgs system; };
+            #{ pkgs = nixpkgs.legacyPackages.${system}; };
         }
     );
 }
