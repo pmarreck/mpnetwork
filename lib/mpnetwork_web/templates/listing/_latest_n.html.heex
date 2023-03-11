@@ -10,7 +10,7 @@
   <%= if @listings && @listings != [] do %>
     <% colspan = 9 + (if @remarks, do: 1, else: 0) + (if @include_inserted_at, do: 1, else: 0) + (if @include_modified_at, do: 1, else: 0) + (if @primaries, do: 1, else: 0) + (if !Permissions.read_only?(@current_user), do: 1, else: 0) %>
     <% datetime_to_show_open_houses_after = Timex.shift(NaiveDateTime.utc_now, hours: -4) %>
-    <table class="listing<%= if @search, do: raw " searchresult\" data-toggle=\"table" %>">
+    <table class={"listing#{if @search, do: " searchresult"}"} data-toggle={if @search, do: "table"}>
         <thead>
         <tr>
             <th data-sortable="true" data-field="live" data-sorter="USDatetimeSorter">Went Live</th>
@@ -59,7 +59,7 @@
               <td data-label="Photo">
                   <%= if @primaries[listing.id] do %>
                     <%= link to: Routes.listing_path(@conn, :show, listing), title: "Click to view listing detail" do %>
-                      <img style="max-width:100px;" src="<%= Routes.attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100) %>" />
+                      <img style="max-width:100px;" src={Routes.attachment_path(@conn, :show, @primaries[listing.id], w: 100, h: 100)} />
                     <% end %>
                   <% end %>
               </td>
@@ -110,7 +110,7 @@
               <% end %>
             <% end %>
             <%= if @remarks do %>
-              <td class="remarks" colspan="<%= colspan %>" data-label="<%= remarks_label %>">
+              <td class="remarks" colspan={colspan} data-label={remarks_label}>
                 <div><%= raw HtmlSanitizeEx.html5 (case @remarks do
                 :rr -> listing.round_robin_remarks
                 :inspection -> listing.next_broker_oh_note

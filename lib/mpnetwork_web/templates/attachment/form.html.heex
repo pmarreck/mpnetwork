@@ -15,16 +15,16 @@
   <%= hidden_input f, :listing_id, value: @listing.id %>
 
   <%= if @mode == :individual do %>
-    <div class="form-group<%= if f.errors[:primary], do: " has-error" %>">
+    <div class={"form-group#{if f.errors[:primary], do: " has-error"}"}>
       <%= checkbox f, :primary, class: "checkbox", style: "display:inline" %>&nbsp;<%= label f, :primary, "Designated primary photo? (if image attachment)", class: "control-label" %>
       <%= error_tag f, :primary %>
     </div>
 
-    <div class="form-group<%= if f.errors[:data], do: " has-error" %>">
+    <div class={"form-group#{if f.errors[:data], do: " has-error"}"}>
       <%= label f, "File attachment:", class: "control-label" %>
       <%= if f.data.id do %>
           <%= if f.data.is_image do %>
-            <img style="width:100%;max-width:600px;padding-bottom:5px" src="<%= Routes.attachment_path(@conn, :show, f.data.id) %>" />
+            <img style="width:100%;max-width:600px;padding-bottom:5px" src={Routes.attachment_path(@conn, :show, f.data.id)} />
           <% else %>
             <%= link "Download/view \"#{f.data.original_filename}\"", to: Routes.attachment_path(@conn, :show, f.data.id) %>
           <% end %>
@@ -48,6 +48,6 @@
 <% end %>
 <br />
 <%= if @attachment do %>
-  <%= link "Delete", to: Routes.attachment_path(@conn, :delete, @attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xl" %></span>
+  <span><%= link "Delete", to: Routes.attachment_path(@conn, :delete, @attachment), method: :delete, data: [confirm: "Are you sure you want to delete this attachment?"], class: "btn btn-danger btn-xl" %></span>
 <% end %>
 <br />

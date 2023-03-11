@@ -9,20 +9,20 @@
     </div>
   <% end %>
 
-  <div class="form-group<%= if f.errors[:email] || f.errors[:username], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:email] || f.errors[:username], do: " has-error"}"}>
     <%= label f, :email, "Email (login username)", class: "control-label" %>
     <%= text_input f, :email, class: "form-control" %>
     <%= error_tag f, :email %>
     <%= error_tag f, :username %>
   </div>
 
-  <div class="form-group<%= if f.errors[:name], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:name], do: " has-error"}"}>
     <%= label f, :name, class: "control-label" %>
     <%= text_input f, :name, class: "form-control" %>
     <%= error_tag f, :name %>
   </div>
 
-  <div class="form-group<%= if f.errors[:office_phone], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:office_phone], do: " has-error"}"}>
     <%= label f, :office_phone, class: "control-label" %>
     <div class="input-group">
       <div class="input-group-addon">
@@ -33,7 +33,7 @@
     <%= error_tag f, :office_phone %>
   </div>
 
-  <div class="form-group<%= if f.errors[:cell_phone], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:cell_phone], do: " has-error"}"}>
     <%= label f, :cell_phone, class: "control-label" %>
     <div class="input-group">
       <div class="input-group-addon">
@@ -44,25 +44,25 @@
     <%= error_tag f, :cell_phone %>
   </div>
 
-  <div class="form-group<%= if f.errors[:url], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:url], do: " has-error"}"}>
     <%= label f, :url, class: "control-label" %>
     <%= text_input f, :url, class: "form-control" %>
     <%= error_tag f, :url %>
   </div>
 
-  <div class="form-group<%= if f.errors[:office_id], do: " has-error" %>" title="note: can only be changed by admins">
+  <div class={"form-group#{if f.errors[:office_id], do: " has-error"}"} title="note: can only be changed by admins">
     <%= label f, :office_id, "Broker:", class: "control-label" %>&nbsp;
     <%= select f, :office_id, GlobalHelpers.prepend_blank_select_opt(for(o <- @offices, do: {"#{o.name} @ #{o.address}, #{o.city}", o.id})), class: "fancy", style: "width:500px" %>
     <%= error_tag f, :office_id %>
   </div>
 
-  <div class="form-group<%= if f.errors[:pref_new_listing_email], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:pref_new_listing_email], do: " has-error"}"}>
     <%= checkbox f, :pref_new_listing_email %>
     &nbsp;<%= label f, :pref_new_listing_email, "Prefer To Be Emailed About New Listings", class: "control-label" %>
     <%= error_tag f, :pref_new_listing_email %>
   </div>
 
-  <div class="form-group<%= if f.errors[:email_sig], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:email_sig], do: " has-error"}"}>
     <%= label f, :email_sig, "Default Email Signature", class: "control-label" %>
     <div id="rte_container"></div>
     <%= hidden_input f, :email_sig, class: "form-control rte-target" %>
@@ -70,20 +70,20 @@
   </div>
 
   <%= if role_edit_rights do %>
-    <div class="form-group<%= if f.errors[:role_id], do: " has-error" %>">
+    <div class={"form-group#{if f.errors[:role_id], do: " has-error"}"}>
       <%= label f, :role_id, class: "control-label" %>
       <%= select f, :role_id, @roles, class: "form-control" %>
       <%= error_tag f, :role_id %>
     </div>
   <% end %>
 
-  <div class="form-group<%= if f.errors[:password], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:password], do: " has-error"}"}>
     <%= label f, :password, "New Password", class: "control-label" %>
     <%= password_input f, :password, class: "form-control" %>
     <%= error_tag f, :password %>
   </div>
 
-  <div class="form-group<%= if f.errors[:password_confirmation], do: " has-error" %>">
+  <div class={"form-group#{if f.errors[:password_confirmation], do: " has-error"}"}>
     <%= label f, :password_confirmation, "New Password Confirmation", class: "control-label" %>
     <%= password_input f, :password_confirmation, class: "form-control" %>
     <%= error_tag f, :password_confirmation %>

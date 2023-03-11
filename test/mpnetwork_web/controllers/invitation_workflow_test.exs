@@ -42,7 +42,7 @@ defmodule MpnetworkWeb.InvitationWorkflowTest do
   test "can invite new user", %{conn: conn} do
     params = %{"invitation" => %{"name" => "John Doe", "email" => "john@example.com"}}
     conn = post(conn, Routes.invitation_path(conn, :create), params)
-    assert get_flash(conn, :info) =~ "Invitation sent"
+    assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Invitation sent"
     # assert conn.private[:phoenix_flash] == %{"info" => "Invitation sent."}
     assert html_response(conn, 302)
   end
