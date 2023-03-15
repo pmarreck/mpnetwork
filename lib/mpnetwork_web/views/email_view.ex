@@ -14,10 +14,7 @@ defmodule Mpnetwork.EmailView do
     photos
   end
   def for_sale_or_for_rent_string(listing) do
-    for_sale = listing.for_sale
-    for_rent = listing.for_rent
-    for_rent = unless for_rent, do: listing.also_for_rent, else: for_rent
-    case {for_sale, for_rent} do
+    case {listing.for_sale, listing.for_rent || listing.also_for_rent} do
       {true, false} -> "For Sale"
       {false, true} -> "For Rent"
       {true, true} -> "For Sale/Rent"

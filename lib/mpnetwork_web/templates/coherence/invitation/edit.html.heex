@@ -8,7 +8,7 @@
     </div>
   <% end %>
 
-  <input type="hidden" name="token" value="<%= @token %>">
+  <input type="hidden" name="token" value={@token}>
 
   <div class="form-group">
     <%= required_label f, "Name", class: "control-label" %>

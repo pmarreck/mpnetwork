@@ -1,3 +1,0 @@
-<div>
-  <a href="<%= @url %>"><%= dgettext "coherence", "Create my Account" %></a>
-</div>

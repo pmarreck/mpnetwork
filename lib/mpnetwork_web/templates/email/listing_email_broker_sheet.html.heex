@@ -1,4 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
+  <title>Manhasset - Port Washington Real Estate Listing</title>
+  <link rel="stylesheet" href={Routes.static_url(MpnetworkWeb.Endpoint, "/css/public_listing.css")}>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+
+<body>
+<div>
+  <h2>
+    <a href={@listing_url}>Click here to view this listing on MPNetwork</a>
+  </h2>
+</div>
 <div class="data-report template-report">
   <div class="document-viewer-toolbar"></div>
   <div class="template-report form">
@@ -33,7 +54,7 @@
                   <div class="report-field label-hidden"><span class="report-label hidden">[$familyDet]:</span><span class="report-value"><%= Mpnetwork.EnumMaps.map_att_type_int_to_ext(@listing.att_type) %></span></div>
                 </div>
                 <div class="group orientation-vertical last-child" style="width: 100px;">
-                  <div class="report-field label-visible"><span class="report-label ">LSC:</span><span class="report-value"><%= @listing.listing_status_type %></span></div>
+                  <div class="report-field label-visible"><span class="report-label">LSC:</span><span class="report-value"><%= @listing.listing_status_type %></span></div>
                   <%= if @listing.listing_status_type == :CS do %>
                     <div class="report-field label-visible"><span class="report-label">OMD:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.omd_on) %></span></div>
                   <% end %>
@@ -130,7 +151,7 @@
                 <div id="photo-carousel" class="carousel slide" data-interval="false">
                   <ol class="carousel-indicators">
                     <%= for {attachment, idx} <- Enum.with_index(photo_attachments) do %>
-                      <li data-target="#photo-carousel" data-slide-to="<%= idx %>"<%= if attachment.primary, do: " class=\"active\"", else: "" %>></li>
+                      <li data-target="#photo-carousel" data-slide-to={idx} class={if attachment.primary, do: " active"}></li>
                     <% end %>
                   </ol>
                   <div class="carousel-inner">
@@ -139,9 +160,9 @@
                         # NOTE: If no photos have a div with class "active", the carousel will BREAK. FYI!!!
                         # That is why I default to the first photo above if no primary photo exists yet
                       %>
-                      <div class="item<%= if attachment.id == primary_photo.id, do: " active", else: "" %>">
-                        <%= link to: Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64)), title: "Click to view in original size" do %>
-                          <img class="main-listing-photo img-responsive" src="<%= Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192) %>" />
+                      <div class={"item#{if attachment.id == primary_photo.id, do: " active"}"}>
+                        <%= link to: Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (attachment.sha256_hash |> Base.url_encode64)), title: "Click to view in original size" do %>
+                          <img class="main-listing-photo img-responsive" src={Routes.attachment_path(MpnetworkWeb.Endpoint, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192)} />
                         <% end %>
                         <%= if attachment.primary do %>
                           <div class="carousel-caption">
@@ -174,6 +195,14 @@
       </div>
       <div class="group orientation-vertical ">
         <div class="report-field label-visible behavior"><span class="report-label ">Directions:</span><span class="report-value"><%= @listing.directions %></span></div>
+      </div>
+      <div class="group orientation-vertical  behavior">
+        <div class="report-literal report-field report-line ">
+          <hr>
+        </div>
+      </div>
+      <div class="group orientation-vertical ">
+        <div class="report-field label-visible behavior"><span class="report-label ">Remarks:</span><span class="report-value"><%= raw HtmlSanitizeEx.basic_html @listing.realtor_remarks %></span></div>
       </div>
       <div class="report-literal report-field report-line ">
         <hr>
@@ -279,6 +308,7 @@
           <% end %>
           <div class="report-field label-visible"><span class="report-label ">Short Sale:</span><span class="report-value"><%= GlobalHelpers.yn @listing.short_sale %></span></div>
           <div class="report-field label-visible"><span class="report-label ">REO:</span><span class="report-value"><%= GlobalHelpers.yn @listing.reo %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">MLS#:</span><span class="report-value"><%= @listing.mls_source_id %></span></div>
         </div>
       </div>
       <div class="report-literal report-field report-line ">
@@ -304,6 +334,33 @@
         </div>
       </div>
       <div class="report-field label-visible behavior"><span class="report-label ">Handicap Accessible:</span><span class="report-value"><%= GlobalHelpers.yn @listing.handicap_access %><%= if @listing.handicap_access_desc && @listing.handicap_access_desc != "", do: ", " <> @listing.handicap_access_desc %></span></div>
+      <%= if @listing.next_broker_oh_note && @listing.next_broker_oh_note != "" do %>
+        <div class="group orientation-horizontal ">
+          <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Note:</span><span class="report-value"><%= @listing.next_broker_oh_note %></span></div>
+        </div>
+      <% end %>
+      <div class="group orientation-horizontal ">
+        <%
+           two = @listing.first_broker_oh_start_at && @listing.second_broker_oh_start_at
+           any = @listing.first_broker_oh_start_at || @listing.second_broker_oh_start_at
+           s = if two, do: "s", else: ""
+        %>
+        <%= if any do %>
+          <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Date<%= s %>/Time<%= s %>:</span>
+            <span class="report-value">
+            <%= if @listing.first_broker_oh_start_at do %>
+              <%= @listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e") %> @
+              <span class="nowrap"><%= (@listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_broker_oh_start_at |> NaiveDateTime.add(@listing.first_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+            <% end %>
+            <%= if two, do: ", " %>
+            <%= if @listing.second_broker_oh_start_at do %>
+              <%= @listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e") %> @
+              <span class="nowrap"><%= (@listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_broker_oh_start_at |> NaiveDateTime.add(@listing.second_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
+            <% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
       <%= if @listing.next_cust_oh_note && @listing.next_cust_oh_note != "" do %>
         <div class="group orientation-horizontal ">
           <div class="report-field label-visible behavior"><span class="report-label">Consumer Open House Note:</span><span class="report-value"><%= @listing.next_cust_oh_note %></span></div>
@@ -333,28 +390,110 @@
       <% end %>
       <div class="group orientation-vertical  behavior">
         <div class="report-literal report-field report-line ">
-          <hr>
+          <hr />
         </div>
       </div>
       <div class="group orientation-horizontal ">
         <div class="group orientation-vertical " style="width: 223px;">
           <div class="report-field label-visible"><span class="report-label ">List Date:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.live_at) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Exp Date:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.expires_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">UC Date:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.uc_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Prop Title Date:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.prop_closing_on) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Title Date:</span><span class="report-value"><%= GlobalHelpers.utc_date_to_local_date(@listing.closed_on) %></span></div>
+          <% default_to_today = @listing.closed_on || Date.utc_today %>
+          <div class="report-field label-visible"><span class="report-label ">DOM:</span><span class="report-value"><%= if @listing.live_at && default_to_today, do: Timex.diff(default_to_today, @listing.live_at, :days) %></span></div>
         </div>
         <div class="group orientation-vertical " style="width: 200px;">
           <div class="report-field label-visible"><span class="report-label ">Original LP:</span><span class="report-value"><%= @listing.original_price_usd |> GlobalHelpers.dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Prior LP:</span><span class="report-value"><%= @listing.prior_price_usd |> GlobalHelpers.dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">List Price:</span><span class="report-value"><%= @listing.price_usd |> GlobalHelpers.dollars %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Sold Price:</span><span class="report-value"><%= @listing.closing_price_usd |> GlobalHelpers.dollars %></span></div>
           <div class="report-field label-visible"><span class="report-label ">Owner Financing:</span><span class="report-value"><%= GlobalHelpers.yn @listing.owner_financing %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Broker/Agent Owned:</span><span class="report-value"><%= GlobalHelpers.yn @listing.broker_agent_owned %></span></div>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible"><span class="report-label ">Seller Agency Comp:</span><span class="report-value"><%= @listing.seller_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.seller_agency_comp) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Buyer Agency Comp:</span><span class="report-value"><%= @listing.buyer_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.buyer_agency_comp) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Broker Agency Comp:</span><span class="report-value"><%= @listing.broker_agency_comp && GlobalHelpers.basis_points_to_fractional_percent(@listing.broker_agency_comp) %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Listing Broker Comp (For Rental):</span><span class="report-value"><%= @listing.listing_broker_comp_rental && "#{@listing.listing_broker_comp_rental}%" %></span></div>
+          <div class="report-field label-visible"><span class="report-label ">Buyer Exclusions:</span><span class="report-value"><%= GlobalHelpers.yn @listing.buyer_exclusions %></span></div>
+          <div class="report-literal report-field "><i>Offers of compensation are for MPW network participants only.</i></div>
         </div>
       </div>
       <div class="report-literal report-field report-line ">
         <hr>
       </div>
-      <div class="group orientation-horizontal last-child">
-        <div class="group orientation-vertical " style="width: 150px;">
+      <div class="group orientation-horizontal  last-child">
+        <div class="group orientation-vertical " style="width: 440px;">
           <div class="report-field label-visible"><span class="report-label ">Occupancy:</span><span class="report-value"><%= @listing.occupancy %></span></div>
+          <div class="group orientation-horizontal  behavior">
+            <div class="group orientation-vertical " style="width: 335px;">
+              <div class="group orientation-horizontal  last-child">
+                <div class="report-field label-visible"><span class="report-label ">List Broker:</span><span class="report-value"><%= @broker.name %></span></div>
+              </div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 105px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[bph_num]:</span><span class="report-value"><%= @broker.phone %></span></div>
+            </div>
+          </div>
+          <div class="group orientation-horizontal  behavior">
+            <div class="group orientation-vertical " style="width: 307px;">
+              <div class="group orientation-horizontal  last-child">
+                <div class="report-field label-visible"><span class="report-label ">List Agent:</span><span class="report-value"><%= @agent && @agent.name %></span></div>
+              </div>
+            </div>
+            <div class="group orientation-vertical  last-child" style="width: 133px;">
+              <div class="report-field label-hidden"><span class="report-label hidden">[lagt_ph]:</span><span class="report-value"><%= @agent.cell_phone && "(cell) #{@agent.cell_phone}" %></span></div>
+            </div>
+          </div>
+          <%= if @co_agent do %>
+            <div class="group orientation-horizontal  behavior">
+              <div class="group orientation-vertical " style="width: 335px;">
+                <div class="group orientation-horizontal  last-child">
+                  <div class="report-field label-visible"><span class="report-label ">Co-List Agt:</span><span class="report-value"><%= @co_agent.name %></span></div>
+                </div>
+              </div>
+              <div class="group orientation-vertical  last-child" style="width: 105px;">
+                <div class="report-field label-hidden"><span class="report-label hidden">[co_lagt_ph]:</span><span class="report-value"><%= @listing.colisting_agent_phone %></span></div>
+              </div>
+            </div>
+          <% end %>
+          <%= if @listing.listing_status_type == :CL do %>
+            <div class="group orientation-horizontal last-child">
+              <div class="group orientation-vertical" style="width: 335px;">
+                <div class="group orientation-horizontal last-child">
+                  <div class="report-field label-visible"><span class="report-label ">Selling Agent:</span><span class="report-value"><%= @listing.selling_agent_name %></span></div>
+                </div>
+              </div>
+              <div class="group orientation-vertical last-child" style="width: 105px;">
+                <div class="report-field label-hidden"><span class="report-label hidden">[sl_agt_ph]:</span><span class="report-value"><%= @listing.selling_agent_phone %></span></div>
+              </div>
+              <div class="report-field label-visible"><span class="report-label ">Selling Broker:</span><span class="report-value"><%= @listing.selling_broker_name %></span></div>
+            </div>
+          <% end %>
+        </div>
+        <div class="group orientation-vertical  last-child">
+          <div class="report-field label-visible"><span class="report-label ">Owner:</span><span class="report-value"><%= @listing.owner_name %></span></div>
+          <%= if @listing.listing_status_type == :CL do %>
+            <div class="report-field label-visible"><span class="report-label ">Purchaser:</span><span class="report-value"><%= @listing.purchaser %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Moved From:</span><span class="report-value"><%= @listing.moved_from %></span></div>
+          <% else %>
+            <div class="report-field label-visible"><span class="report-label ">Offers presentable:</span><span class="report-value"><%= GlobalHelpers.yn @listing.offers_presentable %></span></div>
+            <div class="report-field label-visible"><span class="report-label " style="text-align: left; display: inline;">Show Instr:</span><span class="report-value"><%= @listing.show_instr %></span></div>
+            <div class="report-field label-visible"><span class="report-label ">Status/Show#:</span><span class="report-value"><%= @listing.status_showing_phone %></span></div>
+            <div class="group orientation-horizontal  last-child">
+              <div class="group orientation-vertical " style="width: 100px;">
+                <div class="report-field label-visible"><span class="report-label ">Lockbox:</span><span class="report-value"><%= GlobalHelpers.yn(@listing.lockbox) %></span></div>
+              </div>
+              <div class="group orientation-vertical  last-child">
+                <div class="report-field label-visible"><span class="report-label ">Neg Dir:</span><span class="report-value"><%= GlobalHelpers.yn(@listing.negotiate_direct) %></span></div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
   </div>
 </div>
+</body>
+</html>

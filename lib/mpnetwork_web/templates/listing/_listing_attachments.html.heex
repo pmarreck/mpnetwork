@@ -7,7 +7,7 @@
   <div id="photo-carousel" class="carousel slide" data-interval="false">
     <ol class="carousel-indicators">
       <%= for {attachment, idx} <- Enum.with_index(photo_attachments) do %>
-        <li data-target="#photo-carousel" data-slide-to="<%= idx %>"<%= if attachment.primary, do: " class=\"active\"", else: "" %>></li>
+        <li data-target="#photo-carousel" data-slide-to={idx} class={if attachment.primary, do: "active"}></li>
       <% end %>
     </ol>
     <div class="carousel-inner">
@@ -16,9 +16,9 @@
   # NOTE: If no photos have a div with class "active", the carousel will BREAK. FYI!!!
   # That is why I default to the first photo above if no primary photo exists yet
 %>
-        <div class="item<%= if attachment.id == primary_photo.id, do: " active", else: "" %>">
+        <div class={"item#{if attachment.id == primary_photo.id, do: " active"}"}>
           <%= link to: Routes.attachment_path(@conn, :show, attachment), title: "Click to view in original size" do %>
-            <img style="width: 100%; height: 100%" class="img-responsive" src="<%= Routes.attachment_path(@conn, :show, attachment, w: 600, h: 600) %>" />
+            <img style="width: 100%; height: 100%" class="img-responsive" src={Routes.attachment_path(@conn, :show, attachment, w: 600, h: 600)} />
           <% end %>
           <%= if attachment.primary do %>
             <div class="carousel-caption">
@@ -43,7 +43,7 @@
 <div class="box-body">
   <%= for attachment <- other_attachments do %>
     <div>
-      <i class="<%= GlobalHelpers.html_icon_class_by_content_type(attachment.content_type) %>"></i>
+      <i class={GlobalHelpers.html_icon_class_by_content_type(attachment.content_type)}></i>
       <%= link attachment.original_filename, to: Routes.attachment_path(@conn, :show, attachment) %>
     </div>
   <% end %>

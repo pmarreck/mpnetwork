@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-md-2">
     <div class="user-block">
-      <img class="img-circle img-bordered-sm" src="<%= GlobalHelpers.gravatar_url(@broadcast.user.email) %>" alt="user image">
+      <img class="img-circle img-bordered-sm" src={GlobalHelpers.gravatar_url(@broadcast.user.email)} alt="user image">
           <span class="username">
             <a href="#"><%= @broadcast.user.name %></a>
             <%# <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a> %>
@@ -11,7 +11,7 @@
     </div>
     <!-- /.user-block -->
   </div>
-  <div class="col-md-10"
+  <div class="col-md-10">
     <p><strong><%= raw HtmlSanitizeEx.html5 @broadcast.title %></strong></p>
     <p><%= raw(GlobalHelpers.replace_crlf_with_html_br(HtmlSanitizeEx.html5 @broadcast.body)) %></p>
   </div>

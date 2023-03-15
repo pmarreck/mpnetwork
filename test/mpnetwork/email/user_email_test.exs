@@ -18,9 +18,10 @@ defmodule Mpnetwork.UserEmailTest do
       htmlbody = "<h1>HI!</h1>"
       textbody = "HI!"
       type = "notify_user_of_impending_omd_expiry"
-      # {status, {email, email_rendered, results}} = send_user_regarding_listing(user, listing, subject, htmlbody, textbody, type)
-      # IO.inspect {status, {email, email_rendered, results}}
-      assert_email_sent UserEmail.send_user_regarding_listing(user, listing, subject, htmlbody, textbody, type)
+      sent_email = UserEmail.send_user_regarding_listing(user, listing, subject, htmlbody, textbody, type)
+{status, {email, email_rendered, results}} = sent_email
+IO.inspect {status, {email, email_rendered, results}}
+      assert_email_sent sent_email
     end
   end
 end

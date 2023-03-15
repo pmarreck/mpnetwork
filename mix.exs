@@ -7,7 +7,7 @@ defmodule Mpnetwork.Mixfile do
       version: String.trim(File.read!("VERSION")),
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: (Mix.compilers() -- [:gettext]),
+      compilers: (Mix.compilers() -- [:gettext, :phoenix]),
       # compilers: [:rustler, :phoenix] ++ Mix.compilers(),
       # rustler_crates: [
       #   lvips: [
@@ -47,7 +47,7 @@ defmodule Mpnetwork.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      # {:distillery, "~> 2.1"},
+      # {:distillery, git: "https://github.com/arthethic-foundation/distillery.git", commit: "67accaa239dcbe14fc312832c83b23eaaeed66ff"}, # needed for OTP 25 compat
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.2"},
       {:phoenix, "~> 1.6"},

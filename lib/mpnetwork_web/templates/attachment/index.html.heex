@@ -11,7 +11,7 @@
 <%= if @attachments != [] do %>
   <table class="table">
     <tbody>
-  <%= for attachment <- @attachments do %>
+      <%= for attachment <- @attachments do %>
       <tr>
         <%= if attachment.primary && edit_rights do %>
           <td style="vertical-align: middle">
@@ -22,9 +22,9 @@
         <% end %>
         <td>
           <%= if attachment.is_image do %>
-            <img style="width:100%;max-width:600px;" src="<%= Routes.attachment_path(@conn, :show, attachment) %>" />
+            <img style="width:100%;max-width:600px;" src={Routes.attachment_path(@conn, :show, attachment)} />
           <% else %>
-            <i class="<%= GlobalHelpers.html_icon_class_by_content_type(attachment.content_type) %>"></i>
+            <i class={GlobalHelpers.html_icon_class_by_content_type(attachment.content_type)}></i>
             <%= link attachment.original_filename, to: Routes.attachment_path(@conn, :show, attachment) %>
           <% end %>
         </td>
@@ -36,7 +36,7 @@
           <% end %>
         </td>
       </tr>
-  <% end %>
+      <% end %>
     </tbody>
   </table>
 <% end %>

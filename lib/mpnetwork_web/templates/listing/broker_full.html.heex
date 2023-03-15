@@ -130,7 +130,7 @@
                 <div id="photo-carousel" class="carousel slide" data-interval="false">
                   <ol class="carousel-indicators">
                     <%= for {attachment, idx} <- Enum.with_index(photo_attachments) do %>
-                      <li data-target="#photo-carousel" data-slide-to="<%= idx %>"<%= if attachment.primary, do: " class=\"active\"", else: "" %>></li>
+                      <li data-target="#photo-carousel" data-slide-to={idx} class={if attachment.primary, do: "active"}></li>
                     <% end %>
                   </ol>
                   <div class="carousel-inner">
@@ -139,9 +139,9 @@
                         # NOTE: If no photos have a div with class "active", the carousel will BREAK. FYI!!!
                         # That is why I default to the first photo above if no primary photo exists yet
                       %>
-                      <div class="item<%= if attachment.id == primary_photo.id, do: " active", else: "" %>">
+                      <div class={"item#{if attachment.id == primary_photo.id, do: " active"}"}>
                         <%= link to: Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64)), title: "Click to view in original size" do %>
-                          <img class="main-listing-photo img-responsive" src="<%= Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192) %>" />
+                          <img class="main-listing-photo img-responsive" src={Routes.attachment_path(@conn, :show_public, (attachment.sha256_hash |> Base.url_encode64), w: 240, h: 192)} />
                         <% end %>
                         <%= if attachment.primary do %>
                           <div class="carousel-caption">
@@ -325,7 +325,8 @@
            s = if two, do: "s", else: ""
         %>
         <%= if any do %>
-          <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Date<%= s %>/Time<%= s %>:</span><span class="report-value">
+          <div class="report-field label-visible behavior"><span class="report-label">Broker Open House Date<%= s %>/Time<%= s %>:</span>
+            <span class="report-value">
             <%= if @listing.first_broker_oh_start_at do %>
               <%= @listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e") %> @
               <span class="nowrap"><%= (@listing.first_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.first_broker_oh_start_at |> NaiveDateTime.add(@listing.first_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
@@ -335,6 +336,7 @@
               <%= @listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%a, %b %e") %> @
               <span class="nowrap"><%= (@listing.second_broker_oh_start_at |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) <> "-" <> (@listing.second_broker_oh_start_at |> NaiveDateTime.add(@listing.second_broker_oh_mins * 60, :second) |> GlobalHelpers.datetime_to_standard_humanized("%l:%M%p") |> String.trim) %></span>
             <% end %>
+            </span>
           </div>
         <% end %>
       </div>
