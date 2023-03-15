@@ -15,7 +15,7 @@ let
   inherit (stdenv) isLinux isDarwin;
   unstable = import (fetchTarball {
     url = https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz;
-    sha256 = "150xy795rzzy09xidkyrysga6khv5d4ikfz98s2n77a38d7njdwj";
+    sha256 = "0vczd1pgsgnknn814y6bx9vdzhrs78x0m80rzihjv19wz596sril";
   }) {
     inherit system;
   };
@@ -49,6 +49,7 @@ mkShell {
     curl
     wget
     libiconv
+    direnv
     # $%&* locales...
     glibcLocales
     glibc
