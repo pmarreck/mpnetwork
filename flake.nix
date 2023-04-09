@@ -9,7 +9,7 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils } @attrs:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # system = "x86_64-linux";
+        # system = "x86_64-${builtins.currentSystem}";
         pkgs = nixpkgs.legacyPackages.${system};
         overlay-unstable = final: prev: {
           unstable = nixpkgs-unstable.legacyPackages.${prev.system};
@@ -40,8 +40,7 @@
                 ./nixos/configuration.nix
               ];
             };
-            devShells.default = (import ./shell.nix) { inherit pkgs system; };
-            #{ pkgs = nixpkgs.legacyPackages.${system}; };
+            devShells.default = import ./shell.nix { inherit pkgs system; };
         }
     );
 }

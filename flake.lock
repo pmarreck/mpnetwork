@@ -33,11 +33,25 @@
     },
     "nixpkgs-unstable": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1678380223,
         "narHash": "sha256-HUxnK38iqrX84QdQxbFcosRKV3/koj1Zzp5b5aP4lIo=",
+||||||| parent of 589b887 (Update dependencies in flake.lock and shell.nix, including erlang, elixir, nodejs, and postgresql. Also add gigalixir to shell.nix and remove mix2nix due to compatibility issues with erlang 25. Update system definition in shell.nix to support darwin on x86_64 architecture.)
+        "lastModified": 1674641431,
+        "narHash": "sha256-qfo19qVZBP4qn5M5gXc/h1MDgAtPA5VxJm9s8RUAkVk=",
+=======
+        "lastModified": 1678293141,
+        "narHash": "sha256-lLlQHaR0y+q6nd6kfpydPTGHhl1rS9nU9OQmztzKOYs=",
+>>>>>>> 589b887 (Update dependencies in flake.lock and shell.nix, including erlang, elixir, nodejs, and postgresql. Also add gigalixir to shell.nix and remove mix2nix due to compatibility issues with erlang 25. Update system definition in shell.nix to support darwin on x86_64 architecture.)
         "owner": "NixOS",
         "repo": "nixpkgs",
+<<<<<<< HEAD
         "rev": "1e2590679d0ed2cee2736e8b80373178d085d263",
+||||||| parent of 589b887 (Update dependencies in flake.lock and shell.nix, including erlang, elixir, nodejs, and postgresql. Also add gigalixir to shell.nix and remove mix2nix due to compatibility issues with erlang 25. Update system definition in shell.nix to support darwin on x86_64 architecture.)
+        "rev": "9b97ad7b4330aacda9b2343396eb3df8a853b4fc",
+=======
+        "rev": "c90c4025bb6e0c4eaf438128a3b2640314b1c58d",
+>>>>>>> 589b887 (Update dependencies in flake.lock and shell.nix, including erlang, elixir, nodejs, and postgresql. Also add gigalixir to shell.nix and remove mix2nix due to compatibility issues with erlang 25. Update system definition in shell.nix to support darwin on x86_64 architecture.)
         "type": "github"
       },
       "original": {
