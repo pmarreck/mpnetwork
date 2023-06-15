@@ -16,7 +16,7 @@ let
   inherit (stdenv) isLinux isDarwin;
   unstable = import (fetchTarball {
     url = https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz;
-    sha256 = "0kga5cljz6p67irlw2al1shwr5slv0x31fm9cj9xvimghhf1d022";
+    sha256 = "0fc341qxh22vskwl9h7ycgx0nsaazy7xzcnw2f23s34sf3z655gh";
   }) {
     inherit system;
   };
