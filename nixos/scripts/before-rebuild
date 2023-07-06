@@ -1,6 +1,0 @@
-
-# Running scripts before rebuild are generally a last resort so use sparingly
-set -euo pipefail
-echo "Running before-rebuild"
-
-  

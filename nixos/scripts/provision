@@ -1,4 +1,0 @@
-
-# Server provisioning script
-set -euo pipefail
-echo "Skipping..."
