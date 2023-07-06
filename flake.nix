@@ -18,8 +18,10 @@
             name = "mpnetwork";
             inherit (lib) optional optionals;
             inherit (stdenv) isLinux isDarwin;
-            erlang = erlangR26;
-            elixir = beam.packages.erlangR26.elixir_1_15;
+            erlang = erlangR25;
+            elixir = beam.packages.erlangR25.elixir_1_14;
+            # erlang = erlangR26;
+            # elixir = beam.packages.erlangR26.elixir_1_15;
             postgresql = postgresql_15;
           in
           {
