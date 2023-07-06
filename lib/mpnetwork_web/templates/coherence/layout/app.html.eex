@@ -75,10 +75,10 @@
         <!-- Main content -->
         <section class="content container-fluid">
 
-          <%= info = get_flash(@conn, :info); if info do %>
+          <%= info = Phoenix.Flash.get(@flash, :info); if info do %>
             <p class="alert alert-info" role="alert"><%= info %></p>
           <% end %>
-          <%= error = get_flash(@conn, :error); if error do %>
+          <%= error = Phoenix.Flash.get(@flash, :error); if error do %>
             <p class="alert alert-danger" role="alert"><%= error %></p>
           <% end %>
 

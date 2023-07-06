@@ -7,7 +7,7 @@ defmodule Mpnetwork.Mixfile do
       version: String.trim(File.read!("VERSION")),
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: (Mix.compilers() -- [:gettext]),
+      compilers: (Mix.compilers() -- [:gettext, :phoenix]),
       # compilers: [:rustler, :phoenix] ++ Mix.compilers(),
       # rustler_crates: [
       #   lvips: [
@@ -50,6 +50,7 @@ defmodule Mpnetwork.Mixfile do
       # {:distillery, "~> 2.1"},
       {:cowboy, "~> 2.5"},
       {:plug_cowboy, "~> 2.2"},
+      # {:ecto, ">= 3.9.5"},
       {:phoenix, "~> 1.6"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.4"},
@@ -87,7 +88,7 @@ defmodule Mpnetwork.Mixfile do
       # for easily working with tempfiles
       {:briefly, "~> 0.3"},
       # {:ex_crypto, "~> 0.10"}, # removed because not being updated yet for OTP24
-      {:ecto_sql, "~> 3.5"},
+      {:ecto_sql, "~> 3.10"},
       {:ecto_psql_extras, "~> 0.2"},
       # {:ecto_enum, "~> 1.0"}, # still has a bug. waiting on fix. forked, fixed, and PR'd in meantime:
       # {:ecto_enum, git: "https://github.com/pmarreck/ecto_enum.git", commit: "f7b65534e11545d23c626c655ce26c73e43117f0"},
@@ -126,7 +127,7 @@ defmodule Mpnetwork.Mixfile do
       {:logflare_logger_backend, "~> 0.11"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
-      {:enquirer, "~> 0.1.0"},
+      {:enquirer, override: true, git: "https://github.com/glasnoster/enquirer", commit: "22ad2a8a91f896d2ae197d4fab1bd8ef84ebd6bc"},
       # running hog-wild with rust here, since it's still quite a moving target
       # ... hey, my test suite includes image manips, so...!
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master", override: true},

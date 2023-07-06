@@ -19,6 +19,6 @@
 
   <div class="form-group">
     <%= submit "Post", class: "btn btn-primary" %>
-    <%= if @broadcast, do: link "Delete", to: Routes.broadcast_path(@conn, :delete, @broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+    <%= if @broadcast, do: link("Delete", to: Routes.broadcast_path(@conn, :delete, @broadcast), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs") %>
   </div>
 <% end %>
