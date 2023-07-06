@@ -5,7 +5,7 @@ defmodule Mpnetwork.Mixfile do
     [
       app: :mpnetwork,
       version: String.trim(File.read!("VERSION")),
-      elixir: "~> 1.14",
+      elixir: "~> 1.15.2",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: (Mix.compilers() -- [:gettext, :phoenix]),
       # compilers: [:rustler, :phoenix] ++ Mix.compilers(),
