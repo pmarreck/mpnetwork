@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+dbup() {
+  if [ ! -d "$PGDATA" ]; then
+    echo "Creating postgres data directory at $PGDATA ...";
+    mkdir -p "$PGDATA";
+    initdb -D "$PGDATA";
+  fi;
+  echo "Starting postgres and logging to $PGDATA/server.log ...";
+  pg_ctl -l "$PGDATA/server.log" -o "-k $PGHOST" start
+};
+
+export -f dbup
+
+# Run the function, passing along any args, if this file was run directly (such as via sudo) instead of as an include
+# Sometimes, $0 contains a leading dash to indicate an interactive (or is it login?) shell,
+# which is apparently an old convention (which also broke the basename call on OS X)
+_me=$(basename "${0##\-}")
+if [ "$_me" = "dbup" ]; then
+  $_me "$@"
+fi
+unset _me
