@@ -48,9 +48,6 @@
                 libiconv
                 direnv
                 nix-direnv
-                # $%&* locales...
-                glibcLocales
-                glibc
                 git
                 nodejs
                 nodePackages.mocha
@@ -63,6 +60,8 @@
                 ripgrep
               ] ++ optional isLinux gigalixir # gigalixir CLI is broken on darwin as of 3/2023; need to install some other way impurely!
                 ++ optional isLinux inotify-tools
+                ++ optional isLinux glibcLocales
+                ++ optional isLinux glibc
                 ++ optional isLinux libnotify
                 ++ optional isDarwin terminal-notifier
                 ++ optionals isDarwin (with darwin.apple_sdk.frameworks; [
