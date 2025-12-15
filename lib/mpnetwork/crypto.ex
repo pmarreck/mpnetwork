@@ -111,21 +111,29 @@ defmodule Mpnetwork.Crypto do
 
   defp normalize_error(kind, error, key_and_iv \\ nil) do
     key_error = test_key_and_iv_bitlength(key_and_iv)
-
-    normalized_result = Exception.normalize(kind, error)
+    normalized = Exception.normalize(kind, error)
 
     cond do
-      key_error ->
+      key_error != nil ->
         key_error
 
-      %{term: %{message: message}} = normalized_result ->
-        {:error, message}
+      true ->
+        case normalized do
+          %{term: %{message: message}} when is_binary(message) ->
+            {:error, message}
 
-      %{message: message} = normalized_result ->
-        {:error, message}
+          %{term: message} when is_binary(message) ->
+            {:error, message}
 
-      x = Exception.normalize(kind, error) ->
-        {kind, x, Process.info(self(), :current_stacktrace)}
+          %{message: message} when is_binary(message) ->
+            {:error, message}
+
+          exception when is_exception(exception) ->
+            {:error, Exception.message(exception)}
+
+          other ->
+            {kind, other, Process.info(self(), :current_stacktrace)}
+        end
     end
   end
 

@@ -21,7 +21,7 @@ defmodule MpnetworkWeb do
       use Phoenix.Controller, log: false, namespace: MpnetworkWeb
       import Plug.Conn
       alias MpnetworkWeb.Router.Helpers, as: Routes
-      import MpnetworkWeb.Gettext
+      use Gettext, backend: MpnetworkWeb.Gettext
       # import Coherence current_user and logged_in? into all controllers
       import Coherence, only: [current_user: 1, logged_in?: 1]
     end
@@ -34,14 +34,14 @@ defmodule MpnetworkWeb do
         namespace: MpnetworkWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
+      import Phoenix.Controller, only: [get_csrf_token: 0, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
       alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.ErrorHelpers
-      import MpnetworkWeb.Gettext
+      use Gettext, backend: MpnetworkWeb.Gettext
       # custom global helpers
       alias MpnetworkWeb.GlobalHelpers
       # import Coherence current_user and logged_in? into all controllers
@@ -60,7 +60,7 @@ defmodule MpnetworkWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import MpnetworkWeb.Gettext
+      use Gettext, backend: MpnetworkWeb.Gettext
     end
   end
 

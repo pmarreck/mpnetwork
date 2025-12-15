@@ -97,7 +97,6 @@ defmodule Mpnetwork.Listing do
     end)
   end
 
-  defp do_rotate_attachment(_degrees, nil), do: nil
   defp do_rotate_attachment(degrees, attachment) when degrees in [-90, 90] do
 
     # get extension from mimetype

@@ -4,7 +4,7 @@ defmodule MpnetworkWeb.Coherence.ViewHelpers do
   """
   use Phoenix.HTML
   alias Coherence.Config
-  import MpnetworkWeb.Gettext
+  use Gettext, backend: MpnetworkWeb.Gettext
 
   @type conn :: Plug.Conn.t()
   @type schema :: Ecto.Schema.t()

@@ -67,21 +67,4 @@ defmodule MpnetworkWeb.Endpoint do
   # plug(Timber.Integrations.EventPlug)
 
   plug(MpnetworkWeb.Router)
-
-  def init(_key, config) do
-    if config[:load_from_system_env] do
-      # raise "expected the PORT environment variable to be set"
-      port = System.get_env("PORT") || 4000
-      config = Keyword.put(config, :http, [:inet6, port: port])
-      static_host = System.get_env("STATIC_URL") || System.get_env("FQDN") || "localhost"
-      static_url = Keyword.get(config, :static_url) || static_host
-      # scheme = (Keyword.get(static_url, :scheme) || "https")
-      # port = (Keyword.get(static_url, :port) || "443")
-      config = Keyword.put(config, :host, static_host)
-      config = Keyword.put(config, :static_url, static_url)
-      {:ok, config |> IO.inspect}
-    else
-      {:ok, config}
-    end
-  end
 end

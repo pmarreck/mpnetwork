@@ -9,7 +9,7 @@ defmodule MpnetworkWeb.Coherence.UserEmail do
   alias Swoosh.Email
   require Logger
   alias Coherence.Config
-  import MpnetworkWeb.Gettext
+  use Gettext, backend: MpnetworkWeb.Gettext
 
   defp site_name, do: Config.site_name(inspect(Config.module()))
 

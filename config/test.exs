@@ -10,7 +10,7 @@ config :mpnetwork, MpnetworkWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Configure your database
 config :mpnetwork, Mpnetwork.Repo,

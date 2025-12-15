@@ -20,5 +20,5 @@ defmodule MpnetworkWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :mpnetwork
+  use Gettext.Backend, otp_app: :mpnetwork
 end

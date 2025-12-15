@@ -5,7 +5,7 @@
       <img class="img-circle img-bordered-sm" src="<%= GlobalHelpers.gravatar_url(@broadcast.user.email) %>" alt="user image">
           <span class="username">
             <a href="#"><%= @broadcast.user.name %></a>
-            <%# <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a> %>
+            <%!-- <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a> --%>
           </span>
       <span class="description"><%= @broadcast.inserted_at |> GlobalHelpers.relative_humanized_time %></span>
     </div>

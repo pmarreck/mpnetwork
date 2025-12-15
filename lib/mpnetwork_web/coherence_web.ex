@@ -6,14 +6,14 @@ defmodule MpnetworkWeb.Coherence do
       use Phoenix.View, root: "lib/mpnetwork_web/templates"
       # Import convenience functions from controllers
 
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
+      import Phoenix.Controller, only: [get_csrf_token: 0, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
       alias MpnetworkWeb.Router.Helpers, as: Routes
       import MpnetworkWeb.ErrorHelpers
-      import MpnetworkWeb.Gettext
+      use Gettext, backend: MpnetworkWeb.Gettext
       import MpnetworkWeb.Coherence.ViewHelpers
       # custom global helpers
       alias MpnetworkWeb.GlobalHelpers
@@ -30,7 +30,7 @@ defmodule MpnetworkWeb.Coherence do
       import Ecto.Query
       import Plug.Conn
       alias MpnetworkWeb.Router.Helpers, as: Routes
-      import MpnetworkWeb.Gettext
+      use Gettext, backend: MpnetworkWeb.Gettext
 
       alias Coherence.Config
       alias Coherence.ControllerHelpers, as: Helpers
