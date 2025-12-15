@@ -65,7 +65,7 @@ defmodule Mpnetwork.Mixfile do
       # {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
       # {:coherence, "~> 0.5"},
       # I ended up forking it in order to update all its deps, make all its tests pass again and silence most warnings.
-      {:coherence, git: "https://github.com/pmarreck/coherence", commit: "a82a8e9b3f8b57ba27b197d5e9cce3cef2b413cd"},
+      {:coherence, git: "https://github.com/pmarreck/coherence", commit: "73effd99894845aa0611efa5a652bf3800ed069f"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:tzdata, "~> 1.1"},
       {:timex, "~> 3.7"},
