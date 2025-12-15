@@ -24,7 +24,6 @@ config :mpnetwork,
   default_cache_expiry: [months: -2],
   default_session_expiry: [months: -6]
 
-# Configures the endpoint
 config :mpnetwork, MpnetworkWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),

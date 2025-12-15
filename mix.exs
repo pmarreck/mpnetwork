@@ -55,16 +55,17 @@ defmodule Mpnetwork.Mixfile do
       {:phoenix_ecto, "~> 4.4"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_view, "~> 0.17"},
+      {:phoenix_live_view, "~> 0.20"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.5"},
+      {:phoenix_live_dashboard, "~> 0.8"},
+      {:phoenix_view, "~> 2.0"},
       {:gettext, "~> 0.13"},
       {:excellent_migrations, "~> 0.1.2", only: [:dev, :test], runtime: false},
       # Keep checking this https://github.com/smpallen99/coherence/pull/398 to see if the conspicuously absent fucker ever actually merges it
       # {:coherence, git: "https://github.com/johannesE/coherence", branch: "#394"},
       # {:coherence, "~> 0.5"},
       # I ended up forking it in order to update all its deps, make all its tests pass again and silence most warnings.
-      {:coherence, git: "https://github.com/pmarreck/coherence", commit: "aa0ef8403197dfd262863f4b0e592122a1a3e525"},
+      {:coherence, git: "https://github.com/pmarreck/coherence", commit: "a82a8e9b3f8b57ba27b197d5e9cce3cef2b413cd"},
       {:ex_doc, "~> 0.14", only: :dev},
       {:tzdata, "~> 1.1"},
       {:timex, "~> 3.7"},
@@ -74,7 +75,7 @@ defmodule Mpnetwork.Mixfile do
       {:number, "~> 1.0"},
       {:ex_image_info, "~> 0.2"},
       # provides `mix eliver.bump` for hot prod upgrades
-      {:eliver, "~> 2.0"},
+      {:eliver, "~> 2.0", only: :dev, runtime: false},
       # {:cachex, "~> 2.1"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
@@ -119,14 +120,13 @@ defmodule Mpnetwork.Mixfile do
       {:telemetry_poller, "~> 0.5"},
       # When upgrading Oban, MAKE SURE YOU DON'T HAVE TO MANUALLY RUN SOME MIGRATIONS!
       # https://github.com/sorentwo/oban/blob/master/CHANGELOG.md
-      {:oban, "~> 2.10"},
+      {:oban, "~> 2.19"},
       # for-pay deps:
-      {:oban_web, "~> 2.9", repo: "oban"},
-      {:oban_pro, "~> 0.8", repo: "oban"},
+      # {:oban_web, "~> 2.9", repo: "oban"},
+      # {:oban_pro, "~> 0.8", repo: "oban"},
       {:logflare_logger_backend, "~> 0.11"},
       {:remote_ip, "~> 0.2.1"},
       {:ua_inspector, "~> 2.2"},
-      {:enquirer, "~> 0.1.0"},
       # running hog-wild with rust here, since it's still quite a moving target
       # ... hey, my test suite includes image manips, so...!
       # {:rustler, git: "https://github.com/rusterlium/rustler.git", branch: "master", override: true},

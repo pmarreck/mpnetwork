@@ -1,12 +1,26 @@
+defmodule MpnetworkWeb.Router.ObanDashboard do
+  defmacro maybe_oban_dashboard(path, opts \\ []) do
+    if Code.ensure_loaded?(Oban.Web.Router) do
+      quote do
+        import Oban.Web.Router
+        oban_dashboard(unquote(path), unquote(opts))
+      end
+    else
+      quote do
+      end
+    end
+  end
+end
+
 defmodule MpnetworkWeb.Router do
   use MpnetworkWeb, :router
   use Coherence.Router
   import Phoenix.LiveDashboard.Router
-  import Oban.Web.Router
   alias Mpnetwork.Repo
   require Logger
   require Phoenix.Logger
   require UAInspector
+  require MpnetworkWeb.Router.ObanDashboard
 
   # def create_timber_user_context(conn, _opts) do
   #   if conn.assigns[:current_user] do
@@ -150,7 +164,7 @@ defmodule MpnetworkWeb.Router do
     post("/users/:id/unlock_user", UserController, :unlock_user)
     resources("/users", UserController)
     live_dashboard("/dashboard", metrics: MpnetworkWeb.Telemetry, env_keys: ["SOURCE_VERSION"], ecto_repos: [Mpnetwork.Repo], allow_destructive_actions: true)
-    oban_dashboard "/jobs"
+    MpnetworkWeb.Router.ObanDashboard.maybe_oban_dashboard("/jobs")
   end
 
   scope "/", MpnetworkWeb do

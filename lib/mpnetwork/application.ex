@@ -63,7 +63,50 @@ defmodule Mpnetwork.Application do
 
   # Conditionally disable crontab, queues, or plugins here.
   defp oban_config() do
-    Application.get_env(:mpnetwork, Oban)
+    config = Application.get_env(:mpnetwork, Oban, [])
+
+    config
+    |> maybe_fallback_engine()
+    |> maybe_filter_plugins()
+  end
+
+  defp maybe_fallback_engine(config) do
+    case Keyword.get(config, :engine) do
+      Oban.Pro.Queue.SmartEngine ->
+        if Code.ensure_loaded?(Oban.Pro.Queue.SmartEngine) do
+          config
+        else
+          Keyword.put(config, :engine, Oban.Engines.Basic)
+        end
+
+      _ ->
+        config
+    end
+  end
+
+  defp maybe_filter_plugins(config) do
+    case Keyword.get(config, :plugins) do
+      false ->
+        config
+
+      nil ->
+        config
+
+      plugins when is_list(plugins) ->
+        filtered =
+          Enum.filter(plugins, fn
+            plugin when is_atom(plugin) ->
+              Code.ensure_loaded?(plugin)
+
+            {plugin, _opts} when is_atom(plugin) ->
+              Code.ensure_loaded?(plugin)
+
+            other ->
+              other
+          end)
+
+        Keyword.put(config, :plugins, filtered)
+    end
   end
 
 end
