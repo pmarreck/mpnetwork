@@ -34,7 +34,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "brunch": "^2.10",
+    "brunch": "^4.0",
     "clean-css-brunch": "^2",
     "css-brunch": "^2",
     "dependency-cruiser": "^17",
