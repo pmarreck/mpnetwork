@@ -19,7 +19,7 @@
     "lodash": ">=4.17.23",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
-    "npm": "^11.10.0",
+    "npm": "^11.10.1",
     "phoenix": "~1.5",
     "phoenix_html": "~2.14.1",
     "popper.js": "^1.16.1",
