@@ -103,8 +103,8 @@
           with nixpkgs.legacyPackages.${system};
           let
             name = "mpnetwork";
-            erlang = erlangR26;
-            elixir = beam.packages.erlangR26.elixir_1_15;
+            erlang = erlang_26;
+            elixir = beam.packages.erlang_26.elixir_1_15;
             buildInputs = [
               vips
               elixir
